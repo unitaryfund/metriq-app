@@ -1,9 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
+import MetriqNavbar from './components/MainNavbar'
 
 function App() {
   return (
     <div className="App">
+      <MetriqNavbar/>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
