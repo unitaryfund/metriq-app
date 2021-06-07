@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Nav,
-  NavDropdown
-} from 'react-bootstrap';
+import { Nav, NavDropdown } from 'react-bootstrap';
 
 const AuthNav = () => {
   return (

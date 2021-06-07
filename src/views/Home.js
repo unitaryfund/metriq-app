@@ -17,6 +17,6 @@ const Home = () => {
         </a>
     </header>
   );
-}
+};
 
 export default Home;

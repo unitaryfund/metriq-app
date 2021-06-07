@@ -1,14 +1,14 @@
 import './App.css';
-import Home from './components/Home'
 import MainNavbar from './components/MainNavbar'
+import MainRouter from './MainRouter'
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <MainNavbar/>
-      <Home/>
+      <MainRouter/>
     </div>
   );
-}
+};
 
 export default App;
