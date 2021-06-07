@@ -1,6 +1,11 @@
+import { Link } from "react-router-dom"
+
 const LogIn = () => {
   return (
-    <div>Test - Log In</div>
+    <div>
+      <header>Test - Log In</header>
+      <Link to="/Register">Create a new account</Link>
+    </div>
   );
 }
 
