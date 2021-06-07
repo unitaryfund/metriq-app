@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Home from './views/Home'
 import LogIn from './views/LogIn'
+import About from './views/About'
+import Contact from './views/Contact'
 
 const MainRouter = () => {
   return (
@@ -14,6 +16,16 @@ const MainRouter = () => {
             path="/Login"
             component={LogIn}
             exact
+        />
+        <Route
+          path="/About"
+          component={About}
+          exact
+        />
+        <Route
+          path="/Contact"
+          component={Contact}
+          exact
         />
     </Router>
   );
