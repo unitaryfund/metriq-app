@@ -1,6 +1,8 @@
+import axios from 'axios'
 import React from 'react';
 
 class Register extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +36,9 @@ class Register extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.username);
+    axios.post('http://localhost:8080/api/register', this.state)
+      .then(res => { alert(res.message); })
+      .catch(err => { alert(err.message); });
     event.preventDefault();
   }
 
@@ -44,19 +48,19 @@ class Register extends React.Component {
         <header>Test - Register</header>
         <form onSubmit={this.handleSubmit}>
           <div className="row">
-            <label for="username-input" className="col-md-3">Username:</label>
+            <label htmlFor="username-input" className="col-md-3">Username:</label>
             <input id="username-input" className="col-md-9" type="text" value={this.state.username} onChange={this.handleUsernameChange} />
           </div>
           <div className="row">
-            <label for="email-input" className="col-md-3">Email:</label>
+            <label htmlFor="email-input" className="col-md-3">Email:</label>
             <input id="email-input" className="col-md-9" type="email" value={this.state.email} onChange={this.handleEmailChange} />
           </div>
           <div className="row">
-            <label for="password-input" className="col-md-3">Password:</label>
+            <label htmlFor="password-input" className="col-md-3">Password:</label>
             <input id="password-input" className="col-md-9" type="password" value={this.state.password} onChange={this.handlePasswordChange} />
           </div>
           <div className="row">
-            <label for="password-confirm-input" className="col-md-3">Password Confirmation:</label>
+            <label htmlFor="password-confirm-input" className="col-md-3">Password Confirmation:</label>
             <input id="password-confirm-input" className="col-md-9" type="password" value={this.state.passwordConfirm} onChange={this.handlePasswordConfirmChange} />
           </div>
           <div className="row">
