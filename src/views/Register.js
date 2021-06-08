@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React from 'react';
+import config from './../config';
 
 class Register extends React.Component {
 
@@ -36,7 +37,7 @@ class Register extends React.Component {
   }
 
   handleSubmit(event) {
-    axios.post('http://localhost:8080/api/register', this.state)
+    axios.post(config.api.getUriPrefix() + '/register', this.state)
       .then(res => { alert(res.message); })
       .catch(err => { alert(err.message); });
     event.preventDefault();
