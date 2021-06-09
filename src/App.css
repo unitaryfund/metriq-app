@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+form > div.row {
+  padding: 5px 0 5px 0;
+}
+
+form > .row > label {
+  text-align: right;
+}
