@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Navbar
-} from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import MainNav from "./MainNav";
 
 const MainNavbar = () => {

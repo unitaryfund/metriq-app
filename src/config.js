@@ -1,6 +1,5 @@
 var config = {};
 
-//config.isDebug = typeof v8debug === 'object';
 config.isDebug = true;
 
 config.api = {};
