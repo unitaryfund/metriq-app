@@ -17,6 +17,7 @@ class Register extends React.Component {
     this.handleEmailChange           = this.handleEmailChange.bind(this);
     this.handlePasswordChange        = this.handlePasswordChange.bind(this);
     this.handlePasswordConfirmChange = this.handlePasswordConfirmChange.bind(this);
+    this.handleValidation            = this.handleValidation.bind(this);
     this.handleSubmit                = this.handleSubmit.bind(this);
   }
 
@@ -36,11 +37,44 @@ class Register extends React.Component {
     this.setState({passwordConfirm: event.target.value});
   }
 
+  handleValidation() {
+    let errors = {};
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!this.state.email) {
+      errors.email = 'Email is required.';
+    }
+    if (!re.test(this.state.email)) {
+      errors.email = 'Invalid email format';
+    }
+    if (!this.state.username) {
+      errors.username = 'Username cannot be blank';
+    }
+    if (this.state.password.length < 8) {
+      errors.password = 'Password is too short.'
+    }
+    if (this.state.password !== this.state.passwordConfirm) {
+      errors.password = 'Passwords do not match.'
+    }
+
+    return errors;
+  }
+
   handleSubmit(event) {
     axios.post(config.api.getUriPrefix() + '/register', this.state)
       .then(res => { alert(res.message); })
       .catch(err => { alert(err.message); });
     event.preventDefault();
+    let errors = this.handleValidation();
+    if(errors.length === 0){
+      // Validation successful.
+      // TODO: Create JSON model from form
+    } else {
+      // Validation failure.
+      // TODO: Right now, this just shows an alert of all the things that
+      // failed--present this to the user in a "better" way?
+      alert(JSON.stringify(errors));
+    }
   }
 
   render() {
