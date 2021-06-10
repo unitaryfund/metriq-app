@@ -115,9 +115,10 @@ class Register extends React.Component {
             <div className="col-md-3"/>
           </div>
           <div className="row">
-            <div className="col-md-12 justify-content-center"/>
+            <div className="col-md-12 text-center">
               <input className="btn btn-primary" type="submit" value="Submit" />
             </div>
+          </div>
         </form>
       </div>
     );
