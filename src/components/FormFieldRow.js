@@ -12,17 +12,24 @@ class FormFieldInputRow extends React.Component {
 
         this.onFieldChange = this.onFieldChange.bind(this);
         this.onFieldBlur   = this.onFieldBlur.bind(this);
+        this.isValidValue  = this.isValidValue.bind(this);
+    }
+
+    isValidValue(value) {
+        return this.props.validRegex.test(value);
     }
 
     onFieldChange(event) {
         // for a regular input field, read field name and value from the event
         const fieldName = event.target.name;
         const fieldValue = event.target.value;
+        this.setState({ value: fieldValue });
+        this.setState({ invalid: !this.isValidValue(fieldValue) });
         this.props.onChange(fieldName, fieldValue);
     }
 
     onFieldBlur(event) {
-        this.setState({ invalid: !this.props.validRegex.test(this.state.value) });
+        this.setState({ invalid: !this.isValidValue(this.state.value) });
     }
 
     render () {
@@ -30,7 +37,7 @@ class FormFieldInputRow extends React.Component {
             <div className="row">
                 <label htmlFor={this.props.inputId} className="col-md-3">{this.props.label}</label>
                 <input id={this.props.inputId} className="col-md-6" type="text" value={this.props.value} onChange={this.onFieldChange} onBlur={this.onFieldBlur} />
-                <FormFieldValidator invalid={this.state.invalid} ref={this.validatorRef} className="col-md-3" message={this.props.validatorMessage}/>
+                <FormFieldValidator invalid={this.state.invalid} className="col-md-3" message={this.props.validatorMessage}/>
             </div>
         );
     }

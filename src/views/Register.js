@@ -2,14 +2,16 @@ import axios from 'axios'
 import React from 'react';
 import config from './../config';
 import FormFieldInputRow from '../components/FormFieldRow';
+import FormFieldValidator from '../components/FormFieldValidator';
 
-const emailMissingError     = 'Email is required.';
-const emailBadFormatError   = 'Email format is invalid.';
 const usernameMissingError  = 'Username cannot be blank.';
+const emailBadFormatError   = 'Email is blank or invalid.';
 const passwordInvalidError  = 'Password is too short.';
 const passwordMismatchError = 'Confirm does not match.';
 
 const usernameValidRegex = /^(?!\s*$).+/;
+const emailValidRegex    = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const passwordValidRegex = /.{8,}/;
 
 class Register extends React.Component {
 
@@ -22,54 +24,51 @@ class Register extends React.Component {
       passwordConfirm: ''
     };
 
-    this.onChange                      = this.onChange.bind(this)
-
-    this.handleAllValidate             = this.handleAllValidate.bind(this);
-
-    this.handleSubmit                  = this.handleSubmit.bind(this);
+    this.onChange     = this.onChange.bind(this)
+    this.isAllValid   = this.isAllValid.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  onChange(field, value) {
+  onChange(field, value, isValid) {
     // parent class change handler is always called with field name and value
     this.setState({[field]: value});
   }
 
-  handleAllValidate() {
-    let errors = {};
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  isPasswordMatch() {
+    return !passwordValidRegex.test(this.state.password)
+      || (this.state.password === this.state.passwordConfirm);
+  }
 
-    if (!this.state.email) {
-      errors.email = emailMissingError;
+  isAllValid() {
+    if (!usernameValidRegex.test(this.state.username)) {
+      return false;
     }
-    if (!re.test(this.state.email)) {
-      errors.email = emailBadFormatError;
+    if (!emailValidRegex.test(this.state.email)) {
+      return false;
     }
-    if (!this.state.username) {
-      errors.username = usernameMissingError;
+    if (!passwordValidRegex.test(this.state.password)) {
+      return false;
     }
-    if (this.state.password.length < 8) {
-      errors.password = passwordInvalidError;
+    if (!passwordValidRegex.test(this.state.passwordConfirm)) {
+      return false;
     }
-    if (this.state.password !== this.state.passwordConfirm) {
-      errors.password = passwordMismatchError;
+    if (!this.isPasswordMatch()) {
+      return false;
     }
 
-    return errors;
+    return true;
   }
 
   handleSubmit(event) {
+    if (this.isAllValid()) {
+      event.preventDefault();
+      return;
+    }
+
     axios.post(config.api.getUriPrefix() + '/register', this.state)
       .then(res => { alert(res.message); })
       .catch(err => { alert(err.message); });
     event.preventDefault();
-    let errors = this.handleAllValidate();
-    if(Object.keys(errors).length === 0){
-      // Validation successful.
-      // TODO: Create JSON model from form
-    } else {
-      // Validation failure.
-      alert(JSON.stringify(errors));
-    }
   }
 
   render() {
@@ -84,21 +83,24 @@ class Register extends React.Component {
           <FormFieldInputRow inputId="email-input" label="Email"
             validatorMessage={emailBadFormatError}
             onChange={this.onChange}
-            validRegex={usernameValidRegex}/>
+            validRegex={emailValidRegex}/>
           <FormFieldInputRow inputId="password-input" label="Password"
             validatorMessage={passwordInvalidError}
             onChange={this.onChange}
-            validRegex={usernameValidRegex}/>
+            validRegex={passwordValidRegex}/>
           <FormFieldInputRow inputId="password-confirm-input" label="Password Confirm"
-            validatorMessage={passwordMismatchError}
+            validatorMessage={passwordInvalidError}
             onChange={this.onChange}
-            validRegex={usernameValidRegex}/>
+            validRegex={passwordValidRegex}/>
           <div className="row">
             <div className="col-md-3"/>
-            <div className="col-md-9">
-              <input className="btn btn-primary float-left" type="submit" value="Submit" />
-            </div>
+            <FormFieldValidator className="col-md-6" invalid={!this.isPasswordMatch()} message={passwordMismatchError} />
+            <div className="col-md-3"/>
           </div>
+          <div className="row">
+            <div className="col-md-12 justify-content-center"/>
+              <input className="btn btn-primary" type="submit" value="Submit" />
+            </div>
         </form>
       </div>
     );
