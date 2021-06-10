@@ -44,3 +44,11 @@ form > div.row {
 form > .row > label {
   text-align: right;
 }
+
+.hide {
+  display: none;
+}
+
+.form-field-validator {
+  color: red;
+}
