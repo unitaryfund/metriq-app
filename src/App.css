@@ -50,5 +50,7 @@ form > .row > label {
 }
 
 .form-field-validator {
+  display: inline;
   color: red;
+  padding-left: 5px;
 }

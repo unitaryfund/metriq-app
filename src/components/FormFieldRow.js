@@ -1,11 +1,17 @@
 import React from 'react';
+import FormFieldValidator from './FormFieldValidator';
 
 class FormFieldInputRow extends React.Component {
 
     constructor (props) {
         super(props);
 
+        this.state = {
+            value: ''
+        };
+
         this.onFieldChange = this.onFieldChange.bind(this);
+        this.onFieldBlur   = this.onFieldBlur.bind(this);
     }
 
     onFieldChange(event) {
@@ -15,11 +21,16 @@ class FormFieldInputRow extends React.Component {
         this.props.onChange(fieldName, fieldValue);
     }
 
+    onFieldBlur(event) {
+        this.setState({ invalid: !this.props.validRegex.test(this.state.value) });
+    }
+
     render () {
         return (
             <div className="row">
                 <label htmlFor={this.props.inputId} className="col-md-3">{this.props.label}</label>
-                <input id={this.props.inputId} className="col-md-9" type="text" value={this.props.value} onChange={this.onFieldChange} />
+                <input id={this.props.inputId} className="col-md-6" type="text" value={this.props.value} onChange={this.onFieldChange} onBlur={this.onFieldBlur} />
+                <FormFieldValidator invalid={this.state.invalid} ref={this.validatorRef} className="col-md-3" message={this.props.validatorMessage}/>
             </div>
         );
     }

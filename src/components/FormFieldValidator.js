@@ -5,9 +5,9 @@ const FormFieldValidator = (props) => {
         return <div className="hide"/>;
     }
     return (
-        <h5 className="form-field-validator">
+        <div className="form-field-validator">
             *{props.message}
-        </h5>
+        </div>
     );
 };
 

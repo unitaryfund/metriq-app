@@ -2,13 +2,14 @@ import axios from 'axios'
 import React from 'react';
 import config from './../config';
 import FormFieldInputRow from '../components/FormFieldRow';
-import FormFieldValidator from '../components/FormFieldValidator';
 
 const emailMissingError     = 'Email is required.';
 const emailBadFormatError   = 'Email format is invalid.';
 const usernameMissingError  = 'Username cannot be blank.';
 const passwordInvalidError  = 'Password is too short.';
-const passwordMismatchError = 'Password and confirmation do not match.';
+const passwordMismatchError = 'Confirm does not match.';
+
+const usernameValidRegex = /^(?!\s*$).+/;
 
 class Register extends React.Component {
 
@@ -22,13 +23,6 @@ class Register extends React.Component {
     };
 
     this.onChange                      = this.onChange.bind(this)
-    
-    /*
-    this.handleUsernameValidate        = this.handleUsernameValidate.bind(this);
-    this.handleEmailValidate           = this.handleEmailValidate.bind(this);
-    this.handlePasswordValidate        = this.handlePasswordValidate.bind(this);
-    this.handlePasswordConfirmValidate = this.handlePasswordValidate.bind(this);
-    */
 
     this.handleAllValidate             = this.handleAllValidate.bind(this);
 
@@ -74,6 +68,7 @@ class Register extends React.Component {
       // TODO: Create JSON model from form
     } else {
       // Validation failure.
+      alert(JSON.stringify(errors));
     }
   }
 
@@ -82,10 +77,22 @@ class Register extends React.Component {
       <div className="container">
         <header>Test - Register</header>
         <form onSubmit={this.handleSubmit}>
-          <FormFieldInputRow inputId="username-input" label="Username" onChange={this.onChange}/>
-          <FormFieldInputRow inputId="email-input" label="Email" onChange={this.onChange}/>
-          <FormFieldInputRow inputId="password-input" label="Password" onChange={this.onChange}/>
-          <FormFieldInputRow inputId="password-confirm-input" label="Password Confirm" onChange={this.onChange}/>
+          <FormFieldInputRow inputId="username-input" label="Username"
+            validatorMessage={usernameMissingError}
+            onChange={this.onChange}
+            validRegex={usernameValidRegex}/>
+          <FormFieldInputRow inputId="email-input" label="Email"
+            validatorMessage={emailBadFormatError}
+            onChange={this.onChange}
+            validRegex={usernameValidRegex}/>
+          <FormFieldInputRow inputId="password-input" label="Password"
+            validatorMessage={passwordInvalidError}
+            onChange={this.onChange}
+            validRegex={usernameValidRegex}/>
+          <FormFieldInputRow inputId="password-confirm-input" label="Password Confirm"
+            validatorMessage={passwordMismatchError}
+            onChange={this.onChange}
+            validRegex={usernameValidRegex}/>
           <div className="row">
             <div className="col-md-3"/>
             <div className="col-md-9">
