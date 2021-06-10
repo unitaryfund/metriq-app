@@ -46,7 +46,7 @@ form > .row > label {
 }
 
 .hide {
-  display: none;
+  visibility: hidden;
 }
 
 .form-field-validator {

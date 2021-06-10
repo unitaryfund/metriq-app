@@ -1,11 +1,9 @@
 import React from 'react';
 
 const FormFieldValidator = (props) => {
-    if (!props.invalid) {
-        return <div className="hide"/>;
-    }
+    let active = props.invalid;
     return (
-        <div className="form-field-validator">
+        <div className={`form-field-validator ${active ? "" : "hide"}`}>
             *{props.message}
         </div>
     );
