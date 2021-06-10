@@ -21,17 +21,25 @@ class Register extends React.Component {
       username: '',
       email: '',
       password: '',
-      passwordConfirm: ''
+      passwordConfirm: '',
+      isPasswordMatch: true
     };
 
-    this.onChange     = this.onChange.bind(this)
-    this.isAllValid   = this.isAllValid.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChange         = this.onChange.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.isAllValid       = this.isAllValid.bind(this);
+    this.handleSubmit     = this.handleSubmit.bind(this);
   }
 
-  onChange(field, value, isValid) {
+  onChange(field, value) {
     // parent class change handler is always called with field name and value
     this.setState({[field]: value});
+  }
+
+  onChangePassword(field, value) {
+    // parent class change handler is always called with field name and value
+    this.setState({[field]: value});
+    this.setState({ isPasswordMatch: this.isPasswordMatch() });
   }
 
   isPasswordMatch() {
@@ -76,25 +84,25 @@ class Register extends React.Component {
       <div className="container">
         <header>Test - Register</header>
         <form onSubmit={this.handleSubmit}>
-          <FormFieldInputRow inputId="username-input" label="Username"
+          <FormFieldInputRow inputId="username-input" inputType="text" label="Username"
             validatorMessage={usernameMissingError}
             onChange={this.onChange}
             validRegex={usernameValidRegex}/>
-          <FormFieldInputRow inputId="email-input" label="Email"
+          <FormFieldInputRow inputId="email-input" inputType="email" label="Email"
             validatorMessage={emailBadFormatError}
             onChange={this.onChange}
             validRegex={emailValidRegex}/>
-          <FormFieldInputRow inputId="password-input" label="Password"
+          <FormFieldInputRow inputId="password-input" inputType="password" label="Password"
             validatorMessage={passwordInvalidError}
-            onChange={this.onChange}
+            onChange={this.onChangePassword}
             validRegex={passwordValidRegex}/>
-          <FormFieldInputRow inputId="password-confirm-input" label="Password Confirm"
+          <FormFieldInputRow inputId="password-confirm-input" inputType="password" label="Password Confirm"
             validatorMessage={passwordInvalidError}
-            onChange={this.onChange}
+            onChange={this.onChangePassword}
             validRegex={passwordValidRegex}/>
           <div className="row">
             <div className="col-md-3"/>
-            <FormFieldValidator className="col-md-6" invalid={!this.isPasswordMatch()} message={passwordMismatchError} />
+            <FormFieldValidator className="col-md-6" invalid={!this.state.isPasswordMatch} message={passwordMismatchError} />
             <div className="col-md-3"/>
           </div>
           <div className="row">

@@ -36,7 +36,7 @@ class FormFieldInputRow extends React.Component {
         return (
             <div className="row">
                 <label htmlFor={this.props.inputId} className="col-md-3">{this.props.label}</label>
-                <input id={this.props.inputId} className="col-md-6" type="text" value={this.props.value} onChange={this.onFieldChange} onBlur={this.onFieldBlur} />
+                <input id={this.props.inputId} className="col-md-6" type={this.props.inputType} value={this.props.value} onChange={this.onFieldChange} onBlur={this.onFieldBlur} />
                 <FormFieldValidator invalid={this.state.invalid} className="col-md-3" message={this.props.validatorMessage}/>
             </div>
         );
