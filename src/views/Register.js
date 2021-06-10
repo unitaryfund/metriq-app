@@ -25,10 +25,12 @@ class Register extends React.Component {
       isPasswordMatch: true
     };
 
-    this.onChange         = this.onChange.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.isAllValid       = this.isAllValid.bind(this);
-    this.handleSubmit     = this.handleSubmit.bind(this);
+    this.onChange                = this.onChange.bind(this);
+    this.onChangePassword        = this.onChangePassword.bind(this);
+    this.onChangePasswordConfirm = this.onChangePasswordConfirm.bind(this);
+    this.isPasswordMatch         = this.isPasswordMatch.bind(this);
+    this.isAllValid              = this.isAllValid.bind(this);
+    this.handleSubmit            = this.handleSubmit.bind(this);
   }
 
   onChange(field, value) {
@@ -39,12 +41,17 @@ class Register extends React.Component {
   onChangePassword(field, value) {
     // parent class change handler is always called with field name and value
     this.setState({[field]: value});
-    this.setState({ isPasswordMatch: this.isPasswordMatch() });
+    this.setState({ isPasswordMatch: this.isPasswordMatch(value, this.state.passwordConfirm) });
   }
 
-  isPasswordMatch() {
-    return !passwordValidRegex.test(this.state.password)
-      || (this.state.password === this.state.passwordConfirm);
+  onChangePasswordConfirm(field, value) {
+    // parent class change handler is always called with field name and value
+    this.setState({[field]: value});
+    this.setState({ isPasswordMatch: this.isPasswordMatch(this.state.password, value) });
+  }
+
+  isPasswordMatch(password, passwordConfirm) {
+    return (password === passwordConfirm);
   }
 
   isAllValid() {
@@ -98,11 +105,13 @@ class Register extends React.Component {
             validRegex={passwordValidRegex}/>
           <FormFieldInputRow inputId="password-confirm-input" inputType="password" label="Password Confirm"
             validatorMessage={passwordInvalidError}
-            onChange={this.onChangePassword}
+            onChange={this.onChangePasswordConfirm}
             validRegex={passwordValidRegex}/>
           <div className="row">
             <div className="col-md-3"/>
-            <FormFieldValidator className="col-md-6" invalid={!this.state.isPasswordMatch} message={passwordMismatchError} />
+            <div className="col-md-6">
+              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} />
+            </div>
             <div className="col-md-3"/>
           </div>
           <div className="row">

@@ -24,7 +24,9 @@ class FormFieldInputRow extends React.Component {
         const fieldName = event.target.name;
         const fieldValue = event.target.value;
         this.setState({ value: fieldValue });
-        this.setState({ invalid: !this.isValidValue(fieldValue) });
+        if (this.isValidValue(fieldValue)) {
+            this.setState({ invalid: false });
+        }
         this.props.onChange(fieldName, fieldValue);
     }
 
