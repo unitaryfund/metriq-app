@@ -7,7 +7,7 @@ import FormFieldValidator from '../components/FormFieldValidator';
 
 const usernameMissingError  = 'Username cannot be blank.';
 const passwordInvalidError  = 'Password is too short.';
-const usernamePasswordMismatchError = 'Confirm does not match.';
+const usernamePasswordMismatchError = 'Could not log in. Please check that username and password are correct';
 
 const usernameValidRegex = /^(?!\s*$).+/;
 const passwordValidRegex = /.{8,}/;
@@ -34,7 +34,8 @@ class LogIn extends React.Component {
   }
 
   isUsernamePasswordMatch() {
-    // TODO: Call to DB to see if this.state.username and 
+    // TODO: https://github.com/unitaryfund/metriq-api/issues/9
+    // Call to DB to see if this.state.username and 
     // this.state.password match.
   }
 
@@ -43,9 +44,6 @@ class LogIn extends React.Component {
       return false;
     }
     if (!passwordValidRegex.test(this.state.password)) {
-      return false;
-    }
-    if (!this.isUsernamePasswordMatch()) {
       return false;
     }
 
