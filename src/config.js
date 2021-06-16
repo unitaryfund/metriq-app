@@ -3,7 +3,7 @@ const config = {}
 config.isDebug = true
 
 config.api = {}
-config.api.url = config.isDebug ? 'localhost:8080' : 'metriq.info'
+config.api.url = config.isDebug ? 'localhost:3000' : 'metriq.info'
 config.api.protocol = config.isDebug ? 'http://' : 'https://'
 config.api.endpoint = '/api'
 config.api.getUriPrefix = () => {

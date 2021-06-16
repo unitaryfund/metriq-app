@@ -24,12 +24,12 @@ class Register extends React.Component {
       isPasswordMatch: true
     }
 
-    this.onChange = this.handleOnChange.bind(this)
-    this.onChangePassword = this.handleOnChangePassword.bind(this)
-    this.onChangePasswordConfirm = this.handleOnChangePasswordConfirm.bind(this)
+    this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnChangePassword = this.handleOnChangePassword.bind(this)
+    this.handleOnChangePasswordConfirm = this.handleOnChangePasswordConfirm.bind(this)
     this.isPasswordMatch = this.isPasswordMatch.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
-    this.handleSubmit = this.handleOnSubmit.bind(this)
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
   }
 
   handleOnChange (field, value) {

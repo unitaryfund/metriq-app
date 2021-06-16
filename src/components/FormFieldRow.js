@@ -9,8 +9,8 @@ class FormFieldInputRow extends React.Component {
       value: ''
     }
 
-    this.onFieldChange = this.onFieldChange.bind(this)
-    this.onFieldBlur = this.onFieldBlur.bind(this)
+    this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
+    this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
     this.isValidValue = this.isValidValue.bind(this)
   }
 

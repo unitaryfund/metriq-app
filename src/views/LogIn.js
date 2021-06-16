@@ -21,13 +21,13 @@ class LogIn extends React.Component {
       isUsernamePasswordMatch: true
     }
 
-    this.onChange = this.handleChange.bind(this)
+    this.handleOnChange = this.handleOnChange.bind(this)
     this.isUsernamePasswordMatch = this.isUsernamePasswordMatch.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleOnSubmit = this.handleOnSubmit.bind(this)
   }
 
-  handleChange (field, value) {
+  handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
     this.setState({ [field]: value })
   }
@@ -49,7 +49,7 @@ class LogIn extends React.Component {
     return true
   }
 
-  handleSubmit (event) {
+  handleOnSubmit (event) {
     if (this.isAllValid()) {
       event.preventDefault()
       return
@@ -65,17 +65,17 @@ class LogIn extends React.Component {
     return (
       <div className='container'>
         <header>Test - LogIn</header>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleOnSubmit}>
           <FormFieldInputRow
             inputName='username' inputType='text' label='Username'
             validatorMessage={usernameMissingError}
-            onChange={this.handleChange}
+            onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
           />
           <FormFieldInputRow
             inputName='password' inputType='password' label='Password'
             validatorMessage={passwordInvalidError}
-            onChange={this.handleChange}
+            onChange={this.handleOnChange}
             validRegex={passwordValidRegex}
           />
           <div className='row'>
