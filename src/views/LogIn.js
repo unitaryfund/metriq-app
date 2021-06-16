@@ -1,97 +1,100 @@
 import axios from 'axios'
-import React from 'react';
-import { Link } from "react-router-dom"
-import config from './../config';
-import FormFieldInputRow from '../components/FormFieldRow';
-import FormFieldValidator from '../components/FormFieldValidator';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import config from './../config'
+import FormFieldInputRow from '../components/FormFieldRow'
+import FormFieldValidator from '../components/FormFieldValidator'
 
-const usernameMissingError  = 'Username cannot be blank.';
-const passwordInvalidError  = 'Password is too short.';
-const usernamePasswordMismatchError = 'Could not log in. Please check that username and password are correct';
+const usernameMissingError = 'Username cannot be blank.'
+const passwordInvalidError = 'Password is too short.'
+const usernamePasswordMismatchError = 'Could not log in. Please check that username and password are correct'
 
-const usernameValidRegex = /^(?!\s*$).+/;
-const passwordValidRegex = /.{8,}/;
+const usernameValidRegex = /^(?!\s*$).+/
+const passwordValidRegex = /.{8,}/
 
 class LogIn extends React.Component {
-
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       username: '',
       password: '',
       isUsernamePasswordMatch: true
-    };
+    }
 
-    this.onChange                = this.onChange.bind(this);
-    this.isUsernamePasswordMatch = this.isUsernamePasswordMatch.bind(this);
-    this.isAllValid              = this.isAllValid.bind(this);
-    this.handleSubmit            = this.handleSubmit.bind(this);
+    this.onChange = this.handleChange.bind(this)
+    this.isUsernamePasswordMatch = this.isUsernamePasswordMatch.bind(this)
+    this.isAllValid = this.isAllValid.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  onChange(field, value) {
+  handleChange (field, value) {
     // parent class change handler is always called with field name and value
-    this.setState({[field]: value});
+    this.setState({ [field]: value })
   }
 
-  isUsernamePasswordMatch() {
+  isUsernamePasswordMatch () {
     // TODO: https://github.com/unitaryfund/metriq-api/issues/9
-    // Call to DB to see if this.state.username and 
+    // Call to DB to see if this.state.username and
     // this.state.password match.
   }
 
-  isAllValid() {
+  isAllValid () {
     if (!usernameValidRegex.test(this.state.username)) {
-      return false;
+      return false
     }
     if (!passwordValidRegex.test(this.state.password)) {
-      return false;
+      return false
     }
 
-    return true;
+    return true
   }
 
-  handleSubmit(event) {
+  handleSubmit (event) {
     if (this.isAllValid()) {
-      event.preventDefault();
-      return;
+      event.preventDefault()
+      return
     }
 
     axios.post(config.api.getUriPrefix() + '/login', this.state)
-      .then(res => { alert(res.message); })
-      .catch(err => { alert(err.message); });
-    event.preventDefault();
+      .then(res => { alert(res.message) })
+      .catch(err => { alert(err.message) })
+    event.preventDefault()
   }
 
-  render() {
+  render () {
     return (
-      <div className="container">
+      <div className='container'>
         <header>Test - LogIn</header>
         <form onSubmit={this.handleSubmit}>
-          <FormFieldInputRow inputName="username" inputType="text" label="Username"
+          <FormFieldInputRow
+            inputName='username' inputType='text' label='Username'
             validatorMessage={usernameMissingError}
-            onChange={this.onChange}
-            validRegex={usernameValidRegex}/>
-          <FormFieldInputRow inputName="password" inputType="password" label="Password"
+            onChange={this.handleChange}
+            validRegex={usernameValidRegex}
+          />
+          <FormFieldInputRow
+            inputName='password' inputType='password' label='Password'
             validatorMessage={passwordInvalidError}
-            onChange={this.onChange}
-            validRegex={passwordValidRegex}/>
-          <div className="row">
-            <div className="col-md-3"/>
-            <div className="col-md-6">
+            onChange={this.handleChange}
+            validRegex={passwordValidRegex}
+          />
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
               <FormFieldValidator invalid={!this.state.isUsernamePasswordMatch} message={usernamePasswordMismatchError} />
             </div>
-            <div className="col-md-3"/>
+            <div className='col-md-3' />
           </div>
-          <div className="row">
-            <div className="col-md-12 text-center">
-              <input className="btn btn-primary" type="submit" value="Submit" />
+          <div className='row'>
+            <div className='col-md-12 text-center'>
+              <input className='btn btn-primary' type='submit' value='Submit' />
             </div>
           </div>
         </form>
-        <Link to="/Register">Create a new account</Link>
+        <Link to='/Register'>Create a new account</Link>
       </div>
-    );
+    )
   }
 }
 
-export default LogIn;
+export default LogIn
