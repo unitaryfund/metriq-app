@@ -74,14 +74,19 @@ class Register extends React.Component {
   }
 
   handleOnSubmit (event) {
-    if (this.isAllValid()) {
+    if (!this.isAllValid()) {
       event.preventDefault()
       return
     }
 
     axios.post(config.api.getUriPrefix() + '/register', this.state)
-      .then(res => { alert(res.message) })
-      .catch(err => { alert(err.message) })
+      .then(res => {
+        this.props.onLogin()
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+      })
+    event.preventDefault()
     event.preventDefault()
   }
 
