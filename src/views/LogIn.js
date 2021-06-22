@@ -18,7 +18,9 @@ class LogIn extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isUsernamePasswordMatch: true
+      isUsernamePasswordMatch: true,
+      isRequestFailed: false,
+      requestFailedMessage: ''
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -50,14 +52,25 @@ class LogIn extends React.Component {
   }
 
   handleOnSubmit (event) {
-    if (this.isAllValid()) {
+    if (!this.isAllValid()) {
       event.preventDefault()
       return
     }
 
-    axios.post(config.api.getUriPrefix() + '/login', this.state)
-      .then(res => { alert(res.message) })
-      .catch(err => { alert(err.message) })
+    const request = {
+      username: this.state.username,
+      password: this.state.password
+    }
+
+    console.log('Route: ' + config.api.getUriPrefix() + '/login')
+
+    axios.post(config.api.getUriPrefix() + '/login', request)
+      .then(res => {
+        this.props.onLogin()
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+      })
     event.preventDefault()
   }
 
@@ -81,7 +94,8 @@ class LogIn extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isUsernamePasswordMatch} message={usernamePasswordMismatchError} />
+              <FormFieldValidator invalid={!this.state.isUsernamePasswordMatch} message={usernamePasswordMismatchError} /><br />
+              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
             </div>
             <div className='col-md-3' />
           </div>
