@@ -1,7 +1,7 @@
 import React from 'react'
 import FormFieldValidator from './FormFieldValidator'
 
-class FormFieldInputRow extends React.Component {
+class FormFieldRow extends React.Component {
   constructor (props) {
     super(props)
 
@@ -44,4 +44,4 @@ class FormFieldInputRow extends React.Component {
   }
 };
 
-export default FormFieldInputRow
+export default FormFieldRow

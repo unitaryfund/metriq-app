@@ -14,7 +14,9 @@ class App extends React.Component {
 
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+  }
 
+  componentDidMount() {
     axios.get(config.api.getUriPrefix() + '/user')
       .then(res => {
         this.handleLogin()
