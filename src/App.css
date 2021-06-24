@@ -54,3 +54,7 @@ form > .row > label {
   color: red;
   padding-left: 5px;
 }
+
+.break-all {
+  word-wrap: break-word;
+}

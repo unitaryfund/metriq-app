@@ -5,6 +5,7 @@ import Register from './views/Register'
 import About from './views/About'
 import Contact from './views/Contact'
 import Profile from './views/Profile'
+import Token from './views/Token'
 
 const MainRouter = (props) => {
   return (
@@ -40,6 +41,11 @@ const MainRouter = (props) => {
         exact
         path='/Profile'
         component={Profile}
+      />
+      <Route
+        exact
+        path='/Token'
+        component={Token}
       />
     </Router>
   )
