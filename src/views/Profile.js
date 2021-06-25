@@ -49,7 +49,7 @@ class Profile extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-12 text-center'>
-              <Link to='/Token'><button className='btn btn-primary'>Get API Token</button></Link>
+              <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
             </div>
           </div>
         </div>
