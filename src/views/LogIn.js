@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import config from './../config'
-import FormFieldInputRow from '../components/FormFieldRow'
+import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 
 const usernameMissingError = 'Username cannot be blank.'
@@ -62,8 +62,6 @@ class LogIn extends React.Component {
       password: this.state.password
     }
 
-    console.log('Route: ' + config.api.getUriPrefix() + '/login')
-
     axios.post(config.api.getUriPrefix() + '/login', request)
       .then(res => {
         this.props.onLogin()
@@ -79,13 +77,13 @@ class LogIn extends React.Component {
       <div className='container'>
         <header>Test - LogIn</header>
         <form onSubmit={this.handleOnSubmit}>
-          <FormFieldInputRow
+          <FormFieldRow
             inputName='username' inputType='text' label='Username'
             validatorMessage={usernameMissingError}
             onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
           />
-          <FormFieldInputRow
+          <FormFieldRow
             inputName='password' inputType='password' label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChange}
