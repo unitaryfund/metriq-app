@@ -7,7 +7,6 @@ import FormFieldValidator from '../components/FormFieldValidator'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
-const usernamePasswordMismatchError = 'Could not log in. Please check that username and password are correct'
 
 const usernameValidRegex = /^(?!\s*$).+/
 const passwordValidRegex = /.{8,}/
@@ -18,7 +17,6 @@ class LogIn extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isUsernamePasswordMatch: true,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
@@ -85,7 +83,6 @@ class LogIn extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isUsernamePasswordMatch} message={usernamePasswordMismatchError} /><br />
               <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
             </div>
             <div className='col-md-3' />

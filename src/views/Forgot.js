@@ -11,9 +11,8 @@ class Forgot extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username_email: '',
-      password: '',
-      isUsernamePasswordMatch: true,
+      user: '',
+      isRequestReceived: false,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
@@ -43,12 +42,12 @@ class Forgot extends React.Component {
     }
 
     const request = {
-      username_email: this.state.username_email
+      user: this.state.user
     }
 
     axios.post(config.api.getUriPrefix() + '/recover', request)
       .then(res => {
-        // TODO
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', isRequestReceived: true })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
@@ -57,6 +56,23 @@ class Forgot extends React.Component {
   }
 
   render () {
+    if (this.state.isRequestReceived) {
+      return (
+        <div className='container'>
+          <header>Account Recovery</header>
+          <br />
+          <div>
+            <div className='row'>
+              <div className='col-md-3' />
+              <div className='col-md-6'>
+                <span>Your request has been received. If that account username or email exists, you will receive an email with further account recovery instructions. (Check your email inbox.)</span><br />
+              </div>
+              <div className='col-md-3' />
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className='container'>
         <header>Account Recovery</header>
@@ -76,7 +92,7 @@ class Forgot extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='username_email' inputType='text' label='Username/Email'
+            inputName='user' inputType='text' label='Username/Email'
             validatorMessage={usernameMissingError}
             onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
