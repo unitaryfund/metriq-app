@@ -103,7 +103,8 @@ class LogIn extends React.Component {
             </div>
           </div>
         </form>
-        <Link to='/Register'>Create a new account</Link>
+        <Link to='/Register'>Create a new account</Link><br/>
+        <Link to='/Forgot'>Forgot username/password?</Link>
       </div>
     )
   }
