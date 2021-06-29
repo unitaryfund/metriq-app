@@ -24,7 +24,6 @@ class LogIn extends React.Component {
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
-    this.isUsernamePasswordMatch = this.isUsernamePasswordMatch.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
   }
@@ -32,12 +31,6 @@ class LogIn extends React.Component {
   handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
     this.setState({ [field]: value })
-  }
-
-  isUsernamePasswordMatch () {
-    // TODO: https://github.com/unitaryfund/metriq-api/issues/9
-    // Call to DB to see if this.state.username and
-    // this.state.password match.
   }
 
   isAllValid () {
@@ -75,7 +68,7 @@ class LogIn extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Test - LogIn</header>
+        <header>Log In</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
@@ -103,7 +96,7 @@ class LogIn extends React.Component {
             </div>
           </div>
         </form>
-        <Link to='/Register'>Create a new account</Link><br/>
+        <Link to='/Register'>Create a new account</Link><br />
         <Link to='/Forgot'>Forgot username/password?</Link>
       </div>
     )
