@@ -1,22 +1,18 @@
 import axios from 'axios'
 import React from 'react'
-import { Link } from 'react-router-dom'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 
 const usernameMissingError = 'Username cannot be blank.'
-const passwordInvalidError = 'Password is too short.'
-
 const usernameValidRegex = /^(?!\s*$).+/
-const passwordValidRegex = /.{8,}/
 
-class LogIn extends React.Component {
+class Forgot extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
+      user: '',
+      isRequestReceived: false,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
@@ -35,9 +31,6 @@ class LogIn extends React.Component {
     if (!usernameValidRegex.test(this.state.username)) {
       return false
     }
-    if (!passwordValidRegex.test(this.state.password)) {
-      return false
-    }
 
     return true
   }
@@ -49,13 +42,12 @@ class LogIn extends React.Component {
     }
 
     const request = {
-      username: this.state.username,
-      password: this.state.password
+      user: this.state.user
     }
 
-    axios.post(config.api.getUriPrefix() + '/login', request)
+    axios.post(config.api.getUriPrefix() + '/recover', request)
       .then(res => {
-        this.props.onLogin()
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', isRequestReceived: true })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
@@ -64,21 +56,46 @@ class LogIn extends React.Component {
   }
 
   render () {
+    if (this.state.isRequestReceived) {
+      return (
+        <div className='container'>
+          <header>Account Recovery</header>
+          <br />
+          <div>
+            <div className='row'>
+              <div className='col-md-3' />
+              <div className='col-md-6'>
+                <span>Your request has been received. If that account username or email exists, you will receive an email with further account recovery instructions. (Check your email inbox.)</span><br />
+              </div>
+              <div className='col-md-3' />
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className='container'>
-        <header>Log In</header>
+        <header>Account Recovery</header>
         <form onSubmit={this.handleOnSubmit}>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <span><b>You can log in with either your username or email for your account, with your password.</b></span><br />
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and we will send a password recovery link to the associated account email, if it exists.</span><br />
+            </div>
+            <div className='col-md-3' />
+          </div>
           <FormFieldRow
-            inputName='username' inputType='text' label='Username'
+            inputName='user' inputType='text' label='Username/Email'
             validatorMessage={usernameMissingError}
             onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
-          />
-          <FormFieldRow
-            inputName='password' inputType='password' label='Password'
-            validatorMessage={passwordInvalidError}
-            onChange={this.handleOnChange}
-            validRegex={passwordValidRegex}
           />
           <div className='row'>
             <div className='col-md-3' />
@@ -93,11 +110,9 @@ class LogIn extends React.Component {
             </div>
           </div>
         </form>
-        <Link to='/Register'>Create a new account</Link><br />
-        <Link to='/Forgot'>Forgot username/password?</Link>
       </div>
     )
   }
 }
 
-export default LogIn
+export default Forgot
