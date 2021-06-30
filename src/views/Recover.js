@@ -5,24 +5,25 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 
 const usernameMissingError = 'Username cannot be blank.'
-const emailBadFormatError = 'Email is blank or invalid.'
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
 
 const usernameValidRegex = /^(?!\s*$).+/
-const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const passwordValidRegex = /.{8,}/
 
-class Register extends React.Component {
+class Recover extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: '',
-      email: '',
+      username: this.props.match.params.username,
       password: '',
       passwordConfirm: '',
-      isPasswordMatch: true
+      isPasswordMatch: true,
+      isRequestFailed: false,
+      requestFailedMessage: ''
     }
+
+    console.log(this.props.match.params.username)
 
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnChangePassword = this.handleOnChangePassword.bind(this)
@@ -57,9 +58,6 @@ class Register extends React.Component {
     if (!usernameValidRegex.test(this.state.username)) {
       return false
     }
-    if (!emailValidRegex.test(this.state.email)) {
-      return false
-    }
     if (!passwordValidRegex.test(this.state.password)) {
       return false
     }
@@ -79,33 +77,49 @@ class Register extends React.Component {
       return
     }
 
-    axios.post(config.api.getUriPrefix() + '/register', this.state)
+    const request = {
+      username: this.state.username,
+      password: this.state.password,
+      passwordConfirm: this.state.passwordConfirm,
+      uuid: this.props.match.params.uuid
+    }
+
+    axios.post(config.api.getUriPrefix() + '/password', request)
       .then(res => {
         this.props.onLogin()
+        window.location.href = '/'
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
       })
-    event.preventDefault()
     event.preventDefault()
   }
 
   render () {
     return (
       <div className='container'>
-        <header>Test - Register</header>
+        <header>Account Recovery</header>
         <form onSubmit={this.handleOnSubmit}>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <span><b>You can log in with either your username or email for your account, with your password.</b></span><br />
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and we will send a password recovery link to the associated account email, if it exists.</span><br />
+            </div>
+            <div className='col-md-3' />
+          </div>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
+            defaultValue={this.props.match.params.username}
             validatorMessage={usernameMissingError}
             onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
-          />
-          <FormFieldRow
-            inputName='email' inputType='email' label='Email'
-            validatorMessage={emailBadFormatError}
-            onChange={this.handleOnChange}
-            validRegex={emailValidRegex}
           />
           <FormFieldRow
             inputName='password' inputType='password' label='Password'
@@ -122,7 +136,8 @@ class Register extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} />
+              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
+              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
             </div>
             <div className='col-md-3' />
           </div>
@@ -137,4 +152,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default Recover

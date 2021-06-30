@@ -3,6 +3,7 @@ import Home from './views/Home'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
 import Forgot from './views/Forgot'
+import Recover from './views/Recover'
 import About from './views/About'
 import Contact from './views/Contact'
 import Profile from './views/Profile'
@@ -32,6 +33,11 @@ const MainRouter = (props) => {
         exact
         path='/Forgot'
         component={Forgot}
+      />
+      <Route
+        exact
+        path='/Recover/:username/:uuid'
+        render={(p) => <Recover {...p} onLogin={props.onLogin} />}
       />
       <Route
         exact

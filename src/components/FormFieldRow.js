@@ -6,7 +6,7 @@ class FormFieldRow extends React.Component {
     super(props)
 
     this.state = {
-      value: ''
+      value: this.props.defaultValue ? this.props.defaultValue : ''
     }
 
     this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
@@ -37,7 +37,7 @@ class FormFieldRow extends React.Component {
     return (
       <div className='row'>
         <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-        <input id={this.props.inputName} name={this.props.inputName} className='col-md-6' type={this.props.inputType} value={this.props.value} onChange={this.handleOnFieldChange} onBlur={this.handleOnFieldBlur} />
+        <input id={this.props.inputName} name={this.props.inputName} className='col-md-6' type={this.props.inputType} defaultValue={this.props.defaultValue} value={this.props.value} onChange={this.handleOnFieldChange} onBlur={this.handleOnFieldBlur} />
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
       </div>
     )
