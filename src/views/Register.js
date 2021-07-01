@@ -122,7 +122,8 @@ class Register extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} />
+              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /><br />
+              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
             </div>
             <div className='col-md-3' />
           </div>

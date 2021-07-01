@@ -47,9 +47,16 @@ class Profile extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
+          <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
               <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
+            </div>
+          </div>
+          <br />
+          <div className='row'>
+            <div className='col-md-12 text-center'>
+              <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
             </div>
           </div>
         </div>
