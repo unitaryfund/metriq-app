@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
 import Home from './views/Home'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
+import Delete from './views/Delete'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
@@ -28,6 +29,12 @@ const MainRouter = (props) => {
         path='/Register'
       >
         {props.isLoggedIn ? <Redirect to='/' /> : <Register onLogin={props.onLogin} />}
+      </Route>
+      <Route
+        exact
+        path='/Delete'
+      >
+        {!props.isLoggedIn ? <Redirect to='/' /> : <Delete onLogout={props.onLogout} />}
       </Route>
       <Route
         exact
