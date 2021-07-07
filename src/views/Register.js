@@ -21,7 +21,9 @@ class Register extends React.Component {
       email: '',
       password: '',
       passwordConfirm: '',
-      isPasswordMatch: true
+      isPasswordMatch: true,
+      isRequestFailed: false,
+      requestFailedMessage: ''
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -86,7 +88,6 @@ class Register extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
       })
-    event.preventDefault()
     event.preventDefault()
   }
 
