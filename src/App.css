@@ -58,3 +58,10 @@ form > .row > label {
 .break-all {
   word-wrap: break-word;
 }
+
+.submission {
+  height: 120px;
+  border: 1px solid black;
+  margin: 6px;
+  padding: 8px;
+}

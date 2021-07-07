@@ -43,8 +43,7 @@ class Home extends React.Component {
         <header>MetriQ - Top Submissions</header>
         <br />
         <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
+          <div className='col-md-12'>
             <InfiniteScroll
               dataLength={this.state.items.length} // This is important field to render the next data
               next={this.fetchMoreData}
@@ -57,13 +56,12 @@ class Home extends React.Component {
                 }
             >
               {this.state.items.map((i, index) => (
-                <div key={index}>
+                <div className='submission' key={index}>
                   {i.submissionName}
                 </div>
               ))}
             </InfiniteScroll>
           </div>
-          <div className='col-md-3' />
         </div>
         <br />
         <div className='row'>
