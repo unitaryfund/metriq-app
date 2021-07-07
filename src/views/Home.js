@@ -3,6 +3,7 @@ import React from 'react'
 import config from './../config'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import FormFieldValidator from '../components/FormFieldValidator'
+import SubmissionBox from '../components/SubmissionBox'
 
 class Home extends React.Component {
   constructor (props) {
@@ -10,6 +11,7 @@ class Home extends React.Component {
     this.state = {
       nextPage: 0,
       items: [],
+      hasMore: true,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
@@ -18,7 +20,7 @@ class Home extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/submission/top/0')
+    axios.get(config.api.getUriPrefix() + '/submission/trending/0')
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: 1, items: res.data.data })
       })
@@ -28,9 +30,14 @@ class Home extends React.Component {
   }
 
   fetchMoreData () {
-    axios.get(config.api.getUriPrefix() + '/submission/top/' + toString(this.state.nextPage))
+    axios.get(config.api.getUriPrefix() + '/submission/trending/' + toString(this.state.nextPage))
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1, items: this.state.items.concat(res.data.data) })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
+        if (res.data.data.length > 0) {
+          this.setState({ items: this.state.items.concat(res.data.data) })
+        } else {
+          this.setState({ hasMore: false })
+        }
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
@@ -47,19 +54,15 @@ class Home extends React.Component {
             <InfiniteScroll
               dataLength={this.state.items.length} // This is important field to render the next data
               next={this.fetchMoreData}
-              hasMore
+              hasMore={this.state.hasMore}
               loader={<h4>Loading...</h4>}
               endMessage={
                 <p style={{ textAlign: 'center' }}>
                   <b>You have seen all submissions.</b>
                 </p>
-                }
+              }
             >
-              {this.state.items.map((i, index) => (
-                <div className='submission' key={index}>
-                  {i.submissionName}
-                </div>
-              ))}
+              {this.state.items.map(SubmissionBox)}
             </InfiniteScroll>
           </div>
         </div>
