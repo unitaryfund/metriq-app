@@ -30,7 +30,7 @@ class SubmissionScroll extends React.Component {
   }
 
   fetchMoreData () {
-    axios.get(config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + toString(this.state.nextPage))
+    axios.get(config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + this.state.nextPage)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
         if (res.data.data.length > 0) {
