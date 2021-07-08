@@ -60,7 +60,7 @@ class SubmissionScroll extends React.Component {
                 </p>
               }
             >
-              {this.state.items.map(SubmissionBox)}
+              {this.state.items.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} />)}
             </InfiniteScroll>
           </div>
         </div>
