@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import FieldRow from '../components/FieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
+import ErrorHandler from '../components/ErrorHandler'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -25,7 +26,7 @@ class Profile extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 

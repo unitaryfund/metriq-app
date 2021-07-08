@@ -3,6 +3,7 @@ import React from 'react'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
+import ErrorHandler from '../components/ErrorHandler'
 
 const usernameMissingError = 'Username cannot be blank.'
 const usernameValidRegex = /^(?!\s*$).+/
@@ -50,7 +51,7 @@ class Forgot extends React.Component {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', isRequestReceived: true })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }

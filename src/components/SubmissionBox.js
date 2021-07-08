@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import logo from './../github.jpeg'
+import ErrorHandler from './ErrorHandler'
 
 library.add(faThumbsUp, faGithub)
 
@@ -26,7 +27,7 @@ class SubmissionBox extends React.Component {
           this.setState({ upvotes: res.data.data.upvotes.length })
         })
         .catch(err => {
-          window.alert(err ? (err.message ? err.message : err) : 'Could not reach server.')
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
       window.location = '/Login'
