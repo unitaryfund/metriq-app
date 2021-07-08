@@ -1,21 +1,23 @@
-import logo from './../logo.svg'
+import { Tabs, Tab } from 'react-bootstrap'
+import SubmissionScroll from '../components/SubmissionScroll'
 
-const Home = () => {
+const Home = (props) => {
   return (
-    <header className='App-header'>
-      <img src={logo} className='App-logo' alt='logo' />
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className='App-link'
-        href='https://reactjs.org'
-        target='_blank'
-        rel='noopener noreferrer'
-      >
-        Learn React
-      </a>
-    </header>
+    <div className='container'>
+      <header>MetriQ - Top Submissions</header>
+      <br />
+      <Tabs defaultActiveKey='trending' id='top-submissions-tabs'>
+        <Tab eventKey='trending' title='Trending'>
+          <SubmissionScroll sortType='trending' isLoggedIn={props.isLoggedIn} />
+        </Tab>
+        <Tab eventKey='popular' title='Popular'>
+          <SubmissionScroll sortType='popular' isLoggedIn={props.isLoggedIn} />
+        </Tab>
+        <Tab eventKey='latest' title='Latest'>
+          <SubmissionScroll sortType='latest' isLoggedIn={props.isLoggedIn} />
+        </Tab>
+      </Tabs>
+    </div>
   )
 }
 

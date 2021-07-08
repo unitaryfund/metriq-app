@@ -16,8 +16,9 @@ const MainRouter = (props) => {
       <Route
         exact
         path='/'
-        component={Home}
-      />
+      >
+        <Home isLoggedIn={props.isLoggedIn} />
+      </Route>
       <Route
         exact
         path='/Login'
