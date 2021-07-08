@@ -1,4 +1,3 @@
-import React from 'react'
 import AnonNav from './AnonNav'
 import AuthNav from './AuthNav'
 
