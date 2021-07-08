@@ -60,8 +60,34 @@ form > .row > label {
 }
 
 .submission {
-  height: 120px;
+  height: 200px;
   border: 1px solid black;
   margin: 6px;
   padding: 8px;
+}
+
+.submission-heading {
+  padding-bottom: 8px;
+}
+
+.submission-image {
+  display: inline-block;
+  vertical-align: -80px;
+  width: 180px;
+  height: 180px;
+}
+
+.submission-description {
+  text-align: left;
+}
+
+.submission-button-block {
+  display: inline-block;
+  vertical-align: -100px;
+}
+
+.submission-button {
+  width: 80px;
+  height: 38px;
+  margin: 4px;
 }
