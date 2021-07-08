@@ -2,11 +2,15 @@ import React from 'react'
 import { Nav, NavDropdown } from 'react-bootstrap'
 import axios from 'axios'
 import config from './../config'
+import ErrorHandler from './ErrorHandler'
 
 const handleOnClick = () => {
   axios.get(config.api.getUriPrefix() + '/logout')
     .then(res => {
       window.location.href = '/'
+    })
+    .catch(err => {
+      window.alert('Error: ' + ErrorHandler(err) + '\nSorry, cannot logout. If error persists, clear your site cookies in your browser.')
     })
 }
 

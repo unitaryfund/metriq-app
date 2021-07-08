@@ -4,6 +4,7 @@ import config from './../config'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import FormFieldValidator from '../components/FormFieldValidator'
 import SubmissionBox from '../components/SubmissionBox'
+import ErrorHandler from './ErrorHandler'
 
 class SubmissionScroll extends React.Component {
   constructor (props) {
@@ -25,7 +26,7 @@ class SubmissionScroll extends React.Component {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: 1, items: res.data.data })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -40,7 +41,7 @@ class SubmissionScroll extends React.Component {
         }
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 

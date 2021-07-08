@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import FormFieldValidator from '../components/FormFieldValidator'
+import ErrorHandler from '../components/ErrorHandler'
 
 class Delete extends React.Component {
   constructor (props) {
@@ -25,7 +26,7 @@ class Delete extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -37,7 +38,7 @@ class Delete extends React.Component {
           this.props.onLogout()
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
         })
     } else {
       this.setState({ isRequestFailed: true, requestFailedMessage: 'Entered incorrect username/email!' })

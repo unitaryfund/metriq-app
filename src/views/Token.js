@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import FormFieldValidator from '../components/FormFieldValidator'
+import ErrorHandler from '../components/ErrorHandler'
 
 const isActiveTokenPrefix = 'You have an active API token, created '
 const isNoTokenMessage = 'You do not have an active token.'
@@ -31,7 +32,7 @@ class Token extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -46,7 +47,7 @@ class Token extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -62,7 +63,7 @@ class Token extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: err ? (err.message ? err.message : err) : 'Could not reach server.' })
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
