@@ -43,7 +43,7 @@ class SubmissionBox extends React.Component {
             <img src={logo} alt='logo' className='submission-image' />
           </div>
           <div className='col-md-8'>
-            <div className='submission-heading'>{this.props.item.submissionName} - Submitted {this.props.item.submittedDate}</div>
+            <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView ? (' - ' + (this.props.isUnderReview ? '<b>Under Review</b>' : '<b>Approved</b>')) : ''}</div>
             <div className='submission-description'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec commodo est. Nunc mollis nunc ac ante vestibulum, eu consectetur magna porttitor. Proin ac tortor urna. Aliquam ac ante eu nunc aliquam convallis et in sem. Donec volutpat tincidunt tincidunt. Aliquam at risus non diam imperdiet vestibulum eget a orci. In ultricies, arcu vel semper lobortis, lorem orci placerat nisi, id fermentum purus odio ut nulla. Duis quis felis a erat mattis venenatis id sit amet purus. Aenean a risus dui.
             </div>

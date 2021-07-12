@@ -21,7 +21,10 @@ class SubmissionScroll extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/0')
+    const route = this.props.isEditView
+      ? config.api.getUriPrefix() + '/user/submission/0'
+      : config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/0'
+    axios.get(route)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: 1, items: res.data.data })
       })
@@ -31,7 +34,10 @@ class SubmissionScroll extends React.Component {
   }
 
   fetchMoreData () {
-    axios.get(config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + this.state.nextPage)
+    const route = this.props.isEditView
+      ? config.api.getUriPrefix() + '/user/submission/' + this.state.nextPage
+      : config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + this.state.nextPage
+    axios.get(route)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
         if (res.data.data.length > 0) {
@@ -61,7 +67,7 @@ class SubmissionScroll extends React.Component {
                 </p>
               }
             >
-              {this.state.items.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} />)}
+              {this.state.items.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} isEditView={this.props.isEditView} isUnderReview={!!(item.approvedDate)} />)}
             </InfiniteScroll>
           </div>
         </div>
