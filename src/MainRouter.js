@@ -8,6 +8,7 @@ import Recover from './views/Recover'
 import About from './views/About'
 import Contact from './views/Contact'
 import Profile from './views/Profile'
+import Submissions from './views/Submissions'
 import Token from './views/Token'
 
 const MainRouter = (props) => {
@@ -61,6 +62,11 @@ const MainRouter = (props) => {
         exact
         path='/Profile'
         component={Profile}
+      />
+      <Route
+        exact
+        path='/Submissions'
+        component={Submissions}
       />
       <Route
         exact

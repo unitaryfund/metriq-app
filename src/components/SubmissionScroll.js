@@ -56,19 +56,11 @@ class SubmissionScroll extends React.Component {
       <div className='container'>
         <div className='row'>
           <div className='col-md-12'>
-            <InfiniteScroll
-              dataLength={this.state.items.length} // This is important field to render the next data
-              next={this.fetchMoreData}
-              hasMore={this.state.hasMore}
-              loader={<h4>Loading...</h4>}
-              endMessage={
-                <p style={{ textAlign: 'center' }}>
-                  <b>You have seen all submissions.</b>
-                </p>
-              }
-            >
-              {this.state.items.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} isEditView={this.props.isEditView} isUnderReview={!!(item.approvedDate)} />)}
-            </InfiniteScroll>
+            {this.state.items.length
+              ? (<InfiniteScroll dataLength={this.state.items.length} next={this.fetchMoreData} hasMore={this.state.hasMore} loader={<h4>Loading...</h4>} endMessage={<p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}>{this.state.items.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} isEditView={this.props.isEditView} isUnderReview={!(item.approvedDate)} />)}</InfiniteScroll>)
+              : (this.props.isEditView
+                  ? <p><b>You have no submissions, yet.</b></p>
+                  : <p><b>There are no approved submissions, yet.</b></p>)}
           </div>
         </div>
         <br />

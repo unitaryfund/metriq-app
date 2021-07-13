@@ -1,6 +1,6 @@
 import SubmissionScroll from '../components/SubmissionScroll'
 
-const Home = (props) => {
+const Submissions = (props) => {
   return (
     <div className='container'>
       <header>MetriQ - Your Submissions</header>
@@ -10,4 +10,4 @@ const Home = (props) => {
   )
 }
 
-export default Home
+export default Submissions
