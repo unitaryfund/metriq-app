@@ -24,8 +24,6 @@ class Recover extends React.Component {
       requestFailedMessage: ''
     }
 
-    console.log(this.props.match.params.username)
-
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnChangePassword = this.handleOnChangePassword.bind(this)
     this.handleOnChangePasswordConfirm = this.handleOnChangePasswordConfirm.bind(this)
