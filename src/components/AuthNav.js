@@ -18,6 +18,7 @@ const AuthNav = (props) => {
   return (
     <Nav className='ml-auto'>
       <Nav.Link href='/'>Home</Nav.Link>
+      <Nav.Link href='/Categories'>Categories</Nav.Link>
       <NavDropdown title='Account' id='basic-nav-dropdown' alignRight>
         <NavDropdown.Item href='/Profile'>Settings</NavDropdown.Item>
         <NavDropdown.Item href='/Submissions'>My Submissions</NavDropdown.Item>

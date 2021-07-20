@@ -10,6 +10,7 @@ import Contact from './views/Contact'
 import Profile from './views/Profile'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
+import Categories from './views/Categories'
 
 const MainRouter = (props) => {
   return (
@@ -19,6 +20,12 @@ const MainRouter = (props) => {
         path='/'
       >
         <Home isLoggedIn={props.isLoggedIn} />
+      </Route>
+      <Route
+        exact
+        path='/Categories'
+      >
+        <Categories isLoggedIn={props.isLoggedIn} />
       </Route>
       <Route
         exact
@@ -72,6 +79,11 @@ const MainRouter = (props) => {
         exact
         path='/Token'
         component={Token}
+      />
+      <Route
+        exact
+        path='/Category/:tag'
+        render={(p) => <Home {...p} onLogin={props.onLogin} />}
       />
     </Router>
   )
