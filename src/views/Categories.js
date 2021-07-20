@@ -11,7 +11,9 @@ class Categories extends React.Component {
     super(props)
     this.state = {
       alphabetical: [],
-      popular: []
+      popular: [],
+      isRequestFailed: false,
+      requestFailedMessage: ''
     }
   }
 
