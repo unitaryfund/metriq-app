@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -57,7 +58,7 @@ class SubmissionBox extends React.Component {
       <div className='submission'>
         <div className='row'>
           <div className='col-md-2'>
-            <img src={logo} alt='logo' className='submission-image' />
+            <Link to={'/Submission/' + this.props.item._id}><img src={logo} alt='logo' className='submission-image' /></Link>
           </div>
           <div className='col-md-8'>
             <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>

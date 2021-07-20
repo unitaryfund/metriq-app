@@ -11,6 +11,7 @@ import Profile from './views/Profile'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
 import Categories from './views/Categories'
+import Submission from './views/Submission'
 
 const MainRouter = (props) => {
   return (
@@ -84,6 +85,11 @@ const MainRouter = (props) => {
         exact
         path='/Category/:tag'
         render={(p) => <Home {...p} onLogin={props.onLogin} />}
+      />
+      <Route
+        exact
+        path='/Submission/:id'
+        render={(p) => <Submission {...p} onLogin={props.onLogin} />}
       />
     </Router>
   )
