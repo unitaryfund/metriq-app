@@ -13,8 +13,8 @@ const EditButton = (props) => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item><FontAwesomeIcon className='edit-button-icon' icon='plus' onClick={props.onClickAdd} /> Add</Dropdown.Item>
-        <Dropdown.Item><FontAwesomeIcon className='edit-button-icon' icon='minus' onClick={props.onClickRemove} /> Remove</Dropdown.Item>
+        <Dropdown.Item onClick={props.onClickAdd}><FontAwesomeIcon className='edit-button-icon' icon='plus' /> Add</Dropdown.Item>
+        <Dropdown.Item onClick={props.onClickRemove}><FontAwesomeIcon className='edit-button-icon' icon='minus' /> Remove</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   )
