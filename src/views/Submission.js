@@ -4,6 +4,7 @@ import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import { Modal, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 class Submission extends React.Component {
   constructor (props) {
@@ -11,9 +12,8 @@ class Submission extends React.Component {
     this.state = {
       item: {},
       showAddModal: false,
-      addModalMode: '',
       showRemoveModal: false,
-      removeModalMode: ''
+      modalMode: ''
     }
 
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -25,11 +25,17 @@ class Submission extends React.Component {
   }
 
   handleOnClickAdd (mode) {
-    this.setState({ showAddModal: true, addModalMode: mode })
+    if (!this.props.isLoggedIn) {
+      mode = 'login'
+    }
+    this.setState({ showAddModal: true, modalMode: mode })
   }
 
   handleOnClickRemove (mode) {
-    this.setState({ showRemoveModal: true, removeModalMode: mode })
+    if (!this.props.isLoggedIn) {
+      mode = 'login'
+    }
+    this.setState({ showRemoveModal: true, modalMode: mode })
   }
 
   handleHideAddModal () {
@@ -42,12 +48,10 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     this.setState({ showAddModal: false })
-    console.log('Add modal submitted.')
   }
 
   handleRemoveModalDone () {
     this.setState({ showRemoveModal: false })
-    console.log('Add modal submitted.')
   }
 
   componentDidMount () {
@@ -84,7 +88,8 @@ class Submission extends React.Component {
                   onClickAdd={() => this.handleOnClickAdd('tasks')}
                   onClickRemove={() => this.handleOnClickRemove('tasks')}
                 />
-              </h2><hr />
+              </h2>
+              <hr />
             </div>
             <div>Lorem ipsum</div>
           </div>
@@ -96,7 +101,8 @@ class Submission extends React.Component {
                   onClickAdd={() => this.handleOnClickAdd('methods')}
                   onClickRemove={() => this.handleOnClickRemove('methods')}
                 />
-              </h2><hr />
+              </h2>
+              <hr />
             </div>
             <div>Lorem ipsum</div>
           </div>
@@ -111,7 +117,8 @@ class Submission extends React.Component {
                   onClickAdd={() => this.handleOnClickAdd('results')}
                   onClickRemove={() => this.handleOnClickRemove('results')}
                 />
-              </h2><hr />
+              </h2>
+              <hr />
             </div>
             <div>Lorem ipsum</div>
           </div>
@@ -120,7 +127,16 @@ class Submission extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Add</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.addModalMode}</Modal.Body>
+          <Modal.Body>
+            {(this.state.modalMode === 'login') &&
+              <span>
+                Please <Link to='/Login'>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'login') &&
+              <span>
+                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+              </span>}
+          </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>
               Submit
@@ -131,7 +147,16 @@ class Submission extends React.Component {
           <Modal.Header closeButton>
             <Modal.Title>Remove</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.removeModalMode}</Modal.Body>
+          <Modal.Body>
+            {(this.state.modalMode === 'login') &&
+              <span>
+                Please <Link to='/Login'>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'login') &&
+              <span>
+                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+              </span>}
+          </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
               Done

@@ -89,7 +89,7 @@ const MainRouter = (props) => {
       <Route
         exact
         path='/Submission/:id'
-        render={(p) => <Submission {...p} onLogin={props.onLogin} />}
+        render={(p) => <Submission {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
       />
     </Router>
   )
