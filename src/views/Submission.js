@@ -139,7 +139,7 @@ class Submission extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>
-              Submit
+              {(this.state.modalMode === 'login') ? 'Cancel' : 'Submit'}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -159,7 +159,7 @@ class Submission extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
-              Done
+              {(this.state.modalMode === 'login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>
         </Modal>
