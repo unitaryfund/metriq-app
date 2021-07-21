@@ -35,6 +35,22 @@ class Submission extends React.Component {
             </div>
           </div>
         </div>
+        <div className='row'>
+          <div className='col-md-6'>
+            <div className='submission-heading'>Tasks</div>
+            <div>Lorem ipsum</div>
+          </div>
+          <div className='col-md-6'>
+            <div className='submission-heading'>Methods</div>
+            <div>Lorem ipsum</div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <div className='submission-heading'>Results</div>
+            <div>Lorem ipsum</div>
+          </div>
+        </div>
       </div>
     )
   }
