@@ -2,11 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
-
-library.add(faEdit)
+import EditButton from '../components/EditButton'
 
 class Submission extends React.Component {
   constructor (props) {
@@ -43,18 +39,18 @@ class Submission extends React.Component {
         <br />
         <div className='row'>
           <div className='col-md-6'>
-            <div><h2>Tasks <button className='float-right edit-button btn'><FontAwesomeIcon className='edit-button-icon' icon='edit' /> Edit</button></h2><hr /></div>
+            <div><h2>Tasks <EditButton className='float-right edit-button btn' /></h2><hr /></div>
             <div>Lorem ipsum</div>
           </div>
           <div className='col-md-6'>
-            <div><h2>Methods <button className='float-right edit-button btn'><FontAwesomeIcon className='edit-button-icon' icon='edit' /> Edit</button></h2><hr /></div>
+            <div><h2>Methods <EditButton className='float-right edit-button btn' /></h2><hr /></div>
             <div>Lorem ipsum</div>
           </div>
         </div>
         <br />
         <div className='row'>
           <div className='col-md-12'>
-            <div><h2>Results <button className='float-right edit-button btn'><FontAwesomeIcon className='edit-button-icon' icon='edit' /> Edit</button></h2><hr /></div>
+            <div><h2>Results <EditButton className='float-right edit-button btn' /></h2><hr /></div>
             <div>Lorem ipsum</div>
           </div>
         </div>
