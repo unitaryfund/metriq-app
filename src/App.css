@@ -91,8 +91,23 @@ form > .row > label {
   vertical-align: -125px;
 }
 
+.submission-detail-container {
+  text-align: left;
+}
+
 .submission-button {
   width: 80px;
   height: 38px;
   margin: 4px;
+}
+
+.edit-button {
+  width: 80px;
+  height: 40px;
+  margin: 4px;
+  font-size: 0.5em;
+}
+
+.edit-button-icon {
+  color: black;
 }
