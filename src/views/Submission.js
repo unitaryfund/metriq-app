@@ -3,6 +3,7 @@ import React from 'react'
 import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
+import FormFieldRow from '../components/FormFieldRow'
 import { Modal, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
@@ -22,18 +23,19 @@ class Submission extends React.Component {
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
+    this.handleOnResultChange = this.handleOnResultChange.bind(this)
   }
 
   handleOnClickAdd (mode) {
     if (!this.props.isLoggedIn) {
-      mode = 'login'
+      mode = 'Login'
     }
     this.setState({ showAddModal: true, modalMode: mode })
   }
 
   handleOnClickRemove (mode) {
     if (!this.props.isLoggedIn) {
-      mode = 'login'
+      mode = 'Login'
     }
     this.setState({ showRemoveModal: true, modalMode: mode })
   }
@@ -52,6 +54,10 @@ class Submission extends React.Component {
 
   handleRemoveModalDone () {
     this.setState({ showRemoveModal: false })
+  }
+
+  handleOnResultChange () {
+
   }
 
   componentDidMount () {
@@ -85,8 +91,8 @@ class Submission extends React.Component {
               <h2>Tasks
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('tasks')}
-                  onClickRemove={() => this.handleOnClickRemove('tasks')}
+                  onClickAdd={() => this.handleOnClickAdd('Task')}
+                  onClickRemove={() => this.handleOnClickRemove('Task')}
                 />
               </h2>
               <hr />
@@ -98,8 +104,8 @@ class Submission extends React.Component {
               <h2>Methods
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('methods')}
-                  onClickRemove={() => this.handleOnClickRemove('methods')}
+                  onClickAdd={() => this.handleOnClickAdd('Method')}
+                  onClickRemove={() => this.handleOnClickRemove('Method')}
                 />
               </h2>
               <hr />
@@ -114,8 +120,8 @@ class Submission extends React.Component {
               <h2>Results
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('results')}
-                  onClickRemove={() => this.handleOnClickRemove('results')}
+                  onClickAdd={() => this.handleOnClickAdd('Result')}
+                  onClickRemove={() => this.handleOnClickRemove('Result')}
                 />
               </h2>
               <hr />
@@ -124,22 +130,42 @@ class Submission extends React.Component {
           </div>
         </div>
         <Modal show={this.state.showAddModal} onHide={this.handleHideAddModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add</Modal.Title>
-          </Modal.Header>
+          {(this.state.modalMode === 'Login') &&
+            <Modal.Header closeButton>
+              <Modal.Title>Add</Modal.Title>
+            </Modal.Header>}
+          {(this.state.modalMode !== 'Login') &&
+            <Modal.Header closeButton>
+              <Modal.Title>Add {this.state.modalMode}</Modal.Title>
+            </Modal.Header>}
           <Modal.Body>
-            {(this.state.modalMode === 'login') &&
+            {(this.state.modalMode === 'Login') &&
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
-            {(this.state.modalMode !== 'login') &&
+            {(this.state.modalMode === 'Result') &&
+              <span>
+                <FormFieldRow
+                  inputName='metricValue' inputType='number' label='Metric value'
+                  onChange={this.handleOnResultChange}
+                /><br />
+                <FormFieldRow
+                  inputName='evalutedDate' inputType='date' label='Evaluated'
+                  onChange={this.handleOnResultChange}
+                /><br />
+                <FormFieldRow
+                  inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
+                  onChange={this.handleOnResultChange}
+                />
+              </span>}
+            {(this.state.modalMode !== 'Login' && this.state.modalMode !== 'Result') &&
               <span>
                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
               </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>
-              {(this.state.modalMode === 'login') ? 'Cancel' : 'Submit'}
+              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Submit'}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -148,18 +174,18 @@ class Submission extends React.Component {
             <Modal.Title>Remove</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {(this.state.modalMode === 'login') &&
+            {(this.state.modalMode === 'Login') &&
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
-            {(this.state.modalMode !== 'login') &&
+            {(this.state.modalMode !== 'Login') &&
               <span>
                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
               </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
-              {(this.state.modalMode === 'login') ? 'Cancel' : 'Done'}
+              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>
         </Modal>

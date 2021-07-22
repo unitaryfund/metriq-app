@@ -15,6 +15,9 @@ class FormFieldRow extends React.Component {
   }
 
   isValidValue (value) {
+    if (!this.props.validRegex) {
+      return true
+    }
     return this.props.validRegex.test(value)
   }
 

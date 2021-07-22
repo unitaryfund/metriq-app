@@ -21,31 +21,35 @@ class Categories extends React.Component {
     const route = config.api.getUriPrefix() + '/tag'
     axios.get(route)
       .then(res => {
+        const alphabetical = [...res.data.data]
+        alphabetical.sort(function (a, b) {
+          const keyA = a.name.toLowerCase()
+          const keyB = b.name.toLowerCase()
+          if (keyA < keyB) {
+            return -1
+          }
+          if (keyB < keyA) {
+            return 1
+          }
+          return 0
+        })
+        const popular = res.data.data
+        popular.sort(function (a, b) {
+          const keyA = a.submissionCount
+          const keyB = b.submissionCount
+          if (keyA < keyB) {
+            return 1
+          }
+          if (keyB < keyA) {
+            return -1
+          }
+          return 0
+        })
         this.setState({
           isRequestFailed: false,
           requestFailedMessage: '',
-          alphabetical: res.data.data.sort(function (a, b) {
-            const keyA = a.name.toLowerCase()
-            const keyB = b.name.toLowerCase()
-            if (keyA < keyB) {
-              return -1
-            }
-            if (keyB < keyA) {
-              return 1
-            }
-            return 0
-          }),
-          popular: res.data.data.sort(function (a, b) {
-            const keyA = a.submissionCount
-            const keyB = b.submissionCount
-            if (keyA < keyB) {
-              return -1
-            }
-            if (keyB < keyA) {
-              return 1
-            }
-            return 0
-          })
+          alphabetical: alphabetical,
+          popular: popular
         })
       })
       .catch(err => {
