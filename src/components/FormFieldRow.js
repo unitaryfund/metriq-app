@@ -40,16 +40,18 @@ class FormFieldRow extends React.Component {
     return (
       <div className='row'>
         <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-        <input
-          id={this.props.inputName}
-          name={this.props.inputName}
-          className='col-md-6 form-control'
-          type={this.props.inputType}
-          selected={this.state.defaultValue}
-          value={this.props.value}
-          onChange={this.handleOnFieldChange}
-          onBlur={this.handleOnFieldBlur}
-        />
+        <div className='col-md-6 '>
+          <input
+            id={this.props.inputName}
+            name={this.props.inputName}
+            className='form-control'
+            type={this.props.inputType}
+            selected={this.state.defaultValue}
+            value={this.props.value}
+            onChange={this.handleOnFieldChange}
+            onBlur={this.handleOnFieldBlur}
+          />
+        </div>
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
       </div>
     )
