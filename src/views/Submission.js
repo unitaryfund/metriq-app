@@ -64,10 +64,10 @@ class Submission extends React.Component {
   handleAddModalSubmit () {
     this.setState({ showAddModal: false })
     if (this.state.mode === 'Result') {
-      const resultRoute = config.api.getUriPrefix() + '/result/metricNames'
+      const resultRoute = config.api.getUriPrefix() + '/result'
       axios.post(resultRoute, this.state.result)
         .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
         })
         .catch(err => {
           this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
