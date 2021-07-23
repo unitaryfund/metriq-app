@@ -4,6 +4,7 @@ import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import { Modal, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
@@ -12,6 +13,7 @@ class Submission extends React.Component {
     super(props)
     this.state = {
       item: {},
+      metricNames: [],
       showAddModal: false,
       showRemoveModal: false,
       modalMode: ''
@@ -61,10 +63,18 @@ class Submission extends React.Component {
   }
 
   componentDidMount () {
-    const route = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
-    axios.get(route)
+    const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
+    axios.get(submissionRoute)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const metricNamesRoute = config.api.getUriPrefix() + '/result/metricNames'
+    axios.get(metricNamesRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -97,7 +107,9 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div>Lorem ipsum</div>
+            <div className='card bg-light'>
+              <div className='card-body'>Lorem ipsum</div>
+            </div>
           </div>
           <div className='col-md-6'>
             <div>
@@ -110,7 +122,9 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div>Lorem ipsum</div>
+            <div className='card bg-light'>
+              <div className='card-body'>Lorem ipsum</div>
+            </div>
           </div>
         </div>
         <br />
@@ -126,7 +140,9 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div>Lorem ipsum</div>
+            <div className='card bg-light'>
+              <div className='card-body'>Lorem ipsum</div>
+            </div>
           </div>
         </div>
         <Modal show={this.state.showAddModal} onHide={this.handleHideAddModal}>
@@ -145,6 +161,12 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
+                <FormFieldTypeaheadRow
+                  inputName='metricValue' label='Metric value'
+                  onChange={this.handleOnResultChange}
+                  options={['test']}
+                  value=''
+                /><br />
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
                   onChange={this.handleOnResultChange}

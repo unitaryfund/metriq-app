@@ -1,7 +1,8 @@
 import React from 'react'
+import { Typeahead } from 'react-bootstrap-typeahead'
 import FormFieldValidator from './FormFieldValidator'
 
-class FormFieldRow extends React.Component {
+class FormFieldTypeaheadRow extends React.Component {
   constructor (props) {
     super(props)
 
@@ -21,10 +22,10 @@ class FormFieldRow extends React.Component {
     return this.props.validRegex.test(value)
   }
 
-  handleOnFieldChange (event) {
+  handleOnFieldChange (input, event) {
     // for a regular input field, read field name and value from the event
-    const fieldName = event.target.name
-    const fieldValue = event.target.value
+    const fieldName = this.props.inputName
+    const fieldValue = input
     this.setState({ value: fieldValue })
     if (this.isValidValue(fieldValue)) {
       this.setState({ invalid: false })
@@ -40,14 +41,13 @@ class FormFieldRow extends React.Component {
     return (
       <div className='row'>
         <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-        <input
+        <Typeahead
           id={this.props.inputName}
           name={this.props.inputName}
           className='col-md-6'
-          type={this.props.inputType}
-          selected={this.state.defaultValue}
-          value={this.props.value}
-          onChange={this.handleOnFieldChange}
+          options={this.props.options}
+          defaultSelected={[this.props.value]}
+          onInputChange={this.handleOnFieldChange}
           onBlur={this.handleOnFieldBlur}
         />
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
@@ -56,4 +56,4 @@ class FormFieldRow extends React.Component {
   }
 };
 
-export default FormFieldRow
+export default FormFieldTypeaheadRow
