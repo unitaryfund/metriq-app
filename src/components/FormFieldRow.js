@@ -43,7 +43,7 @@ class FormFieldRow extends React.Component {
         <input
           id={this.props.inputName}
           name={this.props.inputName}
-          className='col-md-6'
+          className='col-md-6 form-control'
           type={this.props.inputType}
           selected={this.state.defaultValue}
           value={this.props.value}
