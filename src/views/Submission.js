@@ -8,6 +8,10 @@ import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import { Modal, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
+const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+const metricNameRegex = /.{1,}/
+const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
+
 class Submission extends React.Component {
   constructor (props) {
     super(props)
@@ -16,7 +20,14 @@ class Submission extends React.Component {
       metricNames: [],
       showAddModal: false,
       showRemoveModal: false,
-      modalMode: ''
+      modalMode: '',
+      result: {
+        submission: this.props.match.params.id,
+        metricName: '',
+        metricValue: 0,
+        isHigherBetter: false,
+        evaluatedDate: new Date()
+      }
     }
 
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -52,14 +63,25 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     this.setState({ showAddModal: false })
+    if (this.state.mode === 'Result') {
+      const resultRoute = config.api.getUriPrefix() + '/result/metricNames'
+      axios.post(resultRoute, this.state.result)
+        .then(res => {
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+        })
+        .catch(err => {
+          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        })
+    }
   }
 
   handleRemoveModalDone () {
     this.setState({ showRemoveModal: false })
   }
 
-  handleOnResultChange () {
-
+  handleOnResultChange (field, value) {
+    // parent class change handler is always called with field name and value
+    this.setState({ result: { [field]: value } })
   }
 
   componentDidMount () {
@@ -164,15 +186,18 @@ class Submission extends React.Component {
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
                   onChange={this.handleOnResultChange}
+                  validRegex={metricNameRegex}
                   options={this.state.metricNames}
                   value=''
                 /><br />
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
+                  validRegex={metricValueRegex}
                   onChange={this.handleOnResultChange}
                 /><br />
                 <FormFieldRow
                   inputName='evalutedDate' inputType='date' label='Evaluated'
+                  validRegex={dateRegex}
                   onChange={this.handleOnResultChange}
                 /><br />
                 <FormFieldRow
