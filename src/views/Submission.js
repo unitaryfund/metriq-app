@@ -164,7 +164,7 @@ class Submission extends React.Component {
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
                   onChange={this.handleOnResultChange}
-                  options={['test']}
+                  options={this.state.metricNames}
                   value=''
                 /><br />
                 <FormFieldRow
