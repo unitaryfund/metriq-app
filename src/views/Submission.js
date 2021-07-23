@@ -162,7 +162,7 @@ class Submission extends React.Component {
             {(this.state.modalMode === 'Result') &&
               <span>
                 <FormFieldTypeaheadRow
-                  inputName='metricValue' label='Metric value'
+                  inputName='metricName' label='Metric name'
                   onChange={this.handleOnResultChange}
                   options={['test']}
                   value=''
