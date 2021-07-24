@@ -5,7 +5,7 @@ import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
@@ -17,6 +17,8 @@ class Submission extends React.Component {
     super(props)
     this.state = {
       item: {},
+      taskNames: [],
+      attachedTasks: [],
       metricNames: [],
       showAddModal: false,
       showRemoveModal: false,
@@ -27,6 +29,11 @@ class Submission extends React.Component {
         metricValue: 0,
         isHigherBetter: false,
         evaluatedDate: new Date()
+      },
+      task: {
+        submission: this.props.match.params.id,
+        taskName: '',
+        attachedTask: ''
       }
     }
 
@@ -97,6 +104,22 @@ class Submission extends React.Component {
     axios.get(metricNamesRoute)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const taskNamesRoute = config.api.getUriPrefix() + '/result/taskNames'
+    axios.get(taskNamesRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const attachedTasksRoute = config.api.getUriPrefix() + '/result/attachedTasks'
+    axios.get(attachedTasksRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', attachedTasks: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -181,6 +204,23 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
+            {(this.state.modalMode === 'Task') &&
+              <span>
+                <b>Attached tasks:</b><br></br>
+                <ButtonGroup vertical>
+                  {this.state.attachedTasks.map((e, key) => {
+                    return <Button key={key} value={e.value}>{e.name}</Button>
+                  })}
+                </ButtonGroup><br></br>
+                Add:
+                <DropdownButton id="dropdown-task-button" title="Tasks">
+                  {this.state.taskNames.map((e, key) => {
+                    return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
+                  })}
+                </DropdownButton><br></br>
+                Not in the list?<br></br>
+                <a href="">+ Create a new task.</a><br></br>
+              </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
                 <FormFieldTypeaheadRow
@@ -207,7 +247,7 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login' && this.state.modalMode !== 'Result') &&
               <span>
-                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+                <br /><br />Mode: {this.state.modalMode}
               </span>}
           </Modal.Body>
           <Modal.Footer>
