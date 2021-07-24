@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom'
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
+const taskNameRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/
+const descriptionRegex = /.{1,}/
 
 class Submission extends React.Component {
   constructor (props) {
@@ -22,6 +24,7 @@ class Submission extends React.Component {
       parentTasks: [],
       attachedTasks: [],
       metricNames: [],
+      description: '',
       showAddModal: false,
       showRemoveModal: false,
       modalMode: '',
@@ -36,7 +39,8 @@ class Submission extends React.Component {
         submission: this.props.match.params.id,
         taskName: '',
         attachedTask: '',
-        parentTask: ''
+        parentTask: '',
+        description: ''
       }
     }
 
@@ -217,24 +221,24 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
-                <b>Attached tasks:</b><br></br>
+                <b>Attached tasks:</b><br />
                 <ButtonGroup vertical>
                   {this.state.attachedTasks.map((e, key) => {
                     return <Button key={key} value={e.value}>{e.name}</Button>
                   })}
-                </ButtonGroup><br></br>
+                </ButtonGroup><br />
                 Add:
-                <DropdownButton id="dropdown-task-button" title="Tasks">
+                <DropdownButton id="dropdown-task-names-button" title="Tasks">
                   {this.state.taskNames.map((e, key) => {
                     return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
                   })}
-                </DropdownButton><br></br>
-                Not in the list?<br></br>
+                </DropdownButton><br />
+                Not in the list?<br />
                 <Accordion defaultActiveKey="0">
                   <Card>
                     <Card.Header>
                       <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                        + Create a new task.
+                        <sup>+</sup> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey="1">
@@ -242,20 +246,20 @@ class Submission extends React.Component {
                         <FormFieldTypeaheadRow
                           inputName='taskName' label='New task name'
                           onChange={this.handleOnResultChange}
-                          validRegex={metricNameRegex}
-                          options={this.state.metricNames}
+                          validRegex={taskNameRegex}
+                          options={this.state.taskNames}
                           value=''
                         /><br />
                         <DropdownButton id="dropdown-parent-task-button" title="Parent task (if any)">
                           {this.state.parentTasks.map((e, key) => {
                             return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
                           })}
-                        </DropdownButton><br></br>
+                        </DropdownButton><br />
                         <FormFieldTextArea
                           inputName='description' label='Description'
                           onChange={this.handleOnResultChange}
-                          validRegex={metricNameRegex}
-                          options={this.state.metricNames}
+                          validRegex={descriptionRegex}
+                          options={this.state.description}
                           value=''
                         /><br />
                       </Card.Body>
