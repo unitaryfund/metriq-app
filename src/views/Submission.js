@@ -5,7 +5,8 @@ import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Modal, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
+import FormFieldTextArea from '../components/FormFieldTextArea'
+import { Accordion, Card, Modal, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
@@ -18,6 +19,7 @@ class Submission extends React.Component {
     this.state = {
       item: {},
       taskNames: [],
+      parentTasks: [],
       attachedTasks: [],
       metricNames: [],
       showAddModal: false,
@@ -33,7 +35,8 @@ class Submission extends React.Component {
       task: {
         submission: this.props.match.params.id,
         taskName: '',
-        attachedTask: ''
+        attachedTask: '',
+        parentTask: ''
       }
     }
 
@@ -120,6 +123,14 @@ class Submission extends React.Component {
     axios.get(attachedTasksRoute)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', attachedTasks: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const parentTasksRoute = config.api.getUriPrefix() + '/result/parentTasks'
+    axios.get(parentTasksRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', parentTasks: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -219,7 +230,38 @@ class Submission extends React.Component {
                   })}
                 </DropdownButton><br></br>
                 Not in the list?<br></br>
-                <a href="">+ Create a new task.</a><br></br>
+                <Accordion defaultActiveKey="0">
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                        + Create a new task.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="1">
+                      <Card.Body>
+                        <FormFieldTypeaheadRow
+                          inputName='taskName' label='New task name'
+                          onChange={this.handleOnResultChange}
+                          validRegex={metricNameRegex}
+                          options={this.state.metricNames}
+                          value=''
+                        /><br />
+                        <DropdownButton id="dropdown-parent-task-button" title="Parent task (if any)">
+                          {this.state.parentTasks.map((e, key) => {
+                            return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
+                          })}
+                        </DropdownButton><br></br>
+                        <FormFieldTextArea
+                          inputName='description' label='Description'
+                          onChange={this.handleOnResultChange}
+                          validRegex={metricNameRegex}
+                          options={this.state.metricNames}
+                          value=''
+                        /><br />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
