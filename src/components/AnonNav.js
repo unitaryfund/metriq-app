@@ -5,6 +5,7 @@ const AnonNav = () => {
   return (
     <Nav className='ml-auto'>
       <Nav.Link href='/'>Home</Nav.Link>
+      <Nav.Link href='/Methods'>Methods</Nav.Link>
       <Nav.Link href='/Categories'>Categories</Nav.Link>
       <Nav.Link href='/Login'>Log In</Nav.Link>
       <Nav.Link href='/About'>About</Nav.Link>

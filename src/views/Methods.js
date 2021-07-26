@@ -6,7 +6,7 @@ import CategoryListItem from '../components/CategoryListItem'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 
-class Categories extends React.Component {
+class Methods extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -18,7 +18,7 @@ class Categories extends React.Component {
   }
 
   componentDidMount () {
-    const route = config.api.getUriPrefix() + '/tag'
+    const route = config.api.getUriPrefix() + '/method/submissionCount'
     axios.get(route)
       .then(res => {
         const alphabetical = [...res.data.data]
@@ -60,14 +60,14 @@ class Categories extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>MetriQ - Categories</header>
+        <header>MetriQ - Methods</header>
         <br />
         <Tabs defaultActiveKey='popular' id='categories-tabs'>
           <Tab eventKey='popular' title='Popular'>
-            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Category' isTag item={item} key={index} />)}
+            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Method' item={item} key={index} />)}
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            {this.state.alphabetical.map((item, index) => <CategoryListItem routePrefix='/Category' isTag item={item} key={index} />)}
+            {this.state.alphabetical.map((item, index) => <CategoryListItem routePrefix='/Method' item={item} key={index} />)}
           </Tab>
         </Tabs>
         <div className='row'>
@@ -82,4 +82,4 @@ class Categories extends React.Component {
   }
 }
 
-export default Categories
+export default Methods

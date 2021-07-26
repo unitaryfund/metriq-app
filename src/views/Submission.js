@@ -16,6 +16,8 @@ class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isRequestFailed: false,
+      requestFailedMessage: '',
       item: {},
       metricNames: [],
       showAddModal: false,

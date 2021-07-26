@@ -10,8 +10,10 @@ import Contact from './views/Contact'
 import Profile from './views/Profile'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
+import Methods from './views/Methods'
 import Categories from './views/Categories'
 import Submission from './views/Submission'
+import Method from './views/Method'
 
 const MainRouter = (props) => {
   return (
@@ -21,6 +23,12 @@ const MainRouter = (props) => {
         path='/'
       >
         <Home isLoggedIn={props.isLoggedIn} />
+      </Route>
+      <Route
+        exact
+        path='/Methods'
+      >
+        <Methods isLoggedIn={props.isLoggedIn} />
       </Route>
       <Route
         exact
@@ -90,6 +98,11 @@ const MainRouter = (props) => {
         exact
         path='/Submission/:id'
         render={(p) => <Submission {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+      />
+      <Route
+        exact
+        path='/Method/:id'
+        render={(p) => <Method {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
       />
     </Router>
   )
