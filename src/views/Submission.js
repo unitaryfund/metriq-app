@@ -22,7 +22,6 @@ class Submission extends React.Component {
       showRemoveModal: false,
       modalMode: '',
       result: {
-        submission: this.props.match.params.id,
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -64,7 +63,7 @@ class Submission extends React.Component {
   handleAddModalSubmit () {
     this.setState({ showAddModal: false })
     if (this.state.mode === 'Result') {
-      const resultRoute = config.api.getUriPrefix() + '/result'
+      const resultRoute = config.api.getUriPrefix() + '/submission' + this.props.match.params.id + '/result'
       axios.post(resultRoute, this.state.result)
         .then(res => {
           this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
