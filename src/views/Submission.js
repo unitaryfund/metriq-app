@@ -5,11 +5,12 @@ import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Modal, Button } from 'react-bootstrap'
+import { Accordion, Button, ButtonGroup, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
+const taskNameRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 
 class Submission extends React.Component {
@@ -20,6 +21,9 @@ class Submission extends React.Component {
       requestFailedMessage: '',
       item: {},
       metricNames: [],
+      taskNames: [],
+      attachedTasks: [],
+      parentTasks: [],
       showAddModal: false,
       showRemoveModal: false,
       modalMode: '',
@@ -28,6 +32,12 @@ class Submission extends React.Component {
         metricValue: 0,
         isHigherBetter: false,
         evaluatedDate: new Date()
+      },
+      task: {
+        taskName: '',
+        attachedTask: '',
+        parentTask: '',
+        description: ''
       }
     }
 
@@ -182,6 +192,53 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
+            {(this.state.modalMode === 'Task') &&
+              <span>
+                <b>Attached tasks:</b><br />
+                <ButtonGroup vertical>
+                  {this.state.attachedTasks.map((e, key) => {
+                    return <Button key={key} value={e.value}>{e.name}</Button>
+                  })}
+                </ButtonGroup><br />
+                Add:
+                <DropdownButton id="dropdown-task-names-button" title="Tasks">
+                  {this.state.taskNames.map((e, key) => {
+                    return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
+                  })}
+                </DropdownButton><br />
+                Not in the list?<br />
+                <Accordion defaultActiveKey="0">
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                        <sup>+</sup> Create a new task.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="1">
+                      <Card.Body>
+                        <FormFieldTypeaheadRow
+                            inputName='taskName' label='New task name'
+                            onChange={this.handleOnResultChange}
+                            validRegex={taskNameRegex}
+                            options={this.state.taskNames}
+                            value=''
+                          /><br />        
+                        <DropdownButton id="dropdown-parent-task-button" title="Parent task (if any)">
+                          {this.state.parentTasks.map((e, key) => {
+                            return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
+                          })}
+                        </DropdownButton><br />
+                        <FormFieldRow
+                          inputName='description' label='Description'
+                          onChange={this.handleOnResultChange}
+                          options={this.state.description}
+                          value=''
+                        /><br />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
                 <FormFieldTypeaheadRow
@@ -197,7 +254,7 @@ class Submission extends React.Component {
                   onChange={this.handleOnResultChange}
                 /><br />
                 <FormFieldRow
-                  inputName='evalutedDate' inputType='date' label='Evaluated'
+                  inputName='evaluatedDate' inputType='date' label='Evaluated'
                   validRegex={dateRegex}
                   onChange={this.handleOnResultChange}
                 /><br />
@@ -206,7 +263,9 @@ class Submission extends React.Component {
                   onChange={this.handleOnResultChange}
                 />
               </span>}
-            {(this.state.modalMode !== 'Login' && this.state.modalMode !== 'Result') &&
+            {(this.state.modalMode !== 'Login' && 
+              this.state.modalMode !== 'Result' && 
+              this.state.modalMode !== 'Task') &&
               <span>
                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
               </span>}
