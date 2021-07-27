@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
-const taskNameRegex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/
+const taskNameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 
 class Submission extends React.Component {
