@@ -67,6 +67,9 @@ class Method extends React.Component {
                   upvoteCount: row.upvotes.length
                 }))
               : []}
+            onRow={(record) => ({
+              onClick () { window.location = '/Submission/' + record.key }
+            })}
             tableLayout='auto'
           />
         </div>
