@@ -11,9 +11,11 @@ import Profile from './views/Profile'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
 import Methods from './views/Methods'
+import Tasks from './views/Tasks'
 import Categories from './views/Categories'
 import Submission from './views/Submission'
 import Method from './views/Method'
+import Task from './views/Task'
 
 const MainRouter = (props) => {
   return (
@@ -29,6 +31,12 @@ const MainRouter = (props) => {
         path='/Methods'
       >
         <Methods isLoggedIn={props.isLoggedIn} />
+      </Route>
+      <Route
+        exact
+        path='/Tasks'
+      >
+        <Tasks isLoggedIn={props.isLoggedIn} />
       </Route>
       <Route
         exact
@@ -103,6 +111,11 @@ const MainRouter = (props) => {
         exact
         path='/Method/:id'
         render={(p) => <Method {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+      />
+      <Route
+        exact
+        path='/Task/:id'
+        render={(p) => <Task {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
       />
     </Router>
   )
