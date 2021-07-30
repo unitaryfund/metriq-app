@@ -25,11 +25,9 @@ class Submission extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: { upvotes: 0 },
+      item: { upvotes: 0, tasks: [] },
       metricNames: [],
       taskNames: [],
-      attachedTasks: [],
-      parentTasks: [],
       showAddModal: false,
       showRemoveModal: false,
       modalMode: '',
@@ -41,7 +39,6 @@ class Submission extends React.Component {
       },
       task: {
         taskName: '',
-        attachedTask: '',
         parentTask: '',
         description: ''
       }
@@ -228,7 +225,7 @@ class Submission extends React.Component {
               <span>
                 <b>Attached tasks:</b><br />
                 <ButtonGroup vertical>
-                  {this.state.attachedTasks.map((e, key) => {
+                  {this.state.item.tasks.map((e, key) => {
                     return <Button key={key} value={e.value}>{e.name}</Button>
                   })}
                 </ButtonGroup><br />
@@ -256,7 +253,7 @@ class Submission extends React.Component {
                             value=''
                           /><br />        
                         <DropdownButton id="dropdown-parent-task-button" title="Parent task (if any)">
-                          {this.state.parentTasks.map((e, key) => {
+                          {this.state.taskNames.map((e, key) => {
                             return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
                           })}
                         </DropdownButton><br />
