@@ -230,29 +230,29 @@ class Submission extends React.Component {
                   })}
                 </ButtonGroup><br />
                 Add:
-                <DropdownButton id="dropdown-task-names-button" title="Tasks">
+                <DropdownButton id='dropdown-task-names-button' title='Tasks'>
                   {this.state.taskNames.map((e, key) => {
                     return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
                   })}
                 </DropdownButton><br />
                 Not in the list?<br />
-                <Accordion defaultActiveKey="0">
+                <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
-                      <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1'>
                         <sup>+</sup> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>
-                    <Accordion.Collapse eventKey="1">
+                    <Accordion.Collapse eventKey='1'>
                       <Card.Body>
                         <FormFieldTypeaheadRow
-                            inputName='taskName' label='New task name'
-                            onChange={this.handleOnResultChange}
-                            validRegex={taskNameRegex}
-                            options={this.state.taskNames}
-                            value=''
-                          /><br />        
-                        <DropdownButton id="dropdown-parent-task-button" title="Parent task (if any)">
+                          inputName='taskName' label='New task name'
+                          onChange={this.handleOnResultChange}
+                          validRegex={taskNameRegex}
+                          options={this.state.taskNames}
+                          value=''
+                        /><br />
+                        <DropdownButton id='dropdown-parent-task-button' title='Parent task (if any)'>
                           {this.state.taskNames.map((e, key) => {
                             return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
                           })}
@@ -292,12 +292,12 @@ class Submission extends React.Component {
                   onChange={this.handleOnResultChange}
                 />
               </span>}
-            {(this.state.modalMode !== 'Login' && 
-              this.state.modalMode !== 'Result' && 
+            {(this.state.modalMode !== 'Login' &&
+              this.state.modalMode !== 'Result' &&
               this.state.modalMode !== 'Task') &&
-              <span>
-                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
-              </span>}
+                <span>
+                  Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+                </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>

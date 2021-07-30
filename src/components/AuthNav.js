@@ -20,7 +20,7 @@ const AuthNav = (props) => {
       <Nav.Link href='/'>Home</Nav.Link>
       <Nav.Link href='/Methods'>Methods</Nav.Link>
       <Nav.Link href='/Tasks'>Tasks</Nav.Link>
-      <Nav.Link href='/Categories'>Categories</Nav.Link>
+      <Nav.Link href='/Tags'>Tags</Nav.Link>
       <NavDropdown title='Account' id='basic-nav-dropdown' alignRight>
         <NavDropdown.Item href='/Profile'>Settings</NavDropdown.Item>
         <NavDropdown.Item href='/Submissions'>My Submissions</NavDropdown.Item>
