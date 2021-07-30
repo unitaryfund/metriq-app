@@ -7,6 +7,12 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import { Accordion, Button, ButtonGroup, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
+
+library.add(faThumbsUp, faGithub)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -19,7 +25,7 @@ class Submission extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: {},
+      item: { upvotes: 0 },
       metricNames: [],
       taskNames: [],
       attachedTasks: [],
@@ -41,6 +47,7 @@ class Submission extends React.Component {
       }
     }
 
+    this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
@@ -48,6 +55,21 @@ class Submission extends React.Component {
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnResultChange = this.handleOnResultChange.bind(this)
+  }
+
+  handleUpVoteOnClick (event) {
+    if (this.props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/upvote', {})
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
+    event.preventDefault()
   }
 
   handleOnClickAdd (mode) {
@@ -122,9 +144,19 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div><h1>{this.state.item.submissionName}</h1></div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
             <div className='submission-description'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec commodo est. Nunc mollis nunc ac ante vestibulum, eu consectetur magna porttitor. Proin ac tortor urna. Aliquam ac ante eu nunc aliquam convallis et in sem. Donec volutpat tincidunt tincidunt. Aliquam at risus non diam imperdiet vestibulum eget a orci. In ultricies, arcu vel semper lobortis, lorem orci placerat nisi, id fermentum purus odio ut nulla. Duis quis felis a erat mattis venenatis id sit amet purus. Aenean a risus dui.
             </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotes.length}</button>
+            <button className='submission-button btn btn-secondary'><FontAwesomeIcon icon={['fab', 'github']} /></button>
           </div>
         </div>
         <br />
