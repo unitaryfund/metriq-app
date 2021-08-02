@@ -43,6 +43,10 @@ class Submission extends React.Component {
         description: ''
       }
     }
+    this.countryData = [
+      { value: 'USA', name: 'USA' },
+      { value: 'CANADA', name: 'CANADA' }            
+  ]
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -314,7 +318,21 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
-            {(this.state.modalMode !== 'Login') &&
+            {(this.state.modalMode === 'Task') &&
+              <span>
+                <b>Attached tasks:</b><br />
+                {
+                  // Not sure what the "best practice" front-end solution here
+                  // would be. Ideally, it should be a two-column view that is
+                  // dynamically populated. The first column will consist of the
+                  // task name and the corresponding element in the second
+                  // column will be a "Remove" button that will call the
+                  // appropriate API route for removing the corresponding
+                  // left-column task.
+                }
+              </span>}
+            {(this.state.modalMode !== 'Login' &&
+              this.state.modalMode !== 'Task') &&
               <span>
                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
               </span>}
