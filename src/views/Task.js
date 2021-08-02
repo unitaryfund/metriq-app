@@ -24,6 +24,35 @@ class Task extends React.Component {
         for (let i = 0; i < item.submissions.length; i++) {
           results = results.concat(item.submissions[i].results)
         }
+        results.sort(function (a, b) {
+          const mna = a.metricName.toLowerCase()
+          const mnb = b.metricName.toLowerCase()
+          if (mna < mnb) {
+            return -1
+          }
+          if (mnb < mna) {
+            return 1
+          }
+          const mva = parseFloat(a.metricValue)
+          const mvb = parseFloat(b.metricValue)
+          if (!a.isHigherBetter) {
+            if (mva < mvb) {
+              return -1
+            }
+            if (mvb < mva) {
+              return 1
+            }
+            return 0
+          } else {
+            if (mva > mvb) {
+              return -1
+            }
+            if (mvb > mva) {
+              return 1
+            }
+            return 0
+          }
+        })
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: item, results: results })
       })
       .catch(err => {
