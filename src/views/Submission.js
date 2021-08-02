@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
+import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
@@ -25,7 +26,7 @@ class Submission extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: { upvotes: 0, tasks: [] },
+      item: { upvotes: 0, tasks: [], methods: [], results: [] },
       metricNames: [],
       taskNames: [],
       showAddModal: false,
@@ -169,9 +170,30 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div className='card bg-light'>
-              <div className='card-body'>Lorem ipsum</div>
-            </div>
+            {(this.state.item.tasks.length > 0) &&
+              <Table
+                columns={[{
+                  title: 'Task',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 700
+                }]}
+                data={this.state.item.tasks.map(row =>
+                  ({
+                    key: row._id,
+                    name: row.name
+                  }))}
+                onRow={(record) => ({
+                  onClick () { window.location = '/Task/' + record.key }
+                })}
+                tableLayout='auto'
+                rowClassName='index-table-link'
+                showHeader={false}
+              />}
+            {(this.state.item.tasks.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tasks, yet.</div>
+              </div>}
           </div>
           <div className='col-md-6'>
             <div>
@@ -184,9 +206,30 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div className='card bg-light'>
-              <div className='card-body'>Lorem ipsum</div>
-            </div>
+            {(this.state.item.methods.length > 0) &&
+              <Table
+                columns={[{
+                  title: 'Method',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 700
+                }]}
+                data={this.state.item.methods.map(row =>
+                  ({
+                    key: row._id,
+                    name: row.name
+                  }))}
+                onRow={(record) => ({
+                  onClick () { window.location = '/Method/' + record.key }
+                })}
+                tableLayout='auto'
+                rowClassName='index-table-link'
+                showHeader={false}
+              />}
+            {(this.state.item.methods.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated methods, yet.</div>
+              </div>}
           </div>
         </div>
         <br />
@@ -202,9 +245,50 @@ class Submission extends React.Component {
               </h2>
               <hr />
             </div>
-            <div className='card bg-light'>
-              <div className='card-body'>Lorem ipsum</div>
-            </div>
+            {(this.state.item.results.length > 0) &&
+              <Table
+                columns={[
+                  {
+                    title: 'Task',
+                    dataIndex: 'taskName',
+                    key: 'taskName',
+                    width: 300
+                  },
+                  {
+                    title: 'Method',
+                    dataIndex: 'methodName',
+                    key: 'methodName',
+                    width: 300
+                  },
+                  {
+                    title: 'Metric',
+                    dataIndex: 'metricName',
+                    key: 'metricName',
+                    width: 300
+                  },
+                  {
+                    title: 'Value',
+                    dataIndex: 'metricValue',
+                    key: 'metricValue',
+                    width: 300
+                  }
+                ]}
+                data={this.state.item.results.length
+                  ? this.state.item.results.map(row =>
+                      ({
+                        key: row._id,
+                        taskName: row.task.name,
+                        methodName: row.method.name,
+                        metricName: row.metricName,
+                        metricValue: row.metricValue
+                      }))
+                  : []}
+                tableLayout='auto'
+              />}
+            {(this.state.item.results.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated results, yet.</div>
+              </div>}
           </div>
         </div>
         <Modal show={this.state.showAddModal} onHide={this.handleHideAddModal}>
