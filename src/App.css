@@ -112,3 +112,7 @@ form > .row > label {
 .edit-button-icon {
   color: black;
 }
+
+.index-table-link:hover {
+  color: blue;
+}
