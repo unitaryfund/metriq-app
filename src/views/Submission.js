@@ -53,6 +53,12 @@ class Submission extends React.Component {
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnResultChange = this.handleOnResultChange.bind(this)
+
+    this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
+  }
+
+  handleOnTaskRemove (taskName) {
+    window.alert("TODO: Perform removal of task: " + taskName)
   }
 
   handleUpVoteOnClick (event) {
@@ -420,7 +426,17 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
+            {(this.state.modalMode === 'Task') &&
+              <span>
+                <b>Attached tasks:</b><br />
+                <ButtonGroup vertical>
+                  {this.state.taskNames.map((e, key) => {
+                    return <Button onClick={() => this.handleOnTaskRemove(e.name)} key={key} value={e.value}>{e.name}</Button>
+                  })}
+                </ButtonGroup><br />
+              </span>}
             {(this.state.modalMode !== 'Login') &&
+             (this.state.modalMode !== 'Task') &&
               <span>
                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
               </span>}
