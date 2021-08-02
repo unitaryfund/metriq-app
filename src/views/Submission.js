@@ -26,7 +26,7 @@ class Submission extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: { upvotes: 0, tasks: [], methods: [], results: [] },
+      item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
       metricNames: [],
       taskNames: [],
       showAddModal: false,
@@ -291,6 +291,27 @@ class Submission extends React.Component {
               </div>}
           </div>
         </div>
+        <br />
+        <div className='row'>
+          <div className='col-md-12'>
+            <div>
+              <h2>Tags
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Tag')}
+                  onClickRemove={() => this.handleOnClickRemove('Tag')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.tags.length > 0) &&
+              this.state.item.tags.map(tag => <span key={tag._id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+            {(this.state.item.tags.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tags, yet.</div>
+              </div>}
+          </div>
+        </div>
         <Modal show={this.state.showAddModal} onHide={this.handleHideAddModal}>
           {(this.state.modalMode === 'Login') &&
             <Modal.Header closeButton>
@@ -378,7 +399,8 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login' &&
               this.state.modalMode !== 'Result' &&
-              this.state.modalMode !== 'Task') &&
+              this.state.modalMode !== 'Task' &&
+              this.state.modalMode !== 'Tag') &&
                 <span>
                   Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
                 </span>}
