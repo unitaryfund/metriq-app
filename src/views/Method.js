@@ -69,6 +69,7 @@ class Method extends React.Component {
               onClick () { window.location = '/Submission/' + record.key }
             })}
             tableLayout='auto'
+            rowClassName='index-table-link'
           />
         </div>
       </div>
