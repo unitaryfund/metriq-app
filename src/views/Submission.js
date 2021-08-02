@@ -295,11 +295,11 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div>
-              <h2>Results
+              <h2>Tags
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Result')}
-                  onClickRemove={() => this.handleOnClickRemove('Result')}
+                  onClickAdd={() => this.handleOnClickAdd('Tag')}
+                  onClickRemove={() => this.handleOnClickRemove('Tag')}
                 />
               </h2>
               <hr />
@@ -399,7 +399,8 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login' &&
               this.state.modalMode !== 'Result' &&
-              this.state.modalMode !== 'Task') &&
+              this.state.modalMode !== 'Task' &&
+              this.state.modalMode !== 'Tag') &&
                 <span>
                   Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
                 </span>}
