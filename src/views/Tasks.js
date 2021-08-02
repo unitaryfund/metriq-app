@@ -63,10 +63,16 @@ class Tasks extends React.Component {
         <header>MetriQ - Methods</header>
         <br />
         <Tabs defaultActiveKey='popular' id='categories-tabs'>
-          <Tab eventKey='popular' title='Popular'>
+          <Tab eventKey='common' title='Common'>
+            <b>Name (Submission Count)</b>
             {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Task' item={item} key={index} />)}
           </Tab>
+          <Tab eventKey='popular' title='Popular'>
+            <b>Name (Total Submission Up-Votes)</b>
+            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Task' isPopular item={item} key={index} />)}
+          </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
+            <b>Name (Submission Count)</b>
             {this.state.alphabetical.map((item, index) => <CategoryListItem routePrefix='/Task' item={item} key={index} />)}
           </Tab>
         </Tabs>

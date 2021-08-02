@@ -12,7 +12,7 @@ import Submissions from './views/Submissions'
 import Token from './views/Token'
 import Methods from './views/Methods'
 import Tasks from './views/Tasks'
-import Categories from './views/Categories'
+import Tags from './views/Tags'
 import Submission from './views/Submission'
 import Method from './views/Method'
 import Task from './views/Task'
@@ -40,9 +40,9 @@ const MainRouter = (props) => {
       </Route>
       <Route
         exact
-        path='/Categories'
+        path='/Tags'
       >
-        <Categories isLoggedIn={props.isLoggedIn} />
+        <Tags isLoggedIn={props.isLoggedIn} />
       </Route>
       <Route
         exact
@@ -99,7 +99,7 @@ const MainRouter = (props) => {
       />
       <Route
         exact
-        path='/Category/:tag'
+        path='/Tag/:tag'
         render={(p) => <Home {...p} onLogin={props.onLogin} />}
       />
       <Route
