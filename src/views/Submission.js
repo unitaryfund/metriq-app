@@ -26,7 +26,7 @@ class Submission extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: { upvotes: 0, tasks: [], methods: [], results: [] },
+      item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
       metricNames: [],
       taskNames: [],
       showAddModal: false,
@@ -288,6 +288,27 @@ class Submission extends React.Component {
             {(this.state.item.results.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated results, yet.</div>
+              </div>}
+          </div>
+        </div>
+        <br />
+        <div className='row'>
+          <div className='col-md-12'>
+            <div>
+              <h2>Results
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Result')}
+                  onClickRemove={() => this.handleOnClickRemove('Result')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.tags.length > 0) &&
+              this.state.item.tags.map(tag => <span key={tag._id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+            {(this.state.item.tags.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tags, yet.</div>
               </div>}
           </div>
         </div>
