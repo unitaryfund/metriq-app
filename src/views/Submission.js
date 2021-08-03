@@ -42,7 +42,8 @@ class Submission extends React.Component {
       task: {
         name: '',
         parentTask: '',
-        description: ''
+        description: '',
+        submissions: this.props.match.params.id
       }
     }
 
@@ -53,9 +54,8 @@ class Submission extends React.Component {
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
-    this.handleOnResultChange = this.handleOnResultChange.bind(this)
+    this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
-    this.handleOnTaskNameChange = this.handleOnTaskNameChange.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
   }
 
@@ -63,8 +63,8 @@ class Submission extends React.Component {
 
   }
 
-  handleOnTaskNameChange (name) {
-    this.state.setState({ task: { name: name } })
+  handleOnChange (key1, key2, value) {
+    this.state.setState({ [key1]: { [key2]: value } })
   }
 
   handleOnTaskRemove (taskId) {
@@ -137,11 +137,6 @@ class Submission extends React.Component {
 
   handleRemoveModalDone () {
     this.setState({ showRemoveModal: false })
-  }
-
-  handleOnResultChange (field, value) {
-    // parent class change handler is always called with field name and value
-    this.setState({ result: { [field]: value } })
   }
 
   componentDidMount () {
@@ -365,7 +360,18 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
-                <FormFieldTypeaheadRow inputName='Task' label='Task' options={this.state.taskNames} onChange={this.handleOnTaskNameChange} validRegex={taskNameRegex} />
+                <FormFieldTypeaheadRow
+                  inputName='Task'
+                  label='Task'
+                  options={this.state.taskNames.map(task => {
+                    return {
+                      label: task.name,
+                      value: task._id
+                    }
+                  })}
+                  onChange={() => { }} /* TODO */
+                  validRegex={taskNameRegex}
+                />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
@@ -381,20 +387,20 @@ class Submission extends React.Component {
                             inputName='taskName'
                             inputType='text'
                             label='Name'
-                            onChange={this.handleOnResultChange}
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
                             validRegex={taskNameRegex}
                           /><br />
                           <FormFieldSelectRow
                             inputName='taskParent'
                             label='Parent task (if any)'
                             options={this.state.taskNames}
-                            onChange={this.handleOnResultChange}
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
                           /><br />
                           <FormFieldRow
                             inputName='description'
                             inputType='text'
                             label='Description'
-                            onChange={this.handleOnResultChange}
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
                           />
                         </form>
                       </Card.Body>
@@ -406,7 +412,7 @@ class Submission extends React.Component {
               <span>
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                   validRegex={metricNameRegex}
                   options={this.state.metricNames}
                   value=''
@@ -414,16 +420,16 @@ class Submission extends React.Component {
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
                   validRegex={metricValueRegex}
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 /><br />
                 <FormFieldRow
                   inputName='evaluatedDate' inputType='date' label='Evaluated'
                   validRegex={dateRegex}
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 /><br />
                 <FormFieldRow
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 />
               </span>}
             {(this.state.modalMode !== 'Login' &&
