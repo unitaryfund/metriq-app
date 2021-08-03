@@ -21,7 +21,7 @@ class FormFieldSelectRow extends React.Component {
   }
 
   handleOnFieldChange (event) {
-    // for a regular input field, read field name and value from the event
+    // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
     const fieldValue = event.target.value
     this.setState({ value: fieldValue })
