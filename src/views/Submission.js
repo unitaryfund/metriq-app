@@ -44,6 +44,10 @@ class Submission extends React.Component {
         parentTask: '',
         description: '',
         submissions: this.props.match.params.id
+      },
+      method: {
+        name: '',
+        submissions: this.props.match.params.id
       }
     }
 
@@ -56,6 +60,7 @@ class Submission extends React.Component {
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
+    this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
   }
 
@@ -65,6 +70,23 @@ class Submission extends React.Component {
 
   handleOnChange (key1, key2, value) {
     this.state.setState({ [key1]: { [key2]: value } })
+  }
+
+  handleOnMethodRemove (methodId) {
+    if (!window.confirm('Are you sure you want to remove this method from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + methodId)
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
   }
 
   handleOnTaskRemove (taskId) {
@@ -475,8 +497,29 @@ class Submission extends React.Component {
                 {(this.state.item.tasks.length === 0) &&
                   <span><i>There are no attached tasks.</i></span>}
               </span>}
+            {(this.state.modalMode === 'Method') &&
+              <span>
+                <b>Attached methods:</b><br />
+                {(this.state.item.methods.length > 0) &&
+                  this.state.item.methods.map(method =>
+                    <div key={method._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {method.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnMethodRemove(method._id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.methods.length === 0) &&
+                  <span><i>There are no attached methods.</i></span>}
+              </span>}
             {(this.state.modalMode !== 'Login') &&
              (this.state.modalMode !== 'Task') &&
+             (this.state.modalMode !== 'Method') &&
                <span>
                  Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
                </span>}
