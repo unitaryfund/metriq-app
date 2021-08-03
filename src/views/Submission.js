@@ -6,14 +6,15 @@ import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Accordion, Button, ButtonGroup, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
+import { Accordion, Button, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
+
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
-library.add(faThumbsUp, faGithub)
+library.add(faThumbsUp, faGithub, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -53,12 +54,24 @@ class Submission extends React.Component {
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnResultChange = this.handleOnResultChange.bind(this)
-
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
   }
 
-  handleOnTaskRemove (taskName) {
-    window.alert("TODO: Perform removal of task: " + taskName)
+  handleOnTaskRemove (taskId) {
+    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
   }
 
   handleUpVoteOnClick (event) {
@@ -335,15 +348,10 @@ class Submission extends React.Component {
             {(this.state.modalMode === 'Task') &&
               <span>
                 <b>Attached tasks:</b><br />
-                <ButtonGroup vertical>
-                  {this.state.item.tasks.map((e, key) => {
-                    return <Button key={key} value={e.value}>{e.name}</Button>
-                  })}
-                </ButtonGroup><br />
                 Add:
                 <DropdownButton id='dropdown-task-names-button' title='Tasks'>
-                  {this.state.taskNames.map((e, key) => {
-                    return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
+                  {this.state.taskNames.map((task, key) => {
+                    return <Dropdown.Item key={key} value={task._id}>{task.name}</Dropdown.Item>
                   })}
                 </DropdownButton><br />
                 Not in the list?<br />
@@ -429,17 +437,28 @@ class Submission extends React.Component {
             {(this.state.modalMode === 'Task') &&
               <span>
                 <b>Attached tasks:</b><br />
-                <ButtonGroup vertical>
-                  {this.state.taskNames.map((e, key) => {
-                    return <Button onClick={() => this.handleOnTaskRemove(e.name)} key={key} value={e.value}>{e.name}</Button>
-                  })}
-                </ButtonGroup><br />
+                {(this.state.item.tasks.length > 0) &&
+                  this.state.item.tasks.map(task =>
+                    <div key={task._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {task.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task._id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.tasks.length === 0) &&
+                  <span><i>There are no attached tasks.</i></span>}
               </span>}
             {(this.state.modalMode !== 'Login') &&
              (this.state.modalMode !== 'Task') &&
-              <span>
-                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
-              </span>}
+               <span>
+                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+               </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
