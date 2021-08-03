@@ -5,15 +5,16 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Accordion, Button, ButtonGroup, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
+import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
-library.add(faThumbsUp, faGithub)
+library.add(faThumbsUp, faGithub, faPlus, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -39,9 +40,10 @@ class Submission extends React.Component {
         evaluatedDate: new Date()
       },
       task: {
-        taskName: '',
+        name: '',
         parentTask: '',
-        description: ''
+        description: '',
+        submissions: this.props.match.params.id
       }
     }
 
@@ -52,7 +54,34 @@ class Submission extends React.Component {
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
-    this.handleOnResultChange = this.handleOnResultChange.bind(this)
+    this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
+    this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
+  }
+
+  handleOnSubmitTask () {
+
+  }
+
+  handleOnChange (key1, key2, value) {
+    this.state.setState({ [key1]: { [key2]: value } })
+  }
+
+  handleOnTaskRemove (taskId) {
+    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
   }
 
   handleUpVoteOnClick (event) {
@@ -110,11 +139,6 @@ class Submission extends React.Component {
     this.setState({ showRemoveModal: false })
   }
 
-  handleOnResultChange (field, value) {
-    // parent class change handler is always called with field name and value
-    this.setState({ result: { [field]: value } })
-  }
-
   componentDidMount () {
     const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
     axios.get(submissionRoute)
@@ -128,6 +152,14 @@ class Submission extends React.Component {
     axios.get(metricNamesRoute)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+    axios.get(taskNamesRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -328,46 +360,49 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
-                <b>Attached tasks:</b><br />
-                <ButtonGroup vertical>
-                  {this.state.item.tasks.map((e, key) => {
-                    return <Button key={key} value={e.value}>{e.name}</Button>
+                <FormFieldTypeaheadRow
+                  inputName='Task'
+                  label='Task'
+                  options={this.state.taskNames.map(task => {
+                    return {
+                      label: task.name,
+                      value: task._id
+                    }
                   })}
-                </ButtonGroup><br />
-                Add:
-                <DropdownButton id='dropdown-task-names-button' title='Tasks'>
-                  {this.state.taskNames.map((e, key) => {
-                    return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
-                  })}
-                </DropdownButton><br />
+                  onChange={() => { }} /* TODO */
+                  validRegex={taskNameRegex}
+                />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
                       <Accordion.Toggle as={Button} variant='link' eventKey='1'>
-                        <sup>+</sup> Create a new task.
+                        <FontAwesomeIcon icon='plus' /> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey='1'>
                       <Card.Body>
-                        <FormFieldTypeaheadRow
-                          inputName='taskName' label='New task name'
-                          onChange={this.handleOnResultChange}
-                          validRegex={taskNameRegex}
-                          options={this.state.taskNames}
-                          value=''
-                        /><br />
-                        <DropdownButton id='dropdown-parent-task-button' title='Parent task (if any)'>
-                          {this.state.taskNames.map((e, key) => {
-                            return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
-                          })}
-                        </DropdownButton><br />
-                        <FormFieldRow
-                          inputName='description' label='Description'
-                          onChange={this.handleOnResultChange}
-                          options={this.state.description}
-                          value=''
-                        /><br />
+                        <form onSubmit={this.handleOnSubmitTask}>
+                          <FormFieldRow
+                            inputName='taskName'
+                            inputType='text'
+                            label='Name'
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
+                            validRegex={taskNameRegex}
+                          /><br />
+                          <FormFieldSelectRow
+                            inputName='taskParent'
+                            label='Parent task (if any)'
+                            options={this.state.taskNames}
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          /><br />
+                          <FormFieldRow
+                            inputName='description'
+                            inputType='text'
+                            label='Description'
+                            onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          />
+                        </form>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
@@ -377,7 +412,7 @@ class Submission extends React.Component {
               <span>
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                   validRegex={metricNameRegex}
                   options={this.state.metricNames}
                   value=''
@@ -385,16 +420,16 @@ class Submission extends React.Component {
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
                   validRegex={metricValueRegex}
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 /><br />
                 <FormFieldRow
                   inputName='evaluatedDate' inputType='date' label='Evaluated'
                   validRegex={dateRegex}
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 /><br />
                 <FormFieldRow
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
-                  onChange={this.handleOnResultChange}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
                 />
               </span>}
             {(this.state.modalMode !== 'Login' &&
@@ -420,10 +455,31 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
-            {(this.state.modalMode !== 'Login') &&
+            {(this.state.modalMode === 'Task') &&
               <span>
-                Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+                <b>Attached tasks:</b><br />
+                {(this.state.item.tasks.length > 0) &&
+                  this.state.item.tasks.map(task =>
+                    <div key={task._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {task.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task._id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.tasks.length === 0) &&
+                  <span><i>There are no attached tasks.</i></span>}
               </span>}
+            {(this.state.modalMode !== 'Login') &&
+             (this.state.modalMode !== 'Task') &&
+               <span>
+                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
+               </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
