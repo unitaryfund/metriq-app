@@ -5,16 +5,16 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import { Accordion, Button, Card, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
+import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
-
+import { faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
-library.add(faThumbsUp, faGithub, faTrash)
+library.add(faThumbsUp, faGithub, faPlus, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -40,7 +40,7 @@ class Submission extends React.Component {
         evaluatedDate: new Date()
       },
       task: {
-        taskName: '',
+        name: '',
         parentTask: '',
         description: ''
       }
@@ -55,6 +55,16 @@ class Submission extends React.Component {
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnResultChange = this.handleOnResultChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
+    this.handleOnTaskNameChange = this.handleOnTaskNameChange.bind(this)
+    this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
+  }
+
+  handleOnSubmitTask () {
+
+  }
+
+  handleOnTaskNameChange (name) {
+    this.state.setState({ task: { name: name } })
   }
 
   handleOnTaskRemove (taskId) {
@@ -147,6 +157,14 @@ class Submission extends React.Component {
     axios.get(metricNamesRoute)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+    axios.get(taskNamesRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -347,41 +365,38 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
-                <b>Attached tasks:</b><br />
-                Add:
-                <DropdownButton id='dropdown-task-names-button' title='Tasks'>
-                  {this.state.taskNames.map((task, key) => {
-                    return <Dropdown.Item key={key} value={task._id}>{task.name}</Dropdown.Item>
-                  })}
-                </DropdownButton><br />
+                <FormFieldTypeaheadRow inputName='Task' label='Task' options={this.state.taskNames} onChange={this.handleOnTaskNameChange} validRegex={taskNameRegex} />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
                       <Accordion.Toggle as={Button} variant='link' eventKey='1'>
-                        <sup>+</sup> Create a new task.
+                        <FontAwesomeIcon icon='plus' /> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey='1'>
                       <Card.Body>
-                        <FormFieldTypeaheadRow
-                          inputName='taskName' label='New task name'
-                          onChange={this.handleOnResultChange}
-                          validRegex={taskNameRegex}
-                          options={this.state.taskNames}
-                          value=''
-                        /><br />
-                        <DropdownButton id='dropdown-parent-task-button' title='Parent task (if any)'>
-                          {this.state.taskNames.map((e, key) => {
-                            return <Dropdown.Item key={key} value={e.value}>{e.name}</Dropdown.Item>
-                          })}
-                        </DropdownButton><br />
-                        <FormFieldRow
-                          inputName='description' label='Description'
-                          onChange={this.handleOnResultChange}
-                          options={this.state.description}
-                          value=''
-                        /><br />
+                        <form onSubmit={this.handleOnSubmitTask}>
+                          <FormFieldRow
+                            inputName='taskName'
+                            inputType='text'
+                            label='Name'
+                            onChange={this.handleOnResultChange}
+                            validRegex={taskNameRegex}
+                          /><br />
+                          <FormFieldSelectRow
+                            inputName='taskParent'
+                            label='Parent task (if any)'
+                            options={this.state.taskNames}
+                            onChange={this.handleOnResultChange}
+                          /><br />
+                          <FormFieldRow
+                            inputName='description'
+                            inputType='text'
+                            label='Description'
+                            onChange={this.handleOnResultChange}
+                          />
+                        </form>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>

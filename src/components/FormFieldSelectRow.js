@@ -1,8 +1,6 @@
 import React from 'react'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import FormFieldValidator from './FormFieldValidator'
 
-class FormFieldTypeaheadRow extends React.Component {
+class FormFieldSelectRow extends React.Component {
   constructor (props) {
     super(props)
 
@@ -22,10 +20,10 @@ class FormFieldTypeaheadRow extends React.Component {
     return this.props.validRegex.test(value)
   }
 
-  handleOnFieldChange (input, event) {
+  handleOnFieldChange (event) {
     // for a regular input field, read field name and value from the event
-    const fieldName = this.props.inputName
-    const fieldValue = input
+    const fieldName = event.target.name
+    const fieldValue = event.target.value
     this.setState({ value: fieldValue })
     if (this.isValidValue(fieldValue)) {
       this.setState({ invalid: false })
@@ -41,19 +39,23 @@ class FormFieldTypeaheadRow extends React.Component {
     return (
       <div className='row'>
         <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-        <Typeahead
-          id={this.props.inputName}
-          name={this.props.inputName}
-          className='col-md-6'
-          options={this.props.options}
-          defaultSelected={[this.props.value ? this.props.value : '']}
-          onInputChange={this.handleOnFieldChange}
-          onBlur={this.handleOnFieldBlur}
-        />
-        <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
+        <div className='col-md-6'>
+          <select
+            id={this.props.inputName}
+            name={this.props.inputName}
+            className='form-control'
+            onChange={this.handleOnFieldChange}
+            onBlur={this.handleOnFieldBlur}
+          >
+            {this.props.options.map(option =>
+              <option key={option._id} value={option._id}>{option.name}</option>
+            )}
+          </select>
+        </div>
+        <div className='col-md-3' />
       </div>
     )
   }
 };
 
-export default FormFieldTypeaheadRow
+export default FormFieldSelectRow
