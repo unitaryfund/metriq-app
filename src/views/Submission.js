@@ -36,6 +36,8 @@ class Submission extends React.Component {
       showRemoveModal: false,
       modalMode: '',
       result: {
+        task: '',
+        method: '',
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -51,7 +53,9 @@ class Submission extends React.Component {
         name: '',
         fullName: '',
         submissions: this.props.match.params.id
-      }
+      },
+      taskId: '',
+      methodId: ''
     }
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
@@ -64,20 +68,44 @@ class Submission extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
+    this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
     this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
   }
 
   handleOnSubmitTask () {
-
+    /* TODO */
   }
 
   handleOnSubmitMethod () {
-      /* TODO */
+    /* TODO */
   }
 
   handleOnChange (key1, key2, value) {
-    this.state.setState({ [key1]: { [key2]: value } })
+    if (key1) {
+      const k1 = this.state[key1]
+      k1[key2] = value
+      this.setState({ [key1]: k1 })
+    } else {
+      this.setState({ [key2]: value })
+    }
+  }
+
+  handleOnTaskRemove (taskId) {
+    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
   }
 
   handleOnMethodRemove (methodId) {
@@ -97,14 +125,20 @@ class Submission extends React.Component {
     }
   }
 
-  handleOnTaskRemove (taskId) {
-    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
+  handleOnResultRemove (resultId) {
+    if (!window.confirm('Are you sure you want to delete this result?')) {
       return
     }
     if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
+      axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
         .then(res => {
-          this.setState({ item: res.data.data })
+          const results = this.state.item.results
+          for (let i = 0; i < results.length; i++) {
+            if (results[i]._id === resultId) {
+              results.splice(i, 1)
+              break
+            }
+          }
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -152,17 +186,55 @@ class Submission extends React.Component {
   }
 
   handleAddModalSubmit () {
-    this.setState({ showAddModal: false })
-    if (this.state.mode === 'Result') {
-      const resultRoute = config.api.getUriPrefix() + '/submission' + this.props.match.params.id + '/result'
-      axios.post(resultRoute, this.state.result)
+    if (!this.props.isLoggedIn) {
+      window.location = '/Login'
+    }
+
+    if (this.state.modalMode === 'Task') {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
         .then(res => {
           this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else if (this.state.modalMode === 'Method') {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
+        .then(res => {
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else if (this.state.modalMode === 'Result') {
+      const result = this.state.result
+      if (!result.task) {
+        result.task = this.state.item.tasks[0]._id
+      }
+      if (!result.method) {
+        result.method = this.state.item.methods[0]._id
+      }
+      console.log(result)
+      if (!result.metricName) {
+        window.alert('Error: Metric Name cannot be blank.')
+      }
+      if (!result.metricValue) {
+        window.alert('Error: Metric Value cannot be blank.')
+      }
+      if (!result.evaluatedDate) {
+        result.evaluatedDate = new Date()
+      }
+      const resultRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/result'
+      axios.post(resultRoute, result)
+        .then(res => {
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     }
+
+    this.setState({ showAddModal: false })
   }
 
   handleRemoveModalDone () {
@@ -178,10 +250,15 @@ class Submission extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
-    const metricNamesRoute = config.api.getUriPrefix() + '/result/metricNames'
+    const metricNamesRoute = config.api.getUriPrefix() + '/method/names'
     axios.get(metricNamesRoute)
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', metricNames: res.data.data })
+        const data = res.data.data
+        let defMethod = ''
+        if (data.length) {
+          defMethod = data[0]._id
+        }
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: data, methodId: defMethod })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -189,7 +266,12 @@ class Submission extends React.Component {
     const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
     axios.get(taskNamesRoute)
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: res.data.data })
+        const data = res.data.data
+        let defTask = ''
+        if (data.length) {
+          defTask = data[0]._id
+        }
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: data, taskId: defTask })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -390,18 +472,12 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Method') &&
               <span>
-                <FormFieldTypeaheadRow
-                  inputName='Method'
+                <FormFieldSelectRow
+                  inputName='methodId'
                   label='Method'
-                  options={this.state.methodNames.map(method => {
-                    return {
-                      label: method.name,
-                      value: method._id
-                    }
-                  })}
-                  onChange={() => { }} /* TODO */
-                  validRegex={methodNameRegex}
-                />
+                  options={this.state.methodNames}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
@@ -441,18 +517,12 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
-                <FormFieldTypeaheadRow
-                  inputName='Task'
+                <FormFieldSelectRow
+                  inputName='taskId'
                   label='Task'
-                  options={this.state.taskNames.map(task => {
-                    return {
-                      label: task.name,
-                      value: task._id
-                    }
-                  })}
-                  onChange={() => { }} /* TODO */
-                  validRegex={taskNameRegex}
-                />
+                  options={this.state.taskNames}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
@@ -491,6 +561,16 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
+                <FormFieldSelectRow
+                  inputName='task' label='Task'
+                  options={this.state.item.tasks}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                /><br />
+                <FormFieldSelectRow
+                  inputName='method' label='Method'
+                  options={this.state.item.methods}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
@@ -577,9 +657,30 @@ class Submission extends React.Component {
                 {(this.state.item.methods.length === 0) &&
                   <span><i>There are no attached methods.</i></span>}
               </span>}
+            {(this.state.modalMode === 'Result') &&
+              <span>
+                <b>Attached methods:</b><br />
+                {(this.state.item.results.length > 0) &&
+                  this.state.item.results.map(result =>
+                    <div key={result._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {result.task.name}, {result.method.name}, {result.metricName}: {result.metricValue}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result._id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.methods.length === 0) &&
+                  <span><i>There are no attached methods.</i></span>}
+              </span>}
             {(this.state.modalMode !== 'Login') &&
              (this.state.modalMode !== 'Task') &&
              (this.state.modalMode !== 'Method') &&
+             (this.state.modalMode !== 'Result') &&
                <span>
                  Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
                </span>}
