@@ -36,6 +36,8 @@ class Submission extends React.Component {
       showRemoveModal: false,
       modalMode: '',
       result: {
+        task: '',
+        method: '',
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -80,7 +82,9 @@ class Submission extends React.Component {
 
   handleOnChange (key1, key2, value) {
     if (key1) {
-      this.setState({ [key1]: { [key2]: value } })
+      const k1 = this.state[key1]
+      k1[key2] = value
+      this.setState(k1)
     } else {
       this.setState({ [key2]: value })
     }
@@ -162,8 +166,6 @@ class Submission extends React.Component {
       window.location = '/Login'
     }
 
-    this.setState({ showAddModal: false })
-
     if (this.state.modalMode === 'Task') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
         .then(res => {
@@ -181,8 +183,25 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else if (this.state.modalMode === 'Result') {
-      const resultRoute = config.api.getUriPrefix() + '/submission' + this.props.match.params.id + '/result'
-      axios.post(resultRoute, this.state.result)
+      const result = this.state.result
+      if (!result.task) {
+        result.task = this.state.item.tasks[0]._id
+      }
+      if (!result.method) {
+        result.method = this.state.item.methods[0]._id
+      }
+      console.log(result)
+      if (!result.metricName) {
+        window.alert('Error: Metric Name cannot be blank.')
+      }
+      if (!result.metricValue) {
+        window.alert('Error: Metric Value cannot be blank.')
+      }
+      if (!result.evaluatedDate) {
+        result.evaluatedDate = new Date()
+      }
+      const resultRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/result'
+      axios.post(resultRoute, result)
         .then(res => {
           this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
         })
@@ -190,6 +209,8 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     }
+
+    this.setState({ showAddModal: false })
   }
 
   handleRemoveModalDone () {
@@ -516,6 +537,16 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
+                <FormFieldSelectRow
+                  inputName='task' label='Task'
+                  options={this.state.item.tasks}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                /><br />
+                <FormFieldSelectRow
+                  inputName='method' label='Method'
+                  options={this.state.item.methods}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
