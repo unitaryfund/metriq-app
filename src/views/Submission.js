@@ -20,6 +20,7 @@ const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
 const methodNameRegex = /.{1,}/
 const taskNameRegex = /.{1,}/
+const tagNameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 
 class Submission extends React.Component {
@@ -32,6 +33,7 @@ class Submission extends React.Component {
       metricNames: [],
       methodNames: [],
       taskNames: [],
+      tagNames: [],
       showAddModal: false,
       showRemoveModal: false,
       modalMode: '',
@@ -55,7 +57,8 @@ class Submission extends React.Component {
         submissions: this.props.match.params.id
       },
       taskId: '',
-      methodId: ''
+      methodId: '',
+      tag: ''
     }
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
@@ -69,6 +72,7 @@ class Submission extends React.Component {
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
     this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
+    this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
     this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
   }
@@ -139,6 +143,23 @@ class Submission extends React.Component {
               break
             }
           }
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
+  }
+
+  handleOnTagRemove (tagName) {
+    if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
+        .then(res => {
+          this.setState({ item: res.data.data })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -232,6 +253,14 @@ class Submission extends React.Component {
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
+    } else if (this.state.modalMode === 'Tag') {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
+        .then(res => {
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
     }
 
     this.setState({ showAddModal: false })
@@ -272,6 +301,14 @@ class Submission extends React.Component {
           defTask = data[0]._id
         }
         this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: data, taskId: defTask })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+    axios.get(tagNamesRoute)
+      .then(res => {
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: res.data.data })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -593,14 +630,15 @@ class Submission extends React.Component {
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                 />
               </span>}
-            {(this.state.modalMode !== 'Login' &&
-              this.state.modalMode !== 'Result' &&
-              this.state.modalMode !== 'Task' &&
-              this.state.modalMode !== 'Method' &&
-              this.state.modalMode !== 'Tag') &&
-                <span>
-                  Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
-                </span>}
+            {(this.state.modalMode === 'Tag') &&
+              <span>
+                <FormFieldTypeaheadRow
+                  inputName='tag' label='Tag'
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  validRegex={tagNameRegex}
+                  options={this.state.tagNames.map(item => item.name)}
+                /><br />
+              </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>
@@ -659,7 +697,7 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
-                <b>Attached methods:</b><br />
+                <b>Attached results:</b><br />
                 {(this.state.item.results.length > 0) &&
                   this.state.item.results.map(result =>
                     <div key={result._id}>
@@ -674,16 +712,29 @@ class Submission extends React.Component {
                       </div>
                     </div>
                   )}
-                {(this.state.item.methods.length === 0) &&
-                  <span><i>There are no attached methods.</i></span>}
+                {(this.state.item.results.length === 0) &&
+                  <span><i>There are no attached results.</i></span>}
               </span>}
-            {(this.state.modalMode !== 'Login') &&
-             (this.state.modalMode !== 'Task') &&
-             (this.state.modalMode !== 'Method') &&
-             (this.state.modalMode !== 'Result') &&
-               <span>
-                 Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
-               </span>}
+            {(this.state.modalMode === 'Tag') &&
+              <span>
+                <b>Attached methods:</b><br />
+                {(this.state.item.results.length > 0) &&
+                  this.state.item.tags.map(tag =>
+                    <div key={tag._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {tag.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnTagRemove(tag.name)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.tags.length === 0) &&
+                  <span><i>There are no attached tags.</i></span>}
+              </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>

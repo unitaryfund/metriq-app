@@ -22,7 +22,7 @@ class FormFieldTypeaheadRow extends React.Component {
     return this.props.validRegex.test(value)
   }
 
-  handleOnFieldChange (input, event) {
+  handleOnFieldChange (input) {
     // for a regular input field, read field name and value from the event
     const fieldName = this.props.inputName
     const fieldValue = input
@@ -47,7 +47,8 @@ class FormFieldTypeaheadRow extends React.Component {
           className='col-md-6'
           options={this.props.options}
           defaultSelected={[this.props.value ? this.props.value : '']}
-          onInputChange={this.handleOnFieldChange}
+          onChange={selected => this.handleOnFieldChange(selected[0])}
+          onInputChange={(input, event) => this.handleOnFieldChange(input)}
           onBlur={this.handleOnFieldBlur}
         />
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
