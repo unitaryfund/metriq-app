@@ -152,12 +152,12 @@ class Submission extends React.Component {
     }
   }
 
-  handleOnTagRemove (tagId) {
+  handleOnTagRemove (tagName) {
     if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
       return
     }
     if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagId)
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
         .then(res => {
           this.setState({ item: res.data.data })
         })
@@ -727,7 +727,7 @@ class Submission extends React.Component {
                           {tag.name}
                         </div>
                         <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTagRemove(tag._id)}><FontAwesomeIcon icon='trash' /> </button>
+                          <button className='btn btn-danger' onClick={() => this.handleOnTagRemove(tag.name)}><FontAwesomeIcon icon='trash' /> </button>
                         </div>
                       </div>
                     </div>
