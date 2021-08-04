@@ -84,7 +84,7 @@ class Submission extends React.Component {
     if (key1) {
       const k1 = this.state[key1]
       k1[key2] = value
-      this.setState(k1)
+      this.setState({ key1: k1 })
     } else {
       this.setState({ [key2]: value })
     }
