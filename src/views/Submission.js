@@ -68,6 +68,7 @@ class Submission extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
+    this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
     this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
   }
@@ -115,6 +116,29 @@ class Submission extends React.Component {
       axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + methodId)
         .then(res => {
           this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
+  }
+
+  handleOnResultRemove (resultId) {
+    if (!window.confirm('Are you sure you want to delete this result?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
+        .then(res => {
+          const results = this.state.item.results
+          for (let i = 0; i < results.length; i++) {
+            if (results[i]._id === resultId) {
+              results.splice(i, 1)
+              break
+            }
+          }
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -633,9 +657,30 @@ class Submission extends React.Component {
                 {(this.state.item.methods.length === 0) &&
                   <span><i>There are no attached methods.</i></span>}
               </span>}
+            {(this.state.modalMode === 'Result') &&
+              <span>
+                <b>Attached methods:</b><br />
+                {(this.state.item.results.length > 0) &&
+                  this.state.item.results.map(result =>
+                    <div key={result._id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {result.task.name}, {result.method.name}, {result.metricName}: {result.metricValue}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result._id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.methods.length === 0) &&
+                  <span><i>There are no attached methods.</i></span>}
+              </span>}
             {(this.state.modalMode !== 'Login') &&
              (this.state.modalMode !== 'Task') &&
              (this.state.modalMode !== 'Method') &&
+             (this.state.modalMode !== 'Result') &&
                <span>
                  Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
                </span>}
