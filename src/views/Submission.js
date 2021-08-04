@@ -18,6 +18,7 @@ library.add(faThumbsUp, faGithub, faPlus, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
+const methodNameRegex = /.{1,}/
 const taskNameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 
@@ -29,6 +30,7 @@ class Submission extends React.Component {
       requestFailedMessage: '',
       item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
       metricNames: [],
+      methodNames: [],
       taskNames: [],
       showAddModal: false,
       showRemoveModal: false,
@@ -47,6 +49,7 @@ class Submission extends React.Component {
       },
       method: {
         name: '',
+        fullName: '',
         submissions: this.props.match.params.id
       }
     }
@@ -62,10 +65,15 @@ class Submission extends React.Component {
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
+    this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
   }
 
   handleOnSubmitTask () {
 
+  }
+
+  handleOnSubmitMethod () {
+      /* TODO */
   }
 
   handleOnChange (key1, key2, value) {
@@ -380,6 +388,57 @@ class Submission extends React.Component {
               <span>
                 Please <Link to='/Login'>login</Link> before editing.
               </span>}
+            {(this.state.modalMode === 'Method') &&
+              <span>
+                <FormFieldTypeaheadRow
+                  inputName='Method'
+                  label='Method'
+                  options={this.state.methodNames.map(method => {
+                    return {
+                      label: method.name,
+                      value: method._id
+                    }
+                  })}
+                  onChange={() => { }} /* TODO */
+                  validRegex={methodNameRegex}
+                />
+                Not in the list?<br />
+                <Accordion defaultActiveKey='0'>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1'>
+                        <FontAwesomeIcon icon='plus' /> Create a new method.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey='1'>
+                      <Card.Body>
+                        <form onSubmit={this.handleOnSubmitMethod}>
+                          <FormFieldRow
+                            inputName='methodName'
+                            inputType='text'
+                            label='Name'
+                            onChange={(field, value) => this.handleOnChange('method', field, value)}
+                            validRegex={methodNameRegex}
+                          /><br />
+                          <FormFieldRow
+                            inputName='methodFullName'
+                            inputType='text'
+                            label='Full name'
+                            onChange={(field, value) => this.handleOnChange('method', field, value)}
+                            validRegex={methodNameRegex}
+                          /><br />
+                          <FormFieldRow
+                            inputName='description'
+                            inputType='text'
+                            label='Description'
+                            onChange={(field, value) => this.handleOnChange('method', field, value)}
+                          />
+                        </form>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
                 <FormFieldTypeaheadRow
@@ -457,6 +516,7 @@ class Submission extends React.Component {
             {(this.state.modalMode !== 'Login' &&
               this.state.modalMode !== 'Result' &&
               this.state.modalMode !== 'Task' &&
+              this.state.modalMode !== 'Method' &&
               this.state.modalMode !== 'Tag') &&
                 <span>
                   Woohoo, you're reading this text in a modal!<br /><br />Mode: {this.state.modalMode}
