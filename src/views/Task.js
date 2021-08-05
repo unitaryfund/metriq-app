@@ -74,9 +74,11 @@ class Task extends React.Component {
         <br />
         {(this.state.item.submissions.length > 0) &&
           <div>
+            <h2>Submissions</h2>
             <div className='row'>
               <div className='col-md-12'>
                 <Table
+                  className='detail-table'
                   columns={[{
                     title: 'Submission',
                     dataIndex: 'submissionName',
@@ -113,9 +115,12 @@ class Task extends React.Component {
             </div>
             <br />
             {(this.state.results.length > 0) &&
+              <h2>Results</h2>}
+            {(this.state.results.length > 0) &&
               <div className='row'>
                 <div className='col-md-12'>
                   <Table
+                    className='detail-table'
                     columns={[{
                       title: 'Submission',
                       dataIndex: 'submissionName',
