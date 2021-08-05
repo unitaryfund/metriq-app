@@ -34,6 +34,9 @@ class Submission extends React.Component {
       methodNames: [],
       taskNames: [],
       tagNames: [],
+      allMethodNames: [],
+      allTaskNames: [],
+      allTagNames: [],
       showAddModal: false,
       showRemoveModal: false,
       modalMode: '',
@@ -75,6 +78,9 @@ class Submission extends React.Component {
     this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
     this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
+    this.handleTrimTasks = this.handleTrimTasks.bind(this)
+    this.handleTrimMethods = this.handleTrimMethods.bind(this)
+    this.handleTrimTags = this.handleTrimTags.bind(this)
   }
 
   handleOnSubmitTask () {
@@ -102,7 +108,10 @@ class Submission extends React.Component {
     if (this.props.isLoggedIn) {
       axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
         .then(res => {
-          this.setState({ item: res.data.data })
+          const submission = res.data.data
+          const tasks = [...this.state.allTaskNames]
+          this.handleTrimTasks(submission, tasks)
+          this.setState({ item: submission, taskNames: tasks })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -119,7 +128,30 @@ class Submission extends React.Component {
     if (this.props.isLoggedIn) {
       axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + methodId)
         .then(res => {
-          this.setState({ item: res.data.data })
+          const submission = res.data.data
+          const methods = [...this.state.allMethodNames]
+          this.handleTrimMethods(submission, methods)
+          this.setState({ item: submission, methodNames: methods })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location = '/Login'
+    }
+  }
+
+  handleOnTagRemove (tagName) {
+    if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
+        .then(res => {
+          const submission = res.data.data
+          const tags = [...this.state.allTagNames]
+          this.handleTrimTags(submission, tags)
+          this.setState({ item: submission, tagNames: tags })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -146,23 +178,6 @@ class Submission extends React.Component {
             }
           }
           this.setState({ item: item })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      window.location = '/Login'
-    }
-  }
-
-  handleOnTagRemove (tagName) {
-    if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
-        .then(res => {
-          this.setState({ item: res.data.data })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -217,7 +232,15 @@ class Submission extends React.Component {
     if (this.state.modalMode === 'Task') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
         .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+          const submission = res.data.data
+          const tasks = [...this.state.taskNames]
+          for (let j = 0; j < tasks.length; j++) {
+            if (this.state.taskId === tasks[j]._id) {
+              tasks.splice(j, 1)
+              break
+            }
+          }
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -225,7 +248,31 @@ class Submission extends React.Component {
     } else if (this.state.modalMode === 'Method') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
         .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+          const submission = res.data.data
+          const methods = [...this.state.methodNames]
+          for (let j = 0; j < methods.length; j++) {
+            if (this.state.methodId === methods[j]._id) {
+              methods.splice(j, 1)
+              break
+            }
+          }
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods, item: submission })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else if (this.state.modalMode === 'Tag') {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
+        .then(res => {
+          const submission = res.data.data
+          const tags = [...this.state.tagNames]
+          for (let j = 0; j < tags.length; j++) {
+            if (this.state.tag === tags[j].name) {
+              tags.splice(j, 1)
+              break
+            }
+          }
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags, item: submission })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -256,14 +303,6 @@ class Submission extends React.Component {
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
-    } else if (this.state.modalMode === 'Tag') {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
-        .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
     }
 
     this.setState({ showAddModal: false })
@@ -273,45 +312,90 @@ class Submission extends React.Component {
     this.setState({ showRemoveModal: false })
   }
 
+  handleTrimTasks (submission, tasks) {
+    for (let i = 0; i < submission.tasks.length; i++) {
+      for (let j = 0; j < tasks.length; j++) {
+        if (submission.tasks[i]._id === tasks[j]._id) {
+          tasks.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
+  handleTrimMethods (submission, methods) {
+    for (let i = 0; i < submission.methods.length; i++) {
+      for (let j = 0; j < methods.length; j++) {
+        if (submission.methods[i]._id === methods[j]._id) {
+          methods.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
+  handleTrimTags (submission, tags) {
+    for (let i = 0; i < submission.tags.length; i++) {
+      for (let j = 0; j < tags.length; j++) {
+        if (submission.tags[i]._id === tags[j]._id) {
+          tags.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
   componentDidMount () {
     const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
     axios.get(submissionRoute)
-      .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
-      })
-      .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-      })
-    const metricNamesRoute = config.api.getUriPrefix() + '/method/names'
-    axios.get(metricNamesRoute)
-      .then(res => {
-        const data = res.data.data
-        let defMethod = ''
-        if (data.length) {
-          defMethod = data[0]._id
-        }
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: data, methodId: defMethod })
-      })
-      .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-      })
-    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
-    axios.get(taskNamesRoute)
-      .then(res => {
-        const data = res.data.data
-        let defTask = ''
-        if (data.length) {
-          defTask = data[0]._id
-        }
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: data, taskId: defTask })
-      })
-      .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-      })
-    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
-    axios.get(tagNamesRoute)
-      .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: res.data.data })
+      .then(subRes => {
+        const submission = subRes.data.data
+
+        const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+        axios.get(taskNamesRoute)
+          .then(res => {
+            const tasks = [...res.data.data]
+            this.handleTrimTasks(submission, tasks)
+
+            let defTask = ''
+            if (tasks.length) {
+              defTask = tasks[0]._id
+            }
+
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
+
+            const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
+            axios.get(methodNamesRoute)
+              .then(res => {
+                const methods = [...res.data.data]
+                this.handleTrimMethods(submission, methods)
+
+                let defMethod = ''
+                if (methods.length) {
+                  defMethod = methods[0]._id
+                }
+
+                this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+
+                const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+                axios.get(tagNamesRoute)
+                  .then(res => {
+                    const tags = [...res.data.data]
+                    this.handleTrimTags(submission, tags)
+
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags, item: submission })
+                  })
+                  .catch(err => {
+                    this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                  })
+              })
+              .catch(err => {
+                this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+              })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
