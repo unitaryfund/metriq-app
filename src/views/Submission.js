@@ -136,13 +136,16 @@ class Submission extends React.Component {
     if (this.props.isLoggedIn) {
       axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
         .then(res => {
-          const results = this.state.item.results
-          for (let i = 0; i < results.length; i++) {
-            if (results[i]._id === resultId) {
-              results.splice(i, 1)
+          const rId = res.data.data._id
+          const item = { ...this.state.item }
+          console.log(item)
+          for (let i = 0; i < item.results.length; i++) {
+            if (item.results[i]._id === rId) {
+              item.results.splice(i, 1)
               break
             }
           }
+          this.setState({ item: item })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
