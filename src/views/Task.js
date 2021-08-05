@@ -80,7 +80,7 @@ class Task extends React.Component {
                 <Table
                   className='detail-table'
                   columns={[{
-                    title: 'Submission',
+                    title: 'Name',
                     dataIndex: 'submissionName',
                     key: 'submissionName',
                     width: 700
