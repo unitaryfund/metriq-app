@@ -92,6 +92,9 @@ class Submission extends React.Component {
   }
 
   handleOnChange (key1, key2, value) {
+    if (!value) {
+      value = null
+    }
     if (key1) {
       const k1 = this.state[key1]
       k1[key2] = value
@@ -668,7 +671,8 @@ class Submission extends React.Component {
                           <FormFieldSelectRow
                             inputName='taskParent'
                             label='Parent task (if any)'
-                            options={this.state.taskNames}
+                            isNullDefault
+                            options={this.state.allTaskNames}
                             onChange={(field, value) => this.handleOnChange('task', field, value)}
                           /><br />
                           <FormFieldRow
