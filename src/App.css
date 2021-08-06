@@ -45,6 +45,15 @@ form > .row > label {
   text-align: right;
 }
 
+.container a {
+  color: #007bff;
+}
+
+.container a:hover {
+  color: #0000EE;
+  text-decoration: underline;
+}
+
 .hide {
   visibility: hidden;
 }

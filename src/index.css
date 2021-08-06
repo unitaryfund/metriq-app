@@ -11,12 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.submission-detail-container a {
-  color: #007bff;
-}
-
-.submission-detail-container a:hover {
-  color: #0000EE;
-  text-decoration: underline;
-}
