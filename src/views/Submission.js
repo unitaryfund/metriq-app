@@ -92,7 +92,7 @@ class Submission extends React.Component {
   }
 
   handleOnChange (key1, key2, value) {
-    if (!value) {
+    if (!value && value !== false) {
       value = null
     }
     if (key1) {
