@@ -47,6 +47,8 @@ class FormFieldSelectRow extends React.Component {
             onChange={this.handleOnFieldChange}
             onBlur={this.handleOnFieldBlur}
           >
+            {this.props.isNullDefault &&
+              <option value=''>(None)</option>}
             {this.props.options.map(option =>
               <option key={option._id} value={option._id}>{option.name}</option>
             )}

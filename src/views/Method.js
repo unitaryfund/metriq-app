@@ -37,40 +37,44 @@ class Method extends React.Component {
           </div>
         </div>
         <br />
-        <div>
-          <Table
-            columns={[{
-              title: 'Submission',
-              dataIndex: 'submissionName',
-              key: 'submissionName',
-              width: 700
-            },
-            {
-              title: 'Submitted',
-              dataIndex: 'submittedDate',
-              key: 'submittedDate',
-              width: 200
-            },
-            {
-              title: 'Up-votes',
-              dataIndex: 'upvoteCount',
-              key: 'upvoteCount',
-              width: 200
-            }]}
-            data={this.state.item.submissions
-              ? this.state.item.submissions.map(row => ({
-                  key: row._id,
-                  submissionName: row.submissionName,
-                  submittedDate: new Date(row.submittedDate).toLocaleDateString('en-US'),
-                  upvoteCount: row.upvotes.length
-                }))
-              : []}
-            onRow={(record) => ({
-              onClick () { window.location = '/Submission/' + record.key }
-            })}
-            tableLayout='auto'
-            rowClassName='index-table-link'
-          />
+        <h2>Submissions</h2>
+        <div className='row'>
+          <div className='col-md-12'>
+            <Table
+              className='detail-table'
+              columns={[{
+                title: 'Name',
+                dataIndex: 'submissionName',
+                key: 'submissionName',
+                width: 700
+              },
+              {
+                title: 'Submitted',
+                dataIndex: 'submittedDate',
+                key: 'submittedDate',
+                width: 200
+              },
+              {
+                title: 'Up-votes',
+                dataIndex: 'upvoteCount',
+                key: 'upvoteCount',
+                width: 200
+              }]}
+              data={this.state.item.submissions
+                ? this.state.item.submissions.map(row => ({
+                    key: row._id,
+                    submissionName: row.submissionName,
+                    submittedDate: new Date(row.submittedDate).toLocaleDateString('en-US'),
+                    upvoteCount: row.upvotes.length
+                  }))
+                : []}
+              onRow={(record) => ({
+                onClick () { window.location = '/Submission/' + record.key }
+              })}
+              tableLayout='auto'
+              rowClassName='index-table-link'
+            />
+          </div>
         </div>
       </div>
     )

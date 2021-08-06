@@ -113,6 +113,15 @@ form > .row > label {
   color: black;
 }
 
+.index-table-link {
+  color: #007bff;
+}
+
 .index-table-link:hover {
-  color: blue;
+  color: #0000EE;
+  text-decoration: underline;
+}
+
+.detail-table .rc-table-cell {
+  border: 1px solid #282c34;
 }
