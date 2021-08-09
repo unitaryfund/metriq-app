@@ -4,6 +4,8 @@ In order to locally run and host the `metriq` application we require the use of 
 
 - `metriq-app`: The front-end component of `metriq`
 - `metriq-api`: The back-end component of `metriq`
+- `metriq-client`: This is a Python API client that posts submissions and other data to the back-end component of `metriq`
+- `metriq-db`: **(Optional)** This contains the exported MongoDB collections of our development and quality assurance database.
 
 ## Setting up `metriq-api`
 
