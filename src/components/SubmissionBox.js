@@ -58,7 +58,7 @@ class SubmissionBox extends React.Component {
       <div className='submission'>
         <div className='row'>
           <div className='col-md-2'>
-            <Link to={'/Submission/' + this.props.item._id}><img src={logo} alt='logo' className='submission-image' /></Link>
+            <Link to={'/Submission/' + this.props.item._id}><img src={this.props.item.submissionThumbnailUrl ? this.props.item.submissionThumbnailUrl : logo} alt='logo' className='submission-image' /></Link>
           </div>
           <div className='col-md-8'>
             <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
