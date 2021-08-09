@@ -687,7 +687,11 @@ class Submission extends React.Component {
                   </Card>
                 </Accordion>
               </span>}
-            {(this.state.modalMode === 'Result') &&
+            {(this.state.modalMode === 'Result') && ((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
+              <span>
+                A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
+              </span>}
+            {(this.state.modalMode === 'Result') && (this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
               <span>
                 <FormFieldSelectRow
                   inputName='task' label='Task'
