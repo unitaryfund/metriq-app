@@ -1,3 +1,101 @@
+# Locally setting up MetriQ  
+
+In order to locally run and host the `metriq` application we require the use of the following GitHub repositories:
+
+- `metriq-app`: The front-end component of `metriq`
+- `metriq-api`: The back-end component of `metriq`
+- `metriq-client`: This is a Python API client that posts submissions and other data to the back-end component of `metriq`
+- `metriq-db`: **(Optional)** This contains the exported MongoDB collections of our development and quality assurance database.
+
+## Setting up `metriq-api`
+
+The following system variables need to be present in your `.bashrc` file. Add
+the following lines into your `.bashrc`, making sure to alter the values of the
+`[REDACTED]` entries as necessary.
+
+```bash
+export METRIQ_SECRET_KEY='[REDACTED]'
+export METRIQ_SUPPORT_EMAIL_SERVICE='gmail'
+export METRIQ_SUPPORT_EMAIL_ACCOUNT='support@unitary.fund'
+export METRIQ_SUPPORT_EMAIL_PASSWORD='[REDACTED]'
+export METRIQ_SUPPORT_EMAIL_ADDRESS='support@unitary.fund'
+```
+
+`METRIQ_SECRET_KEY` can be anything, but, for a realistic secret key, start the API project without this environment variable set at all. The app will automatically generate and print a random secret key for temporary use, and this can copied and pasted into `export METRIQ_SECRET_KEY=...` for permanent use.
+
+### Dependencies
+
+You will need
+[`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+installed on your machine.
+
+Install [`nodemon`](https://www.npmjs.com/package/nodemon).
+
+You will require [Postman](https://winter-zodiac-492730.postman.co/home) and
+will need to request to be added to the Postman account associated with
+`metriq`.
+
+You will require an installation of
+[MongoDB](https://docs.mongodb.com/manual/installation/) on your machine. You
+will also need something like [MongoDB
+Compass](https://docs.mongodb.com/compass/current/install/) that can be used to
+visualize the data stored in your local instance of the Mongo database.
+### Usage
+
+Run the `metriq-api` component from the root of the `metriq-api` project:
+
+```bash
+nodemon index.html
+```
+
+You should see output that looks like the following to indicate that it is
+running on port `8080`. 
+
+```bash
+➜  metriq-api git:(main) nodemon index.js
+[nodemon] 2.0.7
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node index.js`
+Db connection successful
+Support email is configured.
+Running RestHub on port 8080
+```
+
+Run the `metriq-app` component from the root of the `metriq-app` project:
+
+```bash
+npm install
+npm start
+```
+
+You should see something like:
+
+```bash
+Compiled successfully!
+
+You can now view metriq in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://10.102.87.32:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+```
+
+to indicate that the local instance of the website is being hosted as
+`http://localhost:3000`. You can verify this by opening a browser and navigating
+to localhost URL.
+
+Once you have both `metriq-api` and `metriq-app` hosting locally, you can seed
+the local instance of the database with the data from the
+[`metriq-db`](https://github.com/unitaryfund/metriq-db) repo.
+
+Following the instructions in the `README.md` file of the `metriq-db` repo will
+populate your local instance of the database with dummy data from the `.JSON`
+files.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
