@@ -11,10 +11,10 @@ import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
-library.add(faThumbsUp, faGithub, faPlus, faTrash)
+library.add(faEdit, faThumbsUp, faGithub, faPlus, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -39,8 +39,13 @@ class Submission extends React.Component {
       allTagNames: [],
       showAddModal: false,
       showRemoveModal: false,
+      showEditModal: false,
       showAccordian: false,
       modalMode: '',
+      submission: {
+        description: '',
+        submissionThumbnailUrl: ''
+      },
       result: {
         task: '',
         method: '',
@@ -65,6 +70,9 @@ class Submission extends React.Component {
       tag: ''
     }
 
+    this.handleAddDescription = this.handleAddDescription.bind(this)
+    this.handleHideEditModal = this.handleHideEditModal.bind(this)
+    this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleAccordianToggle = this.handleAccordianToggle.bind(this)
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -81,6 +89,40 @@ class Submission extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
+  }
+
+  handleAddDescription () {
+    let mode = 'Edit'
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
+    this.setState({ showEditModal: true, modalMode: mode, description: this.state.item.description })
+  }
+
+  handleHideEditModal () {
+    this.setState({ showEditModal: false })
+  }
+  
+  handleEditModalDone () {
+    if (!this.props.isLoggedIn) {
+      window.location = '/Login'
+    }
+
+    const reqBody = {};
+    if (this.state.submission.submissionThumbnailUrl) {
+      reqBody.submissionThumbnailUrl = this.state.submission.submissionThumbnailUrl
+    }
+    if (this.state.submission.description) {
+      reqBody.description = this.state.submission.description
+    }
+
+    axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id, reqBody)
+      .then(res => {
+        this.setState({ item: res.data.data, showEditModal: false })
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
   }
 
   handleAccordianToggle () {
@@ -436,7 +478,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div className='submission-description'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec commodo est. Nunc mollis nunc ac ante vestibulum, eu consectetur magna porttitor. Proin ac tortor urna. Aliquam ac ante eu nunc aliquam convallis et in sem. Donec volutpat tincidunt tincidunt. Aliquam at risus non diam imperdiet vestibulum eget a orci. In ultricies, arcu vel semper lobortis, lorem orci placerat nisi, id fermentum purus odio ut nulla. Duis quis felis a erat mattis venenatis id sit amet purus. Aenean a risus dui.
+              {this.state.item.description ? this.state.item.description : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleAddDescription}>Add one.</button></div></div>}
             </div>
           </div>
         </div>
@@ -444,6 +486,7 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotes.length}</button>
             <button className='submission-button btn btn-secondary'><FontAwesomeIcon icon={['fab', 'github']} /></button>
+            <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
           </div>
         </div>
         <br />
@@ -852,6 +895,34 @@ class Submission extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleRemoveModalDone}>
+              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={this.state.showEditModal} onHide={this.handleHideEditModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Submission</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {(this.state.modalMode === 'Login') &&
+              <span>
+                Please <Link to='/Login'>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'Login') &&
+              <span>
+                <FormFieldRow
+                  inputName='submissionThumbnailUrl' inputType='text' label='Thumbnail URL'
+                  onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                /><br/>
+                <FormFieldRow
+                  inputName='description' inputType='textarea' label='Description'
+                  onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                />
+              </span>
+            }
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.handleEditModalDone}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>
