@@ -39,6 +39,7 @@ class Submission extends React.Component {
       allTagNames: [],
       showAddModal: false,
       showRemoveModal: false,
+      showAccordian: false,
       modalMode: '',
       result: {
         task: '',
@@ -64,6 +65,7 @@ class Submission extends React.Component {
       tag: ''
     }
 
+    this.handleAccordianToggle = this.handleAccordianToggle.bind(this)
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
@@ -76,19 +78,13 @@ class Submission extends React.Component {
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
     this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
-    this.handleOnSubmitTask = this.handleOnSubmitTask.bind(this)
-    this.handleOnSubmitMethod = this.handleOnSubmitMethod.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
   }
 
-  handleOnSubmitTask () {
-    /* TODO */
-  }
-
-  handleOnSubmitMethod () {
-    /* TODO */
+  handleAccordianToggle () {
+    this.setState({ showAccordian: !this.state.showAccordian })
   }
 
   handleOnChange (key1, key2, value) {
@@ -209,7 +205,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, modalMode: mode })
+    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode })
   }
 
   handleOnClickRemove (mode) {
@@ -220,7 +216,7 @@ class Submission extends React.Component {
   }
 
   handleHideAddModal () {
-    this.setState({ showAddModal: false })
+    this.setState({ showAddModal: false, showAccordian: false })
   }
 
   handleHideRemoveModal () {
@@ -233,37 +229,59 @@ class Submission extends React.Component {
     }
 
     if (this.state.modalMode === 'Task') {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
-        .then(res => {
-          const submission = res.data.data
-          const tasks = [...this.state.taskNames]
-          for (let j = 0; j < tasks.length; j++) {
-            if (this.state.taskId === tasks[j]._id) {
-              tasks.splice(j, 1)
-              break
+      console.log(this.state.showAccordian)
+      console.log(this.state.task)
+      if (this.state.showAccordian) {
+        axios.post(config.api.getUriPrefix() + '/task', this.state.task)
+          .then(res => {
+            window.location.reload()
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      } else {
+        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
+          .then(res => {
+            const submission = res.data.data
+            const tasks = [...this.state.taskNames]
+            for (let j = 0; j < tasks.length; j++) {
+              if (this.state.taskId === tasks[j]._id) {
+                tasks.splice(j, 1)
+                break
+              }
             }
-          }
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      }
     } else if (this.state.modalMode === 'Method') {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
-        .then(res => {
-          const submission = res.data.data
-          const methods = [...this.state.methodNames]
-          for (let j = 0; j < methods.length; j++) {
-            if (this.state.methodId === methods[j]._id) {
-              methods.splice(j, 1)
-              break
+      if (this.state.showAccordian) {
+        axios.post(config.api.getUriPrefix() + '/method', this.state.method)
+          .then(res => {
+            window.location.reload()
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      } else {
+        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
+          .then(res => {
+            const submission = res.data.data
+            const methods = [...this.state.methodNames]
+            for (let j = 0; j < methods.length; j++) {
+              if (this.state.methodId === methods[j]._id) {
+                methods.splice(j, 1)
+                break
+              }
             }
-          }
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods, item: submission })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods, item: submission })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      }
     } else if (this.state.modalMode === 'Tag') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
         .then(res => {
@@ -609,34 +627,37 @@ class Submission extends React.Component {
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1'>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordianToggle}>
                         <FontAwesomeIcon icon='plus' /> Create a new method.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey='1'>
                       <Card.Body>
-                        <form onSubmit={this.handleOnSubmitMethod}>
-                          <FormFieldRow
-                            inputName='methodName'
-                            inputType='text'
-                            label='Name'
-                            onChange={(field, value) => this.handleOnChange('method', field, value)}
-                            validRegex={methodNameRegex}
-                          /><br />
-                          <FormFieldRow
-                            inputName='methodFullName'
-                            inputType='text'
-                            label='Full name'
-                            onChange={(field, value) => this.handleOnChange('method', field, value)}
-                            validRegex={methodNameRegex}
-                          /><br />
-                          <FormFieldRow
-                            inputName='description'
-                            inputType='text'
-                            label='Description'
-                            onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          />
-                        </form>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('method', field, value)}
+                          validRegex={methodNameRegex}
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name'
+                          onChange={(field, value) => this.handleOnChange('method', field, value)}
+                          validRegex={methodNameRegex}
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description'
+                          onChange={(field, value) => this.handleOnChange('method', field, value)}
+                        />
+                        <div className='row'>
+                          <div className='col-md-12'>
+                            <input type='submit' className='btn btn-primary float-right' value='Create' />
+                          </div>
+                        </div>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
@@ -654,34 +675,32 @@ class Submission extends React.Component {
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1'>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordianToggle}>
                         <FontAwesomeIcon icon='plus' /> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey='1'>
                       <Card.Body>
-                        <form onSubmit={this.handleOnSubmitTask}>
-                          <FormFieldRow
-                            inputName='taskName'
-                            inputType='text'
-                            label='Name'
-                            onChange={(field, value) => this.handleOnChange('task', field, value)}
-                            validRegex={taskNameRegex}
-                          /><br />
-                          <FormFieldSelectRow
-                            inputName='taskParent'
-                            label='Parent task (if any)'
-                            isNullDefault
-                            options={this.state.allTaskNames}
-                            onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          /><br />
-                          <FormFieldRow
-                            inputName='description'
-                            inputType='text'
-                            label='Description'
-                            onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          />
-                        </form>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          validRegex={taskNameRegex}
+                        /><br />
+                        <FormFieldSelectRow
+                          inputName='taskParent'
+                          label='Parent task (if any)'
+                          isNullDefault
+                          options={this.state.allTaskNames}
+                          onChange={(field, value) => this.handleOnChange('task', field, value)}
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description'
+                          onChange={(field, value) => this.handleOnChange('task', field, value)}
+                        />
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
