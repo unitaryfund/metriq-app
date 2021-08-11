@@ -96,7 +96,8 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showEditModal: true, modalMode: mode, description: this.state.item.description })
+    const submission = { description: this.state.item.description, submissionThumbnailUrl: this.state.item.submissionThumbnailUrl }
+    this.setState({ showEditModal: true, modalMode: mode, submission: submission })
   }
 
   handleHideEditModal () {
@@ -912,10 +913,12 @@ class Submission extends React.Component {
               <span>
                 <FormFieldRow
                   inputName='submissionThumbnailUrl' inputType='text' label='Thumbnail URL'
+                  value={this.state.submission.submissionThumbnailUrl}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 /><br/>
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description'
+                  value={this.state.submission.description}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 />
               </span>
