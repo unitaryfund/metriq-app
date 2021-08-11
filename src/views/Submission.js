@@ -103,13 +103,13 @@ class Submission extends React.Component {
   handleHideEditModal () {
     this.setState({ showEditModal: false })
   }
-  
+
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
       window.location = '/Login'
     }
 
-    const reqBody = {};
+    const reqBody = {}
     if (this.state.submission.submissionThumbnailUrl) {
       reqBody.submissionThumbnailUrl = this.state.submission.submissionThumbnailUrl
     }
@@ -915,14 +915,13 @@ class Submission extends React.Component {
                   inputName='submissionThumbnailUrl' inputType='text' label='Thumbnail URL'
                   value={this.state.submission.submissionThumbnailUrl}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                /><br/>
+                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description'
                   value={this.state.submission.description}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 />
-              </span>
-            }
+              </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleEditModalDone}>
