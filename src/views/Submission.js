@@ -56,6 +56,7 @@ class Submission extends React.Component {
       },
       task: {
         name: '',
+        fullName: '',
         parentTask: '',
         description: '',
         submissions: this.props.match.params.id
@@ -272,8 +273,6 @@ class Submission extends React.Component {
     }
 
     if (this.state.modalMode === 'Task') {
-      console.log(this.state.showAccordian)
-      console.log(this.state.task)
       if (this.state.showAccordian) {
         axios.post(config.api.getUriPrefix() + '/task', this.state.task)
           .then(res => {
@@ -729,6 +728,13 @@ class Submission extends React.Component {
                           inputName='name'
                           inputType='text'
                           label='Name'
+                          onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          validRegex={taskNameRegex}
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           validRegex={taskNameRegex}
                         /><br />
