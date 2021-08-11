@@ -41,16 +41,29 @@ class FormFieldRow extends React.Component {
       <div className='row'>
         <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
         <div className='col-md-6 '>
-          <input
-            id={this.props.inputName}
-            name={this.props.inputName}
-            className='form-control'
-            type={this.props.inputType}
-            selected={this.state.defaultValue}
-            value={this.props.value}
-            onChange={this.handleOnFieldChange}
-            onBlur={this.handleOnFieldBlur}
-          />
+          {(this.props.inputType === 'textarea') &&
+            <textarea
+              id={this.props.inputName}
+              name={this.props.inputName}
+              className='form-control'
+              onChange={this.handleOnFieldChange}
+              onBlur={this.handleOnFieldBlur}
+              rows={this.props.rows}
+              cols={this.props.cols}
+            >
+              {this.props.value}
+            </textarea>}
+          {(this.props.inputType !== 'textarea') &&
+            <input
+              id={this.props.inputName}
+              name={this.props.inputName}
+              className='form-control'
+              type={this.props.inputType}
+              selected={this.state.defaultValue}
+              value={this.props.value}
+              onChange={this.handleOnFieldChange}
+              onBlur={this.handleOnFieldBlur}
+            />}
         </div>
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
       </div>
