@@ -39,8 +39,8 @@ class SubmissionScroll extends React.Component {
     const route = this.props.isEditView
       ? config.api.getUriPrefix() + '/user/submission/' + this.state.nextPage
       : (this.props.tag
-          ? config.api.getUriPrefix() + '/submission/' + this.props.tag + '/' + this.props.sortType + this.state.nextPage
-          : config.api.getUriPrefix() + '/submission/' + this.props.sortType + this.state.nextPage)
+          ? config.api.getUriPrefix() + '/submission/' + this.props.tag + '/' + this.props.sortType + '/' + this.state.nextPage
+          : config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + this.state.nextPage)
     axios.get(route)
       .then(res => {
         this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
