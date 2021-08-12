@@ -56,6 +56,7 @@ class Submission extends React.Component {
       },
       task: {
         name: '',
+        fullName: '',
         parentTask: '',
         description: '',
         submissions: this.props.match.params.id
@@ -103,13 +104,13 @@ class Submission extends React.Component {
   handleHideEditModal () {
     this.setState({ showEditModal: false })
   }
-  
+
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
       window.location = '/Login'
     }
 
-    const reqBody = {};
+    const reqBody = {}
     if (this.state.submission.submissionThumbnailUrl) {
       reqBody.submissionThumbnailUrl = this.state.submission.submissionThumbnailUrl
     }
@@ -272,8 +273,6 @@ class Submission extends React.Component {
     }
 
     if (this.state.modalMode === 'Task') {
-      console.log(this.state.showAccordian)
-      console.log(this.state.task)
       if (this.state.showAccordian) {
         axios.post(config.api.getUriPrefix() + '/task', this.state.task)
           .then(res => {
@@ -732,6 +731,13 @@ class Submission extends React.Component {
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           validRegex={taskNameRegex}
                         /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name'
+                          onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          validRegex={taskNameRegex}
+                        /><br />
                         <FormFieldSelectRow
                           inputName='taskParent'
                           label='Parent task (if any)'
@@ -915,14 +921,13 @@ class Submission extends React.Component {
                   inputName='submissionThumbnailUrl' inputType='text' label='Thumbnail URL'
                   value={this.state.submission.submissionThumbnailUrl}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                /><br/>
+                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description'
                   value={this.state.submission.description}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 />
-              </span>
-            }
+              </span>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleEditModalDone}>
