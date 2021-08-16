@@ -42,8 +42,7 @@ class Submission extends React.Component {
       showAccordian: false,
       modalMode: '',
       submission: {
-        description: '',
-        submissionThumbnailUrl: ''
+        description: ''
       },
       result: {
         task: '',
@@ -96,7 +95,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const submission = { description: this.state.item.description, submissionThumbnailUrl: this.state.item.submissionThumbnailUrl }
+    const submission = { description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, submission: submission })
   }
 
@@ -110,9 +109,6 @@ class Submission extends React.Component {
     }
 
     const reqBody = {}
-    if (this.state.submission.submissionThumbnailUrl) {
-      reqBody.submissionThumbnailUrl = this.state.submission.submissionThumbnailUrl
-    }
     if (this.state.submission.description) {
       reqBody.description = this.state.submission.description
     }
@@ -916,11 +912,6 @@ class Submission extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
-                <FormFieldRow
-                  inputName='submissionThumbnailUrl' inputType='text' label='Thumbnail URL'
-                  value={this.state.submission.submissionThumbnailUrl}
-                  onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description'
                   value={this.state.submission.description}
