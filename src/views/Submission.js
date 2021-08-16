@@ -480,7 +480,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotes.length}</button>
-            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
             <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
           </div>
         </div>
