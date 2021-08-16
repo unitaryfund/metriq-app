@@ -69,7 +69,6 @@ form > .row > label {
 }
 
 .submission {
-  height: 200px;
   border: 1px solid black;
   margin: 6px;
   padding: 8px;
@@ -83,7 +82,9 @@ form > .row > label {
   display: inline-block;
   vertical-align: -80px;
   width: 180px;
-  height: 180px;
+  height: auto;
+  max-width: 180px;
+  max-height: 180px;
 }
 
 .submission-description {
@@ -133,4 +134,8 @@ form > .row > label {
 
 .detail-table .rc-table-cell {
   border: 1px solid #282c34;
+}
+
+.max-width {
+  max-width: 100%;
 }
