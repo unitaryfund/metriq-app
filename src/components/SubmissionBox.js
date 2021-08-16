@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import logo from './../github.jpeg'
 import ErrorHandler from './ErrorHandler'
 
-library.add(faThumbsUp, faGithub)
+library.add(faThumbsUp, faExternalLinkAlt)
 
 class SubmissionBox extends React.Component {
   constructor (props) {
@@ -69,7 +68,7 @@ class SubmissionBox extends React.Component {
           <div className='col-md-2'>
             <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
               <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.upvotes}</button><br />
-              <button className='submission-button btn btn-secondary'><FontAwesomeIcon icon={['fab', 'github']} /></button>
+              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.props.item.submissionContentUrl, "_blank") }} ><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
               {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
             </div>
           </div>

@@ -11,10 +11,9 @@ import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEdit, faThumbsUp, faGithub, faPlus, faTrash)
+library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -485,7 +484,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotes.length}</button>
-            <button className='submission-button btn btn-secondary'><FontAwesomeIcon icon={['fab', 'github']} /></button>
+            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.item.submissionContentUrl, "_blank") }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
             <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
           </div>
         </div>
