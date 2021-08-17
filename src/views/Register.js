@@ -25,7 +25,7 @@ class Register extends React.Component {
       isPasswordMatch: true,
       isRequestFailed: false,
       requestFailedMessage: '',
-      isValidationDirty: true
+      isValidated: false
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -38,7 +38,7 @@ class Register extends React.Component {
 
   handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
-    this.setState({ [field]: value, isValidationDirty: true })
+    this.setState({ [field]: value, isValidated: false })
   }
 
   handleOnChangePassword (field, value) {
@@ -74,8 +74,8 @@ class Register extends React.Component {
       return false
     }
 
-    if (this.state.isValidationDirty) {
-      this.setState({ isValidationDirty: false })
+    if (!this.state.isValidated) {
+      this.setState({ isValidated: true })
     }
 
     return true
@@ -136,7 +136,7 @@ class Register extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={this.state.isValidationDirty && !this.isAllValid()} />
+              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </div>
           </div>
         </form>

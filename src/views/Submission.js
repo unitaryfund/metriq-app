@@ -26,7 +26,7 @@ class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isValidationDirty: true,
+      isValidated: false,
       isRequestFailed: false,
       requestFailedMessage: '',
       item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
@@ -125,7 +125,7 @@ class Submission extends React.Component {
   }
 
   handleAccordianToggle () {
-    this.setState({ showAccordian: !this.state.showAccordian, isValidationDirty: true })
+    this.setState({ showAccordian: !this.state.showAccordian, isValidated: false })
   }
 
   handleOnChange (key1, key2, value) {
@@ -135,9 +135,9 @@ class Submission extends React.Component {
     if (key1) {
       const k1 = this.state[key1]
       k1[key2] = value
-      this.setState({ [key1]: k1, isValidationDirty: true })
+      this.setState({ [key1]: k1, isValidated: false })
     } else {
-      this.setState({ [key2]: value, isValidationDirty: true })
+      this.setState({ [key2]: value, isValidated: false })
     }
   }
 
@@ -246,7 +246,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode, isValidationDirty: true })
+    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode, isValidated: false })
   }
 
   handleOnClickRemove (mode) {
@@ -407,8 +407,8 @@ class Submission extends React.Component {
 
   isAllValid () {
     if (this.state.modalMode === 'Login') {
-      if (this.state.isValidationDirty) {
-        this.setState({ isValidationDirty: false })
+      if (this.state.isValidated) {
+        this.setState({ isValidated: true })
       }
       return true
     }
@@ -444,8 +444,8 @@ class Submission extends React.Component {
       }
     }
 
-    if (this.state.isValidationDirty) {
-      this.setState({ isValidationDirty: false })
+    if (this.state.isValidated) {
+      this.setState({ isValidated: true })
     }
 
     return true
@@ -843,7 +843,7 @@ class Submission extends React.Component {
               </span>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={this.state.isValidationDirty && !this.isAllValid()}>
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Submit'}
             </Button>
           </Modal.Footer>
