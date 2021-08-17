@@ -24,7 +24,7 @@ class FormFieldRow extends React.Component {
   handleOnFieldChange (event) {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
-    const fieldValue = (this.props.inputType === 'checkbox') ? !!event.target.value : event.target.value
+    const fieldValue = (this.props.inputType === 'checkbox') ? event.target.checked : event.target.value
     this.setState({ value: fieldValue })
     if (this.isValidValue(fieldValue)) {
       this.setState({ invalid: false })
