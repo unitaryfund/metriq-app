@@ -26,6 +26,7 @@ class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isValidated: false,
       isRequestFailed: false,
       requestFailedMessage: '',
       item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
@@ -88,6 +89,7 @@ class Submission extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
+    this.isAllValid = this.isAllValid.bind(this)
   }
 
   handleAddDescription () {
@@ -123,7 +125,7 @@ class Submission extends React.Component {
   }
 
   handleAccordianToggle () {
-    this.setState({ showAccordian: !this.state.showAccordian })
+    this.setState({ showAccordian: !this.state.showAccordian, isValidated: false })
   }
 
   handleOnChange (key1, key2, value) {
@@ -133,9 +135,9 @@ class Submission extends React.Component {
     if (key1) {
       const k1 = this.state[key1]
       k1[key2] = value
-      this.setState({ [key1]: k1 })
+      this.setState({ [key1]: k1, isValidated: false })
     } else {
-      this.setState({ [key2]: value })
+      this.setState({ [key2]: value, isValidated: false })
     }
   }
 
@@ -244,7 +246,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode })
+    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode, isValidated: false })
   }
 
   handleOnClickRemove (mode) {
@@ -401,6 +403,52 @@ class Submission extends React.Component {
         }
       }
     }
+  }
+
+  isAllValid () {
+    if (this.state.modalMode === 'Login') {
+      if (this.state.isValidated) {
+        this.setState({ isValidated: true })
+      }
+      return true
+    }
+
+    if (this.state.modalMode === 'Task') {
+      if (this.state.showAccordian) {
+        if (!taskNameRegex.test(this.state.task.name)) {
+          return false
+        }
+        if (!taskNameRegex.test(this.state.task.fullName)) {
+          return false
+        }
+      } else if (!this.state.taskId) {
+        return false
+      }
+    } else if (this.state.modalMode === 'Method') {
+      if (this.state.showAccordian) {
+        if (!methodNameRegex.test(this.state.method.name)) {
+          return false
+        }
+        if (!methodNameRegex.test(this.state.method.fullName)) {
+          return false
+        }
+      } else if (!this.state.methodId) {
+        return false
+      }
+    } else if (this.state.modalMode === 'Result') {
+      if (!metricNameRegex.test(this.state.result.metricName)) {
+        return false
+      }
+      if (!metricValueRegex.test(this.state.result.metricValue)) {
+        return false
+      }
+    }
+
+    if (this.state.isValidated) {
+      this.setState({ isValidated: true })
+    }
+
+    return true
   }
 
   componentDidMount () {
@@ -694,11 +742,6 @@ class Submission extends React.Component {
                           label='Description'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
                         />
-                        <div className='row'>
-                          <div className='col-md-12'>
-                            <input type='submit' className='btn btn-primary float-right' value='Create' />
-                          </div>
-                        </div>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
@@ -803,7 +846,7 @@ class Submission extends React.Component {
               </span>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit}>
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Submit'}
             </Button>
           </Modal.Footer>
