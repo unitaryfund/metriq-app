@@ -19,7 +19,8 @@ class LogIn extends React.Component {
       username: '',
       password: '',
       isRequestFailed: false,
-      requestFailedMessage: ''
+      requestFailedMessage: '',
+      isValidationDirty: true
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -29,7 +30,7 @@ class LogIn extends React.Component {
 
   handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
-    this.setState({ [field]: value })
+    this.setState({ [field]: value, isValidationDirty: true })
   }
 
   isAllValid () {
@@ -38,6 +39,10 @@ class LogIn extends React.Component {
     }
     if (!passwordValidRegex.test(this.state.password)) {
       return false
+    }
+
+    if (this.state.isValidationDirty) {
+      this.setState({ isValidationDirty: false })
     }
 
     return true
@@ -90,7 +95,7 @@ class LogIn extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
+              <input className='btn btn-primary' type='submit' value='Submit' disabled={this.state.isValidationDirty && !this.isAllValid()} />
             </div>
           </div>
         </form>
