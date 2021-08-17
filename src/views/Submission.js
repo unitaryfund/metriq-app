@@ -409,6 +409,9 @@ class Submission extends React.Component {
       .then(subRes => {
         const submission = subRes.data.data
 
+        // Just get the view populated as quickly as possible, before we "trim."
+        this.setState({ item: submission })
+
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
           .then(res => {
