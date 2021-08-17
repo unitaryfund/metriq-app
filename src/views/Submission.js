@@ -409,6 +409,9 @@ class Submission extends React.Component {
       .then(subRes => {
         const submission = subRes.data.data
 
+        // Just get the view populated as quickly as possible, before we "trim."
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission })
+
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
           .then(res => {
@@ -441,7 +444,7 @@ class Submission extends React.Component {
                     const tags = [...res.data.data]
                     this.handleTrimTags(submission, tags)
 
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags, item: submission })
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
                   })
                   .catch(err => {
                     this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
