@@ -139,3 +139,8 @@ form > .row > label {
 .max-width {
   max-width: 100%;
 }
+
+.container .submission a {
+  color: #000000;
+  text-decoration: none;
+}
