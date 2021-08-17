@@ -444,7 +444,7 @@ class Submission extends React.Component {
                     const tags = [...res.data.data]
                     this.handleTrimTags(submission, tags)
 
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags, item: submission })
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
                   })
                   .catch(err => {
                     this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
