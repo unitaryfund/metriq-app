@@ -55,24 +55,26 @@ class SubmissionBox extends React.Component {
   render () {
     return (
       <div className='submission'>
-        <div className='row h-100'>
-          <div className='col-md-2 col h-100'>
-            <Link to={'/Submission/' + this.props.item._id}><img src={this.props.item.submissionThumbnailUrl ? this.props.item.submissionThumbnailUrl : logo} alt='logo' className='submission-image' /></Link>
-          </div>
-          <div className='col-md-8 col h-100'>
-            <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
-            <div className='submission-description'>
-              {this.props.item.description ? this.props.item.description : <i>(No description provided.)</i>}
+        <Link to={'/Submission/' + this.props.item._id}>
+          <div className='row h-100'>
+            <div className='col-md-2 col h-100'>
+              <img src={this.props.item.submissionThumbnailUrl ? this.props.item.submissionThumbnailUrl : logo} alt='logo' className='submission-image' />
+            </div>
+            <div className='col-md-8 col h-100'>
+              <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+              <div className='submission-description'>
+                {this.props.item.description ? this.props.item.description : <i>(No description provided.)</i>}
+              </div>
+            </div>
+            <div className='col-md-2 col h-100'>
+              <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
+                <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.upvotes}</button><br />
+                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.props.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+                {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
+              </div>
             </div>
           </div>
-          <div className='col-md-2 col h-100'>
-            <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
-              <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.upvotes}</button><br />
-              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.props.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
-              {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
-            </div>
-          </div>
-        </div>
+        </Link>
       </div>
     )
   }
