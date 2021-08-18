@@ -3,6 +3,7 @@ import React from 'react'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
+import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 
 const usernameMissingError = 'Username cannot be blank.'
@@ -25,7 +26,8 @@ class Register extends React.Component {
       isPasswordMatch: true,
       isRequestFailed: false,
       requestFailedMessage: '',
-      isValidated: false
+      isValidated: false,
+      isPasswordVisible: false
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -115,16 +117,20 @@ class Register extends React.Component {
             validRegex={emailValidRegex}
           />
           <FormFieldRow
-            inputName='password' inputType='password' label='Password'
+            inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePassword}
             validRegex={passwordValidRegex}
           />
           <FormFieldRow
-            inputName='passwordConfirm' inputType='password' label='Password Confirm'
+            inputName='passwordConfirm' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password Confirm'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePasswordConfirm}
             validRegex={passwordValidRegex}
+          />
+          <PasswordVisibleControlRow
+            inputName='isPasswordVisible'
+            onChange={this.handleOnChange}
           />
           <div className='row'>
             <div className='col-md-3' />
