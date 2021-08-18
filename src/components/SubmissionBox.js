@@ -68,7 +68,7 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-2 col h-100'>
               <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.upvotes}</button><br />
+                <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br />
                 <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.props.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
                 {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
               </div>
