@@ -59,7 +59,7 @@ class FormFieldRow extends React.Component {
               name={this.props.inputName}
               className='form-control'
               type={this.props.inputType}
-              selected={this.state.defaultValue}
+              selected={this.props.defaultValue}
               value={this.props.value}
               onChange={this.handleOnFieldChange}
               onBlur={this.handleOnFieldBlur}

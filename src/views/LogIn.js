@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
+import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 
 const usernameMissingError = 'Username cannot be blank.'
@@ -20,7 +21,8 @@ class LogIn extends React.Component {
       password: '',
       isRequestFailed: false,
       requestFailedMessage: '',
-      isValidated: false
+      isValidated: false,
+      isPasswordVisible: false
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -81,10 +83,14 @@ class LogIn extends React.Component {
             validRegex={usernameValidRegex}
           />
           <FormFieldRow
-            inputName='password' inputType='password' label='Password'
+            inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChange}
             validRegex={passwordValidRegex}
+          />
+          <PasswordVisibleControlRow
+            inputName='isPasswordVisible'
+            onChange={this.handleOnChange}
           />
           <div className='row'>
             <div className='col-md-3' />

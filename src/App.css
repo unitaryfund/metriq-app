@@ -144,3 +144,7 @@ form > .row > label {
   color: #000000;
   text-decoration: none;
 }
+
+.password-visible-checkbox {
+  display: inline-block;
+}
