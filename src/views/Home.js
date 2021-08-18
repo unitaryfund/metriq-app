@@ -4,7 +4,7 @@ import SubmissionScroll from '../components/SubmissionScroll'
 const Home = (props) => {
   return (
     <div className='container'>
-      <header>MetriQ - Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</header>
+      <header>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</header>
       <br />
       <Tabs defaultActiveKey='trending' id='top-submissions-tabs'>
         <Tab eventKey='trending' title='Trending'>

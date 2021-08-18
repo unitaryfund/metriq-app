@@ -74,7 +74,7 @@ class Tags extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>MetriQ - Tags</header>
+        <header>Tags</header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>

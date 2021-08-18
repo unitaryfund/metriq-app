@@ -60,7 +60,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>MetriQ - Methods</header>
+        <header>Tasks</header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
