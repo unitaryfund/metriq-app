@@ -47,8 +47,8 @@ class Tasks extends React.Component {
           return 0
         })
         popular.sort(function (a, b) {
-          const keyA = a.upvoteCount
-          const keyB = b.upvoteCount
+          const keyA = a.upvoteTotal
+          const keyB = b.upvoteTotal
           if (keyA < keyB) {
             return 1
           }
