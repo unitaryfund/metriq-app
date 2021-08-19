@@ -847,7 +847,7 @@ class Submission extends React.Component {
                 <FormFieldRow
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Does a higher value of the metric indicate better performance? (If no, then a lower value of the metric indiicates better performance.)'
+                  tooltip='Does a higher value of the metric indicate better performance? (If no, then a lower value of the metric indicates better performance.)'
                 />
               </span>}
             {(this.state.modalMode === 'Tag') &&
