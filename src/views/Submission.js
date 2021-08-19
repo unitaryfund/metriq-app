@@ -860,12 +860,11 @@ class Submission extends React.Component {
                   tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
               </span>}
-              {(this.state.modalMode !== 'Login') && <div className='text-center'><b>(Mouse-over labels for explanation.)</b></div>}
+            {(this.state.modalMode !== 'Login') && <div className='text-center'><b>(Mouse-over labels for explanation.)</b></div>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>
-              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Submit'}
-            </Button>
+            {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideAddModal}>Cancel</Button>}
+            {(this.state.modalMode !== 'Login') && <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>}
           </Modal.Footer>
         </Modal>
         <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
@@ -983,9 +982,8 @@ class Submission extends React.Component {
               </span>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleEditModalDone}>
-              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
-            </Button>
+            {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideEditModal}>Cancel</Button>}
+            {(this.state.modalMode !== 'Login') && <Button variant='primary' onClick={this.handleEditModalDone}>Submit</Button>}
           </Modal.Footer>
         </Modal>
       </div>
