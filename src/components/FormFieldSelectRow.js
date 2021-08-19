@@ -1,4 +1,6 @@
 import React from 'react'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 class FormFieldSelectRow extends React.Component {
   constructor (props) {
@@ -38,7 +40,12 @@ class FormFieldSelectRow extends React.Component {
   render () {
     return (
       <div className='row'>
-        <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
+        {this.props.tooltip &&
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
+            <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
+          </OverlayTrigger>}
+        {!this.props.tooltip &&
+          <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>}
         <div className='col-md-6'>
           <select
             id={this.props.inputName}
