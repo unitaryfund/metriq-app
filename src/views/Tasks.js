@@ -22,33 +22,10 @@ class Tasks extends React.Component {
     const route = config.api.getUriPrefix() + '/task/submissionCount'
     axios.get(route)
       .then(res => {
-        const alphabetical = [...res.data.data]
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
-        const popular = res.data.data
-        popular.sort(function (a, b) {
+        const common = [...res.data.data]
+        common.sort(function (a, b) {
           const keyA = a.submissionCount
           const keyB = b.submissionCount
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          return 0
-        })
-        popular.sort(function (a, b) {
-          const keyA = a.upvoteTotal
-          const keyB = b.upvoteTotal
           if (keyA < keyB) {
             return 1
           }
@@ -60,10 +37,36 @@ class Tasks extends React.Component {
         this.setState({
           isRequestFailed: false,
           requestFailedMessage: '',
-          alphabetical: alphabetical,
-          popular: popular,
-          common: res.data.data
+          common: common
         })
+
+        const popular = [...res.data.data]
+        popular.sort(function (a, b) {
+          const keyA = a.upvoteTotal
+          const keyB = b.upvoteTotal
+          if (keyA < keyB) {
+            return 1
+          }
+          if (keyB < keyA) {
+            return -1
+          }
+          return 0
+        })
+        this.setState({ popular: popular })
+
+        const alphabetical = res.data.data
+        alphabetical.sort(function (a, b) {
+          const keyA = a.name.toLowerCase()
+          const keyB = b.name.toLowerCase()
+          if (keyA < keyB) {
+            return -1
+          }
+          if (keyB < keyA) {
+            return 1
+          }
+          return 0
+        })
+        this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })

@@ -21,7 +21,10 @@ class TaskMethodBox extends React.Component {
         <td>
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with task</Tooltip>}>
             <span><FontAwesomeIcon icon={faExternalLinkAlt} />: {this.props.item.submissionCount}</span>
-          </OverlayTrigger>&nbsp;
+          </OverlayTrigger>
+        </td>
+        <td className='task-method-item-spacer' />
+        <td>
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of upvotes, for all submissions with task</Tooltip>}>
             <span><FontAwesomeIcon icon={faThumbsUp} />: {this.props.item.upvoteTotal}</span>
           </OverlayTrigger>
