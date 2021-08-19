@@ -24,6 +24,10 @@
   color: white;
 }
 
+.navbar-title {
+  font-family: 'Courier New', monospace;
+}
+
 .App-link {
   color: #61dafb;
 }

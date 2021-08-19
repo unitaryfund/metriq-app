@@ -33,7 +33,7 @@ class Profile extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Test - Profile</header>
+        <header>Profile</header>
         <br />
         <div>
           <FieldRow fieldName='username' label='Username' value={this.state.data.username} />
