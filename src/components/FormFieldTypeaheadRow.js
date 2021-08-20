@@ -3,6 +3,11 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import FormFieldValidator from './FormFieldValidator'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faInfoCircle)
 
 class FormFieldTypeaheadRow extends React.Component {
   constructor (props) {
@@ -42,12 +47,9 @@ class FormFieldTypeaheadRow extends React.Component {
   render () {
     return (
       <div className='row'>
-        {this.props.tooltip &&
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-          </OverlayTrigger>}
-        {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>}
+        <div className='col-md-3'>
+          <label htmlFor={this.props.inputName}>{this.props.label}</label>
+        </div>
         <Typeahead
           id={this.props.inputName}
           name={this.props.inputName}
@@ -58,7 +60,13 @@ class FormFieldTypeaheadRow extends React.Component {
           onInputChange={(input, event) => this.handleOnFieldChange(input)}
           onBlur={this.handleOnFieldBlur}
         />
-        <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
+        <div className='col-md-3'>
+          {this.props.tooltip &&
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
+              <FontAwesomeIcon icon='info-circle' />
+            </OverlayTrigger>}
+          <FormFieldValidator invalid={this.state.invalid} message={this.props.validatorMessage} />
+        </div>
       </div>
     )
   }

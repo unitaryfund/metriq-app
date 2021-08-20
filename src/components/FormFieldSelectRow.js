@@ -1,6 +1,11 @@
 import React from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faInfoCircle)
 
 class FormFieldSelectRow extends React.Component {
   constructor (props) {
@@ -40,12 +45,9 @@ class FormFieldSelectRow extends React.Component {
   render () {
     return (
       <div className='row'>
-        {this.props.tooltip &&
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
-          </OverlayTrigger>}
-        {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>}
+        <div className='col-md-3'>
+          <label htmlFor={this.props.inputName}>{this.props.label}</label>
+        </div>
         <div className='col-md-6'>
           <select
             id={this.props.inputName}
@@ -61,7 +63,12 @@ class FormFieldSelectRow extends React.Component {
             )}
           </select>
         </div>
-        <div className='col-md-3' />
+        <div className='col-md-3'>
+          {this.props.tooltip &&
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
+              <FontAwesomeIcon icon='info-circle' />
+            </OverlayTrigger>}
+        </div>
       </div>
     )
   }
