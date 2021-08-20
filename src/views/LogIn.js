@@ -11,7 +11,6 @@ const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
 
 const usernameValidRegex = /^(?!\s*$).+/
-const passwordValidRegex = /.{8,}/
 
 class LogIn extends React.Component {
   constructor (props) {
@@ -37,9 +36,6 @@ class LogIn extends React.Component {
 
   isAllValid () {
     if (!usernameValidRegex.test(this.state.username)) {
-      return false
-    }
-    if (!passwordValidRegex.test(this.state.password)) {
       return false
     }
 
@@ -86,7 +82,6 @@ class LogIn extends React.Component {
             inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChange}
-            validRegex={passwordValidRegex}
           />
           <PasswordVisibleControlRow
             inputName='isPasswordVisible'
