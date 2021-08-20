@@ -860,7 +860,7 @@ class Submission extends React.Component {
                   tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
               </span>}
-            {(this.state.modalMode !== 'Login') && <div className='text-center'><br /><b>(Mouse-over labels for explanation.)</b></div>}
+            {(this.state.modalMode !== 'Login') && <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>}
           </Modal.Body>
           <Modal.Footer>
             {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideAddModal}>Cancel</Button>}
