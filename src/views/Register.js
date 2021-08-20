@@ -8,12 +8,12 @@ import ErrorHandler from '../components/ErrorHandler'
 
 const usernameMissingError = 'Username cannot be blank.'
 const emailBadFormatError = 'Email is blank or invalid.'
-const passwordInvalidError = 'Password is too short.'
+const passwordInvalidError = 'Must be at least 12 characters long.'
 const passwordMismatchError = 'Confirm does not match.'
 
 const usernameValidRegex = /^(?!\s*$).+/
 const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const passwordValidRegex = /.{8,}/
+const passwordValidRegex = /.{12,}/
 
 class Register extends React.Component {
   constructor (props) {
