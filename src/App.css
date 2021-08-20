@@ -160,3 +160,7 @@ form > .row > label {
 .password-visible-checkbox {
   display: inline-block;
 }
+
+.form-field-label {
+  white-space: nowrap;
+}

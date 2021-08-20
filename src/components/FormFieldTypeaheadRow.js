@@ -44,10 +44,10 @@ class FormFieldTypeaheadRow extends React.Component {
       <div className='row'>
         {this.props.tooltip &&
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
+            <span htmlFor={this.props.inputName} className='col-md-3 form-field-label'>{this.props.label}</span>
           </OverlayTrigger>}
         {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>}
+          <label htmlFor={this.props.inputName} className='col-md-3 form-field-label'>{this.props.label}</label>}
         <Typeahead
           id={this.props.inputName}
           name={this.props.inputName}
