@@ -68,7 +68,7 @@ class AddSubmission extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Log In</header>
+        <header>Add Submission</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='submissionName' inputType='text' label='Submission Name'
