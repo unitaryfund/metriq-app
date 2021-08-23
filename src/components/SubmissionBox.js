@@ -19,6 +19,7 @@ class SubmissionBox extends React.Component {
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleDeleteOnClick = this.handleDeleteOnClick.bind(this)
+    this.handleExternalLinkClick = this.handleExternalLinkClick.bind(this)
   }
 
   handleDeleteOnClick (event) {
@@ -52,6 +53,11 @@ class SubmissionBox extends React.Component {
     event.preventDefault()
   }
 
+  handleExternalLinkClick (event) {
+    window.open(this.props.item.submissionContentUrl, '_blank')
+    event.preventDefault()
+  }
+
   render () {
     return (
       <div className='submission'>
@@ -69,7 +75,7 @@ class SubmissionBox extends React.Component {
             <div className='col-md-2 col h-100'>
               <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
                 <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br />
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.props.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+                <button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
                 {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
               </div>
             </div>
