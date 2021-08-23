@@ -711,6 +711,7 @@ class Submission extends React.Component {
                   label='Method'
                   options={this.state.methodNames}
                   onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A method used in or by this submission, (to perform a task)'
                 /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
@@ -728,6 +729,7 @@ class Submission extends React.Component {
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
                           validRegex={methodNameRegex}
+                          tooltip='Short name of new method'
                         /><br />
                         <FormFieldRow
                           inputName='fullName'
@@ -735,12 +737,14 @@ class Submission extends React.Component {
                           label='Full name'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
                           validRegex={methodNameRegex}
+                          tooltip='Long name of new method'
                         /><br />
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'
                           label='Description'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
+                          tooltip='Long description of new method'
                         />
                       </Card.Body>
                     </Accordion.Collapse>
@@ -754,6 +758,7 @@ class Submission extends React.Component {
                   label='Task'
                   options={this.state.taskNames}
                   onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A task performed in or by this submission, (using a method)'
                 /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
@@ -771,6 +776,7 @@ class Submission extends React.Component {
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           validRegex={taskNameRegex}
+                          tooltip='Short name of new task'
                         /><br />
                         <FormFieldRow
                           inputName='fullName'
@@ -778,6 +784,7 @@ class Submission extends React.Component {
                           label='Full name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           validRegex={taskNameRegex}
+                          tooltip='Long name of new task'
                         /><br />
                         <FormFieldSelectRow
                           inputName='taskParent'
@@ -785,12 +792,14 @@ class Submission extends React.Component {
                           isNullDefault
                           options={this.state.allTaskNames}
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          tooltip='Optionally, the new task is a sub-task of a "parent" task.'
                         /><br />
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'
                           label='Description'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
+                          tooltip='Long description of new task'
                         />
                       </Card.Body>
                     </Accordion.Collapse>
@@ -807,11 +816,13 @@ class Submission extends React.Component {
                   inputName='task' label='Task'
                   options={this.state.item.tasks}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='Task from submission, used in this result'
                 /><br />
                 <FormFieldSelectRow
                   inputName='method' label='Method'
                   options={this.state.item.methods}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='Method from submission, used in this result'
                 /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
@@ -819,20 +830,24 @@ class Submission extends React.Component {
                   validRegex={metricNameRegex}
                   options={this.state.metricNames}
                   value=''
+                  tooltip='The name of the measure of performance, for this combination of task and method, for this submission.'
                 /><br />
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
                   validRegex={metricValueRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='The value of the measure of performance, for this combination of task and method, for this submission.'
                 /><br />
                 <FormFieldRow
                   inputName='evaluatedDate' inputType='date' label='Evaluated'
                   validRegex={dateRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='(Optionally) What date was the metric value collected on?'
                 /><br />
                 <FormFieldRow
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
                 />
               </span>}
             {(this.state.modalMode === 'Tag') &&
@@ -842,8 +857,10 @@ class Submission extends React.Component {
                   onChange={(field, value) => this.handleOnChange('', field, value)}
                   validRegex={tagNameRegex}
                   options={this.state.tagNames.map(item => item.name)}
+                  tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
               </span>}
+            {(this.state.modalMode !== 'Login') && <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>}
           </Modal.Body>
           <Modal.Footer>
             {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideAddModal}>Cancel</Button>}

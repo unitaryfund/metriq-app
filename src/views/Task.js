@@ -80,9 +80,14 @@ class Task extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const item = res.data.data
-        let results = []
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: item })
+        const results = []
         for (let i = 0; i < item.submissions.length; i++) {
-          results = results.concat(item.submissions[i].results)
+          for (let j = 0; j < item.submissions[i].results.length; j++) {
+            if (item.submissions[i].results[j].task._id === item._id) {
+              results.push(item.submissions[i].results[j])
+            }
+          }
         }
         results.sort(function (a, b) {
           const mna = a.metricName.toLowerCase()
@@ -113,7 +118,7 @@ class Task extends React.Component {
             return 0
           }
         })
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: item, results: results })
+        this.setState({ results: results })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -126,7 +131,7 @@ class Task extends React.Component {
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName}</h1></div>
+              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
               <div className='submission-description'>
                 {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
               </div>

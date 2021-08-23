@@ -1,4 +1,6 @@
 import React from 'react'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import FormFieldValidator from './FormFieldValidator'
 
@@ -40,7 +42,12 @@ class FormFieldTypeaheadRow extends React.Component {
   render () {
     return (
       <div className='row'>
-        <label htmlFor={this.props.inputName} className='col-md-3'>{this.props.label}</label>
+        {this.props.tooltip &&
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
+            <span htmlFor={this.props.inputName} className='col-md-3 form-field-label'>{this.props.label}</span>
+          </OverlayTrigger>}
+        {!this.props.tooltip &&
+          <label htmlFor={this.props.inputName} className='col-md-3 form-field-label'>{this.props.label}</label>}
         <Typeahead
           id={this.props.inputName}
           name={this.props.inputName}
