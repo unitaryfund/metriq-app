@@ -107,7 +107,7 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
 
     const reqBody = {}
@@ -157,7 +157,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
   }
 
@@ -177,7 +177,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
   }
 
@@ -197,7 +197,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
   }
 
@@ -223,7 +223,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
   }
 
@@ -237,7 +237,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
     event.preventDefault()
   }
@@ -266,7 +266,7 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
 
     if (this.state.modalMode === 'Task') {
@@ -562,7 +562,7 @@ class Submission extends React.Component {
                     name: row.name
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location = '/Task/' + record.key }
+                  onClick () { this.context.history.push('/Task/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'
@@ -598,7 +598,7 @@ class Submission extends React.Component {
                     name: row.name
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location = '/Method/' + record.key }
+                  onClick () { this.context.history.push('/Method/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'

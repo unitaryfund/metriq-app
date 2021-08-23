@@ -135,7 +135,7 @@ class Method extends React.Component {
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { window.location = '/Submission/' + record.key }
+                  onClick () { this.context.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'

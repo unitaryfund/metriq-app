@@ -57,7 +57,7 @@ class AddSubmission extends React.Component {
 
     axios.post(config.api.getUriPrefix() + '/submission', request)
       .then(res => {
-        window.location = '/Submissions'
+        this.context.history.push('/Submissions')
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
