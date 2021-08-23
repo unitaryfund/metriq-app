@@ -8,6 +8,7 @@ import Recover from './views/Recover'
 import About from './views/About'
 import Contact from './views/Contact'
 import Profile from './views/Profile'
+import AddSubmission from './views/AddSubmission'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
 import Methods from './views/Methods'
@@ -86,6 +87,11 @@ const MainRouter = (props) => {
         exact
         path='/Profile'
         component={Profile}
+      />
+      <Route
+        exact
+        path='/AddSubmission'
+        component={AddSubmission}
       />
       <Route
         exact
