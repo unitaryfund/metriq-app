@@ -61,7 +61,7 @@ const MainRouter = (props) => {
         exact
         path='/Delete'
       >
-        {!props.isLoggedIn ? <Redirect to='/' /> : <Delete onLogout={props.onLogout} />}
+        {props.isLoggedIn ? <Delete isLoggedIn onLogout={props.onLogout} /> : <Redirect to='/Login' />}
       </Route>
       <Route
         exact

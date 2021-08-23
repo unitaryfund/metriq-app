@@ -3,7 +3,7 @@ import AuthNav from './AuthNav'
 
 const MainNav = (props) => {
   if (props.isLoggedIn) {
-    return <AuthNav />
+    return <AuthNav isLoggedIn />
   }
   return <AnonNav />
 }
