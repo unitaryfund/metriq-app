@@ -86,7 +86,7 @@ class Recover extends React.Component {
     axios.post(config.api.getUriPrefix() + '/password', request)
       .then(res => {
         this.props.onLogin()
-        window.location.href = '/'
+        this.context.history.push('/')
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
