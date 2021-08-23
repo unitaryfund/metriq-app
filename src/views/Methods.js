@@ -2,9 +2,9 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import { Tabs, Tab } from 'react-bootstrap'
-import CategoryListItem from '../components/CategoryListItem'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
+import TaskMethodScroll from '../components/TaskMethodScroll'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -12,6 +12,7 @@ class Methods extends React.Component {
     this.state = {
       alphabetical: [],
       popular: [],
+      common: [],
       isRequestFailed: false,
       requestFailedMessage: ''
     }
@@ -21,20 +22,8 @@ class Methods extends React.Component {
     const route = config.api.getUriPrefix() + '/method/submissionCount'
     axios.get(route)
       .then(res => {
-        const alphabetical = [...res.data.data]
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
-        const popular = res.data.data
-        popular.sort(function (a, b) {
+        const common = [...res.data.data]
+        common.sort(function (a, b) {
           const keyA = a.submissionCount
           const keyB = b.submissionCount
           if (keyA < keyB) {
@@ -48,9 +37,36 @@ class Methods extends React.Component {
         this.setState({
           isRequestFailed: false,
           requestFailedMessage: '',
-          alphabetical: alphabetical,
-          popular: popular
+          common: common
         })
+
+        const popular = [...res.data.data]
+        popular.sort(function (a, b) {
+          const keyA = a.upvoteTotal
+          const keyB = b.upvoteTotal
+          if (keyA < keyB) {
+            return 1
+          }
+          if (keyB < keyA) {
+            return -1
+          }
+          return 0
+        })
+        this.setState({ popular: popular })
+
+        const alphabetical = res.data.data
+        alphabetical.sort(function (a, b) {
+          const keyA = a.name.toLowerCase()
+          const keyB = b.name.toLowerCase()
+          if (keyA < keyB) {
+            return -1
+          }
+          if (keyB < keyA) {
+            return 1
+          }
+          return 0
+        })
+        this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -64,16 +80,13 @@ class Methods extends React.Component {
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
-            <b>Name (Submission Count)</b>
-            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Method' item={item} key={index} />)}
+            <TaskMethodScroll type='method' items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='popular' title='Popular'>
-            <b>Name (Total Submission Up-Votes)</b>
-            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Method' isPopular item={item} key={index} />)}
+            <TaskMethodScroll type='method' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            <b>Name (Submission Count)</b>
-            {this.state.alphabetical.map((item, index) => <CategoryListItem routePrefix='/Method' item={item} key={index} />)}
+            <TaskMethodScroll type='method' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
         </Tabs>
         <div className='row'>

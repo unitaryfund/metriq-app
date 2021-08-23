@@ -115,6 +115,14 @@ form > .row > label {
   margin: 4px;
 }
 
+.task-method-item {
+  display: inline-block;
+  text-align: left;
+}
+.task-method-item-spacer {
+  width: 20px;
+}
+
 .edit-button {
   width: 80px;
   height: 40px;
@@ -151,4 +159,8 @@ form > .row > label {
 
 .password-visible-checkbox {
   display: inline-block;
+}
+
+.form-field-label {
+  white-space: nowrap;
 }
