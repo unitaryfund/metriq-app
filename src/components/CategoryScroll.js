@@ -1,8 +1,8 @@
 import React from 'react'
 import FormFieldValidator from './FormFieldValidator'
-import TaskMethodBox from './TaskMethodBox'
+import CategoryItemBox from './CategoryItemBox'
 
-class TaskMethodScroll extends React.Component {
+class CategoryScroll extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -23,7 +23,7 @@ class TaskMethodScroll extends React.Component {
                   <div className='col-md col h-100'>
                     <table className='task-method-item'>
                       <tbody>
-                        {this.props.items.map((item, index) => <TaskMethodBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} type={this.props.type} />)}
+                        {this.props.items.map((item, index) => <CategoryItemBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} type={this.props.type} />)}
                       </tbody>
                     </table>
                   </div>
@@ -44,4 +44,4 @@ class TaskMethodScroll extends React.Component {
   }
 }
 
-export default TaskMethodScroll
+export default CategoryScroll

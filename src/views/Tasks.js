@@ -4,7 +4,7 @@ import config from './../config'
 import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
-import TaskMethodScroll from '../components/TaskMethodScroll'
+import CategoryScroll from '../components/CategoryScroll'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -80,13 +80,13 @@ class Tasks extends React.Component {
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
-            <TaskMethodScroll type='task' items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='task' items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='popular' title='Popular'>
-            <TaskMethodScroll type='task' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='task' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            <TaskMethodScroll type='task' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='task' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
         </Tabs>
         <div className='row'>

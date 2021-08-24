@@ -8,12 +8,12 @@ import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons
 
 library.add(faThumbsUp, faExternalLinkAlt)
 
-class TaskMethodBox extends React.Component {
+class CategoryItemBox extends React.Component {
   render () {
     return (
       <tr>
         <td>
-          <Link to={((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item._id}>
+          <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item._id)}>
             <div className='submission-heading'>{this.props.item.name}</div>
           </Link>
         </td>
@@ -34,4 +34,4 @@ class TaskMethodBox extends React.Component {
   }
 }
 
-export default TaskMethodBox
+export default CategoryItemBox
