@@ -47,9 +47,21 @@ const MainRouter = (props) => {
       </Route>
       <Route
         exact
+        path='/Login/AddSubmission'
+      >
+        {props.isLoggedIn ? <Redirect to='/AddSubmission' /> : <LogIn onLogin={props.onLogin} nextLocation='/AddSubmission' />}
+      </Route>
+      <Route
+        exact
         path='/Login'
       >
         {props.isLoggedIn ? <Redirect to='/' /> : <LogIn onLogin={props.onLogin} />}
+      </Route>
+      <Route
+        exact
+        path='/Register/AddSubmission'
+      >
+        {props.isLoggedIn ? <Redirect to='/AddSubmission' /> : <Register onLogin={props.onLogin} nextLocation='/AddSubmission' />}
       </Route>
       <Route
         exact

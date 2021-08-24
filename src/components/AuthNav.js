@@ -1,5 +1,5 @@
 import React from 'react'
-import { Nav, NavDropdown } from 'react-bootstrap'
+import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import axios from 'axios'
 import config from './../config'
 import ErrorHandler from './ErrorHandler'
@@ -17,6 +17,7 @@ const handleOnClick = () => {
 const AuthNav = (props) => {
   return (
     <Nav className='ml-auto'>
+      <Nav.Link href='/AddSubmission'><Button variant='primary'>Submit</Button></Nav.Link>
       <Nav.Link href='/'>Home</Nav.Link>
       <Nav.Link href='/Methods'>Methods</Nav.Link>
       <Nav.Link href='/Tasks'>Tasks</Nav.Link>
