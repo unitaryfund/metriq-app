@@ -19,7 +19,7 @@ class Tags extends React.Component {
   }
 
   componentDidMount () {
-    const route = config.api.getUriPrefix() + '/task/submissionCount'
+    const route = config.api.getUriPrefix() + '/tag'
     axios.get(route)
       .then(res => {
         const common = [...res.data.data]
