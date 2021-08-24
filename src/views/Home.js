@@ -4,7 +4,7 @@ import SubmissionScroll from '../components/SubmissionScroll'
 const Home = (props) => {
   return (
     <div className='container'>
-      <header>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</header>
+      <header><h5>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</h5></header>
       <br />
       <Tabs defaultActiveKey='trending' id='top-submissions-tabs'>
         <Tab eventKey='trending' title='Trending'>
