@@ -76,7 +76,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Tasks</header>
+        <header><h5>Tasks</h5></header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>

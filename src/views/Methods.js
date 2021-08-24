@@ -76,7 +76,7 @@ class Methods extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Methods</header>
+        <header><h5>Methods</h5></header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
