@@ -1,40 +1,28 @@
 import axios from 'axios'
 import React from 'react'
-import config from '../config'
+import config from './../config'
 import { Tabs, Tab } from 'react-bootstrap'
-import CategoryListItem from '../components/CategoryListItem'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
+import CategoryScroll from '../components/CategoryScroll'
 
 class Tags extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       alphabetical: [],
-      common: [],
       popular: [],
+      common: [],
       isRequestFailed: false,
       requestFailedMessage: ''
     }
   }
 
   componentDidMount () {
-    const route = config.api.getUriPrefix() + '/tag'
+    const route = config.api.getUriPrefix() + '/task/submissionCount'
     axios.get(route)
       .then(res => {
-        const alphabetical = [...res.data.data]
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
-        const common = res.data.data
+        const common = [...res.data.data]
         common.sort(function (a, b) {
           const keyA = a.submissionCount
           const keyB = b.submissionCount
@@ -46,7 +34,13 @@ class Tags extends React.Component {
           }
           return 0
         })
-        const popular = res.data.data
+        this.setState({
+          isRequestFailed: false,
+          requestFailedMessage: '',
+          common: common
+        })
+
+        const popular = [...res.data.data]
         popular.sort(function (a, b) {
           const keyA = a.upvoteTotal
           const keyB = b.upvoteTotal
@@ -58,13 +52,21 @@ class Tags extends React.Component {
           }
           return 0
         })
-        this.setState({
-          isRequestFailed: false,
-          requestFailedMessage: '',
-          alphabetical: alphabetical,
-          common: common,
-          popular: popular
+        this.setState({ popular: popular })
+
+        const alphabetical = res.data.data
+        alphabetical.sort(function (a, b) {
+          const keyA = a.name.toLowerCase()
+          const keyB = b.name.toLowerCase()
+          if (keyA < keyB) {
+            return -1
+          }
+          if (keyB < keyA) {
+            return 1
+          }
+          return 0
         })
+        this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -78,28 +80,13 @@ class Tags extends React.Component {
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
-            <div className='row'>
-              <div className='col-md-12'>
-                <b>Name (Submission Count)</b>
-              </div>
-            </div>
-            {this.state.common.map((item, index) => <CategoryListItem routePrefix='/Tag' isTag item={item} key={index} />)}
+            <CategoryScroll type='tag' items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='popular' title='Popular'>
-            <div className='row'>
-              <div className='col-md-12'>
-                <b>Name (Total Submission Up-Votes)</b>
-              </div>
-            </div>
-            {this.state.popular.map((item, index) => <CategoryListItem routePrefix='/Tag' isTag isPopular item={item} key={index} />)}
+            <CategoryScroll type='tag' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            <div className='row'>
-              <div className='col-md-12'>
-                <b>Name (Submission Count)</b>
-              </div>
-            </div>
-            {this.state.alphabetical.map((item, index) => <CategoryListItem routePrefix='/Tag' isTag item={item} key={index} />)}
+            <CategoryScroll type='tag' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
           </Tab>
         </Tabs>
         <div className='row'>
