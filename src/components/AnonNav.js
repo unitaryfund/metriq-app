@@ -1,9 +1,10 @@
 import React from 'react'
-import { Nav } from 'react-bootstrap'
+import { Button, Nav } from 'react-bootstrap'
 
 const AnonNav = () => {
   return (
     <Nav className='ml-auto'>
+      <Nav.Link href='/Login/AddSubmission'><Button variant='primary'>Submit</Button></Nav.Link>
       <Nav.Link href='/'>Home</Nav.Link>
       <Nav.Link href='/Methods'>Methods</Nav.Link>
       <Nav.Link href='/Tasks'>Tasks</Nav.Link>
