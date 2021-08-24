@@ -23,7 +23,10 @@ class SubmissionBox extends React.Component {
   }
 
   handleDeleteOnClick (event) {
-    const confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + this.props.item.submissionName, '').trim().toLowerCase()
+    let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + this.props.item.submissionName, '')
+    if (confirmString) {
+      confirmString = confirmString.trim().toLowerCase()
+    }
     if (confirmString && (confirmString === this.props.item.submissionNameNormal)) {
       axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.item._id, {})
         .then(res => {
