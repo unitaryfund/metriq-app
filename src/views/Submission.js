@@ -562,7 +562,7 @@ class Submission extends React.Component {
                     name: row.name
                   }))}
                 onRow={(record) => ({
-                  onClick () { this.context.history.push('/Task/' + record.key) }
+                  onClick () { window.location.href = '/Task/' + record.key }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'
@@ -598,7 +598,7 @@ class Submission extends React.Component {
                     name: row.name
                   }))}
                 onRow={(record) => ({
-                  onClick () { this.context.history.push('/Method/' + record.key) }
+                  onClick () { window.location.href = '/Method/' + record.key }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'

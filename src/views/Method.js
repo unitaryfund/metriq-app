@@ -44,7 +44,7 @@ class Method extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location = '/Login'
+      this.context.history.push('/Login')
     }
 
     const reqBody = {}
@@ -135,7 +135,7 @@ class Method extends React.Component {
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { this.context.history.push('/Submission/' + record.key) }
+                  onClick () { window.location.href = '/Submission/' + record.key }
                 })}
                 tableLayout='auto'
                 rowClassName='index-table-link'
