@@ -6,7 +6,6 @@ import Delete from './views/Delete'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
-import Contact from './views/Contact'
 import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
 import Submissions from './views/Submissions'
@@ -89,11 +88,6 @@ const MainRouter = (props) => {
         exact
         path='/About'
         component={About}
-      />
-      <Route
-        exact
-        path='/Contact'
-        component={Contact}
       />
       <Route
         exact
