@@ -11,7 +11,6 @@ const AnonNav = () => {
       <Nav.Link href='/Tags'>Tags</Nav.Link>
       <Nav.Link href='/Login'>Log In</Nav.Link>
       <Nav.Link href='/About'>About</Nav.Link>
-      <Nav.Link href='/Contact'>Contact</Nav.Link>
     </Nav>
   )
 }
