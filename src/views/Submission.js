@@ -786,7 +786,7 @@ class Submission extends React.Component {
                         /><br />
                         <FormFieldSelectRow
                           inputName='taskParent'
-                          label='Parent task (if any)'
+                          label='Parent task<br/>(if any)'
                           isNullDefault
                           options={this.state.allTaskNames}
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
