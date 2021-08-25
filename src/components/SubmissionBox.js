@@ -14,7 +14,8 @@ class SubmissionBox extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      upvotes: props.item.upvotes.length
+      upvotes: props.item.upvotesCount,
+      isUpvoted: props.item.isUpvoted
     }
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
@@ -45,7 +46,7 @@ class SubmissionBox extends React.Component {
     if (this.props.isLoggedIn) {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.item._id + '/upvote', {})
         .then(res => {
-          this.setState({ upvotes: res.data.data.upvotes.length })
+          this.setState({ upvotes: res.data.data.upvotesCount, isUpvoted: res.data.data.isUpvoted })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -77,7 +78,7 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-2 col h-100'>
               <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br />
+                <button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br />
                 <button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
                 {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
               </div>
