@@ -29,7 +29,7 @@ class Submission extends React.Component {
       isValidated: false,
       isRequestFailed: false,
       requestFailedMessage: '',
-      item: { upvotes: 0, tags: [], tasks: [], methods: [], results: [] },
+      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [] },
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -107,7 +107,7 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
 
     const reqBody = {}
@@ -157,7 +157,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
   }
 
@@ -177,7 +177,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
   }
 
@@ -197,7 +197,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
   }
 
@@ -210,7 +210,6 @@ class Submission extends React.Component {
         .then(res => {
           const rId = res.data.data._id
           const item = { ...this.state.item }
-          console.log(item)
           for (let i = 0; i < item.results.length; i++) {
             if (item.results[i]._id === rId) {
               item.results.splice(i, 1)
@@ -223,7 +222,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
   }
 
@@ -237,7 +236,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
     event.preventDefault()
   }
@@ -266,7 +265,7 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
 
     if (this.state.modalMode === 'Task') {
@@ -345,7 +344,6 @@ class Submission extends React.Component {
       if (!result.method) {
         result.method = this.state.item.methods[0]._id
       }
-      console.log(result)
       if (!result.metricName) {
         window.alert('Error: Metric Name cannot be blank.')
       }
@@ -530,7 +528,7 @@ class Submission extends React.Component {
         </div>
         <div className='row'>
           <div className='col-md-12'>
-            <button className='submission-button btn btn-secondary' onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotes.length}</button>
+            <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
             <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
             <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
           </div>

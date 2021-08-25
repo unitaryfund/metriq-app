@@ -44,7 +44,7 @@ class Method extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      this.context.history.push('/Login')
+      window.location.href = '/Login'
     }
 
     const reqBody = {}
