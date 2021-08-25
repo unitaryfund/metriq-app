@@ -14,6 +14,12 @@ class CategoryScroll extends React.Component {
   render () {
     return (
       <div className='container'>
+        {this.props.heading &&
+          <div className='row'>
+            <div className='col-md-12'>
+              <b>{this.props.heading}</b>
+            </div>
+          </div>}
         <div className='row'>
           <div className='col-md-12'>
             {!this.props.items.length && <p><b>There are no approved items, yet.</b></p>}

@@ -80,13 +80,13 @@ class Methods extends React.Component {
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
-            <CategoryScroll type='method' items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='method' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
           </Tab>
           <Tab eventKey='popular' title='Popular'>
-            <CategoryScroll type='method' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='method' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            <CategoryScroll type='method' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
+            <CategoryScroll type='method' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
           </Tab>
         </Tabs>
         <div className='row'>
