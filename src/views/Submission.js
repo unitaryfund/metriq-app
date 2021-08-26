@@ -11,9 +11,9 @@ import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash)
+library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faSuperscript)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -29,6 +29,9 @@ class Submission extends React.Component {
       isValidated: false,
       isRequestFailed: false,
       requestFailedMessage: '',
+      isArxiv: false,
+      vanityUrl: '',
+      bibtexUrl: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [] },
       metricNames: [],
       methodNames: [],
@@ -455,8 +458,20 @@ class Submission extends React.Component {
       .then(subRes => {
         const submission = subRes.data.data
 
+        let isArxiv = false
+        let vanityUrl = ''
+        let bibtexUrl = ''
+        const url = submission.submissionContentUrl
+        if (url.toLowerCase().startsWith('https://arxiv.org/')) {
+          isArxiv = true
+          let urlTail = url.substring(18)
+          vanityUrl = 'https://www.arxiv-vanity.com/' + urlTail
+          urlTail = urlTail.substring(4)
+          bibtexUrl = 'https://arxiv.org/bibtex/' + urlTail
+        }
+
         // Just get the view populated as quickly as possible, before we "trim."
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, bibtexUrl: bibtexUrl })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
@@ -530,6 +545,11 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
             <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            {this.state.isArxiv &&
+              <span>
+                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
+                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+              </span>}
             <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
           </div>
         </div>
