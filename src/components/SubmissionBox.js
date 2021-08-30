@@ -16,7 +16,7 @@ class SubmissionBox extends React.Component {
     this.state = {
       upvotes: props.item.upvotesCount,
       isUpvoted: props.item.isUpvoted,
-      description: !this.props.item.description ? '' : ((this.props.item.description.length > 550) ? (this.props.item.description.substring(0, 547) + '...') : this.props.item.description)
+      description: !this.props.item.description ? '' : ((this.props.item.description.length > 500) ? (this.props.item.description.substring(0, 497) + '...') : this.props.item.description)
     }
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
