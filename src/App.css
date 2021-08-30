@@ -24,8 +24,12 @@
   color: white;
 }
 
-.navbar-title {
+.metriq-navbar {
   font-family: 'Courier New', monospace;
+}
+
+.navbar-nav .metriq-navbar-text.nav-link {
+    padding-top: 0.9rem;
 }
 
 .App-link {
