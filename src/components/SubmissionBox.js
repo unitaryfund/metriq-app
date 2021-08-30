@@ -15,7 +15,8 @@ class SubmissionBox extends React.Component {
     super(props)
     this.state = {
       upvotes: props.item.upvotesCount,
-      isUpvoted: props.item.isUpvoted
+      isUpvoted: props.item.isUpvoted,
+      description: !this.props.item.description ? '' : ((this.props.item.description.length > 550) ? (this.props.item.description.substring(0, 547) + '...') : this.props.item.description)
     }
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
@@ -73,7 +74,7 @@ class SubmissionBox extends React.Component {
             <div className='col-md-8 col h-100'>
               <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
               <div className='submission-description'>
-                {this.props.item.description ? this.props.item.description : <i>(No description provided.)</i>}
+                {this.state.description ? this.state.description : <i>(No description provided.)</i>}
               </div>
             </div>
             <div className='col-md-2 col h-100'>
