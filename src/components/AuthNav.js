@@ -16,14 +16,14 @@ const handleOnClick = () => {
 
 const AuthNav = (props) => {
   return (
-    <Nav className='ml-auto'>
+    <Nav className='ml-auto metriq-navbar'>
       <Nav.Link href='/AddSubmission'><Button variant='primary'>Submit</Button></Nav.Link>
-      <Nav.Link href='/'>Home</Nav.Link>
-      <Nav.Link href='/Methods'>Methods</Nav.Link>
-      <Nav.Link href='/Tasks'>Tasks</Nav.Link>
-      <Nav.Link href='/Tags'>Tags</Nav.Link>
-      <Nav.Link href='/About'>About</Nav.Link>
-      <NavDropdown title='Account' id='basic-nav-dropdown' alignRight>
+      <Nav.Link href='/' className='metriq-navbar-text'>Home</Nav.Link>
+      <Nav.Link href='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
+      <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
+      <Nav.Link href='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
+      <Nav.Link href='/About' className='metriq-navbar-text'>About</Nav.Link>
+      <NavDropdown title='Account' id='basic-nav-dropdown' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item href='/Profile'>Settings</NavDropdown.Item>
         <NavDropdown.Item href='/AddSubmission'>Add Submission</NavDropdown.Item>
         <NavDropdown.Item href='/Submissions'>My Submissions</NavDropdown.Item>
