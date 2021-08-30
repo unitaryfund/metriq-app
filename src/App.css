@@ -32,6 +32,10 @@
     padding-top: 0.9rem;
 }
 
+.navbar-nav .metriq-navbar-text.nav-item {
+  padding-top: 0.4rem;
+}
+
 .App-link {
   color: #61dafb;
 }
