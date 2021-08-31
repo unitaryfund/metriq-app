@@ -15,14 +15,10 @@ function SotaChart (props) {
         if (isLowerBetter) {
           if (data[i].value <= sotaData[sotaData.length - 1].value) {
             sotaData.push(data[i])
-          } else if (i === (data.length - 1)) {
-            sotaData.push({ label: data[i].label, value: sotaData[sotaData.length - 1].value })
           }
         } else {
           if (data[i].value >= sotaData[sotaData.length - 1].value) {
             sotaData.push(data[i])
-          } else if (i === (data.length - 1)) {
-            sotaData.push({ label: data[i].label, value: sotaData[sotaData.length - 1].value })
           }
         }
       }
