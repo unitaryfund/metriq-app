@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SotaChart from '../components/SotaChart'
 
 library.add(faEdit)
 
@@ -21,13 +22,18 @@ class Task extends React.Component {
       showEditModal: false,
       task: { description: '' },
       item: { submissions: [] },
-      results: []
+      results: [],
+      chartData: {},
+      isChart: false,
+      chartKey: '',
+      metricNames: []
     }
 
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.regenerateData = this.regenerateData.bind(this)
   }
 
   handleShowEditModal () {
@@ -123,11 +129,40 @@ class Task extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
+
+    this.regenerateData()
+  }
+
+  regenerateData () {
+    const allData = this.state.results.map(row =>
+      ({
+        method: row.method.name,
+        metric: row.metricName,
+        label: row.evaluatedDate ? row.evaluatedDate : row.submissionDate,
+        value: row.metricValue
+      }))
+    const chartData = {}
+    for (let i = 0; i < allData.length; i++) {
+      chartData[allData[i].metric].push(allData[i])
+    }
+    const metricNames = Object.keys(chartData)
+    let isChart = false
+    let chartKey = ''
+    let m = 0
+    for (let i = 0; i < metricNames.length; i++) {
+      if (chartData[metricNames[i]].length > m) {
+        chartKey = metricNames[i]
+        m = chartData[chartKey].length
+        isChart |= (m > 1)
+      }
+    }
+    this.setState({ metricNames: metricNames, isChart: isChart, chartKey: chartKey, chartData: chartData })
   }
 
   render () {
     return (
       <div>
+        {this.state.isChart && <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel='Metric Value' yType='number' />}
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
