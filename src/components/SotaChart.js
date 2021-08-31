@@ -1,15 +1,32 @@
-// ScatterChart.js
+// SotaChart.js
 // from https://www.d3-graph-gallery.com/graph/scatter_basic.html
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React, { useEffect } from 'react'
 import * as d3 from 'd3'
 
-function ScatterChart (props) {
-  const { data, width, height, xLabel, yLabel, xType, yType } = props
+function SotaChart (props) {
+  const { data, width, height, xLabel, yLabel, xType, yType, isLowerBetter } = props
 
   useEffect(() => {
     function drawChart () {
+      const sotaData = data.length ? [data[0]] : []
+      for (let i = 1; i < data.length; i++) {
+        if (isLowerBetter) {
+          if (data[i].value <= sotaData[sotaData.length - 1].value) {
+            sotaData.push(data[i])
+          } else if (i === (data.length - 1)) {
+            sotaData.push({ label: data[i].label, value: sotaData[sotaData.length - 1].value })
+          }
+        } else {
+          if (data[i].value >= sotaData[sotaData.length - 1].value) {
+            sotaData.push(data[i])
+          } else if (i === (data.length - 1)) {
+            sotaData.push({ label: data[i].label, value: sotaData[sotaData.length - 1].value })
+          }
+        }
+      }
+
       d3.select('#metriq-line-chart-container')
         .select('svg')
         .remove()
@@ -74,6 +91,17 @@ function ScatterChart (props) {
         .attr('r', 1.5)
         .style('fill', '#69b3a2')
 
+      const line = d3.line()
+        .x(function (d) { return x(d.label) })
+        .y(function (d) { return y(d.value) })
+
+      svg.append('path')
+        .datum(sotaData)
+        .attr('fill', 'none')
+        .attr('stroke-width', 1.5)
+        .attr('stroke', 'steelblue')
+        .attr('d', line)
+
       const xAxisLabelX = width / 2
       const xAxisLabelY = height + 40
 
@@ -95,9 +123,9 @@ function ScatterChart (props) {
         .text(yLabel)
     }
     drawChart()
-  }, [data, width, height, xLabel, yLabel])
+  }, [data, width, height, xLabel, yLabel, xType, yType, isLowerBetter])
 
   return <div id='metriq-line-chart-container' />
 }
 
-export default ScatterChart
+export default SotaChart
