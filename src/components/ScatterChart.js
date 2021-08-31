@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import * as d3 from 'd3'
 
 function ScatterChart (props) {
-  const { data, width, height, xLabel, yLabel } = props
+  const { data, width, height, xLabel, yLabel, xType, yType } = props
 
   useEffect(() => {
     function drawChart () {
@@ -37,17 +37,29 @@ function ScatterChart (props) {
           'translate(' + margin.left + ',' + margin.top + ')')
 
       // Add X axis
-      const x = d3.scaleLinear()
-        .domain([xMinValue, xMaxValue])
-        .range([0, width])
+      const x = (xType === 'time')
+        ? d3.scaleTime()
+            .domain([xMinValue, xMaxValue])
+            .range([0, width])
+        : d3.scaleLinear()
+          .domain([xMinValue, xMaxValue])
+          .range([0, width])
+
       svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x))
 
+      const yDomain = [(yMinValue < 0) ? yMinValue : 0, (yMaxValue < 0) ? 0 : yMaxValue]
+
       // Add Y axis
-      const y = d3.scaleLinear()
-        .domain([(yMinValue < 0) ? yMinValue : 0, (yMaxValue < 0) ? 0 : yMaxValue])
-        .range([height, 0])
+      const y = (yType === 'time')
+        ? d3.scaleTime()
+            .domain(yDomain)
+            .range([height, 0])
+        : d3.scaleLinear()
+          .domain(yDomain)
+          .range([height, 0])
+
       svg.append('g')
         .call(d3.axisLeft(y))
 
