@@ -33,7 +33,7 @@ class Task extends React.Component {
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
-    this.regenerateData = this.regenerateData.bind(this)
+    this.sliceChartData = this.sliceChartData.bind(this)
   }
 
   handleShowEditModal () {
@@ -125,16 +125,15 @@ class Task extends React.Component {
           }
         })
         this.setState({ results: results })
+        this.sliceChartData(results)
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
-
-    this.regenerateData()
   }
 
-  regenerateData () {
-    const allData = this.state.results.map(row =>
+  sliceChartData (results) {
+    const allData = results.map(row =>
       ({
         method: row.method.name,
         metric: row.metricName,
