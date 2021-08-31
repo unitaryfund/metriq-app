@@ -35,8 +35,8 @@ function SotaChart (props) {
         .remove()
 
       const margin = { top: 10, right: 30, bottom: 60, left: 60 }
-      const width = 900 - margin.left - margin.right
-      const height = 400 - margin.top - margin.bottom
+      const lWidth = width - margin.left - margin.right
+      const lHeight = height - margin.top - margin.bottom
       const yMinValue = d3.min(data, d => d.value)
       const yMaxValue = d3.max(data, d => d.value)
       const xMinValue = d3.min(data, d => d.label)
@@ -47,8 +47,8 @@ function SotaChart (props) {
       // append the svg object to the body of the page
       const svg = d3.select('#metriq-line-chart-container')
         .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .append('g')
         .attr('transform',
           'translate(' + margin.left + ',' + margin.top + ')')
@@ -57,10 +57,10 @@ function SotaChart (props) {
       const x = (xType === 'time')
         ? d3.scaleTime()
             .domain([xMinValue, xMaxValue])
-            .range([0, width])
+            .range([0, lWidth])
         : d3.scaleLinear()
           .domain([xMinValue, xMaxValue])
-          .range([0, width])
+          .range([0, lWidth])
 
       svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
@@ -72,10 +72,10 @@ function SotaChart (props) {
       const y = (yType === 'time')
         ? d3.scaleTime()
             .domain(yDomain)
-            .range([height, 0])
+            .range([lHeight, 0])
         : d3.scaleLinear()
           .domain(yDomain)
-          .range([height, 0])
+          .range([lHeight, 0])
 
       svg.append('g')
         .call(d3.axisLeft(y))
@@ -102,8 +102,8 @@ function SotaChart (props) {
         .attr('stroke', 'steelblue')
         .attr('d', line)
 
-      const xAxisLabelX = width / 2
-      const xAxisLabelY = height + 40
+      const xAxisLabelX = lWidth / 2
+      const xAxisLabelY = lHeight + 40
 
       svg.append('text')
         .attr('class', 'x label')
