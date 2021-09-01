@@ -137,7 +137,7 @@ class Task extends React.Component {
       ({
         method: row.method.name,
         metric: row.metricName,
-        label: row.evaluatedDate ? row.evaluatedDate : row.submissionDate,
+        label: new Date(row.evaluatedDate ? row.evaluatedDate : row.submissionDate),
         value: row.metricValue
       }))
     const chartData = {}
@@ -147,6 +147,7 @@ class Task extends React.Component {
       }
       chartData[allData[i].metric].push(allData[i])
     }
+    console.log(chartData)
     const metricNames = Object.keys(chartData)
     let isChart = false
     let chartKey = ''

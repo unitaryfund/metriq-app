@@ -59,7 +59,7 @@ function SotaChart (props) {
           .range([0, lWidth])
 
       svg.append('g')
-        .attr('transform', 'translate(0,' + height + ')')
+        .attr('transform', 'translate(0,' + lHeight + ')')
         .call(d3.axisBottom(x))
 
       const yDomain = [(yMinValue < 0) ? yMinValue : 0, (yMaxValue < 0) ? 0 : yMaxValue]
