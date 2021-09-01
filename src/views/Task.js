@@ -142,6 +142,9 @@ class Task extends React.Component {
       }))
     const chartData = {}
     for (let i = 0; i < allData.length; i++) {
+      if (!chartData[allData[i].metric]) {
+        chartData[allData[i].metric] = []
+      }
       chartData[allData[i].metric].push(allData[i])
     }
     const metricNames = Object.keys(chartData)
@@ -252,7 +255,7 @@ class Task extends React.Component {
                       }]}
                       data={this.state.results.map(row =>
                         ({
-                          key: row.submission._id,
+                          key: row._id,
                           submissionName: row.submission.submissionName,
                           methodName: row.method.name,
                           metricName: row.metricName,
