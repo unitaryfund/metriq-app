@@ -133,7 +133,29 @@ class Task extends React.Component {
   }
 
   sliceChartData (results) {
-    const allData = results.map(row =>
+    const sortedResults = [...results]
+    sortedResults.sort(function (a, b) {
+      const mna = a.metricName.toLowerCase()
+      const mnb = b.metricName.toLowerCase()
+      if (mna < mnb) {
+        return -1
+      }
+      if (mnb < mna) {
+        return 1
+      }
+
+      const mda = new Date(a.evaluatedDate ? a.evaluatedDate : a.submissionDate)
+      const mdb = new Date(b.evaluatedDate ? b.evaluatedDate : b.submissionDate)
+      if (mda < mdb) {
+        return -1
+      }
+      if (mdb < mda) {
+        return 1
+      }
+
+      return 0
+    })
+    const allData = sortedResults.map(row =>
       ({
         method: row.method.name,
         metric: row.metricName,
@@ -147,7 +169,6 @@ class Task extends React.Component {
       }
       chartData[allData[i].metric].push(allData[i])
     }
-    console.log(chartData)
     const metricNames = Object.keys(chartData)
     let isChart = false
     let chartKey = ''
