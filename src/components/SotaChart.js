@@ -84,7 +84,7 @@ function SotaChart (props) {
         .append('circle')
         .attr('cx', function (d) { return x(d.label) })
         .attr('cy', function (d) { return y(d.value) })
-        .attr('r', 1.5)
+        .attr('r', 3.0)
         .style('fill', '#69b3a2')
 
       const line = d3.line()
