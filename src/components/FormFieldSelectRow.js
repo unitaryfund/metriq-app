@@ -42,10 +42,10 @@ class FormFieldSelectRow extends React.Component {
       <div className='row'>
         {this.props.tooltip &&
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <span htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />
+            <span htmlFor={this.props.inputName} className={'col-md-3 form-field-label ' + this.props.labelClass} dangerouslySetInnerHTML={{ __html: this.props.label }} />
           </OverlayTrigger>}
         {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />}
+          <label htmlFor={this.props.inputName} className={'col-md-3 form-field-label ' + this.props.labelClass} dangerouslySetInnerHTML={{ __html: this.props.label }} />}
         <div className='col-md-6'>
           <select
             id={this.props.inputName}

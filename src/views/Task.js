@@ -4,6 +4,7 @@ import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -186,7 +187,24 @@ class Task extends React.Component {
   render () {
     return (
       <div>
-        {this.state.isChart && <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel='Metric Value' yType='number' />}
+        {this.state.isChart &&
+          <div>
+            <div className='container'>
+              <FormFieldSelectRow
+                inputName='chartKey'
+                label='Chart Metric:'
+                labelClass='metric-chart-label'
+                options={this.state.metricNames.map(name =>
+                  ({
+                    key: name,
+                    name: name
+                  }))}
+                onChange={(field, value) => this.handleOnChange('', field, value)}
+                tooltip='A metric performance measure of any "method" on this "task"'
+              />
+            </div>
+            <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel='Metric Value' yType='number' />
+          </div>}
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
