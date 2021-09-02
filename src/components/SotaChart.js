@@ -60,7 +60,7 @@ function SotaChart (props) {
 
       svg.append('g')
         .attr('transform', 'translate(0,' + lHeight + ')')
-        .call(d3.axisBottom(x))
+        .call(d3.axisBottom(x).tickSizeOuter(0))
 
       const yDomain = [(yMinValue < 0) ? yMinValue : 0, (yMaxValue < 0) ? 0 : yMaxValue]
 
@@ -73,8 +73,14 @@ function SotaChart (props) {
           .domain(yDomain)
           .range([lHeight, 0])
 
+      const yTickAxis = d3.axisLeft(y)
+        .tickSize(0)
+        .tickSizeInner(-lWidth)
+        .tickSizeOuter(0)
+
       svg.append('g')
-        .call(d3.axisLeft(y))
+        .attr('class', 'grid')
+        .call(yTickAxis)
 
       // Add dots
       const dots = svg.append('g')
