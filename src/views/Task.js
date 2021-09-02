@@ -206,7 +206,7 @@ class Task extends React.Component {
                 labelClass='metric-chart-label'
                 options={this.state.metricNames.map(name =>
                   ({
-                    key: name,
+                    _id: name,
                     name: name
                   }))}
                 onChange={(field, value) => this.handleOnChange('', field, value)}
