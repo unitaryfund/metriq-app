@@ -77,15 +77,20 @@ function SotaChart (props) {
         .call(d3.axisLeft(y))
 
       // Add dots
-      svg.append('g')
+      const dots = svg.append('g')
         .selectAll('dot')
         .data(data)
         .enter()
-        .append('circle')
+
+      dots.append('circle')
         .attr('cx', function (d) { return x(d.label) })
         .attr('cy', function (d) { return y(d.value) })
         .attr('r', 3.0)
         .style('fill', '#69b3a2')
+
+      dots.append('text').text(function (d) { return d.method })
+        .attr('x', function (d) { return x(d.label) })
+        .attr('y', function (d) { return y(d.value) })
 
       const line = d3.line()
         .x(function (d) { return x(d.label) })
