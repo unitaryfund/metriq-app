@@ -27,7 +27,8 @@ class Task extends React.Component {
       chartData: {},
       isChart: false,
       chartKey: '',
-      metricNames: []
+      metricNames: [],
+      isLowerBetterDict: {}
     }
 
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
@@ -161,27 +162,36 @@ class Task extends React.Component {
         method: row.method.name,
         metric: row.metricName,
         label: new Date(row.evaluatedDate ? row.evaluatedDate : row.submissionDate),
-        value: row.metricValue
+        value: row.metricValue,
+        isHigherBetter: row.isHigherBetter
       }))
     const chartData = {}
+    const isHigherBetterCounts = {}
     for (let i = 0; i < allData.length; i++) {
       if (!chartData[allData[i].metric]) {
         chartData[allData[i].metric] = []
+        isHigherBetterCounts[allData[i].metric] = 0
       }
       chartData[allData[i].metric].push(allData[i])
+      if (allData[i].isHigherBetter) {
+        isHigherBetterCounts[allData[i].metric]++
+      }
     }
     const metricNames = Object.keys(chartData)
     let isChart = false
     let chartKey = ''
     let m = 0
+    const isLowerBetterDict = {}
     for (let i = 0; i < metricNames.length; i++) {
-      if (chartData[metricNames[i]].length > m) {
+      const length = chartData[metricNames[i]].length
+      if (length > m) {
         chartKey = metricNames[i]
-        m = chartData[chartKey].length
+        m = length
         isChart |= (m > 1)
       }
+      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
     }
-    this.setState({ metricNames: metricNames, isChart: isChart, chartKey: chartKey, chartData: chartData })
+    this.setState({ metricNames: metricNames, isChart: isChart, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
   }
 
   render () {
@@ -203,7 +213,7 @@ class Task extends React.Component {
                 tooltip='A metric performance measure of any "method" on this "task"'
               />
             </div>
-            <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel='Metric Value' yType='number' />
+            <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel='Metric Value' yType='number' isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
           </div>}
         <div className='container submission-detail-container'>
           <div className='row'>
