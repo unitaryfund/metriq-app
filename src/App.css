@@ -172,3 +172,17 @@ form > .row > label {
 .form-field-label {
   white-space: nowrap;
 }
+
+.metric-chart-label {
+  text-align: right;
+  font-weight: bold;
+  padding-top: 8px;
+}
+
+/* D3.js: */
+
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}

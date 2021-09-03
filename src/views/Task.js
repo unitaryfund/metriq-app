@@ -4,11 +4,13 @@ import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SotaChart from '../components/SotaChart'
 
 library.add(faEdit)
 
@@ -21,13 +23,19 @@ class Task extends React.Component {
       showEditModal: false,
       task: { description: '' },
       item: { submissions: [] },
-      results: []
+      results: [],
+      chartData: {},
+      isChart: false,
+      chartKey: '',
+      metricNames: [],
+      isLowerBetterDict: {}
     }
 
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.sliceChartData = this.sliceChartData.bind(this)
   }
 
   handleShowEditModal () {
@@ -119,15 +127,94 @@ class Task extends React.Component {
           }
         })
         this.setState({ results: results })
+        this.sliceChartData(results)
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
+  sliceChartData (results) {
+    const sortedResults = [...results]
+    sortedResults.sort(function (a, b) {
+      const mna = a.metricName.toLowerCase()
+      const mnb = b.metricName.toLowerCase()
+      if (mna < mnb) {
+        return -1
+      }
+      if (mnb < mna) {
+        return 1
+      }
+
+      const mda = new Date(a.evaluatedDate ? a.evaluatedDate : a.submissionDate)
+      const mdb = new Date(b.evaluatedDate ? b.evaluatedDate : b.submissionDate)
+      if (mda < mdb) {
+        return -1
+      }
+      if (mdb < mda) {
+        return 1
+      }
+
+      return 0
+    })
+    const allData = sortedResults.map(row =>
+      ({
+        method: row.method.name,
+        metric: row.metricName,
+        label: new Date(row.evaluatedDate ? row.evaluatedDate : row.submissionDate),
+        value: row.metricValue,
+        isHigherBetter: row.isHigherBetter
+      }))
+    const chartData = {}
+    const isHigherBetterCounts = {}
+    for (let i = 0; i < allData.length; i++) {
+      if (!chartData[allData[i].metric]) {
+        chartData[allData[i].metric] = []
+        isHigherBetterCounts[allData[i].metric] = 0
+      }
+      chartData[allData[i].metric].push(allData[i])
+      if (allData[i].isHigherBetter) {
+        isHigherBetterCounts[allData[i].metric]++
+      }
+    }
+    const metricNames = Object.keys(chartData)
+    let isChart = false
+    let chartKey = ''
+    let m = 0
+    const isLowerBetterDict = {}
+    for (let i = 0; i < metricNames.length; i++) {
+      const length = chartData[metricNames[i]].length
+      if (length > m) {
+        chartKey = metricNames[i]
+        m = length
+        isChart |= (m > 1)
+      }
+      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
+    }
+    this.setState({ metricNames: metricNames, isChart: isChart, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
+  }
+
   render () {
     return (
       <div>
+        {this.state.isChart &&
+          <div>
+            <div className='container'>
+              <FormFieldSelectRow
+                inputName='chartKey'
+                label='Chart Metric:'
+                labelClass='metric-chart-label'
+                options={this.state.metricNames.map(name =>
+                  ({
+                    _id: name,
+                    name: name
+                  }))}
+                onChange={(field, value) => this.handleOnChange('', field, value)}
+                tooltip='A metric performance measure of any "method" on this "task"'
+              />
+            </div>
+            <SotaChart data={this.state.chartData[this.state.chartKey]} width={900} height={400} xLabel='Date' xType='time' yLabel={this.state.chartKey} yType='number' isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+          </div>}
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
@@ -218,7 +305,7 @@ class Task extends React.Component {
                       }]}
                       data={this.state.results.map(row =>
                         ({
-                          key: row.submission._id,
+                          key: row._id,
                           submissionName: row.submission.submissionName,
                           methodName: row.method.name,
                           metricName: row.metricName,
