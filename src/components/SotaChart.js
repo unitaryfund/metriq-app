@@ -120,7 +120,7 @@ function SotaChart (props) {
         .text(xLabel)
 
       const yAxisLabelX = -40
-      const yAxisLabelY = height / 2
+      const yAxisLabelY = lHeight / 2
 
       svg.append('g')
         .attr('transform', 'translate(' + yAxisLabelX + ', ' + yAxisLabelY + ')')
