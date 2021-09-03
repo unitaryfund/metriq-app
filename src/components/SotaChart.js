@@ -128,6 +128,46 @@ function SotaChart (props) {
         .attr('text-anchor', 'middle')
         .attr('transform', 'rotate(-90)')
         .text(yLabel)
+
+      const xLegendOffset = 150
+      const yLegendOffset = 120
+
+      const circleLegendKeys = ['Results']
+
+      const circleLegend = svg
+        .selectAll('.circleLegend')
+        .data(circleLegendKeys)
+        .enter().append('g')
+        .attr('class', 'circleLegend')
+        .attr('transform', function (d, i) {
+          return 'translate(' + (lWidth - xLegendOffset + 5) + ',' + (yLegendOffset + i * 20) + ')'
+        })
+
+      circleLegend.append('text').text(function (d) { return d })
+        .attr('transform', 'translate(10,6)') // align texts with boxes
+
+      circleLegend.append('circle')
+        .attr('r', 3.0)
+        .style('fill', '#69b3a2')
+
+      const lineLegendKeys = ['State-of-the-Art']
+
+      const lineLegend = svg
+        .selectAll('.lineLegend')
+        .data(lineLegendKeys)
+        .enter().append('g')
+        .attr('class', 'lineLegend')
+        .attr('transform', function (d, i) {
+          return 'translate(' + (lWidth - xLegendOffset) + ',' + (yLegendOffset + (circleLegendKeys.length + i) * 20) + ')'
+        })
+
+      lineLegend.append('text').text(function (d) { return d })
+        .attr('transform', 'translate(15,6)') // align texts with boxes
+
+      lineLegend.append('rect')
+        .attr('fill', 'steelblue')
+        .attr('width', 10)
+        .attr('height', 1.5)
     }
     drawChart()
   }, [data, width, height, xLabel, yLabel, xType, yType, isLowerBetter])
