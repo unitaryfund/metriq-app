@@ -104,7 +104,7 @@ class LogIn extends React.Component {
             </div>
           </div>
         </form>
-        <Link to={'/Register' + this.props.nextLocation}>Create a new account</Link><br />
+        <Link to={this.props.nextLocation ? '/Register' + this.props.nextLocation : '/Register'}>Create a new account</Link><br />
         <Link to='/Forgot'>Forgot username/password?</Link>
       </div>
     )
