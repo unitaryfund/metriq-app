@@ -77,7 +77,7 @@ function SotaChart (props) {
         .tickSize(0)
         .tickSizeInner(-lWidth)
         .tickSizeOuter(0)
-        .tickFormat(d3.format("1e"))
+        .tickFormat(d3.format(".1e"))
 
       svg.append('g')
         .attr('class', 'grid')
