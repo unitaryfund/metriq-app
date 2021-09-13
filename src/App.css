@@ -87,7 +87,7 @@ form > .row > label {
 }
 
 .submission-heading {
-  padding-bottom: 8px;
+  padding: 0 8px 8px 8px
 }
 
 .submission-image {
@@ -102,6 +102,7 @@ form > .row > label {
 
 .submission-description {
   text-align: left;
+  padding: 0 8px 8px 8px
 }
 
 .submission-button-block {

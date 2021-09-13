@@ -5,7 +5,7 @@ import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import logo from './../github.jpeg'
+import logo from './../metriq_logo_purple.png'
 import ErrorHandler from './ErrorHandler'
 
 library.add(faThumbsUp, faExternalLinkAlt)
@@ -72,7 +72,7 @@ class SubmissionBox extends React.Component {
               <img src={this.props.item.submissionThumbnailUrl ? this.props.item.submissionThumbnailUrl : logo} alt='logo' className='submission-image' />
             </div>
             <div className='col-md-8 col h-100'>
-              <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+              <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate ? new Date(this.props.item.submittedDate).toLocaleDateString('en-US') : ''} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description : <i>(No description provided.)</i>}
               </div>
