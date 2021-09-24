@@ -553,7 +553,7 @@ class Submission extends React.Component {
             </OverlayTrigger>
             {this.state.isArxiv &&
               <span>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Vanity preprint</Tooltip>}>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Mobile view preprint</Tooltip>}>
                   <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
                 </OverlayTrigger>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>BibTex reference</Tooltip>}>
