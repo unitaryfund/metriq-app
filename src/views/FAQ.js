@@ -24,7 +24,7 @@ const FAQ = () => {
                 A metriq <b>"submission"</b> can be an arXiv preprint, GitHub
                 repository, or links to peer reviewed and published articles. A
                 submission can present or utilize one of more <b>"methods"</b> by
-                which they accomplish one or more <i>tasks</i>, which are workloads
+                which they accomplish one or more <b>"tasks"</b>, which are workloads
                 of interest.
             </p>
             <p>
