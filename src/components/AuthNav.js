@@ -22,7 +22,10 @@ const AuthNav = (props) => {
       <Nav.Link href='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
       <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
       <Nav.Link href='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
-      <Nav.Link href='/About' className='metriq-navbar-text'>About</Nav.Link>
+      <NavDropdown title='About' id='basic-nav-dropdown' className='metriq-navbar-text' alignRight>
+        <NavDropdown.Item href='/About'>About</NavDropdown.Item>
+        <NavDropdown.Item href='/FAQ'>F.A.Q.</NavDropdown.Item>
+      </NavDropdown>
       <NavDropdown title='Account' id='basic-nav-dropdown' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item href='/Profile'>Settings</NavDropdown.Item>
         <NavDropdown.Item href='/AddSubmission'>Add Submission</NavDropdown.Item>
