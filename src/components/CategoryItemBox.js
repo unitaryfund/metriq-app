@@ -19,15 +19,15 @@ class CategoryItemBox extends React.Component {
         </td>
         <td className='task-method-item-spacer' />
         <td>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with task</Tooltip>}>
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
             <span><FontAwesomeIcon icon={faExternalLinkAlt} />: {this.props.item.submissionCount}</span>
           </OverlayTrigger>
         </td>
         <td className='task-method-item-spacer' />
         <td>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with task</Tooltip>}>
+        <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
             <span><FontAwesomeIcon icon={faThumbsUp} />: {this.props.item.upvoteTotal}</span>
-          </OverlayTrigger>
+        </OverlayTrigger>
         </td>
       </tr>
     )
