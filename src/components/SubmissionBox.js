@@ -14,7 +14,7 @@ class SubmissionBox extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      upvotes: props.item.upvotesCount,
+      upvotes: props.item.upvotesCount || 0,
       isUpvoted: props.item.isUpvoted,
       description: !this.props.item.description ? '' : ((this.props.item.description.length > 500) ? (this.props.item.description.substring(0, 497) + '...') : this.props.item.description)
     }
