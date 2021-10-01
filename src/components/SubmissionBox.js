@@ -25,12 +25,12 @@ class SubmissionBox extends React.Component {
   }
 
   handleDeleteOnClick (event) {
-    let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + this.props.item.submissionName, '')
+    let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + this.props.item.name, '')
     if (confirmString) {
       confirmString = confirmString.trim().toLowerCase()
     }
-    if (confirmString && (confirmString === this.props.item.submissionNameNormal)) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.item._id, {})
+    if (confirmString && (confirmString === this.props.item.nameNormal)) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.item.id, {})
         .then(res => {
           window.location = '/Submissions'
         })
@@ -45,7 +45,7 @@ class SubmissionBox extends React.Component {
 
   handleUpVoteOnClick (event) {
     if (this.props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.item._id + '/upvote', {})
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.item.id + '/upvote', {})
         .then(res => {
           this.setState({ upvotes: res.data.data.upvotesCount, isUpvoted: res.data.data.isUpvoted })
         })
@@ -59,20 +59,20 @@ class SubmissionBox extends React.Component {
   }
 
   handleExternalLinkClick (event) {
-    window.open(this.props.item.submissionContentUrl, '_blank')
+    window.open(this.props.item.contentUrl, '_blank')
     event.preventDefault()
   }
 
   render () {
     return (
       <div className='submission'>
-        <Link to={'/Submission/' + this.props.item._id}>
+        <Link to={'/Submission/' + this.props.item.id}>
           <div className='row h-100'>
             <div className='col-md-2 col h-100'>
-              <img src={this.props.item.submissionThumbnailUrl ? this.props.item.submissionThumbnailUrl : logo} alt='logo' className='submission-image' />
+              <img src={this.props.item.thumbnailUrl ? this.props.item.thumbnailUrl : logo} alt='logo' className='submission-image' />
             </div>
             <div className='col-md-8 col h-100'>
-              <div className='submission-heading'>{this.props.item.submissionName} - Posted {this.props.item.submittedDate} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+              <div className='submission-heading'>{this.props.item.name} - Posted {this.props.item.createdAt} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description : <i>(No description provided.)</i>}
               </div>
