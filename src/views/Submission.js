@@ -529,8 +529,6 @@ class Submission extends React.Component {
   render () {
     return (
       <div className='container submission-detail-container'>
-        <header>{this.state.item.name}</header>
-        <br />
         <div className='row'>
           <div className='col-md-12'>
             <div><h1>{this.state.item.name}</h1></div>
