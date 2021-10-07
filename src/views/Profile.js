@@ -40,7 +40,7 @@ class Profile extends React.Component {
           <FieldRow fieldName='usernameNormal' label='Normalized Username' value={this.state.data.usernameNormal} />
           <FieldRow fieldName='email' label='Email' value={this.state.data.email} />
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientToken ? 'Active' : 'None'} />
-          <FieldRow fieldName='dateJoined' label='Date Joined' value={this.state.data.dateJoined} />
+          <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
