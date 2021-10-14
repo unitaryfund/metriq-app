@@ -7,6 +7,8 @@ import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -543,14 +545,24 @@ class Submission extends React.Component {
         </div>
         <div className='row'>
           <div className='col-md-12'>
-            <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
-            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+              <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Preprint</Tooltip>}>
+              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            </OverlayTrigger>
             {this.state.isArxiv &&
               <span>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Mobile view preprint</Tooltip>}>
+                  <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
+                </OverlayTrigger>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>BibTex reference</Tooltip>}>
+                  <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+                </OverlayTrigger>
               </span>}
-            <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
+                  <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
+                </OverlayTrigger>
           </div>
         </div>
         <br />

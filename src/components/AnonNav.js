@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Nav } from 'react-bootstrap'
+import { Button, Nav, NavDropdown } from 'react-bootstrap'
 
 const AnonNav = () => {
   return (
@@ -10,7 +10,10 @@ const AnonNav = () => {
       <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
       <Nav.Link href='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
       <Nav.Link href='/Login' className='metriq-navbar-text'>Log In</Nav.Link>
-      <Nav.Link href='/About' className='metriq-navbar-text'>About</Nav.Link>
+      <NavDropdown title='About' id='basic-nav-dropdown' className='metriq-navbar-text' alignRight>
+        <NavDropdown.Item href='/About'>About</NavDropdown.Item>
+        <NavDropdown.Item href='/FAQ'>F.A.Q.</NavDropdown.Item>
+      </NavDropdown>
     </Nav>
   )
 }
