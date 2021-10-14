@@ -110,14 +110,14 @@ class Method extends React.Component {
                 className='detail-table'
                 columns={[{
                   title: 'Name',
-                  dataIndex: 'submissionName',
-                  key: 'submissionName',
+                  dataIndex: 'name',
+                  key: 'name',
                   width: 700
                 },
                 {
                   title: 'Submitted',
-                  dataIndex: 'submittedDate',
-                  key: 'submittedDate',
+                  dataIndex: 'createdAt',
+                  key: 'createdAt',
                   width: 200
                 },
                 {
@@ -128,10 +128,10 @@ class Method extends React.Component {
                 }]}
                 data={this.state.item.submissions
                   ? this.state.item.submissions.map(row => ({
-                      key: row._id,
-                      submissionName: row.submissionName,
-                      submittedDate: new Date(row.submittedDate).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvotes.length
+                      key: row.id,
+                      name: row.name,
+                      createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                      upvoteCount: row.upvoteCount
                     }))
                   : []}
                 onRow={(record) => ({

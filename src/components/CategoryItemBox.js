@@ -13,7 +13,7 @@ class CategoryItemBox extends React.Component {
     return (
       <tr>
         <td>
-          <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item._id)}>
+          <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item.id)}>
             <div className='submission-heading'>{this.props.item.name}</div>
           </Link>
         </td>
@@ -25,9 +25,9 @@ class CategoryItemBox extends React.Component {
         </td>
         <td className='task-method-item-spacer' />
         <td>
-        <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
             <span><FontAwesomeIcon icon={faThumbsUp} />: {this.props.item.upvoteTotal}</span>
-        </OverlayTrigger>
+          </OverlayTrigger>
         </td>
       </tr>
     )

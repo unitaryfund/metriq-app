@@ -13,9 +13,9 @@ class AddSubmission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      submissionName: '',
-      submissionContentUrl: '',
-      submissionThumbnailUrl: '',
+      name: '',
+      contentUrl: '',
+      thumbnailUrl: '',
       description: '',
       tags: '',
       isRequestFailed: false,
@@ -48,9 +48,9 @@ class AddSubmission extends React.Component {
     }
 
     const request = {
-      submissionName: this.state.submissionName,
-      submissionContentUrl: this.state.submissionContentUrl,
-      submissionThumbnailUrl: this.state.submissionThumbnailUrl,
+      name: this.state.name,
+      contentUrl: this.state.contentUrl,
+      thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
       tags: this.state.tags
     }
@@ -71,7 +71,7 @@ class AddSubmission extends React.Component {
         <header>Add Submission</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
-            inputName='submissionName' inputType='text' label='Submission Name'
+            inputName='name' inputType='text' label='Submission Name'
             validatorMessage={requiredFieldMissingError}
             onChange={this.handleOnChange}
             validRegex={nonblankRegex}
@@ -84,7 +84,7 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='submissionContentUrl' inputType='text' label='Content URL'
+            inputName='contentUrl' inputType='text' label='Content URL'
             validatorMessage={requiredFieldMissingError}
             onChange={this.handleOnChange}
             validRegex={nonblankRegex}
@@ -97,7 +97,7 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='submissionThumbnailUrl' inputType='text' label='Image URL'
+            inputName='thumbnailUrl' inputType='text' label='Image URL'
             onChange={this.handleOnChange}
           />
           <div className='row'>

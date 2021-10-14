@@ -213,10 +213,10 @@ class Submission extends React.Component {
     if (this.props.isLoggedIn) {
       axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
         .then(res => {
-          const rId = res.data.data._id
+          const rId = res.data.data.id
           const item = { ...this.state.item }
           for (let i = 0; i < item.results.length; i++) {
-            if (item.results[i]._id === rId) {
+            if (item.results[i].id === rId) {
               item.results.splice(i, 1)
               break
             }
@@ -288,7 +288,7 @@ class Submission extends React.Component {
             const submission = res.data.data
             const tasks = [...this.state.taskNames]
             for (let j = 0; j < tasks.length; j++) {
-              if (this.state.taskId === tasks[j]._id) {
+              if (this.state.taskId === tasks[j].id) {
                 tasks.splice(j, 1)
                 break
               }
@@ -314,7 +314,7 @@ class Submission extends React.Component {
             const submission = res.data.data
             const methods = [...this.state.methodNames]
             for (let j = 0; j < methods.length; j++) {
-              if (this.state.methodId === methods[j]._id) {
+              if (this.state.methodId === methods[j].id) {
                 methods.splice(j, 1)
                 break
               }
@@ -344,10 +344,10 @@ class Submission extends React.Component {
     } else if (this.state.modalMode === 'Result') {
       const result = this.state.result
       if (!result.task) {
-        result.task = this.state.item.tasks[0]._id
+        result.task = this.state.item.tasks[0].id
       }
       if (!result.method) {
-        result.method = this.state.item.methods[0]._id
+        result.method = this.state.item.methods[0].id
       }
       if (!result.metricName) {
         window.alert('Error: Metric Name cannot be blank.')
@@ -378,7 +378,7 @@ class Submission extends React.Component {
   handleTrimTasks (submission, tasks) {
     for (let i = 0; i < submission.tasks.length; i++) {
       for (let j = 0; j < tasks.length; j++) {
-        if (submission.tasks[i]._id === tasks[j]._id) {
+        if (submission.tasks[i].id === tasks[j].id) {
           tasks.splice(j, 1)
           break
         }
@@ -389,7 +389,7 @@ class Submission extends React.Component {
   handleTrimMethods (submission, methods) {
     for (let i = 0; i < submission.methods.length; i++) {
       for (let j = 0; j < methods.length; j++) {
-        if (submission.methods[i]._id === methods[j]._id) {
+        if (submission.methods[i].id === methods[j].id) {
           methods.splice(j, 1)
           break
         }
@@ -400,7 +400,7 @@ class Submission extends React.Component {
   handleTrimTags (submission, tags) {
     for (let i = 0; i < submission.tags.length; i++) {
       for (let j = 0; j < tags.length; j++) {
-        if (submission.tags[i]._id === tags[j]._id) {
+        if (submission.tags[i].id === tags[j].id) {
           tags.splice(j, 1)
           break
         }
@@ -463,7 +463,7 @@ class Submission extends React.Component {
         let isArxiv = false
         let vanityUrl = ''
         let bibtexUrl = ''
-        const url = submission.submissionContentUrl
+        const url = submission.contentUrl
         if (url.toLowerCase().startsWith('https://arxiv.org/')) {
           isArxiv = true
           let urlTail = url.substring(18)
@@ -483,7 +483,7 @@ class Submission extends React.Component {
 
             let defTask = ''
             if (tasks.length) {
-              defTask = tasks[0]._id
+              defTask = tasks[0].id
             }
 
             this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
@@ -496,7 +496,7 @@ class Submission extends React.Component {
 
                 let defMethod = ''
                 if (methods.length) {
-                  defMethod = methods[0]._id
+                  defMethod = methods[0].id
                 }
 
                 this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
@@ -529,11 +529,9 @@ class Submission extends React.Component {
   render () {
     return (
       <div className='container submission-detail-container'>
-        <header>{this.state.item.name}</header>
-        <br />
         <div className='row'>
           <div className='col-md-12'>
-            <div><h1>{this.state.item.submissionName}</h1></div>
+            <div><h1>{this.state.item.name}</h1></div>
           </div>
         </div>
         <div className='row'>
@@ -549,7 +547,7 @@ class Submission extends React.Component {
               <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
             </OverlayTrigger>
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Preprint</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.submissionContentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
             </OverlayTrigger>
             {this.state.isArxiv &&
               <span>
@@ -560,9 +558,9 @@ class Submission extends React.Component {
                   <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
                 </OverlayTrigger>
               </span>}
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
-                  <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
-                </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
+              <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
+            </OverlayTrigger>
           </div>
         </div>
         <br />
@@ -588,7 +586,7 @@ class Submission extends React.Component {
                 }]}
                 data={this.state.item.tasks.map(row =>
                   ({
-                    key: row._id,
+                    key: row.id,
                     name: row.name
                   }))}
                 onRow={(record) => ({
@@ -624,7 +622,7 @@ class Submission extends React.Component {
                 }]}
                 data={this.state.item.methods.map(row =>
                   ({
-                    key: row._id,
+                    key: row.id,
                     name: row.name
                   }))}
                 onRow={(record) => ({
@@ -684,7 +682,7 @@ class Submission extends React.Component {
                 data={this.state.item.results.length
                   ? this.state.item.results.map(row =>
                       ({
-                        key: row._id,
+                        key: row.id,
                         taskName: row.task.name,
                         methodName: row.method.name,
                         metricName: row.metricName,
@@ -713,7 +711,7 @@ class Submission extends React.Component {
               <hr />
             </div>
             {(this.state.item.tags.length > 0) &&
-              this.state.item.tags.map(tag => <span key={tag._id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
             {(this.state.item.tags.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated tags, yet.</div>
@@ -911,14 +909,14 @@ class Submission extends React.Component {
                 <b>Attached tasks:</b><br />
                 {(this.state.item.tasks.length > 0) &&
                   this.state.item.tasks.map(task =>
-                    <div key={task._id}>
+                    <div key={task.id}>
                       <hr />
                       <div className='row'>
                         <div className='col-md-10'>
                           {task.name}
                         </div>
                         <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task._id)}><FontAwesomeIcon icon='trash' /> </button>
+                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task.id)}><FontAwesomeIcon icon='trash' /> </button>
                         </div>
                       </div>
                     </div>
@@ -931,14 +929,14 @@ class Submission extends React.Component {
                 <b>Attached methods:</b><br />
                 {(this.state.item.methods.length > 0) &&
                   this.state.item.methods.map(method =>
-                    <div key={method._id}>
+                    <div key={method.id}>
                       <hr />
                       <div className='row'>
                         <div className='col-md-10'>
                           {method.name}
                         </div>
                         <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnMethodRemove(method._id)}><FontAwesomeIcon icon='trash' /> </button>
+                          <button className='btn btn-danger' onClick={() => this.handleOnMethodRemove(method.id)}><FontAwesomeIcon icon='trash' /> </button>
                         </div>
                       </div>
                     </div>
@@ -951,14 +949,14 @@ class Submission extends React.Component {
                 <b>Attached results:</b><br />
                 {(this.state.item.results.length > 0) &&
                   this.state.item.results.map(result =>
-                    <div key={result._id}>
+                    <div key={result.id}>
                       <hr />
                       <div className='row'>
                         <div className='col-md-10'>
                           {result.task.name}, {result.method.name}, {result.metricName}: {result.metricValue}
                         </div>
                         <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result._id)}><FontAwesomeIcon icon='trash' /> </button>
+                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result.id)}><FontAwesomeIcon icon='trash' /> </button>
                         </div>
                       </div>
                     </div>
@@ -971,7 +969,7 @@ class Submission extends React.Component {
                 <b>Attached tags:</b><br />
                 {(this.state.item.results.length > 0) &&
                   this.state.item.tags.map(tag =>
-                    <div key={tag._id}>
+                    <div key={tag.id}>
                       <hr />
                       <div className='row'>
                         <div className='col-md-10'>

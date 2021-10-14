@@ -92,7 +92,7 @@ class Task extends React.Component {
         const results = []
         for (let i = 0; i < item.submissions.length; i++) {
           for (let j = 0; j < item.submissions[i].results.length; j++) {
-            if (item.submissions[i].results[j].task._id === item._id) {
+            if (item.submissions[i].results[j].task.id === item.id) {
               results.push(item.submissions[i].results[j])
             }
           }
@@ -206,7 +206,7 @@ class Task extends React.Component {
                 labelClass='metric-chart-label'
                 options={this.state.metricNames.map(name =>
                   ({
-                    _id: name,
+                    id: name,
                     name: name
                   }))}
                 onChange={(field, value) => this.handleOnChange('', field, value)}
@@ -239,14 +239,14 @@ class Task extends React.Component {
                     className='detail-table'
                     columns={[{
                       title: 'Name',
-                      dataIndex: 'submissionName',
-                      key: 'submissionName',
+                      dataIndex: 'name',
+                      key: 'name',
                       width: 700
                     },
                     {
                       title: 'Submitted',
-                      dataIndex: 'submittedDate',
-                      key: 'submittedDate',
+                      dataIndex: 'createdAt',
+                      key: 'createdAt',
                       width: 200
                     },
                     {
@@ -257,10 +257,10 @@ class Task extends React.Component {
                     }]}
                     data={this.state.item.submissions
                       ? this.state.item.submissions.map(row => ({
-                          key: row._id,
-                          submissionName: row.submissionName,
-                          submittedDate: new Date(row.submittedDate).toLocaleDateString('en-US'),
-                          upvoteCount: row.upvotes.length
+                          key: row.id,
+                          name: row.name,
+                          createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                          upvoteCount: row.upvoteCount
                         }))
                       : []}
                     onRow={(record) => ({
@@ -305,7 +305,7 @@ class Task extends React.Component {
                       }]}
                       data={this.state.results.map(row =>
                         ({
-                          key: row._id,
+                          key: row.id,
                           submissionName: row.submission.submissionName,
                           methodName: row.method.name,
                           metricName: row.metricName,
