@@ -30,7 +30,7 @@ function SotaChart (props) {
         .select('.tooltip')
         .remove()
 
-      const margin = { top: 20, right: 30, bottom: 60, left: 60 }
+      const margin = { top: 20, right: 30, bottom: 60, left: 80 }
       const lWidth = width - margin.left - margin.right
       const lHeight = height - margin.top - margin.bottom
       const yMinValue = d3.min(data, d => d.value)
@@ -77,6 +77,7 @@ function SotaChart (props) {
         .tickSize(0)
         .tickSizeInner(-lWidth)
         .tickSizeOuter(0)
+        .tickFormat(d3.format(".1e"))
 
       svg.append('g')
         .attr('class', 'grid')
@@ -119,7 +120,7 @@ function SotaChart (props) {
         .attr('y', xAxisLabelY)
         .text(xLabel)
 
-      const yAxisLabelX = -40
+      const yAxisLabelX = -60
       const yAxisLabelY = lHeight / 2
 
       svg.append('g')
