@@ -1,11 +1,15 @@
 import { Navbar } from 'react-bootstrap'
 import MainNav from './MainNav'
+import logo from './../metriq_logo_black.png'
+
 
 const MainNavbar = (props) => {
   return (
     <div>
       <Navbar bg='light' expand='lg'>
-        <Navbar.Brand href='/' className='metriq-navbar'>metriq</Navbar.Brand>
+        <Navbar.Brand href='/' className='metriq-navbar'>
+          <img src={logo} alt='logo' className='logo-image' />
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <MainNav isLoggedIn={props.isLoggedIn} />
