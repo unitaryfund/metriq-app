@@ -1,25 +1,25 @@
 const About = () => {
   return (
     <div class='container content content-buffer '>
-      <div className='row'>
-        <div class='col-md-2' />
-        <div class='col-md-8'>
+      <div align='left' class='col-md-8'>
           <h1>Our Mission</h1>
           <p>
-            The mission of Metriq is to create a free and open resource for acting as the state-of-the-art in categorizing benchmarks for near-term quantum computers
+            The mission of metriq is to create a free and open resource for
+            acting as the state-of-the-art in categorizing benchmarks for
+            near-term quantum computers
           </p>
           <p>
             We believe this is best done together with the community.
           </p>
-
           <p>
-            All content on this website is openly licensed under CC-BY-SA (same as Wikipedia) and everyone can contribute - look for the "Edit" buttons!
+            All content on this website is openly licensed under CC-BY-SA (same
+            as Wikipedia) and everyone can contribute - look for the "Edit"
+            buttons!
           </p>
-
           <h2>Joining the community</h2>
-
-          <p>Join our community of contributors across academia and industry!</p>
-
+          <p>
+            Join our community of contributors across academia and industry!
+          </p>
           <p>
             We hang out on&nbsp;
             <a href='https://discord.gg/PZpWX3sh'>
@@ -32,7 +32,6 @@ const About = () => {
               Discord
             </a>, come join us!
           </p>
-
           <p>
             You can also follow us and get in touch on&nbsp;
             <a href='https://twitter.com/unitaryfund'>
@@ -51,59 +50,51 @@ const About = () => {
               </span> GitHub
             </a>.
           </p>
-
-          <h2 id='contributing'>Contributing</h2>
+          <h2>Contributing</h2>
           <p>
             Anyone can contribute - look for the "Edit" buttons!
           </p>
           <p>
-            Want to add an method, tag, or a task? You'll see edit buttons on the submission pages - just go ahead and edit! We found this a fun way to learn about new areas of quantum benchmarks and staying in tune with research.
+            Want to add an method, tag, or a task? You'll see edit buttons on
+            the submission pages - just go ahead and edit! We found this a fun
+            way to learn about new areas of quantum benchmarks and staying in
+            tune with research.
           </p>
-
           <p>
-            You can make use of the <a href='https://github.com/unitaryfund/metriq-client'>metriq-client</a> project to get and submit content to the Metriq platform.
+            You can make use of the <a
+            href='https://github.com/unitaryfund/metriq-client'>metriq-client</a>
+            project to get and submit content to the Metriq platform.
           </p>
-
           <p>
-            Please note that any contribution you make (i.e. linking code or submitting results) will be licensed under the free <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a> licence.
+            Please note that any contribution you make (i.e. linking code or
+            submitting results) will be licensed under the free <a
+            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
+            licence.
           </p>
-
-          <h2 id='moderation'>Inclusion policy</h2>
-
+          <h2>Inclusion policy</h2>
           <p>
             To ensure high quality of data, all edits are monitored.
           </p>
-
-          <h2 id='date'>Downloading the data</h2>
+          <h2>Downloading the data</h2>
           <p>
-            All data is licensed under the <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a> licence, same as Wikipedia.
+            All data is licensed under the <a
+            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
+            licence, same as Wikipedia.
           </p>
-          <p>
-            Download links:
-          </p>
-          <ul />
-
           <h2>Team</h2>
-
           <p>
-            The core Metriq team is based in the <a href='https://unitary.fund/'>Unitary Fund</a>.
+            The core metriq team is based in the <a
+            href='https://unitary.fund/'>Unitary Fund</a>.
           </p>
-
           <p>
-            Metriq is heavily influenced by the <a href='https://paperswithcode.com/'>Papers with Code</a> project created by Facebook AI Research.
+            The metriq project is heavily influenced by the <a
+            href='https://paperswithcode.com/'>Papers with Code</a> project
+            created by Facebook AI Research.
           </p>
-
           <p>
-            Metriq is a community project.
+            All contributions are welcome; metriq is a community project.
           </p>
-
-          <p>
-            All contributions are welcome!
-          </p>
-        </div>
-        <div class='col-md-2' />
       </div>
-
     </div>
   )
 }
