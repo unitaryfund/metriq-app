@@ -103,7 +103,17 @@ form > .row > label {
 }
 
 .submission-heading {
-  padding: 0 8px 8px 8px
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+}
+.submission-heading:hover {
+  color: #3cd2f9;
+  text-shadow: 0 0 10px #3cd2f9,
+               0 0 20px #3cd2f9,
+               0 0 40px #3cd2f9,
+               0 0 80px #3cd2f9,
+               0 0 120px #3cd2f9,
 }
 
 .submission-image {
