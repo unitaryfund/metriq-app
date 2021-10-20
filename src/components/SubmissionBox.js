@@ -74,7 +74,7 @@ class SubmissionBox extends React.Component {
             <div className='col-md-8 col h-100'>
               <div className='submission-heading'>{this.props.item.name} - Posted {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US') : ''} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
               <div className='submission-description'>
-                {this.state.description ? this.state.description.split('.')[0] + '.' : <i>(No description provided.)</i>}
+                {this.state.description ? this.state.description.split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>
             </div>
             <div className='col-md-2 col h-100'>
