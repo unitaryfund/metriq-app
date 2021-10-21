@@ -1,6 +1,6 @@
 import { Navbar } from 'react-bootstrap'
 import MainNav from './MainNav'
-import logo from './../metriq_logo_blue.png'
+import logo from './../metriq_logo_primary_blue.png'
 
 
 const MainNavbar = (props) => {

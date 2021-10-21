@@ -5,7 +5,7 @@ import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import logo from './../metriq_logo_purple.png'
+import logo from './../metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
 
 library.add(faThumbsUp, faExternalLinkAlt)
