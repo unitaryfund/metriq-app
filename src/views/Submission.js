@@ -45,7 +45,7 @@ class Submission extends React.Component {
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
-      showAccordian: false,
+      showAccordion: false,
       modalMode: '',
       submission: {
         description: ''
@@ -78,7 +78,7 @@ class Submission extends React.Component {
     this.handleAddDescription = this.handleAddDescription.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
-    this.handleAccordianToggle = this.handleAccordianToggle.bind(this)
+    this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
@@ -129,8 +129,8 @@ class Submission extends React.Component {
       })
   }
 
-  handleAccordianToggle () {
-    this.setState({ showAccordian: !this.state.showAccordian, isValidated: false })
+  handleAccordionToggle () {
+    this.setState({ showAccordion: !this.state.showAccordion, isValidated: false })
   }
 
   handleOnChange (key1, key2, value) {
@@ -250,7 +250,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, showAccordian: false, modalMode: mode, isValidated: false })
+    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
   }
 
   handleOnClickRemove (mode) {
@@ -261,7 +261,7 @@ class Submission extends React.Component {
   }
 
   handleHideAddModal () {
-    this.setState({ showAddModal: false, showAccordian: false })
+    this.setState({ showAddModal: false, showAccordion: false })
   }
 
   handleHideRemoveModal () {
@@ -274,7 +274,7 @@ class Submission extends React.Component {
     }
 
     if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordian) {
+      if (this.state.showAccordion) {
         axios.post(config.api.getUriPrefix() + '/task', this.state.task)
           .then(res => {
             window.location.reload()
@@ -300,7 +300,7 @@ class Submission extends React.Component {
           })
       }
     } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordian) {
+      if (this.state.showAccordion) {
         axios.post(config.api.getUriPrefix() + '/method', this.state.method)
           .then(res => {
             window.location.reload()
@@ -417,7 +417,7 @@ class Submission extends React.Component {
     }
 
     if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordian) {
+      if (this.state.showAccordion) {
         if (!taskNameRegex.test(this.state.task.name)) {
           return false
         }
@@ -428,7 +428,7 @@ class Submission extends React.Component {
         return false
       }
     } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordian) {
+      if (this.state.showAccordion) {
         if (!methodNameRegex.test(this.state.method.name)) {
           return false
         }
@@ -745,7 +745,7 @@ class Submission extends React.Component {
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordianToggle}>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
                         <FontAwesomeIcon icon='plus' /> Create a new method.
                       </Accordion.Toggle>
                     </Card.Header>
@@ -792,7 +792,7 @@ class Submission extends React.Component {
                 <Accordion defaultActiveKey='0'>
                   <Card>
                     <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordianToggle}>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
                         <FontAwesomeIcon icon='plus' /> Create a new task.
                       </Accordion.Toggle>
                     </Card.Header>

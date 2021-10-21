@@ -72,7 +72,8 @@ class SubmissionBox extends React.Component {
               <img src={this.props.item.thumbnailUrl ? this.props.item.thumbnailUrl : logo} alt='logo' className='submission-image' />
             </div>
             <div className='col-md-8 col h-100'>
-              <div className='submission-heading'>{this.props.item.name} - Posted {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US') : ''} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+              <div className='submission-heading'>{this.props.item.name} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+              <div className='submission-subheading'> • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} • </div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description.split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>

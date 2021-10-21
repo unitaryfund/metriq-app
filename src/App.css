@@ -103,6 +103,12 @@ form > .row > label {
 }
 
 .submission-heading {
+  font-weight: bold;
+  padding: 0 8px 8px 8px
+}
+
+.submission-subheading {
+  font-size: 80%;
   padding: 0 8px 8px 8px
 }
 
@@ -118,6 +124,7 @@ form > .row > label {
 
 .submission-description {
   text-align: left;
+  font-size: 90%;
   padding: 0 8px 8px 8px
 }
 
