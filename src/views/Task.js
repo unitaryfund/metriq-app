@@ -282,8 +282,8 @@ class Task extends React.Component {
                       className='detail-table'
                       columns={[{
                         title: 'Submission',
-                        dataIndex: 'submissionName',
-                        key: 'submissionName',
+                        dataIndex: 'name',
+                        key: 'name',
                         width: 300
                       },
                       {
@@ -307,7 +307,7 @@ class Task extends React.Component {
                       data={this.state.results.map(row =>
                         ({
                           key: row.id,
-                          submissionName: row.submission.submissionName,
+                          name: row.submission.name,
                           methodName: row.method.name,
                           metricName: row.metricName,
                           metricValue: row.metricValue
