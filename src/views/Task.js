@@ -94,6 +94,7 @@ class Task extends React.Component {
           for (let j = 0; j < item.submissions[i].results.length; j++) {
             if (item.submissions[i].results[j].task.id === item.id) {
               results.push(item.submissions[i].results[j])
+              results[results.length - 1].submission = item.submissions[i]
             }
           }
         }
@@ -126,6 +127,7 @@ class Task extends React.Component {
             return 0
           }
         })
+        console.log(results)
         this.setState({ results: results })
         this.sliceChartData(results)
       })
