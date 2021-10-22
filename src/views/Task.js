@@ -148,8 +148,8 @@ class Task extends React.Component {
         return 1
       }
 
-      const mda = new Date(a.evaluatedDate ? a.evaluatedDate : a.submissionDate)
-      const mdb = new Date(b.evaluatedDate ? b.evaluatedDate : b.submissionDate)
+      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt)
+      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt)
       if (mda < mdb) {
         return -1
       }
@@ -163,7 +163,7 @@ class Task extends React.Component {
       ({
         method: row.method.name,
         metric: row.metricName,
-        label: new Date(row.evaluatedDate ? row.evaluatedDate : row.submissionDate),
+        label: new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter
       }))
