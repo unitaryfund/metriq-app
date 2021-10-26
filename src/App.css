@@ -185,7 +185,7 @@ form > .row > label {
 
 .detail-table td, #customers th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
 }
 
 .detail-table tr:nth-child(even){background-color: #f2f2f2;}
@@ -194,6 +194,7 @@ form > .row > label {
 
 .detail-table th {
   padding-top: 12px;
+  padding-left: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: #34bce4;
