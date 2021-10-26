@@ -1,7 +1,9 @@
 const About = () => {
   return (
-    <div class='container content content-buffer '>
-      <div align='left' class='col-md-8'>
+    <div class='container'>
+      <div CssClass='row'>
+      <div CssClass='col-md-2' />
+      <div align='left' CssClass='col-md-8'>
           <h1>Our Mission</h1>
           <p>
             The mission of metriq is to create a free and open resource for
@@ -94,6 +96,8 @@ const About = () => {
           <p>
             All contributions are welcome; metriq is a community project.
           </p>
+      </div>
+      <div CssClass='col-md-2' />
       </div>
     </div>
   )
