@@ -177,9 +177,30 @@ form > .row > label {
   text-decoration: underline;
 }
 
-.detail-table .rc-table-cell {
-  border: 1px solid #282c34;
+.detail-table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
 }
+
+.detail-table td, #customers th {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.detail-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.detail-table tr:hover {background-color: #ddd;}
+
+.detail-table th {
+  padding-top: 12px;
+  padding-left: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #34bce4;
+  color: white;
+}
+
 
 .max-width {
   max-width: 100%;
