@@ -94,6 +94,7 @@ class Task extends React.Component {
           for (let j = 0; j < item.submissions[i].results.length; j++) {
             if (item.submissions[i].results[j].task.id === item.id) {
               results.push(item.submissions[i].results[j])
+              results[results.length - 1].submission = item.submissions[i]
             }
           }
         }
@@ -146,8 +147,8 @@ class Task extends React.Component {
         return 1
       }
 
-      const mda = new Date(a.evaluatedDate ? a.evaluatedDate : a.submissionDate)
-      const mdb = new Date(b.evaluatedDate ? b.evaluatedDate : b.submissionDate)
+      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt)
+      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt)
       if (mda < mdb) {
         return -1
       }
@@ -161,7 +162,7 @@ class Task extends React.Component {
       ({
         method: row.method.name,
         metric: row.metricName,
-        label: new Date(row.evaluatedDate ? row.evaluatedDate : row.submissionDate),
+        label: new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter
       }))
@@ -281,8 +282,8 @@ class Task extends React.Component {
                       className='detail-table'
                       columns={[{
                         title: 'Submission',
-                        dataIndex: 'submissionName',
-                        key: 'submissionName',
+                        dataIndex: 'name',
+                        key: 'name',
                         width: 300
                       },
                       {
@@ -306,7 +307,7 @@ class Task extends React.Component {
                       data={this.state.results.map(row =>
                         ({
                           key: row.id,
-                          submissionName: row.submission.submissionName,
+                          name: row.submission.name,
                           methodName: row.method.name,
                           metricName: row.metricName,
                           metricValue: row.metricValue

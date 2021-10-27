@@ -17,7 +17,7 @@ const handleOnClick = () => {
 const AuthNav = (props) => {
   return (
     <Nav className='ml-auto metriq-navbar'>
-      <Nav.Link href='/AddSubmission'><Button variant='primary' className="metriq-navbar-button">Submit</Button></Nav.Link>
+      <Nav.Link href='/AddSubmission'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
       <Nav.Link href='/' className='metriq-navbar-text'>Home</Nav.Link>
       <Nav.Link href='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
       <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>

@@ -23,7 +23,7 @@ class App extends React.Component {
         this.handleLogin()
       })
       .catch(err => {
-        if (err.response.status === 401) {
+        if (!err || !err.response || err.response.status === 401) {
           this.handleLogout()
         }
       })

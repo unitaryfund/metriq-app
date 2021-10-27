@@ -2,8 +2,8 @@ const About = () => {
   return (
     <div class='container'>
       <div CssClass='row'>
-      <div CssClass='col-md-2' />
-      <div align='left' CssClass='col-md-8'>
+        <div CssClass='col-md-2' />
+        <div align='left' CssClass='col-md-8'>
           <h1>Our Mission</h1>
           <p>
             The mission of metriq is to create a free and open resource for
@@ -63,14 +63,12 @@ const About = () => {
             tune with research.
           </p>
           <p>
-            You can make use of the <a
-            href='https://github.com/unitaryfund/metriq-client'>metriq-client</a>
+            You can make use of the <a href='https://github.com/unitaryfund/metriq-client'>metriq-client</a>
             project to get and submit content to the Metriq platform.
           </p>
           <p>
             Please note that any contribution you make (i.e. linking code or
-            submitting results) will be licensed under the free <a
-            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
+            submitting results) will be licensed under the free <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
             licence.
           </p>
           <h2>Inclusion policy</h2>
@@ -79,25 +77,22 @@ const About = () => {
           </p>
           <h2>Downloading the data</h2>
           <p>
-            All data is licensed under the <a
-            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
+            All data is licensed under the <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
             licence, same as Wikipedia.
           </p>
           <h2>Team</h2>
           <p>
-            The core metriq team is based in the <a
-            href='https://unitary.fund/'>Unitary Fund</a>.
+            The core metriq team is based in the <a href='https://unitary.fund/'>Unitary Fund</a>.
           </p>
           <p>
-            The metriq project is heavily influenced by the <a
-            href='https://paperswithcode.com/'>Papers with Code</a> project
+            The metriq project is heavily influenced by the <a href='https://paperswithcode.com/'>Papers with Code </a> project
             created by Facebook AI Research.
           </p>
           <p>
             All contributions are welcome; metriq is a community project.
           </p>
-      </div>
-      <div CssClass='col-md-2' />
+        </div>
+        <div CssClass='col-md-2' />
       </div>
     </div>
   )
