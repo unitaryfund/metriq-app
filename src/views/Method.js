@@ -131,7 +131,7 @@ class Method extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount
+                      upvoteCount: row.upvoteCount || 0
                     }))
                   : []}
                 onRow={(record) => ({
