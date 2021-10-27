@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faExternalLinkAlt, faScroll, faCode } from '@fortawesome/free-solid-svg-icons'
 import logo from './../metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
 
@@ -63,6 +63,19 @@ class SubmissionBox extends React.Component {
     event.preventDefault()
   }
 
+  parseContentUrl () {
+    let urlStr = String(this.props.item.contentUrl);
+    if (urlStr.includes("arxiv")) {
+      return <span> <FontAwesomeIcon icon={faScroll} /> arXiv:{urlStr.split("/abs/")[1]} </span>
+    }
+    else if (urlStr.includes("github")) {
+      return <span> <FontAwesomeIcon icon={faCode} /> GitHub:{urlStr.split("/.com/")[1]} </span>
+    }
+    else {
+      return ""
+    }
+  }
+
   render () {
     return (
       <div className='submission'>
@@ -73,7 +86,7 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-8 col h-100'>
               <div className='submission-heading'>{this.props.item.name} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
-              <div className='submission-subheading'> • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} • </div>
+              <div className='submission-subheading'> {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} • </div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description.split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>
