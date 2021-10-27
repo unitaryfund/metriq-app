@@ -69,7 +69,7 @@ class SubmissionBox extends React.Component {
       return <span> <FontAwesomeIcon icon={faScroll} /> arXiv:{urlStr.split("/abs/")[1]} </span>
     }
     else if (urlStr.includes("github")) {
-      return <span> <FontAwesomeIcon icon={faCode} /> GitHub:{urlStr.split("/.com/")[1]} </span>
+      return <span> <FontAwesomeIcon icon={faCode} /> GitHub:{urlStr.split(".com/")[1]} </span>
     }
     else {
       return ""
