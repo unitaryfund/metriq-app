@@ -1,0 +1,32 @@
+# This workflow publish to QA by connecting to the environment via SSH and pulling all repos.
+# The web server instances will hotload the changes, as a result.
+
+name: Metriq QA Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deployment:
+
+    runs-on: ubuntu-latest
+    environment: qa
+
+    steps:
+    - name: Setup SSH Keys and known_hosts
+      env:
+        KNOWN_HOSTS: ${{ secrets.QA_KNOWN_HOSTS }}
+        SSH_PRIVATE_KEY: ${{ secrets.QA_SSH_PRIVATE_KEY }}
+      run: |
+        mkdir ~/.ssh
+        echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_metriq
+        chmod 400 ~/.ssh/id_metriq
+
+    - name: Deploy to QA
+      env:
+        SSH_USER: ${{ secrets.QA_SSH_USER }}
+        IP_ADDRESS: ${{ secrets.QA_IP_ADDRESS }}
+      run: |
+        ssh -i ~/.ssh/id_metriq $SSH_USER@$IP_ADDRESS ./GitHub/metriq-api/metriq-pull.sh
