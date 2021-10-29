@@ -4,7 +4,7 @@ const FAQ = () => {
       <div className='row'>
         <div className='col-md-2' />
         <div className='col-md-8 text-justify'>
-          <h1>F.A.Q.</h1>
+          <h1 className='text-center'>Frequently Asked Questions (F.A.Q.)</h1>
           <br/>
           <h2 className='text-center'>What is Metriq?</h2>
           <div>
