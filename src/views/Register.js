@@ -106,7 +106,7 @@ class Register extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header>Test - Register</header>
+        <header>Register</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
