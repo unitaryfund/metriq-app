@@ -6,17 +6,13 @@ const About = () => {
         <div align='left' CssClass='col-md-8'>
           <h1>Our Mission</h1>
           <p>
-            The mission of metriq is to create a free and open resource for
-            acting as the state-of-the-art in categorizing benchmarks for
-            near-term quantum computers
+            The mission of metriq is to create a free and open resource for acting as the state-of-the-art in categorizing benchmarks for near-term quantum computers.
           </p>
           <p>
             We believe this is best done together with the community.
           </p>
           <p>
-            All content on this website is openly licensed under CC-BY-SA (same
-            as Wikipedia) and everyone can contribute - look for the "Edit"
-            buttons!
+            All content on this website is openly licensed under CC-BY-SA (same as Wikipedia) and everyone can contribute - look for the "Edit" buttons!
           </p>
           <h2>Joining the community</h2>
           <p>
@@ -30,8 +26,7 @@ const About = () => {
                   <path d='M6.552 6.712c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888.008-.488-.36-.888-.816-.888zm2.92 0c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888s-.36-.888-.816-.888z' />
                   <path d='M13.36 0H2.64C1.736 0 1 .736 1 1.648v10.816c0 .912.736 1.648 1.64 1.648h9.072l-.424-1.48 1.024.952.968.896L15 16V1.648C15 .736 14.264 0 13.36 0zm-3.088 10.448s-.288-.344-.528-.648c1.048-.296 1.448-.952 1.448-.952-.328.216-.64.368-.92.472-.4.168-.784.28-1.16.344a5.604 5.604 0 0 1-2.072-.008 6.716 6.716 0 0 1-1.176-.344 4.688 4.688 0 0 1-.584-.272c-.024-.016-.048-.024-.072-.04-.016-.008-.024-.016-.032-.024-.144-.08-.224-.136-.224-.136s.384.64 1.4.944c-.24.304-.536.664-.536.664-1.768-.056-2.44-1.216-2.44-1.216 0-2.576 1.152-4.664 1.152-4.664 1.152-.864 2.248-.84 2.248-.84l.08.096c-1.44.416-2.104 1.048-2.104 1.048s.176-.096.472-.232c.856-.376 1.536-.48 1.816-.504.048-.008.088-.016.136-.016a6.521 6.521 0 0 1 4.024.752s-.632-.6-1.992-1.016l.112-.128s1.096-.024 2.248.84c0 0 1.152 2.088 1.152 4.664 0 0-.68 1.16-2.448 1.216z' />
                 </svg>
-              </span>
-              Discord
+              </span> Discord
             </a>, come join us!
           </p>
           <p>
@@ -57,22 +52,13 @@ const About = () => {
             Anyone can contribute - look for the "Edit" buttons!
           </p>
           <p>
-            Want to add an method, tag, or a task? You'll see edit buttons on
-            the submission pages - just go ahead and edit! We found this a fun
-            way to learn about new areas of quantum benchmarks and staying in
-            tune with research.
+            Want to add an method, tag, or a task? You'll see edit buttons on the submission pages - just go ahead and edit! We found this a fun way to learn about new areas of quantum benchmarks and staying in tune with research.
           </p>
           <p>
-            You can make use of the <span><a
-            href='https://github.com/unitaryfund/metriq-client'> metriq-client
-            </a></span> project to get and submit content to the Metriq
-            platform.
+            You can make use of the <a href='https://github.com/unitaryfund/metriq-client'>metriq-client</a> project to get and submit content to the Metriq platform.
           </p>
           <p>
-            Please note that any contribution you make (i.e. linking code or
-            submitting results) will be licensed under the free <span><a
-            href='https://creativecommons.org/licenses/by-sa/4.0/'> CC BY-SA
-            </a></span> licence.
+            Please note that any contribution you make (i.e. linking code or submitting results) will be licensed under the free <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a> licence.
           </p>
           <h2>Inclusion policy</h2>
           <p>
@@ -80,17 +66,14 @@ const About = () => {
           </p>
           <h2>Downloading the data</h2>
           <p>
-            All data is licensed under the <span><a
-            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC
-            BY-SA</a></span> licence, same as Wikipedia.
+            All data is licensed under the <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a> licence, same as Wikipedia.
           </p>
           <h2>Team</h2>
           <p>
             The core metriq team is based in the <a href='https://unitary.fund/'>Unitary Fund</a>.
           </p>
           <p>
-            The metriq project is heavily influenced by the <a href='https://paperswithcode.com/'>Papers with Code </a> project
-            created by Facebook AI Research.
+            The metriq project is heavily influenced by the <a href='https://paperswithcode.com/'>Papers with Code</a> project created by Facebook AI Research.
           </p>
           <p>
             All contributions are welcome; metriq is a community project.
