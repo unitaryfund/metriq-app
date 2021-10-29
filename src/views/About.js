@@ -24,7 +24,7 @@ const About = () => {
           </p>
           <p>
             We hang out on&nbsp;
-            <a href='https://discord.gg/PZpWX3sh'>
+            <a href='https://discord.com/invite/JqVGmpkP96'>
               <span class=' icon-wrapper' data-name='discord'>
                 <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-discord' viewBox='0 0 16 16'>
                   <path d='M6.552 6.712c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888.008-.488-.36-.888-.816-.888zm2.92 0c-.456 0-.816.4-.816.888s.368.888.816.888c.456 0 .816-.4.816-.888s-.36-.888-.816-.888z' />
@@ -63,13 +63,16 @@ const About = () => {
             tune with research.
           </p>
           <p>
-            You can make use of the <a href='https://github.com/unitaryfund/metriq-client'>metriq-client</a>
-            project to get and submit content to the Metriq platform.
+            You can make use of the <span><a
+            href='https://github.com/unitaryfund/metriq-client'> metriq-client
+            </a></span> project to get and submit content to the Metriq
+            platform.
           </p>
           <p>
             Please note that any contribution you make (i.e. linking code or
-            submitting results) will be licensed under the free <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
-            licence.
+            submitting results) will be licensed under the free <span><a
+            href='https://creativecommons.org/licenses/by-sa/4.0/'> CC BY-SA
+            </a></span> licence.
           </p>
           <h2>Inclusion policy</h2>
           <p>
@@ -77,8 +80,9 @@ const About = () => {
           </p>
           <h2>Downloading the data</h2>
           <p>
-            All data is licensed under the <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC BY-SA</a>
-            licence, same as Wikipedia.
+            All data is licensed under the <span><a
+            href='https://creativecommons.org/licenses/by-sa/4.0/'>CC
+            BY-SA</a></span> licence, same as Wikipedia.
           </p>
           <h2>Team</h2>
           <p>
