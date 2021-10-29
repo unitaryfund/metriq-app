@@ -43,7 +43,7 @@ class Task extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const task = { description: this.state.item.description }
+    const task = { description: this.state.task.description }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
 
