@@ -718,7 +718,12 @@ class Submission extends React.Component {
               </div>}
           </div>
         </div>
-        <Modal show={this.state.showAddModal} onHide={this.handleHideAddModal}>
+        <Modal 
+          show={this.state.showAddModal} onHide={this.handleHideAddModal}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
           {(this.state.modalMode === 'Login') &&
             <Modal.Header closeButton>
               <Modal.Title>Add</Modal.Title>
