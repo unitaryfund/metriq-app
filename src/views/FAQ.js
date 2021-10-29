@@ -5,7 +5,8 @@ const FAQ = () => {
         <div className='col-md-2' />
         <div className='col-md-8 text-justify'>
           <h1>F.A.Q.</h1>
-          <h2>What is metriq?</h2>
+          <br/>
+          <h2 className='text-center'>What is Metriq?</h2>
           <div>
             <p>
               The purpose of the metriq platform is to allow users to answer the following question:
@@ -20,7 +21,8 @@ const FAQ = () => {
               The goal of metriq is to become a focal point for present benchmarking efforts sprouting up in the quantum ecosystem.
             </p>
           </div>
-          <h2>What is a metriq submission?</h2>
+          <br/>
+          <h2 className='text-center'>What is a Metriq submission?</h2>
           <div>
             <p>
               A metriq <b>"submission"</b> can be an arXiv preprint, GitHub repository, or links to peer reviewed and published articles.
@@ -32,7 +34,8 @@ const FAQ = () => {
               <b>"Results"</b> are quantitative <b>metric</b> values at the intersection of <b>one method</b> and <b>one task</b>, reported in or independently recreated from a <b>submission</b>.
             </p>
           </div>
-          <h2>How are submissions reviewed?</h2>
+          <br/>
+          <h2 className='text-center'>How are submissions reviewed?</h2>
           <div>
             <p>
               Submissions are received and reviewed by a panel to verify the authenticity and claims of the benchmark. Once the submission has been approved, it will appear under the main submission view on metriq.
