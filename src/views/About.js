@@ -3,7 +3,7 @@ const About = () => {
     <div className='container'>
       <div className='row'>
         <div className='col-md-2' />
-        <div align='left' className='col-md-8 text-justify'>
+        <div className='col-md-8 text-justify'>
           <h1 className='text-center'>Our Mission</h1>
           <div>
             <p>
