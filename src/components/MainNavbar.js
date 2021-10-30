@@ -1,6 +1,7 @@
 import { Navbar } from 'react-bootstrap'
 import MainNav from './MainNav'
 import logo from './../metriq_logo_primary_blue.png'
+import uf_logo from './../unitary_fund_logo.png'
 
 const MainNavbar = (props) => {
   return (
@@ -13,10 +14,15 @@ const MainNavbar = (props) => {
         <Navbar.Collapse id='basic-navbar-nav'>
           <MainNav isLoggedIn={props.isLoggedIn} />
         </Navbar.Collapse>
+        <Navbar.Brand href='https://unitary.fund/' className='metriq-navbar'>
+          <img src={uf_logo} alt='uf_logo' className='logo-image' />
+        </Navbar.Brand>
       </Navbar>
       <div className='bg-light metriq-navbar'>
-        <h1>Quantum Computing Benchmarks</h1>
-        <h5>by community contributors</h5>
+        <h1>metriq</h1>
+        <h5>Quantum Computing Benchmarks by community contributors</h5>
+        <h6><a href='/'>Submissions</a> show performance of <a href='/Methods'>methods</a> against <a href='/Tasks'>tasks</a>.</h6>
+        <h8>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></h8>
         <br />
       </div>
     </div>
