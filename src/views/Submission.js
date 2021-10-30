@@ -718,10 +718,10 @@ class Submission extends React.Component {
               </div>}
           </div>
         </div>
-        <Modal 
+        <Modal
           show={this.state.showAddModal} onHide={this.handleHideAddModal}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
           centered
         >
           {(this.state.modalMode === 'Login') &&
