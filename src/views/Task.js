@@ -225,6 +225,14 @@ class Task extends React.Component {
               </div>
             </div>
           </div>
+          {this.state.item.parentTask &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Parent task:</b> <Link onClick={() => { window.location = '/Task/' + this.state.item.parentTask.id }}>{this.state.item.parentTask.name}</Link>
+                </div>
+              </div>
+            </div>}
           <div className='row'>
             <div className='col-md-12'>
               <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
