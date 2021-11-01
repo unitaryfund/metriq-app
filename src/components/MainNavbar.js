@@ -1,7 +1,7 @@
 import { Navbar } from 'react-bootstrap'
 import MainNav from './MainNav'
-import logo from './../metriq_logo_primary_blue.png'
-import uf_logo from './../unitary_fund_logo.png'
+import logo from './../images/metriq_logo_primary_blue.png'
+import uf_logo from './../images/unitary_fund_logo.png'
 
 const MainNavbar = (props) => {
   return (

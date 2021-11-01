@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { faThumbsUp, faExternalLinkAlt, faScroll, faCode } from '@fortawesome/free-solid-svg-icons'
-import logo from './../metriq_logo_secondary_blue.png'
+import logo from './../images/metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
 
 library.add(faThumbsUp, faExternalLinkAlt)
