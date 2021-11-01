@@ -820,7 +820,7 @@ class Submission extends React.Component {
                           tooltip='Long name of new task'
                         /><br />
                         <FormFieldSelectRow
-                          inputName='taskParent'
+                          inputName='parentTask'
                           label='Parent task<br/>(if any)'
                           isNullDefault
                           options={this.state.allTaskNames}
