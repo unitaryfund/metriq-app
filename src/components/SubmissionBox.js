@@ -96,7 +96,7 @@ class SubmissionBox extends React.Component {
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
                   <span><button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br /></span>
                 </OverlayTrigger>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Preprint</Tooltip>}>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
                   <span><button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button></span>
                 </OverlayTrigger>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>

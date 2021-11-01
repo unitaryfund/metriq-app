@@ -546,7 +546,7 @@ class Submission extends React.Component {
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
               <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
             </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Preprint</Tooltip>}>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
               <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
             </OverlayTrigger>
             {this.state.isArxiv &&
