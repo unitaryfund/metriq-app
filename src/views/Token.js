@@ -71,7 +71,7 @@ class Token extends React.Component {
     if (this.state.isGeneratedSuccess) {
       return (
         <div className='container'>
-          <header>Test - Get Token</header>
+          <header>Get Token</header>
           <br />
           <div>
             <div className='row'>
@@ -99,7 +99,7 @@ class Token extends React.Component {
     }
     return (
       <div className='container'>
-        <header>Test - Get Token</header>
+        <header>Get Token</header>
         <br />
         <div>
           <div className='row'>
