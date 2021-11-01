@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { faThumbsUp, faExternalLinkAlt, faScroll, faCode } from '@fortawesome/free-solid-svg-icons'
 import logo from './../metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
@@ -91,9 +93,15 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-2 col h-100'>
               <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
-                <button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br />
-                <button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
-                {this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+                  <span><button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br /></span>
+                </OverlayTrigger>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Preprint</Tooltip>}>
+                  <span><button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button></span>
+                </OverlayTrigger>
+                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
+                  <span>{this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
+                </OverlayTrigger>
               </div>
             </div>
           </div>
