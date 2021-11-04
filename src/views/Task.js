@@ -87,17 +87,10 @@ class Task extends React.Component {
     const methodRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {
-        const item = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: item })
-        const results = []
-        for (let i = 0; i < item.submissions.length; i++) {
-          for (let j = 0; j < item.submissions[i].results.length; j++) {
-            if (item.submissions[i].results[j].task.id === item.id) {
-              results.push(item.submissions[i].results[j])
-              results[results.length - 1].submission = item.submissions[i]
-            }
-          }
-        }
+        const task = res.data.data
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
+
+        const results = task.results
         results.sort(function (a, b) {
           const mna = a.metricName.toLowerCase()
           const mnb = b.metricName.toLowerCase()
@@ -160,7 +153,7 @@ class Task extends React.Component {
     })
     const allData = sortedResults.map(row =>
       ({
-        method: row.method.name,
+        method: row.methodName,
         metric: row.metricName,
         label: new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt),
         value: row.metricValue,
@@ -229,7 +222,7 @@ class Task extends React.Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent task:</b> <Link onClick={() => { window.location = '/Task/' + this.state.item.parentTask.id }}>{this.state.item.parentTask.name}</Link>
+                  <b>Parent task:</b> <a href={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</a>
                 </div>
               </div>
             </div>}
@@ -315,8 +308,8 @@ class Task extends React.Component {
                       data={this.state.results.map(row =>
                         ({
                           key: row.id,
-                          name: row.submission.name,
-                          methodName: row.method.name,
+                          name: row.submissionName,
+                          methodName: row.methodName,
                           metricName: row.metricName,
                           metricValue: row.metricValue
                         }))}

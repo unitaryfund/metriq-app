@@ -5,7 +5,7 @@ const FAQ = () => {
         <div className='col-md-2' />
         <div className='col-md-8 text-justify'>
           <h1 className='text-center'>Frequently Asked Questions (F.A.Q.)</h1>
-          <br/>
+          <br />
           <h2 className='text-center'>What is Metriq?</h2>
           <div>
             <p>
@@ -21,7 +21,7 @@ const FAQ = () => {
               The goal of metriq is to become a focal point for present benchmarking efforts sprouting up in the quantum ecosystem.
             </p>
           </div>
-          <br/>
+          <br />
           <h2 className='text-center'>What is a Metriq submission?</h2>
           <div>
             <p>
@@ -34,7 +34,7 @@ const FAQ = () => {
               <b>"Results"</b> are quantitative <b>metric</b> values at the intersection of <b>one method</b> and <b>one task</b>, reported in or independently recreated from a <b>submission</b>.
             </p>
           </div>
-          <br/>
+          <br />
           <h2 className='text-center'>How are submissions reviewed?</h2>
           <div>
             <p>

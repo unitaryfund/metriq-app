@@ -5,6 +5,7 @@ import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import CategoryScroll from '../components/CategoryScroll'
+import NetworkGraph from '../components/NetworkGraph'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -13,12 +14,26 @@ class Tasks extends React.Component {
       alphabetical: [],
       popular: [],
       common: [],
+      network: { nodes: [], links: [] },
       isRequestFailed: false,
       requestFailedMessage: ''
     }
   }
 
   componentDidMount () {
+    const networkRoute = config.api.getUriPrefix() + '/task/network'
+    axios.get(networkRoute)
+      .then(res => {
+        this.setState({
+          isRequestFailed: false,
+          requestFailedMessage: '',
+          network: res.data.data
+        })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+
     const route = config.api.getUriPrefix() + '/task/submissionCount'
     axios.get(route)
       .then(res => {
@@ -78,7 +93,10 @@ class Tasks extends React.Component {
       <div className='container'>
         <header><h5>Tasks</h5></header>
         <br />
-        <Tabs defaultActiveKey='common' id='categories-tabs'>
+        <Tabs defaultActiveKey='network' id='categories-tabs'>
+          <Tab eventKey='network' title='Network'>
+            <NetworkGraph data={this.state.network} width={900} height={400} />
+          </Tab>
           <Tab eventKey='common' title='Common'>
             <CategoryScroll type='task' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
           </Tab>
