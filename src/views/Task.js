@@ -190,7 +190,7 @@ class Task extends React.Component {
 
   render () {
     return (
-      <div>
+      <div id='metriq-main-content'>
         {this.state.isChart &&
           <div>
             <div className='container'>

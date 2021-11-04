@@ -32,7 +32,7 @@ class Profile extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Profile</header>
         <br />
         <div>

@@ -67,7 +67,7 @@ class AddSubmission extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Add Submission</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow

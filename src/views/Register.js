@@ -105,7 +105,7 @@ class Register extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Register</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow

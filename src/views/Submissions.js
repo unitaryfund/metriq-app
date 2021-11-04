@@ -2,7 +2,7 @@ import SubmissionScroll from '../components/SubmissionScroll'
 
 const Submissions = (props) => {
   return (
-    <div className='container'>
+    <div id='metriq-main-content' className='container'>
       <header>Your Submissions</header>
       <br />
       <SubmissionScroll isLoggedIn isEditView />

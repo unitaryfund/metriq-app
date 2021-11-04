@@ -1,6 +1,6 @@
 const FAQ = () => {
   return (
-    <div className='container'>
+    <div id='metriq-main-content' className='container'>
       <div className='row'>
         <div className='col-md-2' />
         <div className='col-md-8 text-justify'>

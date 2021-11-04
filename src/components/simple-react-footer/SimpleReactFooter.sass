@@ -1,0 +1,104 @@
+@import url(https://fonts.googleapis.com/css?family=Mulish:200,300,regular,500,600,700,800,900,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic)
+$titles-font: 20px
+$secondary-text-font: 16px
+$smaller-screen: 650px
+$main-font: "Mulish", regular
+$letter-spacing: 1px
+$smaller-screen: 870px
+
+.first-row
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    justify-content: inherit
+    @media (min-width: $smaller-screen)
+        display: flex
+        flex-direction: row
+        flex-wrap: nowrap
+
+.footer-container
+    margin-top: 20px
+    height: fit-content
+    width: 100%
+    justify-content: space-between
+    display: flex
+    flex-direction: column
+    padding: 10px 30px 10px 30px
+    flex-wrap: wrap
+
+.columns
+    margin-right: 0px
+    margin-left: 0px
+    @media (min-width: $smaller-screen)
+        margin-right: 25px
+        margin-left: 25px
+
+.social-media
+    display: flex
+    flex-direction: row
+    justify-content: center
+    margin-top: 15px
+
+.social-media-col
+    display: flex
+    flex-direction: column
+
+.img-logo
+    max-height: 70px
+    min-height: 70px
+    border-radius: 35%
+    width: auto
+
+.socialMediaLogo
+    margin-right: 45px
+
+%titles
+   font-family: $main-font
+   font-size: $titles-font 
+   letter-spacing: $letter-spacing
+
+.first-title
+    @extend %titles
+    font-weight: bolder
+    font-size: 28px
+
+.second-title
+    @extend %titles
+
+.third-title
+    @extend %titles
+
+.stay-connected-title
+    font-family: $main-font
+    font-size: $titles-font 
+    align-self: center
+    letter-spacing: 2px
+
+.description
+    font-family: $main-font
+    font-size: $secondary-text-font
+    letter-spacing: $letter-spacing
+    margin-right: 30px
+    margin-bottom: 10px
+    text-align: justify
+
+.resources
+    font-family: $main-font
+    font-size: $secondary-text-font
+    letter-spacing: $letter-spacing
+    color: black
+
+.resources:hover
+    text-decoration: none
+    font-weight: bolder
+
+.copyright
+    text-align: center
+    font-size: 18px
+    margin-top: 10px
+    letter-spacing: $letter-spacing
+
+.col-about
+    min-width: auto
+    display: flex
+    flex-direction: column
