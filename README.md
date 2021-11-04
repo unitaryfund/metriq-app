@@ -5,7 +5,7 @@ In order to locally run and host the `metriq` application we require the use of 
 - `metriq-app`: The front-end component of `metriq`
 - `metriq-api`: The back-end component of `metriq`
 - `metriq-client`: This is a Python API client that posts submissions and other data to the back-end component of `metriq`
-- `metriq-db`: **(Optional)** This contains the exported MongoDB collections of our development and quality assurance database.
+- `metriq-postgres`: **(Optional)** This contains the exported PostgreSQL collections of our development and database.
 
 ## Setting up `metriq-api`
 
@@ -35,11 +35,6 @@ You will require [Postman](https://winter-zodiac-492730.postman.co/home) and
 will need to request to be added to the Postman account associated with
 `metriq`.
 
-You will require an installation of
-[MongoDB](https://docs.mongodb.com/manual/installation/) on your machine. You
-will also need something like [MongoDB
-Compass](https://docs.mongodb.com/compass/current/install/) that can be used to
-visualize the data stored in your local instance of the Mongo database.
 ### Usage
 
 Run the `metriq-api` component from the root of the `metriq-api` project:
@@ -90,9 +85,9 @@ to localhost URL.
 
 Once you have both `metriq-api` and `metriq-app` hosting locally, you can seed
 the local instance of the database with the data from the
-[`metriq-db`](https://github.com/unitaryfund/metriq-db) repo.
+[`metriq-postgres`](https://github.com/unitaryfund/metriq-postgres) repo.
 
-Following the instructions in the `README.md` file of the `metriq-db` repo will
+Following the instructions in the `README.md` file of the `metriq-postgres` repo will
 populate your local instance of the database with dummy data from the `.JSON`
 files.
 
