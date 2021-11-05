@@ -524,6 +524,17 @@ class Submission extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
+
+    const metricNameRoute = config.api.getUriPrefix() + '/result/metricNames'
+    axios.get(metricNameRoute)
+      .then(subRes => {
+        const metricNames = subRes.data.data
+        console.log(metricNames)
+        this.setState({ metricNames: metricNames })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   render () {
