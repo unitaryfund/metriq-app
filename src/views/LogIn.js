@@ -73,7 +73,7 @@ class LogIn extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Log In</header>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow

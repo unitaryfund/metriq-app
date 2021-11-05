@@ -59,7 +59,7 @@ class Forgot extends React.Component {
   render () {
     if (this.state.isRequestReceived) {
       return (
-        <div className='container'>
+        <div id='metriq-main-content' className='container'>
           <header>Account Recovery</header>
           <br />
           <div>
@@ -75,7 +75,7 @@ class Forgot extends React.Component {
       )
     }
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Account Recovery</header>
         <form onSubmit={this.handleOnSubmit}>
           <div className='row'>

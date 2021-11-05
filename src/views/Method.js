@@ -87,7 +87,7 @@ class Method extends React.Component {
 
   render () {
     return (
-      <div>
+      <div id='metriq-main-content'>
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>

@@ -47,7 +47,7 @@ class Delete extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header>Delete Account</header>
         <br />
         <div className='row'>

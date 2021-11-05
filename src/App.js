@@ -4,6 +4,7 @@ import axios from 'axios'
 import React from 'react'
 import MainNavbar from './components/MainNavbar'
 import MainRouter from './MainRouter'
+import SimpleReactFooter from './components/simple-react-footer/SimpleReactFooter'
 
 class App extends React.Component {
   constructor (props) {
@@ -41,7 +42,19 @@ class App extends React.Component {
     return (
       <div className='App'>
         <MainNavbar isLoggedIn={this.state.isLoggedIn} />
-        <MainRouter isLoggedIn={this.state.isLoggedIn} onLogin={this.handleLogin} onLogout={this.handleLogout} />
+        <MainRouter id='metriq-main-content' isLoggedIn={this.state.isLoggedIn} onLogin={this.handleLogin} onLogout={this.handleLogout} />
+        <SimpleReactFooter
+          title='metriq'
+          description='Quantum computing benchmarks by community contributors'
+          copyright='2021 Unitary Fund'
+          discord='unitary.fund'
+          twitch='unitaryfund'
+          twitter='unitaryfund'
+          youtube='UCDbDLAzGRTHnhkoMMOX7D1A'
+          linkedin='unitary-fund'
+          backgroundColor='#f8f9fa'
+          columns={[]}
+        />
       </div>
     )
   }

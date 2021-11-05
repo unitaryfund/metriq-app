@@ -90,7 +90,7 @@ class Tasks extends React.Component {
 
   render () {
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header><h5>Tasks</h5></header>
         <br />
         <Tabs defaultActiveKey='network' id='categories-tabs'>

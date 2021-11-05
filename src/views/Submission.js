@@ -528,7 +528,7 @@ class Submission extends React.Component {
 
   render () {
     return (
-      <div className='container submission-detail-container'>
+      <div id='metriq-main-content' className='container submission-detail-container'>
         <div className='row'>
           <div className='col-md-12'>
             <div><h1>{this.state.item.name}</h1></div>

@@ -44,6 +44,10 @@
   font-weight: bold;
 }
 
+#metriq-main-content {
+  min-height: 700px;
+}
+
 .App-link {
   color: #61dafb;
 }
