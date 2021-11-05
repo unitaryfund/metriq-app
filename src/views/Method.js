@@ -143,7 +143,13 @@ class Method extends React.Component {
             </div>
           </div>
         </div>
-        <Modal show={this.state.showEditModal} onHide={this.handleHideEditModal}>
+        <Modal
+          show={this.state.showEditModal}
+          onHide={this.handleHideEditModal}
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
+          centered
+        >
           <Modal.Header closeButton>
             <Modal.Title>Edit Submission</Modal.Title>
           </Modal.Header>
@@ -155,7 +161,7 @@ class Method extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description'
+                  inputName='description' inputType='textarea' label='Description' rows='12'
                   value={this.state.method.description}
                   onChange={(field, value) => this.handleOnChange('method', field, value)}
                 />

@@ -996,7 +996,13 @@ class Submission extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Modal show={this.state.showEditModal} onHide={this.handleHideEditModal}>
+        <Modal
+          show={this.state.showEditModal}
+          onHide={this.handleHideEditModal}
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
+          centered
+        >
           <Modal.Header closeButton>
             <Modal.Title>Edit Submission</Modal.Title>
           </Modal.Header>
@@ -1008,7 +1014,7 @@ class Submission extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description'
+                  inputName='description' inputType='textarea' label='Description' rows='12'
                   value={this.state.submission.description}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 />
