@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 
@@ -18,6 +19,7 @@ class AddSubmission extends React.Component {
       thumbnailUrl: '',
       description: '',
       tags: '',
+      tagNames: [],
       isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false
@@ -63,6 +65,18 @@ class AddSubmission extends React.Component {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
+  }
+
+  componentDidMount () {
+    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+    axios.get(tagNamesRoute)
+      .then(res => {
+        const tags = [...res.data.data]
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   render () {
@@ -118,9 +132,10 @@ class AddSubmission extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
-          <FormFieldRow
-            inputName='tags' inputType='text' label='Tags'
+          <FormFieldTypeaheadRow
+            inputName='tag' label='Tags'
             onChange={this.handleOnChange}
+            options={this.state.tagNames.map(item => item.name)}
           />
           <div className='row'>
             <div className='col-md-3' />
