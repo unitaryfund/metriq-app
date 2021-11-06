@@ -20,7 +20,6 @@ const MainNavbar = (props) => {
       </Navbar>
       <div className='bg-light metriq-navbar'>
         <h1>metriq</h1>
-        <h5>Quantum Computing Benchmarks by community contributors</h5>
         <h6><a href='/'>Submissions</a> show performance of <a href='/Methods'>methods</a> against <a href='/Tasks'>tasks</a>.</h6>
         <h6>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></h6>
         <br />

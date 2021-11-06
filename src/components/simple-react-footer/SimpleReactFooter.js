@@ -10,10 +10,6 @@ class SimpleReactFooter extends React.Component {
       <div style={{ backgroundColor: this.props.backgroundColor || 'bisque' }} className='footer-container'>
 
         <div className='first-row'>
-          <div className='col-about'>
-            <div style={{ color: this.props.fontColor || 'black' }} className='first-title'>{this.props.title}</div>
-            <div style={{ color: this.props.fontColor || 'black' }} className='description'>{this.props.description}</div>
-          </div>
           {this.props.columns.map((column, i) => (
             <div key={i} className='columns'>
               <div style={{ color: this.props.fontColor || 'black' }} className='second-title'>{column.title}</div>
@@ -27,7 +23,7 @@ class SimpleReactFooter extends React.Component {
         </div>
         {(this.props.facebook !== undefined || this.props.linkedin !== undefined || this.props.instagram !== undefined || this.props.twitter !== undefined || this.props.pinterest !== undefined || this.props.youtube !== undefined) &&
           <div className='social-media-col'>
-            <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title'>Stay connected</div>
+            <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title'>Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a></div>
             <div className='social-media'>
               {this.props.facebook !== undefined ? <a href={`https://www.facebook.com/${this.props.facebook}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><ImFacebook2 color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
               {this.props.twitter !== undefined ? <a href={`https://www.twitter.com/${this.props.twitter}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><FaTwitterSquare color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
@@ -41,6 +37,8 @@ class SimpleReactFooter extends React.Component {
           </div>}
 
         <div>
+          <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></div>
+          <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>All content on this website is openly licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA</a>.</div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Copyright &copy; {this.props.copyright}</div>
         </div>
       </div>
