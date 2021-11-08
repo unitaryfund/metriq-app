@@ -14,22 +14,26 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #3cd2f9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .metriq-navbar {
+  background-color: #3cd2f9;
   font-family: 'Courier New', monospace;
+   color:white;
+   font-weight: bold;
 }
 
 .metriq-navbar-button {
   font-weight: bold;
+  color: black;
+  background-color: white;
 }
 
 .navbar-nav .metriq-navbar-text.nav-link {

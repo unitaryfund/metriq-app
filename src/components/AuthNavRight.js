@@ -14,18 +14,9 @@ const handleOnClick = () => {
     })
 }
 
-const AuthNav = (props) => {
+const AuthNavRight = (props) => {
   return (
     <Nav className='ml-auto metriq-navbar'>
-      <Nav.Link href='/AddSubmission'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
-      <Nav.Link href='/' className='metriq-navbar-text'>Home</Nav.Link>
-      <Nav.Link href='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
-      <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
-      <Nav.Link href='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
-      <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
-        <NavDropdown.Item href='/About'><p class='font-weight-bold'>About</p></NavDropdown.Item>
-        <NavDropdown.Item href='/FAQ'><p class='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
-      </NavDropdown>
       <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item href='/Profile'><p class='font-weight-bold'>Settings</p></NavDropdown.Item>
         <NavDropdown.Item href='/AddSubmission'><p class='font-weight-bold'>Add Submission</p></NavDropdown.Item>
@@ -34,8 +25,9 @@ const AuthNav = (props) => {
         <NavDropdown.Divider />
         <NavDropdown.Item onClick={handleOnClick}><p class='font-weight-bold'>Logout</p></NavDropdown.Item>
       </NavDropdown>
+      <Nav.Link href='/AddSubmission'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
     </Nav>
   )
 }
 
-export default AuthNav
+export default AuthNavRight
