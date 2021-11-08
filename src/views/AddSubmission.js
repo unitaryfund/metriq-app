@@ -111,13 +111,13 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='thumbnailUrl' inputType='text' label='Image URL'
+            inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
             onChange={this.handleOnChange}
           />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <b>The external image URL points to an image loaded as a thumbnail, for the submission.<br /><i>This cannot be changed after hitting "Submit."</i></b>
+              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
             </div>
             <div className='col-md-3' />
           </div>
