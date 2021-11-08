@@ -6,16 +6,15 @@ import logo from './../images/metriq_logo_primary_blue_inverted.png'
 const MainNavbar = (props) => {
   return (
     <div>
-      <Navbar className="metriq-navbar" expand='lg'>
+      <Navbar className='metriq-navbar' expand='lg'>
         <Navbar.Brand href='/' className='metriq-navbar'>
-        <Navbar.Collapse id='basic-navbar-nav'>
-          <img src={logo} alt='logo' className='logo-image' />
-        </Navbar.Collapse>
+          <Navbar.Collapse id='basic-navbar-nav'>
+            <img src={logo} alt='logo' className='logo-image' />
+          </Navbar.Collapse>
         </Navbar.Brand>
-          <MainNavLeft isLoggedIn={props.isLoggedIn} />
-        <Navbar.Collapse id='basic-navbar-nav'>
-        </Navbar.Collapse>
-          <MainNavRight isLoggedIn={props.isLoggedIn} />
+        <MainNavLeft isLoggedIn={props.isLoggedIn} />
+        <Navbar.Collapse id='basic-navbar-nav' />
+        <MainNavRight isLoggedIn={props.isLoggedIn} />
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
       </Navbar>
       <div className='metriq-navbar'>

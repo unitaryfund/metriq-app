@@ -11,37 +11,37 @@ class App extends React.Component {
     super(props)
     this.state = {
       isLoggedIn: false,
-      userId: '',
+      userId: ''
     }
 
     this.handleLogin = this.handleLogin.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
   }
 
- changeTitle = () => {
-   switch(window.location.pathname){
-    case '/Methods':
-      return 'Methods'
-    case '/Tasks':
-      return 'Tasks'
-    case '/Tags':
-      return 'Tags'
-    default:
-      return 'Community-driven Quantum Benchmarks'
-   }
+  changeTitle () {
+    switch (window.location.pathname) {
+      case '/Methods':
+        return 'Methods'
+      case '/Tasks':
+        return 'Tasks'
+      case '/Tags':
+        return 'Tags'
+      default:
+        return 'Community-driven Quantum Benchmarks'
+    }
   }
 
- changeSubtitle = () => {
-   switch(window.location.pathname){
-    case '/Methods':
-      return '### different algorithms and approaches to solving problems'
-    case '/Tasks':
-      return '### quantum computing objectives'
-    case '/Tags':
-      return '### common elements amongst submissions'
-    default:
-      return <span>Submissions show performance of <a href={'/Methods/'}>methods</a> against <a href={'/Tasks/'}>tasks</a></span>
-   }
+  changeSubtitle () {
+    switch (window.location.pathname) {
+      case '/Methods':
+        return '### different algorithms and approaches to solving problems'
+      case '/Tasks':
+        return '### quantum computing objectives'
+      case '/Tags':
+        return '### common elements amongst submissions'
+      default:
+        return <span>Submissions show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>
+    }
   }
 
   componentDidMount () {
