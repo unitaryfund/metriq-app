@@ -16,7 +16,7 @@ class FormFieldRow extends React.Component {
     this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
     this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
     this.isValidValue = this.isValidValue.bind(this)
-    this.showImagePreview = this.showImagePreview.bind(this)
+    this.handleShowImagePreview = this.handleShowImagePreview.bind(this)
   }
 
   isValidValue (value) {
