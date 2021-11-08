@@ -97,7 +97,7 @@ class Recover extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header>Account Recovery</header>
+        <header><h5>Account Recovery</h5></header>
         <form onSubmit={this.handleOnSubmit}>
           <div className='row'>
             <div className='col-md-3' />
