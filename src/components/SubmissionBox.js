@@ -81,17 +81,17 @@ class SubmissionBox extends React.Component {
       <div className='submission'>
         <Link to={'/Submission/' + this.props.item.id}>
           <div className='row h-100'>
-            <div className='col-md-2 col h-100'>
+            <div className='col-md-2 col-sm-12 h-100'>
               <img src={this.props.item.thumbnailUrl ? this.props.item.thumbnailUrl : logo} alt='logo' className='submission-image' />
             </div>
-            <div className='col-md-8 col h-100'>
+            <div className='col-md-8 col-sm-12 h-100'>
               <div className='submission-heading'>{this.props.item.name} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
               <div className='submission-subheading'> {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} • </div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description.split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>
             </div>
-            <div className='col-md-2 col h-100'>
+            <div className='col-md-2 col-sm-12 h-100'>
               <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
                   <span><button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br /></span>
