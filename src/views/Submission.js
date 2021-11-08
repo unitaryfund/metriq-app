@@ -68,6 +68,7 @@ class Submission extends React.Component {
       method: {
         name: '',
         fullName: '',
+        description: '',
         submissions: this.props.match.params.id
       },
       taskId: '',
