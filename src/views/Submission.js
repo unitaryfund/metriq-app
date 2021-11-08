@@ -884,7 +884,7 @@ class Submission extends React.Component {
                   tooltip='The value of the measure of performance, for this combination of task and method, for this submission.'
                 /><br />
                 <FormFieldRow
-                  inputName='evaluatedDate' inputType='date' label='Evaluated'
+                  inputName='evaluatedAt' inputType='date' label='Evaluated'
                   validRegex={dateRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='(Optionally) What date was the metric value collected on?'
