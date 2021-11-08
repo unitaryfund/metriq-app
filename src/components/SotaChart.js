@@ -30,7 +30,7 @@ function SotaChart (props) {
         .select('.tooltip')
         .remove()
 
-      const margin = { top: 20, right: 30, bottom: 60, left: 80 }
+      const margin = { top: 20, right: 160, bottom: 60, left: 80 }
       const lWidth = width - margin.left - margin.right
       const lHeight = height - margin.top - margin.bottom
       const yMinValue = d3.min(data, d => d.value)
@@ -130,7 +130,7 @@ function SotaChart (props) {
         .attr('transform', 'rotate(-90)')
         .text(yLabel)
 
-      const xLegendOffset = 150
+      const xLegendOffset = -5
       const yLegendOffset = 120
 
       const circleLegendKeys = ['Results']
