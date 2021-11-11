@@ -14,7 +14,7 @@ const handleOnClick = () => {
     })
 }
 
-const AuthNavRight = (props) => {
+const AuthNavRight = () => {
   return (
     <Nav className='ml-auto metriq-navbar'>
       <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
