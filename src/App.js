@@ -74,6 +74,7 @@ class App extends React.Component {
           description='Quantum computing benchmarks by community contributors'
           copyright='2021 Unitary Fund'
           discord='unitary.fund'
+          github='unitaryfund'
           twitch='unitaryfund'
           twitter='unitaryfund'
           youtube='UCDbDLAzGRTHnhkoMMOX7D1A'
