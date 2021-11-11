@@ -8,14 +8,13 @@ const MainNavbar = (props) => {
     <div>
       <Navbar className='metriq-navbar' expand='lg'>
         <Navbar.Brand href='/' className='metriq-navbar'>
-          <Navbar.Collapse id='basic-navbar-nav'>
-            <img src={logo} alt='logo' className='logo-image' />
-          </Navbar.Collapse>
+          <img src={logo} alt='logo' className='logo-image' />
         </Navbar.Brand>
-        <MainNavLeft isLoggedIn={props.isLoggedIn} />
-        <Navbar.Collapse id='basic-navbar-nav' />
-        <MainNavRight isLoggedIn={props.isLoggedIn} />
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        <Navbar.Collapse id='basic-navbar-nav'>
+          <MainNavLeft isLoggedIn={props.isLoggedIn} />
+          <MainNavRight isLoggedIn={props.isLoggedIn} />
+        </Navbar.Collapse>
       </Navbar>
       <div className='metriq-navbar'>
         <h2>{props.title}</h2>
