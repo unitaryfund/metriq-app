@@ -50,6 +50,9 @@ class Submission extends React.Component {
       submission: {
         description: ''
       },
+      moderationReport: {
+        description: ''
+      },
       result: {
         task: '',
         method: '',
@@ -77,6 +80,7 @@ class Submission extends React.Component {
     }
 
     this.handleAddDescription = this.handleAddDescription.bind(this)
+    this.handleModerationReport = this.handleModerationReport.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
@@ -100,6 +104,15 @@ class Submission extends React.Component {
 
   handleAddDescription () {
     let mode = 'Edit'
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
+    const submission = { description: this.state.item.description }
+    this.setState({ showEditModal: true, modalMode: mode, submission: submission })
+  }
+
+  handleModerationReport () {
+    let mode = 'Moderation'
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
@@ -735,7 +748,7 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <hr />
             <div className='text-center'>
-              Notice something about this submission that needs moderation? <a href='#'>Let us know.</a>
+              Notice something about this submission that needs moderation? <a href='#' onClick={this.handleModerationReport}>Let us know.</a>
             </div>
           </div>
         </div>
@@ -1025,18 +1038,25 @@ class Submission extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Submission</Modal.Title>
+            <Modal.Title>{this.state.modalMode === 'Moderation' ? 'Report' : 'Edit'} Submission</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to='/Login'>login</Link> before {this.state.modalMode === 'Moderation' ? 'filing a report' : 'editing'}.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
+                {(this.state.modalMode === 'Moderation') &&
+                  <div>
+                    <div>
+                      <b>Remember that any logged in user can edit any submission. However, if editing won't address the issue, please describe for a moderator what's wrong.</b>
+                    </div>
+                    <br />
+                  </div>}
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.submission.description}
+                  value={this.state.modalMode === 'Moderation' ? this.state.moderationReport.description : this.state.submission.description}
                   onChange={(field, value) => this.handleOnChange('submission', field, value)}
                 />
               </span>}
