@@ -730,6 +730,15 @@ class Submission extends React.Component {
               </div>}
           </div>
         </div>
+        <br />
+        <div className='row'>
+          <div className='col-md-12'>
+            <hr />
+            <div className='text-center'>
+              Notice something about this submission that needs moderation? <a href='#'>Let us know.</a>
+            </div>
+          </div>
+        </div>
         <Modal
           show={this.state.showAddModal} onHide={this.handleHideAddModal}
           size='lg'
