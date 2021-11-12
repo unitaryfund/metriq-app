@@ -98,7 +98,7 @@ class Token extends React.Component {
       )
     }
     return (
-      <div className='container'>
+      <div id='metriq-main-content' className='container'>
         <header><h5>Get Token</h5></header>
         <br />
         <div>
