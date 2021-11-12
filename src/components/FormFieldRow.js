@@ -84,8 +84,10 @@ class FormFieldRow extends React.Component {
             {this.props.imageUrl ? <span className='btn btn-primary' onClick={this.handleShowImagePreview}>Preview</span> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
           </div>
           {this.state.imagePreview &&
-            <div className='row text-center'>
-              <img src={this.state.imagePreviewUrl} alt='logo' className='submission-image' />
+            <div className='row'>
+              <div className='col-md-12 text-center'>
+                <img src={this.state.imagePreviewUrl} alt='thumbnail' className='submission-image' />
+              </div>
             </div>}
         </div>
       </div>
