@@ -18,32 +18,6 @@ class App extends React.Component {
     this.handleLogout = this.handleLogout.bind(this)
   }
 
-  changeTitle () {
-    switch (window.location.pathname) {
-      case '/Methods':
-        return 'Methods'
-      case '/Tasks':
-        return 'Tasks'
-      case '/Tags':
-        return 'Tags'
-      default:
-        return 'Community-driven Quantum Benchmarks'
-    }
-  }
-
-  changeSubtitle () {
-    switch (window.location.pathname) {
-      case '/Methods':
-        return '### different algorithms and approaches to solving problems'
-      case '/Tasks':
-        return '### quantum computing objectives'
-      case '/Tags':
-        return '### common elements amongst submissions'
-      default:
-        return <span>Submissions show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>
-    }
-  }
-
   componentDidMount () {
     axios.get(config.api.getUriPrefix() + '/user')
       .then(res => {
@@ -67,7 +41,7 @@ class App extends React.Component {
   render () {
     return (
       <div className='App'>
-        <MainNavbar isLoggedIn={this.state.isLoggedIn} title={this.changeTitle()} subtitle={this.changeSubtitle()} />
+        <MainNavbar isLoggedIn={this.state.isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span>Submissions show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>} />
         <MainRouter id='metriq-main-content' isLoggedIn={this.state.isLoggedIn} onLogin={this.handleLogin} onLogout={this.handleLogout} />
         <SimpleReactFooter
           title='metriq'
