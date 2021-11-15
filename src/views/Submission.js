@@ -50,6 +50,9 @@ class Submission extends React.Component {
       submission: {
         description: ''
       },
+      moderationReport: {
+        description: ''
+      },
       result: {
         task: '',
         method: '',
@@ -77,6 +80,7 @@ class Submission extends React.Component {
     }
 
     this.handleAddDescription = this.handleAddDescription.bind(this)
+    this.handleModerationReport = this.handleModerationReport.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
@@ -107,6 +111,15 @@ class Submission extends React.Component {
     this.setState({ showEditModal: true, modalMode: mode, submission: submission })
   }
 
+  handleModerationReport () {
+    let mode = 'Moderation'
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
+    const submission = { description: this.state.item.description }
+    this.setState({ showEditModal: true, modalMode: mode, submission: submission })
+  }
+
   handleHideEditModal () {
     this.setState({ showEditModal: false })
   }
@@ -116,14 +129,28 @@ class Submission extends React.Component {
       window.location.href = '/Login'
     }
 
+    const isModerationReport = (this.state.modalMode === 'Moderation')
+
     const reqBody = {}
-    if (this.state.submission.description) {
+    if (isModerationReport && this.state.moderationReport.description) {
+      reqBody.description = this.state.moderationReport.description
+    } else if (this.state.submission.description) {
       reqBody.description = this.state.submission.description
     }
 
-    axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id, reqBody)
+    let requestUrl = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
+    if (isModerationReport) {
+      requestUrl = requestUrl + '/report'
+    }
+
+    axios.post(requestUrl, reqBody)
       .then(res => {
-        this.setState({ item: res.data.data, showEditModal: false })
+        if (isModerationReport) {
+          window.alert('Thank you, your report has been submitted to the moderators. They will contact you via your Metriq account email, if further action is necessary.')
+          this.setState({ showEditModal: false })
+        } else {
+          this.setState({ item: res.data.data, showEditModal: false })
+        }
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -730,6 +757,15 @@ class Submission extends React.Component {
               </div>}
           </div>
         </div>
+        <br />
+        <div className='row'>
+          <div className='col-md-12'>
+            <hr />
+            <div className='text-center'>
+              Notice something about this submission that needs moderation? <a href='#' onClick={this.handleModerationReport}>Let us know.</a>
+            </div>
+          </div>
+        </div>
         <Modal
           show={this.state.showAddModal} onHide={this.handleHideAddModal}
           size='lg'
@@ -1016,20 +1052,34 @@ class Submission extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Submission</Modal.Title>
+            <Modal.Title>{this.state.modalMode === 'Moderation' ? 'Report' : 'Edit'} Submission</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to='/Login'>login</Link> before {this.state.modalMode === 'Moderation' ? 'filing a report' : 'editing'}.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
-                <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.submission.description}
-                  onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                />
+                {(this.state.modalMode === 'Moderation') &&
+                  <div>
+                    <div>
+                      <b>Remember that any logged in user can edit any submission. However, if editing won't address the issue, please describe for a moderator what's wrong.</b>
+                    </div>
+                    <br />
+                  </div>}
+                {(this.state.modalMode === 'Moderation') &&
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.moderationReport.description}
+                    onChange={(field, value) => this.handleOnChange('moderationReport', field, value)}
+                  />}
+                {(this.state.modalMode !== 'Moderation') &&
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.submission.description}
+                    onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                  />}
               </span>}
           </Modal.Body>
           <Modal.Footer>
