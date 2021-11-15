@@ -129,14 +129,28 @@ class Submission extends React.Component {
       window.location.href = '/Login'
     }
 
+    const isModerationReport = (this.state.modalMode === 'Moderation')
+
     const reqBody = {}
-    if (this.state.submission.description) {
+    if (isModerationReport && this.state.moderationReport.description) {
+      reqBody.description = this.state.moderationReport.description
+    } else if (this.state.submission.description) {
       reqBody.description = this.state.submission.description
     }
 
-    axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id, reqBody)
+    let requestUrl = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
+    if (isModerationReport) {
+      requestUrl = requestUrl + '/report'
+    }
+
+    axios.post(requestUrl, reqBody)
       .then(res => {
-        this.setState({ item: res.data.data, showEditModal: false })
+        if (isModerationReport) {
+          window.alert('Thank you, your report has been submitted to the moderators. They will contact you via your Metriq account email, if further action is necessary.')
+          this.setState({ showEditModal: false })
+        } else {
+          this.setState({ item: res.data.data, showEditModal: false })
+        }
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -1054,11 +1068,18 @@ class Submission extends React.Component {
                     </div>
                     <br />
                   </div>}
-                <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.modalMode === 'Moderation' ? this.state.moderationReport.description : this.state.submission.description}
-                  onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                />
+                {(this.state.modalMode === 'Moderation') &&
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.moderationReport.description}
+                    onChange={(field, value) => this.handleOnChange('moderationReport', field, value)}
+                  />}
+                {(this.state.modalMode !== 'Moderation') &&
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.submission.description}
+                    onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                  />}
               </span>}
           </Modal.Body>
           <Modal.Footer>
