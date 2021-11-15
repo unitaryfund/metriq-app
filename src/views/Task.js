@@ -25,7 +25,6 @@ class Task extends React.Component {
       item: { submissions: [] },
       results: [],
       chartData: {},
-      isChart: false,
       chartKey: '',
       metricNames: [],
       isLowerBetterDict: {}
@@ -172,7 +171,6 @@ class Task extends React.Component {
       }
     }
     const metricNames = Object.keys(chartData)
-    let isChart = false
     let chartKey = ''
     let m = 0
     const isLowerBetterDict = {}
@@ -181,17 +179,25 @@ class Task extends React.Component {
       if (length > m) {
         chartKey = metricNames[i]
         m = length
-        isChart |= (m > 1)
       }
       isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
     }
-    this.setState({ metricNames: metricNames, isChart: isChart, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
+    let i = 0
+    while (i < metricNames.length) {
+      const length = chartData[metricNames[i]].length
+      if (length < 4) {
+        metricNames.splice(i, 1)
+      } else {
+        i++
+      }
+    }
+    this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
   }
 
   render () {
     return (
       <div id='metriq-main-content'>
-        {this.state.isChart &&
+        {this.state.metricNames.length &&
           <div>
             <div className='container'>
               <FormFieldSelectRow
