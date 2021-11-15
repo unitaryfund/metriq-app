@@ -197,7 +197,7 @@ class Task extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        {this.state.metricNames.length &&
+        {(this.state.metricNames.length > 0) &&
           <div>
             <div className='container'>
               <FormFieldSelectRow
