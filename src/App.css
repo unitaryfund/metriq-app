@@ -53,10 +53,6 @@
   padding-top: 20px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -177,11 +173,11 @@ form > .row > label {
   color: black;
 }
 
-.index-table-link {
+.link {
   color: #007bff;
 }
 
-.index-table-link:hover {
+.link:hover {
   color: #0000EE;
   text-decoration: underline;
 }

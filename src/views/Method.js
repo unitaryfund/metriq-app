@@ -138,7 +138,7 @@ class Method extends React.Component {
                   onClick () { window.location.href = '/Submission/' + record.key }
                 })}
                 tableLayout='auto'
-                rowClassName='index-table-link'
+                rowClassName='link'
               />
             </div>
           </div>
