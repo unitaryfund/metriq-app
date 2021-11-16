@@ -632,7 +632,7 @@ class Submission extends React.Component {
                   onClick () { window.location.href = '/Task/' + record.key }
                 })}
                 tableLayout='auto'
-                rowClassName='index-table-link'
+                rowClassName='link'
                 showHeader={false}
               />}
             {(this.state.item.tasks.length === 0) &&
@@ -668,7 +668,7 @@ class Submission extends React.Component {
                   onClick () { window.location.href = '/Method/' + record.key }
                 })}
                 tableLayout='auto'
-                rowClassName='index-table-link'
+                rowClassName='link'
                 showHeader={false}
               />}
             {(this.state.item.methods.length === 0) &&
@@ -762,7 +762,7 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <hr />
             <div className='text-center'>
-              Notice something about this submission that needs moderation? <a href='#' onClick={this.handleModerationReport}>Let us know.</a>
+              Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
             </div>
           </div>
         </div>
