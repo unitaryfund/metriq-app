@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import './SimpleReactFooter.sass'
 import { FaDiscord, FaGithub, FaPinterestSquare, FaTwitterSquare } from 'react-icons/fa'
 import { ImFacebook2, ImInstagram, ImLinkedin, ImTwitch, ImYoutube } from 'react-icons/im'
+import logo from './../../images/unitary_fund_logo.png'
 
 class SimpleReactFooter extends React.Component {
   render () {
     return (
       <div style={{ backgroundColor: this.props.backgroundColor || 'bisque' }} className='footer-container'>
-
         <div className='first-row'>
           {this.props.columns.map((column, i) => (
             <div key={i} className='columns'>
@@ -24,6 +24,9 @@ class SimpleReactFooter extends React.Component {
         {(this.props.facebook !== undefined || this.props.linkedin !== undefined || this.props.instagram !== undefined || this.props.twitter !== undefined || this.props.pinterest !== undefined || this.props.youtube !== undefined) &&
           <div className='social-media-col'>
             <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title'>Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a></div>
+            <div className='stay-connected-subtitle'>
+              made with &hearts; by <a href='https://unitary.fund'><img width='64px' src={logo} alt='Unitary Fund' /></a>
+            </div>
             <div className='social-media'>
               {this.props.facebook !== undefined ? <a href={`https://www.facebook.com/${this.props.facebook}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><ImFacebook2 color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
               {this.props.twitter !== undefined ? <a href={`https://www.twitter.com/${this.props.twitter}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><FaTwitterSquare color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
