@@ -557,7 +557,6 @@ class Submission extends React.Component {
     axios.get(metricNameRoute)
       .then(subRes => {
         const metricNames = subRes.data.data
-        console.log(metricNames)
         this.setState({ metricNames: metricNames })
       })
       .catch(err => {
