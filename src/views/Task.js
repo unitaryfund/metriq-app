@@ -119,7 +119,6 @@ class Task extends React.Component {
             return 0
           }
         })
-
         this.setState({ results: results })
         this.sliceChartData(results)
       })
