@@ -88,7 +88,7 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               <b>
-                <p>If you have an article, code repository, or any URL constituting or presenting a new "method" for quantum applications, use this form to create a unique page for it.</p>
+                <p>If you have an article, code repository, or any URL constituting or presenting a "method" for quantum applications, use this form to create a unique page for it.</p>
                 <p>If you have independently recreated or validated the results of another submission on Metriq, you can add your new results to its page.</p>
               </b>
             </div>
