@@ -2,11 +2,20 @@
 // from https://www.d3-graph-gallery.com/graph/scatter_basic.html
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as d3 from 'd3'
 
 function SotaChart (props) {
   const { data, width, height, xLabel, yLabel, xType, yType, isLowerBetter } = props
+
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    function handleResize () {
+      setScreenWidth(window.innerWidth)
+    }
+    window.addEventListener('resize', handleResize)
+  })
 
   useEffect(() => {
     function drawChart () {
@@ -30,9 +39,22 @@ function SotaChart (props) {
         .select('.tooltip')
         .remove()
 
-      const margin = { top: 20, right: 160, bottom: 60, left: 80 }
-      const lWidth = width - margin.left - margin.right
+      const margin = { top: 20, right: 256, bottom: 60, left: 128 }
+      const sWidth = (width ? width : screenWidth)
+      let lWidth = sWidth - margin.left - margin.right
       const lHeight = height - margin.top - margin.bottom
+      if (lWidth < 300) {
+        const shim = (sWidth / 2) - 96
+        margin.right = shim + 64
+        margin.left = shim - 64
+        lWidth = 300
+      }
+      if (lWidth > 900) {
+        const shim = (sWidth - 900) / 2
+        margin.right = shim + 64
+        margin.left = shim - 64
+        lWidth = 900
+      }
       const yMinValue = d3.min(data, d => d.value)
       const yMaxValue = d3.max(data, d => d.value)
       const xMinValue = d3.min(data, d => d.label)
@@ -43,7 +65,7 @@ function SotaChart (props) {
       // append the svg object to the body of the page
       const svg = d3.select('#metriq-line-chart-container')
         .append('svg')
-        .attr('width', width)
+        .attr('width', sWidth)
         .attr('height', height)
         .append('g')
         .attr('transform',
@@ -171,7 +193,7 @@ function SotaChart (props) {
         .attr('height', 1.5)
     }
     drawChart()
-  }, [data, width, height, xLabel, yLabel, xType, yType, isLowerBetter])
+  }, [data, screenWidth, width, height, xLabel, yLabel, xType, yType, isLowerBetter])
 
   return <div id='metriq-line-chart-container' />
 }
