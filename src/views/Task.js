@@ -300,6 +300,12 @@ class Task extends React.Component {
                         width: 300
                       },
                       {
+                        title: 'Date',
+                        dataIndex: 'tableDate',
+                        key: 'tableDate',
+                        width: 300
+                      },
+                      {
                         title: 'Metric',
                         dataIndex: 'metricName',
                         key: 'metricName',
@@ -317,7 +323,8 @@ class Task extends React.Component {
                           name: row.submissionName,
                           methodName: row.methodName,
                           metricName: row.metricName,
-                          metricValue: row.metricValue
+                          metricValue: row.metricValue,
+                          tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
                         }))}
                       onRow={(record) => ({
                         onClick () { window.location.href = '/Submission/' + record.key }
