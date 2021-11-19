@@ -314,13 +314,14 @@ class Task extends React.Component {
                       data={this.state.results.map(row =>
                         ({
                           key: row.id,
+                          submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
                           name: row.submissionName,
                           methodName: row.methodName,
                           metricName: row.metricName,
                           metricValue: row.metricValue
                         }))}
                       onRow={(record) => ({
-                        onClick () { window.location.href = '/Submission/' + record.key }
+                        onClick () { window.location.href = '/Submission/' + record.submissionId }
                       })}
                       tableLayout='auto'
                       rowClassName='link'
