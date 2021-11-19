@@ -320,6 +320,7 @@ class Task extends React.Component {
                       data={this.state.results.map(row =>
                         ({
                           key: row.id,
+                          submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
                           name: row.submissionName,
                           methodName: row.methodName,
                           metricName: row.metricName,
@@ -327,7 +328,7 @@ class Task extends React.Component {
                           tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
                         }))}
                       onRow={(record) => ({
-                        onClick () { window.location.href = '/Submission/' + record.key }
+                        onClick () { window.location.href = '/Submission/' + record.submissionId }
                       })}
                       tableLayout='auto'
                       rowClassName='link'
