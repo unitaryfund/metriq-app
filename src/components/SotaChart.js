@@ -40,7 +40,7 @@ function SotaChart (props) {
         .remove()
 
       const margin = { top: 20, right: 256, bottom: 60, left: 128 }
-      const sWidth = (width ? width : screenWidth)
+      const sWidth = (width || screenWidth)
       let lWidth = sWidth - margin.left - margin.right
       const lHeight = height - margin.top - margin.bottom
       if (lWidth < 300) {

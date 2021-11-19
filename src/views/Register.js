@@ -23,6 +23,7 @@ class Register extends React.Component {
       email: '',
       password: '',
       passwordConfirm: '',
+      isAgreedToTerms: false,
       isPasswordMatch: true,
       isRequestFailed: false,
       requestFailedMessage: '',
@@ -73,6 +74,9 @@ class Register extends React.Component {
       return false
     }
     if (!this.isPasswordMatch()) {
+      return false
+    }
+    if (!this.state.isAgreedToTerms) {
       return false
     }
 
@@ -139,7 +143,16 @@ class Register extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
+              <input type='checkbox' onChange={(event) => this.setState({ isAgreedToTerms: event.target.checked })} />
+              <b>&nbsp;I agree to the <a href='/MetriqTermsofUse.html' target='_blank'>Metriq Terms of Use</a></b>
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
               <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /><br />
+              <FormFieldValidator invalid={!this.state.isAgreedToTerms} message='You must agree to the Metriq Terms of Use' /><br />
               <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
             </div>
             <div className='col-md-3' />
