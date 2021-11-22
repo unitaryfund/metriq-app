@@ -19,7 +19,7 @@ const AuthNavRight = () => {
   return (
     <Nav className='ml-auto metriq-navbar'>
       <Nav.Link href='http://discord.unitary.fund'> <FaDiscord color={`${'black'}`} size={25} /> </Nav.Link>
-      <Nav.Link href='https://github.com/unitaryfund'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
+      <Nav.Link href='https://github.com/unitaryfund/metriq-api'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
       <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item href='/Profile'><p class='font-weight-bold'>Settings</p></NavDropdown.Item>
         <NavDropdown.Item href='/AddSubmission'><p class='font-weight-bold'>Add Submission</p></NavDropdown.Item>
