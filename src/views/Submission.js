@@ -47,6 +47,7 @@ class Submission extends React.Component {
       showEditModal: false,
       showAccordion: false,
       modalMode: '',
+      modalTextMode: '',
       submission: {
         description: ''
       },
@@ -113,11 +114,12 @@ class Submission extends React.Component {
 
   handleModerationReport () {
     let mode = 'Moderation'
+    const modalTextMode = 'Moderation'
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
     const submission = { description: this.state.item.description }
-    this.setState({ showEditModal: true, modalMode: mode, submission: submission })
+    this.setState({ showEditModal: true, modalMode: mode, modalTextMode: modalTextMode, submission: submission })
   }
 
   handleHideEditModal () {
@@ -1051,12 +1053,12 @@ class Submission extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>{this.state.modalMode === 'Moderation' ? 'Report' : 'Edit'} Submission</Modal.Title>
+            <Modal.Title>{this.state.modalTextMode === 'Moderation' ? 'Report' : 'Edit'} Submission</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before {this.state.modalMode === 'Moderation' ? 'filing a report' : 'editing'}.
+                Please <Link to='/Login'>login</Link> before {this.state.modalTextMode === 'Moderation' ? 'filing a report' : 'editing'}.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
