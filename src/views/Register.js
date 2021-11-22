@@ -144,7 +144,7 @@ class Register extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               <input type='checkbox' onChange={(event) => this.setState({ isAgreedToTerms: event.target.checked })} />
-              <b>&nbsp;I agree to the <a href='/MetriqTermsofUse.html' target='_blank'>Metriq Terms of Use</a></b>
+              <b>&nbsp;I agree to the <a href='/MetriqTermsofUse.html' target='_blank'>Metriq Platform Terms of Use</a></b>
             </div>
             <div className='col-md-3' />
           </div>
