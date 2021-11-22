@@ -7,7 +7,7 @@ const AnonNavRight = () => {
   return (
     <Nav className='ml-auto metriq-navbar'>
       <Nav.Link href='http://discord.unitary.fund'> <FaDiscord color={`${'black'}`} size={25} /> </Nav.Link>
-      <Nav.Link href='https://github.com/unitaryfund'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
+      <Nav.Link href='https://github.com/unitaryfund/metriq-api'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
       <Nav.Link href='/Login' className='metriq-navbar-text'>Log In</Nav.Link>
       <Nav.Link href='/Login/AddSubmission'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
     </Nav>
