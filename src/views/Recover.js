@@ -109,7 +109,7 @@ class Recover extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and we will send a password recovery link to the associated account email, if it exists.</span><br />
+              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and your new password. If your account recovery link is valid, your password will be changed, and you will be redirected to the homepage.</span><br />
             </div>
             <div className='col-md-3' />
           </div>
