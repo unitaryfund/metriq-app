@@ -22,7 +22,7 @@ class Task extends React.Component {
       requestFailedMessage: '',
       showEditModal: false,
       task: { description: '' },
-      item: { submissions: [] },
+      item: { submissions: [], childTasks: [] },
       results: [],
       chartData: {},
       chartKey: '',
@@ -87,6 +87,7 @@ class Task extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const task = res.data.data
+        console.log(task)
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
 
         const results = task.results
@@ -224,6 +225,12 @@ class Task extends React.Component {
               </div>
             </div>
           </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            </div>
+          </div>
+          <br />
           {this.state.item.parentTask &&
             <div className='row'>
               <div className='col-md-12'>
@@ -231,13 +238,37 @@ class Task extends React.Component {
                   <b>Parent task:</b> <a href={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</a>
                 </div>
               </div>
+              <br />
             </div>}
-          <div className='row'>
-            <div className='col-md-12'>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-            </div>
-          </div>
-          <br />
+          {(this.state.item.childTasks && (this.state.item.childTasks.length > 0)) &&
+            <div>
+              <h2>Child Tasks</h2>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <Table
+                    className='detail-table'
+                    columns={[{
+                      title: 'Name',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.childTasks
+                      ? this.state.item.childTasks.map(row => ({
+                          key: row.id,
+                          name: row.name
+                        }))
+                      : []}
+                    onRow={(record) => ({
+                      onClick () { window.location.href = '/Task/' + record.key }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>
+              </div>
+              <br />
+            </div>}
           {(this.state.item.submissions.length > 0) &&
             <div>
               <h2>Submissions</h2>
