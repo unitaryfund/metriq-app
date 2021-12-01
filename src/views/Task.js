@@ -186,7 +186,7 @@ class Task extends React.Component {
     let i = 0
     while (i < metricNames.length) {
       const length = chartData[metricNames[i]].length
-      if (length < 4) {
+      if (length < 3) {
         metricNames.splice(i, 1)
       } else {
         i++
