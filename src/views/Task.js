@@ -42,7 +42,7 @@ class Task extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const task = { description: this.state.task.description }
+    const task = { description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
 
@@ -87,7 +87,6 @@ class Task extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const task = res.data.data
-        console.log(task)
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
 
         const results = task.results
