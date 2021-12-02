@@ -13,9 +13,9 @@ import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faSuperscript)
+library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -698,25 +698,32 @@ class Submission extends React.Component {
                     title: 'Task',
                     dataIndex: 'taskName',
                     key: 'taskName',
-                    width: 300
+                    width: 290
                   },
                   {
                     title: 'Method',
                     dataIndex: 'methodName',
                     key: 'methodName',
-                    width: 300
+                    width: 290
                   },
                   {
                     title: 'Metric',
                     dataIndex: 'metricName',
                     key: 'metricName',
-                    width: 300
+                    width: 290
                   },
                   {
                     title: 'Value',
                     dataIndex: 'metricValue',
                     key: 'metricValue',
-                    width: 300
+                    width: 290
+                  },
+                  {
+                    title: 'Notes',
+                    dataIndex: 'notes',
+                    key: 'notes',
+                    width: 40,
+                    render: (value, row, index) => row.notes ? <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}><span className='display-linebreak'>{row.notes}</span></Tooltip>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></OverlayTrigger> : <span />
                   }
                 ]}
                 data={this.state.item.results.length
@@ -726,7 +733,8 @@ class Submission extends React.Component {
                         taskName: row.task.name,
                         methodName: row.method.name,
                         metricName: row.metricName,
-                        metricValue: row.metricValue
+                        metricValue: row.metricValue,
+                        notes: row.notes
                       }))
                   : []}
                 tableLayout='auto'
@@ -930,6 +938,11 @@ class Submission extends React.Component {
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
+                /><br />
+                <FormFieldRow
+                  inputName='notes' inputType='textarea' label='Notes'
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
                 />
               </span>}
             {(this.state.modalMode === 'Tag') &&

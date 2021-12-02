@@ -34,7 +34,7 @@ class Method extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const method = { description: this.state.method.description }
+    const method = { description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, method: method })
   }
 

@@ -23,6 +23,10 @@
   font-size: calc(10px + 2vmin);
 }
 
+.display-linebreak {
+  white-space: pre-line;
+}
+
 .metriq-navbar {
   background-color: #3cd2f9;
   font-family: 'Courier New', monospace;
@@ -128,6 +132,7 @@ form > .row > label {
 }
 
 .submission-description {
+  white-space: pre-line;
   text-align: left;
   font-size: 90%;
   padding: 0 8px 8px 8px
