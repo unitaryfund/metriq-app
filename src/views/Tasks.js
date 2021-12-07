@@ -5,7 +5,6 @@ import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import CategoryScroll from '../components/CategoryScroll'
-import NetworkGraph from '../components/NetworkGraph'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -93,10 +92,7 @@ class Tasks extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h5>Tasks</h5></header>
         <br />
-        <Tabs defaultActiveKey='network' id='categories-tabs'>
-          <Tab eventKey='network' title='Network'>
-            <NetworkGraph data={this.state.network} width={900} height={400} />
-          </Tab>
+        <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
             <CategoryScroll type='task' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
           </Tab>
