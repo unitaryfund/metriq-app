@@ -8,7 +8,7 @@ import logo from './../../images/unitary_fund_logo.png'
 class SimpleReactFooter extends React.Component {
   render () {
     return (
-      <div style={{ backgroundColor: this.props.backgroundColor || 'bisque' }} className='footer-container'>
+      <div style={{ backgroundColor: this.props.backgroundColor || 'bisque', color: this.props.fontColor }} className='footer-container'>
         <div className='first-row'>
           {this.props.columns.map((column, i) => (
             <div key={i} className='columns'>
