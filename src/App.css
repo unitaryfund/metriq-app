@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #E5E5E5;
 }
 
 .App-logo {
@@ -40,6 +41,16 @@
   background-color: white;
 }
 
+.navbar-nav {
+  border-radius: 16px;
+  border: none;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  border-radius: 16px;
+  border: none;
+}
+
 .navbar-nav .metriq-navbar-text.nav-link {
     padding-top: 0.9rem;
     color:black;
@@ -50,6 +61,10 @@
   padding-top: 0.4rem;
   color: black;
   font-weight: bold;
+}
+
+.infinite-scroll-component {
+  overflow: visible !important;
 }
 
 #metriq-main-content {
@@ -105,10 +120,16 @@ form > .row > label {
   max-height: 180px;
 }
 
+.metriq-nav-tab-bar {
+  border-radius: 16px;
+  background-color: #FFFFFF;
+}
+
 .submission {
-  border: 1px solid black;
+  border-radius: 16px;
   margin: 6px;
   padding: 8px;
+  background-color: #FFFFFF;
 }
 
 .submission-heading {
