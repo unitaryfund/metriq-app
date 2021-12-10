@@ -53,7 +53,8 @@ class App extends React.Component {
           twitter='unitaryfund'
           youtube='UCDbDLAzGRTHnhkoMMOX7D1A'
           linkedin='unitary-fund'
-          backgroundColor='#f8f9fa'
+          backgroundColor='#212529'
+          fontColor='#FFFFFF'
           columns={[]}
         />
       </div>
