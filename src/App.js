@@ -55,6 +55,7 @@ class App extends React.Component {
           linkedin='unitary-fund'
           backgroundColor='#212529'
           fontColor='#FFFFFF'
+          iconColor='#FFFFFF'
           columns={[]}
         />
       </div>
