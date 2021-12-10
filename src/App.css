@@ -127,6 +127,10 @@ form > .row > label {
   background-color: #FFFFFF;
 }
 
+.submission:hover {
+  box-shadow: 0 0 16px rgba(33,33,33,.2); 
+}
+
 .submission-heading {
   font-weight: bold;
   padding: 0 8px 8px 8px
