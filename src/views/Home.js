@@ -6,7 +6,7 @@ const Home = (props) => {
     <div id='metriq-main-content' className='container'>
       <header><h5>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</h5></header>
       <br />
-      <Tabs defaultActiveKey='trending' id='top-submissions-tabs' className='metriq-nav-tab-bar'>
+      <Tabs defaultActiveKey='trending' id='top-submissions-tabs'>
         <Tab eventKey='trending' title='Trending' className='metriq-nav-tab'>
           <SubmissionScroll sortType='trending' isLoggedIn={props.isLoggedIn} tag={props.match ? props.match.params.tag : ''} />
         </Tab>
