@@ -86,23 +86,27 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-8 col-sm-12 h-100'>
               <div className='submission-heading'>{this.props.item.name} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
-              <div className='submission-subheading'> {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} • </div>
               <div className='submission-description'>
                 {this.state.description ? this.state.description.replace(/\0.*$/g, '').split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>
             </div>
-            <div className='col-md-2 col-sm-12 h-100'>
-              <div className={this.props.isEditView ? 'submission-edit-button-block' : 'submission-button-block'}>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-                  <span><button className={'submission-button btn ' + (this.state.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon={faThumbsUp} /> {this.state.upvotes}</button><br /></span>
-                </OverlayTrigger>
+            <div className='col-md-2 col-sm-12 h-100' />
+          </div>
+          <hr />
+          <div className='row submission-social-row'>
+            <div className='col-md-11 h-100'>
+              <div className='submission-subheading'>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
-                  <span><button className='submission-button btn btn-secondary' onClick={this.handleExternalLinkClick}><FontAwesomeIcon icon={faExternalLinkAlt} /></button></span>
-                </OverlayTrigger>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
-                  <span>{this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
+                  <span onClick={this.handleExternalLinkClick}>
+                    {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
+                  </span>
                 </OverlayTrigger>
               </div>
+            </div>
+            <div className='col-md-1 text-center'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+                <span><button id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} /></span>
+              </OverlayTrigger>
             </div>
           </div>
         </Link>

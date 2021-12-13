@@ -158,6 +158,11 @@ form > .row > label {
   padding: 0 8px 8px 8px
 }
 
+.submission-social-row {
+  text-align: left;
+  padding-bottom: 10px;
+}
+
 .submission-button-block {
   display: inline-block;
   vertical-align: -88px;
@@ -311,33 +316,40 @@ form > .row > label {
 
 #heart-full {
   display: inline-block;
+  margin-top: 2px;
+  top: -1px;
+  width: 20px;
+  height: 20px;
   position: relative;
-  top: 8px;
-  width: 40px;
-  height: 36px;
-  margin-top: 4px;
+  transform: rotate(-45deg);
+  border: 1px solid gray;
+  border-radius: 1px;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  background-color: blue;
 }
 
 #heart-full::before, #heart-full::after {
-  content: "";
-  position: absolute;
-  top: 0;
+  content: '';
   width: 20px;
-  height: 32px;
-  border-radius: 20px 20px 0 0;
-  background: #FFFF00;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  border: 1px solid gray;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  background-color: blue;
 }
 
 #heart-full::before {
-  left: 20px;
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
-}
-
-#heart-full::after {
-  left: 0;
+  top: -10px;
+  left: -1px;
   transform: rotate(45deg);
-  transform-origin: 100% 100%;
+}
+#heart-full::after {
+  top: -1px;
+  left: 8px;
+  transform: rotate(135deg);
 }
 
 #heart-empty {
@@ -348,10 +360,11 @@ form > .row > label {
   height: 20px;
   position: relative;
   transform: rotate(-45deg);
-  border: 1px solid #FFFF00;
+  border: 1px solid gray;
   border-radius: 1px;
   border-top-color: transparent;
   border-right-color: transparent;
+  background-color: transparent;
 }
 
 #heart-empty::before, #heart-empty::after {
@@ -360,7 +373,7 @@ form > .row > label {
   height: 20px;
   border-radius: 50%;
   position: absolute;
-  border: 1px solid #FFFF00;
+  border: 1px solid gray;
   border-bottom-color: transparent;
   border-right-color: transparent;
 }
