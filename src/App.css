@@ -163,24 +163,14 @@ form > .row > label {
   padding-bottom: 10px;
 }
 
-.submission-button-block {
-  display: inline-block;
-  vertical-align: -88px;
-}
-
-.submission-edit-button-block {
-  display: inline-block;
-  vertical-align: -113px;
-}
-
 .submission-detail-container {
   text-align: left;
 }
 
-.submission-button {
-  width: 80px;
-  height: 38px;
-  margin: 4px;
+.submission-like-count {
+  margin-left: 20px;
+  position: relative;
+  top: -5px;
 }
 
 .task-method-item {

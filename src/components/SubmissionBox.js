@@ -94,7 +94,7 @@ class SubmissionBox extends React.Component {
           </div>
           <hr />
           <div className='row submission-social-row'>
-            <div className='col-md-11 h-100'>
+            <div className='col-md-10 h-100'>
               <div className='submission-subheading'>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
                   <span onClick={this.handleExternalLinkClick}>
@@ -103,9 +103,12 @@ class SubmissionBox extends React.Component {
                 </OverlayTrigger>
               </div>
             </div>
-            <div className='col-md-1 text-center'>
+            <div className='col-md-2 text-center'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-                <span><button id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} /></span>
+                <div>
+                  <div id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} />
+                  <span className='submission-like-count'>{this.state.upvotes}</span>
+                </div>
               </OverlayTrigger>
             </div>
           </div>
