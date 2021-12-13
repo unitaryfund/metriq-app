@@ -322,11 +322,11 @@ form > .row > label {
   height: 20px;
   position: relative;
   transform: rotate(-45deg);
-  border: 1px solid gray;
+  border: none;
   border-radius: 1px;
   border-top-color: transparent;
   border-right-color: transparent;
-  background-color: blue;
+  background-color: #3CD2F9;
 }
 
 #heart-full::before, #heart-full::after {
@@ -335,20 +335,20 @@ form > .row > label {
   height: 20px;
   border-radius: 50%;
   position: absolute;
-  border: 1px solid gray;
+  border: none;
   border-bottom-color: transparent;
   border-right-color: transparent;
-  background-color: blue;
+  background-color: #3CD2F9;
 }
 
 #heart-full::before {
   top: -10px;
-  left: -1px;
+  left: 0;
   transform: rotate(45deg);
 }
 #heart-full::after {
-  top: -1px;
-  left: 8px;
+  top: 0;
+  left: 10px;
   transform: rotate(135deg);
 }
 
@@ -360,7 +360,7 @@ form > .row > label {
   height: 20px;
   position: relative;
   transform: rotate(-45deg);
-  border: 1px solid gray;
+  border: 1px solid #3CD2F9;
   border-radius: 1px;
   border-top-color: transparent;
   border-right-color: transparent;
@@ -373,7 +373,7 @@ form > .row > label {
   height: 20px;
   border-radius: 50%;
   position: absolute;
-  border: 1px solid gray;
+  border: 1px solid #3CD2F9;
   border-bottom-color: transparent;
   border-right-color: transparent;
 }
