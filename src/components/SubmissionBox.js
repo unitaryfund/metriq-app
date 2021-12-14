@@ -94,14 +94,19 @@ class SubmissionBox extends React.Component {
           </div>
           <hr />
           <div className='row submission-social-row'>
-            <div className='col-md-10 h-100'>
+            <div className='col-md-9 h-100'>
               <div className='submission-subheading'>
                 <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
                   <span onClick={this.handleExternalLinkClick}>
-                    {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
+                    {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} •
                   </span>
                 </OverlayTrigger>
               </div>
+            </div>
+            <div className='col-md-1 text-center'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
+                <span>{this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
+              </OverlayTrigger>
             </div>
             <div className='col-md-2 text-center'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
