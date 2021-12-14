@@ -105,7 +105,7 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-1 text-center'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
-                <span>{this.props.isEditView && <button className='submission-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
+                <span>{this.props.isEditView && <button className='delete-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
               </OverlayTrigger>
             </div>
             <div className='col-md-2 text-center'>

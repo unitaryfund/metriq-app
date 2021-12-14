@@ -131,9 +131,15 @@ form > .row > label {
   box-shadow: 0 0 16px rgba(33,33,33,.2); 
 }
 
-.submission-button {
+.delete-button {
   position: relative;
   top: -8px;
+}
+
+.submission-button {
+  width: 80px;
+  height: 38px;
+  margin: 4px;
 }
 
 .submission-heading {
