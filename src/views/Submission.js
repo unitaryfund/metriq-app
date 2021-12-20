@@ -55,6 +55,7 @@ class Submission extends React.Component {
         description: ''
       },
       result: {
+        id: '',
         task: '',
         method: '',
         metricName: '',
@@ -88,6 +89,8 @@ class Submission extends React.Component {
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
+    this.handleOnClickAddResult = this.handleOnClickAddResult.bind(this)
+    this.handleOnClickEditResult = this.handleOnClickEditResult.bind(this)
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
@@ -290,6 +293,32 @@ class Submission extends React.Component {
     this.setState({ showRemoveModal: true, modalMode: mode })
   }
 
+  handleOnClickAddResult () {
+    const result = {
+      id: '',
+      task: '',
+      method: '',
+      metricName: '',
+      metricValue: 0,
+      isHigherBetter: false,
+      evaluatedDate: new Date()
+    }
+    this.setState({ result: result })
+    this.handleOnClickAdd('Result')
+  }
+
+  handleOnClickEditResult (resultId) {
+    for (let i = 0; i < this.state.item.results.length; i++) {
+      if (this.state.item.results[i].id === resultId) {
+        const result = this.state.item.results[i]
+        result.submissionId = this.state.item.id
+        this.setState({ result: result })
+        break
+      }
+    }
+    this.handleOnClickAdd('Result')
+  }
+
   handleHideAddModal () {
     this.setState({ showAddModal: false, showAccordion: false })
   }
@@ -388,8 +417,9 @@ class Submission extends React.Component {
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
-      const resultRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/result'
-      axios.post(resultRoute, result)
+      const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
+      const request = axios.post(resultRoute, result)
+      request
         .then(res => {
           this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
         })
@@ -685,7 +715,7 @@ class Submission extends React.Component {
               <h2>Results
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Result')}
+                  onClickAdd={() => this.handleOnClickAddResult()}
                   onClickRemove={() => this.handleOnClickRemove('Result')}
                 />
               </h2>
@@ -698,32 +728,39 @@ class Submission extends React.Component {
                     title: 'Task',
                     dataIndex: 'taskName',
                     key: 'taskName',
-                    width: 290
+                    width: 280
                   },
                   {
                     title: 'Method',
                     dataIndex: 'methodName',
                     key: 'methodName',
-                    width: 290
+                    width: 280
                   },
                   {
                     title: 'Metric',
                     dataIndex: 'metricName',
                     key: 'metricName',
-                    width: 290
+                    width: 280
                   },
                   {
                     title: 'Value',
                     dataIndex: 'metricValue',
                     key: 'metricValue',
-                    width: 290
+                    width: 280
                   },
                   {
                     title: 'Notes',
                     dataIndex: 'notes',
                     key: 'notes',
                     width: 40,
-                    render: (value, row, index) => row.notes ? <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}><span className='display-linebreak'>{row.notes}</span></Tooltip>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></OverlayTrigger> : <span />
+                    render: (value, row, index) => <div className='text-center'>{row.notes && <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}><span className='display-linebreak'>{row.notes}</span></Tooltip>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></OverlayTrigger>}</div>
+                  },
+                  {
+                    title: '',
+                    dataIndex: 'edit',
+                    key: 'edit',
+                    width: 40,
+                    render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} /></div>
                   }
                 ]}
                 data={this.state.item.results.length
@@ -787,7 +824,7 @@ class Submission extends React.Component {
             </Modal.Header>}
           {(this.state.modalMode !== 'Login') &&
             <Modal.Header closeButton>
-              <Modal.Title>Add {this.state.modalMode}</Modal.Title>
+              <Modal.Title>{(this.state.modalMode === 'Result' && this.state.result.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>
             </Modal.Header>}
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
@@ -905,42 +942,48 @@ class Submission extends React.Component {
                 <FormFieldSelectRow
                   inputName='task' label='Task'
                   options={this.state.item.tasks}
+                  value={this.state.result.task}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Task from submission, used in this result'
                 /><br />
                 <FormFieldSelectRow
                   inputName='method' label='Method'
                   options={this.state.item.methods}
+                  value={this.state.result.method}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Method from submission, used in this result'
                 /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
+                  value={this.state.result.metricName}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   validRegex={metricNameRegex}
                   options={this.state.metricNames}
-                  value=''
                   tooltip='The name of the measure of performance, for this combination of task and method, for this submission.'
                 /><br />
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
+                  value={this.state.result.metricValue}
                   validRegex={metricValueRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='The value of the measure of performance, for this combination of task and method, for this submission.'
                 /><br />
                 <FormFieldRow
                   inputName='evaluatedAt' inputType='date' label='Evaluated'
+                  value={this.state.result.evaluatedAt}
                   validRegex={dateRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='(Optionally) What date was the metric value collected on?'
                 /><br />
                 <FormFieldRow
                   inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
+                  checked={this.state.result.isHigherBetter}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
                 /><br />
                 <FormFieldRow
                   inputName='notes' inputType='textarea' label='Notes'
+                  value={this.state.result.notes}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
                 />

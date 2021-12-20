@@ -24,6 +24,10 @@
   font-size: calc(10px + 2vmin);
 }
 
+.text-center {
+  text-align: center;
+}
+
 .display-linebreak {
   white-space: pre-line;
 }
