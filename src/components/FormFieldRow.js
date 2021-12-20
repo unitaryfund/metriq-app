@@ -77,6 +77,7 @@ class FormFieldRow extends React.Component {
                   type={this.props.inputType}
                   selected={this.props.defaultValue}
                   value={this.props.value}
+                  checked={this.props.checked}
                   onChange={this.handleOnFieldChange}
                   onBlur={this.handleOnFieldBlur}
                 />}
