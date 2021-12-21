@@ -25,6 +25,7 @@ const AuthNavRight = () => {
         <NavDropdown.Item href='/AddSubmission'><p class='font-weight-bold'>Add Submission</p></NavDropdown.Item>
         <NavDropdown.Item href='/Submissions'><p class='font-weight-bold'>My Submissions</p></NavDropdown.Item>
         <NavDropdown.Item href='/Token'><p class='font-weight-bold'>API Token</p></NavDropdown.Item>
+        <NavDropdown.Item href='/Password'><p class='font-weight-bold'>Change password</p></NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item onClick={handleOnClick}><p class='font-weight-bold'>Logout</p></NavDropdown.Item>
       </NavDropdown>

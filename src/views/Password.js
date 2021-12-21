@@ -1,22 +1,23 @@
 import axios from 'axios'
 import React from 'react'
-import config from './../config'
+import config from '../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 
-const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
+const passwordRequiredError = 'Required'
 
-const usernameValidRegex = /^(?!\s*$).+/
 const passwordValidRegex = /.{12,}/
 
-class Recover extends React.Component {
+class Password extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: this.props.match.params.username,
+      isPasswordVisible: false,
+      oldPassword: '',
       password: '',
       passwordConfirm: '',
       isPasswordMatch: true,
@@ -54,7 +55,7 @@ class Recover extends React.Component {
   }
 
   isAllValid () {
-    if (!usernameValidRegex.test(this.state.username)) {
+    if (!this.state.oldPassword) {
       return false
     }
     if (!passwordValidRegex.test(this.state.password)) {
@@ -77,15 +78,13 @@ class Recover extends React.Component {
     }
 
     const request = {
-      username: this.state.username,
+      oldPassword: this.state.oldPassword,
       password: this.state.password,
-      passwordConfirm: this.state.passwordConfirm,
-      uuid: this.props.match.params.uuid
+      passwordConfirm: this.state.passwordConfirm
     }
 
-    axios.post(config.api.getUriPrefix() + '/password', request)
+    axios.post(config.api.getUriPrefix() + '/user/password', request)
       .then(res => {
-        this.props.onLogin()
         window.location.href = '/'
       })
       .catch(err => {
@@ -97,40 +96,36 @@ class Recover extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Account Recovery</h5></header>
+        <header><h5>Change Password</h5></header>
         <form onSubmit={this.handleOnSubmit}>
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <span><b>You can log in with either your username or email for your account, with your password.</b></span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and your new password. If your account recovery link is valid, your password will be changed, and you will be redirected to the homepage.</span><br />
+              <span><b>Enter your current password below, then enter and confirm your new password.</b></span><br />
             </div>
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='username' inputType='text' label='Username'
-            defaultValue={this.props.match.params.username}
-            validatorMessage={usernameMissingError}
+            inputName='oldPassword' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Current Password'
+            validatorMessage={passwordRequiredError}
             onChange={this.handleOnChange}
-            validRegex={usernameValidRegex}
+            validRegex={passwordValidRegex}
           />
           <FormFieldRow
-            inputName='password' inputType='password' label='Password'
+            inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='New Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePassword}
             validRegex={passwordValidRegex}
           />
           <FormFieldRow
-            inputName='passwordConfirm' inputType='password' label='Password Confirm'
+            inputName='passwordConfirm' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='New Password Confirm'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePasswordConfirm}
             validRegex={passwordValidRegex}
+          />
+          <PasswordVisibleControlRow
+            inputName='isPasswordVisible'
+            onChange={this.handleOnChange}
           />
           <div className='row'>
             <div className='col-md-3' />
@@ -151,4 +146,4 @@ class Recover extends React.Component {
   }
 }
 
-export default Recover
+export default Password
