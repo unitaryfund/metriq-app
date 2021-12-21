@@ -11,6 +11,7 @@ import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
 import Submissions from './views/Submissions'
 import Token from './views/Token'
+import Password from './views/Password'
 import Methods from './views/Methods'
 import Tasks from './views/Tasks'
 import Tags from './views/Tags'
@@ -114,6 +115,11 @@ const MainRouter = (props) => {
         exact
         path='/Token'
         component={Token}
+      />
+      <Route
+        exact
+        path='/Password'
+        component={Password}
       />
       <Route
         exact

@@ -57,6 +57,12 @@ class Profile extends React.Component {
           <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
+              <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
+            </div>
+          </div>
+          <br />
+          <div className='row'>
+            <div className='col-md-12 text-center'>
               <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
             </div>
           </div>
