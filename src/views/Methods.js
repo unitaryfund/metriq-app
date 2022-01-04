@@ -32,6 +32,14 @@ class Methods extends React.Component {
           if (keyB < keyA) {
             return -1
           }
+          const key2A = a.name
+          const key2B = b.name
+          if (key2A < key2B) {
+            return -1
+          }
+          if (key2B < key2A) {
+            return 1
+          }
           return 0
         })
         this.setState({
@@ -49,6 +57,14 @@ class Methods extends React.Component {
           }
           if (keyB < keyA) {
             return -1
+          }
+          const key2A = a.name
+          const key2B = b.name
+          if (key2A < key2B) {
+            return -1
+          }
+          if (key2B < key2A) {
+            return 1
           }
           return 0
         })
