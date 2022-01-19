@@ -106,7 +106,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Tasks</h5></header>
+        <header><h4>Tasks</h4></header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>

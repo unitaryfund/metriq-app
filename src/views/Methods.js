@@ -92,7 +92,7 @@ class Methods extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Methods</h5></header>
+        <header><h4>Methods</h4></header>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>

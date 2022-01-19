@@ -96,7 +96,7 @@ class Password extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Change Password</h5></header>
+        <header><h4>Change Password</h4></header>
         <form onSubmit={this.handleOnSubmit}>
           <div className='row'>
             <div className='col-md-3' />
