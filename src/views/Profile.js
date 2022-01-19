@@ -33,7 +33,7 @@ class Profile extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Profile</h5></header>
+        <header><h4>Profile</h4></header>
         <br />
         <div>
           <FieldRow fieldName='username' label='Username' value={this.state.data.username} />

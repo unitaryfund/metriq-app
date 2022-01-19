@@ -71,7 +71,7 @@ class Token extends React.Component {
     if (this.state.isGeneratedSuccess) {
       return (
         <div id='metriq-main-content' className='container'>
-          <header><h5>Get Token</h5></header>
+          <header><h4>Get Token</h4></header>
           <br />
           <div>
             <div className='row'>
