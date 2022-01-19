@@ -34,7 +34,7 @@ class Submission extends React.Component {
       isArxiv: false,
       vanityUrl: '',
       bibtexUrl: '',
-      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [] },
+      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [], user: [] },
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -602,6 +602,13 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div><h1>{this.state.item.name}</h1></div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <div className='submission-description'>
+              <b>Submitted by {this.state.item.user.username} on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
+            </div>
           </div>
         </div>
         <div className='row'>
