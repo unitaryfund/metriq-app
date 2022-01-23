@@ -6,11 +6,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { faThumbsUp, faExternalLinkAlt, faScroll, faCode } from '@fortawesome/free-solid-svg-icons'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
 
-library.add(faThumbsUp, faExternalLinkAlt)
+library.add(faExternalLinkAlt)
 
 class SubmissionBox extends React.Component {
   constructor (props) {
@@ -68,11 +68,11 @@ class SubmissionBox extends React.Component {
   parseContentUrl () {
     const urlStr = String(this.props.item.contentUrl)
     if (urlStr.includes('arxiv')) {
-      return <span> <FontAwesomeIcon icon={faScroll} /> arXiv:{urlStr.split('/abs/')[1]} </span>
+      return <span> <FontAwesomeIcon icon={faExternalLinkAlt} /> arXiv:{urlStr.split('/abs/')[1]} </span>
     } else if (urlStr.includes('github')) {
-      return <span> <FontAwesomeIcon icon={faCode} /> GitHub:{urlStr.split('.com/')[1]} </span>
+      return <span> <FontAwesomeIcon icon={faExternalLinkAlt} /> GitHub:{urlStr.split('.com/')[1]} </span>
     } else {
-      return ''
+      return <span> <FontAwesomeIcon icon={faExternalLinkAlt} /> Link:{urlStr} </span>
     }
   }
 
