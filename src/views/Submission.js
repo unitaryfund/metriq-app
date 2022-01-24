@@ -13,9 +13,9 @@ import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEdit, faExternalLinkAlt, faThumbsUp, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
+library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const metricNameRegex = /.{1,}/
@@ -621,7 +621,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-              <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='thumbs-up' /> {this.state.item.upvotesCount}</button>
+              <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
             </OverlayTrigger>
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
               <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
