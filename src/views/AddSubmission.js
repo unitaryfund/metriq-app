@@ -143,7 +143,7 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldTypeaheadRow
-            inputName='tag' label='Tags'
+            inputName='tags' label='Tags'
             onChange={this.handleOnChange}
             options={this.state.tagNames.map(item => item.name)}
           />
