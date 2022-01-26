@@ -32,6 +32,10 @@
   white-space: pre-line;
 }
 
+.search-bar {
+  padding-top: 10px;
+}
+
 .metriq-navbar {
   background-color: #3cd2f9;
   font-family: 'Courier New', monospace;
