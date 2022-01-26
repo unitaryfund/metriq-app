@@ -90,6 +90,10 @@ class SubmissionScroll extends React.Component {
       }
     }
 
+    if (this.state.hasMore && fItems.length === 0) {
+      this.fetchMoreData()
+    }
+
     this.setState({ filterText: text, filteredItems: fItems })
   }
 
