@@ -4,9 +4,9 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faThumbsUp, faExternalLinkAlt)
+library.add(faHeart, faExternalLinkAlt)
 
 class CategoryItemBox extends React.Component {
   render () {
@@ -26,7 +26,7 @@ class CategoryItemBox extends React.Component {
         <td className='task-method-item-spacer' />
         <td>
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
-            <span><FontAwesomeIcon icon={faThumbsUp} />: {this.props.item.upvoteTotal}</span>
+            <span><FontAwesomeIcon icon={faHeart} />: {this.props.item.upvoteTotal}</span>
           </OverlayTrigger>
         </td>
       </tr>
