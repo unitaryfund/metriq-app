@@ -8,7 +8,7 @@ const MainNavbar = (props) => {
     <div>
       <Navbar className='metriq-navbar' expand='lg'>
         <Navbar.Brand href='/' className='metriq-navbar'>
-          <img src={logo} alt='logo' className='logo-image' />
+          <img src={logo} alt='Metriq logo' className='logo-image' />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>

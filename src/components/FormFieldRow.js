@@ -87,7 +87,7 @@ class FormFieldRow extends React.Component {
           {this.state.imagePreview &&
             <div className='row'>
               <div className='col-md-12 text-center'>
-                <img src={this.state.imagePreviewUrl} alt='thumbnail' className='submission-image' />
+                <img src={this.state.imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
               </div>
             </div>}
         </div>

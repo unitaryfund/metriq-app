@@ -17,9 +17,9 @@ const Partners = () => {
               If your organization or institution would like to become a partner, please contact us at <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.
             </p>
             <div className='text-center'>
-              <img src={iqtLogo} alt='IQT Logo' className='logo-image' />
-              <img src={quicLogo} alt='QUIC Logo' className='logo-image' />
-              <img src={qedcLogo} alt='QEDC Logo' className='logo-image' />
+              <img src={iqtLogo} alt='IQT partner logo' className='logo-image' />
+              <img src={quicLogo} alt='QUIC partner logo' className='logo-image' />
+              <img src={qedcLogo} alt='QEDC partner logo' className='logo-image' />
             </div>
           </div>
         </div>
