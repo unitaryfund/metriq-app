@@ -1,6 +1,6 @@
-import iqt_logo from './../images/iqt_logo.png'
-import quic_logo from './../images/quic_logo.png'
-import qedc_logo from './../images/qedc_logo.png'
+import iqtLogo from './../images/iqt_logo.png'
+import quicLogo from './../images/quic_logo.png'
+import qedcLogo from './../images/qedc_logo.png'
 
 const Partners = () => {
   return (
@@ -16,9 +16,11 @@ const Partners = () => {
             <p>
               If your organization or institution would like to become a partner, please contact us at <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.
             </p>
-            <img src={iqt_logo} alt='iqt_logo' className='logo-image' />
-            <img src={quic_logo} alt='quic_logo' className='logo-image' />
-            <img src={qedc_logo} alt='qedc_logo' className='logo-image' />
+            <div className='text-center'>
+              <img src={iqtLogo} alt='IQT Logo' className='logo-image' />
+              <img src={quicLogo} alt='QUIC Logo' className='logo-image' />
+              <img src={qedcLogo} alt='QEDC Logo' className='logo-image' />
+            </div>
           </div>
         </div>
         <div className='col-md-2' />
