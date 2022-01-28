@@ -1,6 +1,5 @@
 import iqtLogo from './../images/iqt_logo.png'
-import quicLogo from './../images/quic_logo.png'
-import qedcLogo from './../images/qedc_logo.png'
+import ufLogo from './../images/unitary_fund_logo.png'
 
 const Partners = () => {
   return (
@@ -18,8 +17,7 @@ const Partners = () => {
             </p>
             <div className='text-center'>
               <img src={iqtLogo} alt='IQT partner logo' className='logo-image' />
-              <img src={quicLogo} alt='QUIC partner logo' className='logo-image' />
-              <img src={qedcLogo} alt='QEDC partner logo' className='logo-image' />
+              <img src={ufLogo} alt='UF partner logo' className='logo-image' />
             </div>
           </div>
         </div>
