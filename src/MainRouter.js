@@ -11,6 +11,7 @@ import FAQ from './views/FAQ'
 import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
 import Submissions from './views/Submissions'
+import SubmissionsPublic from './views/SubmissionsPublic'
 import Token from './views/Token'
 import Password from './views/Password'
 import Methods from './views/Methods'
@@ -136,6 +137,11 @@ const MainRouter = (props) => {
         exact
         path='/Submission/:id'
         render={(p) => <Submission {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+      />
+      <Route
+        exact
+        path='/User/:userId/Submissions'
+        render={(p) => <SubmissionsPublic {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
       />
       <Route
         exact

@@ -92,32 +92,35 @@ class SubmissionBox extends React.Component {
             </div>
             <div className='col-md-2 col-sm-12 h-100' />
           </div>
-          <hr />
-          <div className='row submission-social-row'>
-            <div className='col-md-9 h-100'>
-              <div className='submission-subheading'>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
-                  <span onClick={this.handleExternalLinkClick}>
-                    Submitted by {this.props.item.username} • {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} •
-                  </span>
-                </OverlayTrigger>
-              </div>
-            </div>
-            <div className='col-md-1 text-center'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
-                <span>{this.props.isEditView && <button className='delete-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
-              </OverlayTrigger>
-            </div>
-            <div className='col-md-2 text-center'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-                <div>
-                  <div id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} />
-                  <span className='submission-like-count'>{this.state.upvotes}</span>
-                </div>
+        </Link>
+        <hr />
+        <div className='row submission-social-row'>
+          <div className='col-md-9 h-100'>
+            <div className='submission-subheading'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>User submissions link</Tooltip>}>
+                <Link to={'/User/' + this.props.item.userId + '/Submissions'}>Submitted by {this.props.item.username}</Link>
+              </OverlayTrigger> •
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
+                <span onClick={this.handleExternalLinkClick}>
+                  {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} •
+                </span>
               </OverlayTrigger>
             </div>
           </div>
-        </Link>
+          <div className='col-md-1 text-center'>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
+              <span>{this.props.isEditView && <button className='delete-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
+            </OverlayTrigger>
+          </div>
+          <div className='col-md-2 text-center'>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+              <div>
+                <div id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} />
+                <span className='submission-like-count'>{this.state.upvotes}</span>
+              </div>
+            </OverlayTrigger>
+          </div>
+        </div>
       </div>
     )
   }
