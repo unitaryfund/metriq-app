@@ -846,6 +846,7 @@ class Submission extends React.Component {
                   options={this.state.methodNames}
                   onChange={(field, value) => this.handleOnChange('', field, value)}
                   tooltip='A method used in or by this submission, (to perform a task)'
+                  disabled={this.state.showAccordion}
                 /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
@@ -893,6 +894,7 @@ class Submission extends React.Component {
                   options={this.state.taskNames}
                   onChange={(field, value) => this.handleOnChange('', field, value)}
                   tooltip='A task performed in or by this submission, (using a method)'
+                  disabled={this.state.showAccordion}
                 /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
