@@ -111,7 +111,7 @@ const MainRouter = (props) => {
       <Route
         exact
         path='/AddSubmission'
-        component={AddSubmission}
+        render={(p) => <AddSubmission {...p} isLoggedIn={props.isLoggedIn} />}
       />
       <Route
         exact
