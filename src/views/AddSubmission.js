@@ -25,6 +25,10 @@ class AddSubmission extends React.Component {
       isValidated: false
     }
 
+    if (!this.props.isLoggedIn) {
+      window.location.href = '/LogIn/AddSubmission'
+    }
+
     this.handleOnChange = this.handleOnChange.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
