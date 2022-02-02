@@ -53,6 +53,7 @@ class FormFieldSelectRow extends React.Component {
             className='form-control'
             onChange={this.handleOnFieldChange}
             onBlur={this.handleOnFieldBlur}
+            disabled={this.props.disabled}
           >
             {this.props.isNullDefault &&
               <option value=''>(None)</option>}
