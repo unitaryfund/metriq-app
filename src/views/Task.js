@@ -11,6 +11,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
+import { FacebookShareButton, TwitterShareButton } from "react-share";
+import { FacebookIcon, TwitterIcon } from "react-share";
 
 library.add(faEdit)
 
@@ -227,6 +229,16 @@ class Task extends React.Component {
           <div className='row'>
             <div className='col-md-12'>
               <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+              <FacebookShareButton
+                url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}
+              >
+              <FacebookIcon size={32} />
+              </FacebookShareButton>
+              <TwitterShareButton
+                url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}
+              >
+              <TwitterIcon size={32} />
+              </TwitterShareButton>
             </div>
           </div>
           <br />
