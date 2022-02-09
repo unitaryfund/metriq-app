@@ -125,6 +125,10 @@ class Register extends React.Component {
             validRegex={emailValidRegex}
           />
           <FormFieldRow
+            inputName='affiliation' inputType='text' label='Affiliation'
+            onChange={this.handleOnChange}
+          />
+          <FormFieldRow
             inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePassword}
