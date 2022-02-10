@@ -444,6 +444,11 @@ class Submission extends React.Component {
         }
       }
     }
+    tasks.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
   }
 
   handleTrimMethods (submission, methods) {
@@ -455,6 +460,11 @@ class Submission extends React.Component {
         }
       }
     }
+    methods.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
   }
 
   handleTrimTags (submission, tags) {
