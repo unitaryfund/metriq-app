@@ -16,7 +16,7 @@ const MainNavbar = (props) => {
           <MainNavRight isLoggedIn={props.isLoggedIn} />
         </Navbar.Collapse>
       </Navbar>
-      <div className='metriq-navbar metriq-header'>
+      <div className='metriq-navbar'>
         <h2>{props.title}</h2>
         <h3>{props.subtitle}</h3>
         <br />

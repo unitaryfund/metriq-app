@@ -38,7 +38,7 @@
 
 .metriq-navbar {
   background-color: #3cd2f9;
-  font-family: 'Courier New', monospace;
+  font-family: 'Arial', monospace;
    color:white;
    font-weight: bold;
 }
@@ -47,10 +47,6 @@
   font-weight: bold;
   color: black;
   background-color: white;
-}
-
-.metriq-header {
-  font-weight: bold;
 }
 
 .navbar-nav {
