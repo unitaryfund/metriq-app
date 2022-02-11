@@ -49,6 +49,10 @@
   background-color: white;
 }
 
+.metriq-header {
+  font-weight: bold;
+}
+
 .navbar-nav {
   border-radius: 16px;
   border: none;
