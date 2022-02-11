@@ -126,6 +126,7 @@ form > .row > label {
   height: auto;
   max-width: 180px;
   max-height: 180px;
+  padding: 2px;
 }
 
 .submission {

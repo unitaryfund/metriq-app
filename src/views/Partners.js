@@ -1,5 +1,7 @@
+import cqcLogo from './../images/cqc_logo.png'
 import iqtLogo from './../images/iqt_logo.png'
 import ufLogo from './../images/unitary_fund_logo.png'
+import usraLogo from './../images/usra_logo.png'
 
 const Partners = () => {
   return (
@@ -16,8 +18,10 @@ const Partners = () => {
               If your organization or institution would like to become a partner, please contact us at <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.
             </p>
             <div className='text-center'>
+              <img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' />
               <img src={iqtLogo} alt='IQT partner logo' className='logo-image' />
               <img src={ufLogo} alt='UF partner logo' className='logo-image' />
+              <img src={usraLogo} alt='USRA partner logo' className='logo-image' />
             </div>
           </div>
         </div>
