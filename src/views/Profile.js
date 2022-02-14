@@ -43,12 +43,13 @@ class Profile extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
+          showEditModal: false,
           isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ showEditModal: false, isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
