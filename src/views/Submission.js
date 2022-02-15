@@ -899,6 +899,14 @@ class Submission extends React.Component {
                           validRegex={methodNameRegex}
                           tooltip='Long name of new method'
                         /><br />
+                        <FormFieldSelectRow
+                          inputName='parentMethod'
+                          label='Parent method<br/>(if any)'
+                          isNullDefault
+                          options={this.state.allMethodNames}
+                          onChange={(field, value) => this.handleOnChange('method', field, value)}
+                          tooltip='Optionally, the new method is a sub-method of a "parent" method.'
+                        /><br />
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'

@@ -122,6 +122,45 @@ class Method extends React.Component {
             </div>
           </div>
           <br />
+          {this.state.item.parentMethod &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Parent method:</b> <a href={'/Method/' + this.state.item.parentMethod.id}>{this.state.item.parentMethod.name}</a>
+                </div>
+              </div>
+              <br />
+            </div>}
+          {(this.state.item.childMethods && (this.state.item.childMethods.length > 0)) &&
+            <div>
+              <h2>Child Methods</h2>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <Table
+                    className='detail-table'
+                    columns={[{
+                      title: 'Name',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.childMethods
+                      ? this.state.item.childMethods.map(row => ({
+                          key: row.id,
+                          name: row.name
+                        }))
+                      : []}
+                    onRow={(record) => ({
+                      onClick () { window.location.href = '/Method/' + record.key }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>
+              </div>
+              <br />
+            </div>}
+          <br/>
           <h2>Submissions</h2>
           <div className='row'>
             <div className='col-md-12'>
