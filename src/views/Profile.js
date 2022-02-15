@@ -3,17 +3,54 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import config from './../config'
 import FieldRow from '../components/FieldRow'
+import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import { Button, Modal } from 'react-bootstrap'
 
 class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: {},
+      data: { affiliation: '' },
+      showEditModal: false,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
+
+    this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleHideModal = this.handleHideModal.bind(this)
+    this.handleShowModal = this.handleShowModal.bind(this)
+    this.handleUpdateDetails = this.handleUpdateDetails.bind(this)
+  }
+
+  handleOnChange (field, value) {
+    const data = this.state.data
+    data[field] = value
+    this.setState({ data: data })
+  }
+
+  handleHideModal () {
+    this.setState({ showEditModal: false })
+  }
+
+  handleShowModal () {
+    this.setState({ showEditModal: true })
+  }
+
+  handleUpdateDetails () {
+    axios.post(config.api.getUriPrefix() + '/user', this.state.data)
+      .then(res => {
+        this.setState({
+          data: res.data.data,
+          showEditModal: false,
+          isRequestFailed: false,
+          requestFailedMessage: ''
+        })
+      })
+      .catch(err => {
+        this.setState({ showEditModal: false, isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   componentDidMount () {
@@ -52,6 +89,12 @@ class Profile extends React.Component {
           <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
+              <Button variant='primary' onClick={this.handleShowModal}>Edit Details</Button>
+            </div>
+          </div>
+          <br />
+          <div className='row'>
+            <div className='col-md-12 text-center'>
               <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
             </div>
           </div>
@@ -68,6 +111,30 @@ class Profile extends React.Component {
             </div>
           </div>
         </div>
+        <Modal
+          show={this.state.showEditModal}
+          onHide={this.handleHideModal}
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <span>
+              <FormFieldRow
+                inputName='affiliation' inputType='text' label='Affiliation'
+                value={this.state.data.affiliation}
+                onChange={(field, value) => this.handleOnChange(field, value)}
+              />
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.handleHideModal}>Cancel</Button>
+            <Button variant='primary' onClick={this.handleUpdateDetails}>Submit</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     )
   }
