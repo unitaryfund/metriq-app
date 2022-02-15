@@ -5,6 +5,8 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -227,17 +229,23 @@ class Task extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-12'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
               <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              <FacebookShareButton
-                url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}
-              >
-                <FacebookIcon size={32} />
-              </FacebookShareButton>
-              <TwitterShareButton
-                url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}
-              >
-                <TwitterIcon size={32} />
-              </TwitterShareButton>
+              </OverlayTrigger>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+                <button className='submission-button btn-secondary'>
+                  <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
+                    <FacebookIcon size={32} />
+                  </FacebookShareButton>
+                </button>
+              </OverlayTrigger>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+                <button className='submission-button btn-secondary'>
+                  <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
+                    <TwitterIcon size={32} />
+                  </TwitterShareButton>
+                </button>
+              </OverlayTrigger>
             </div>
           </div>
           <br />
