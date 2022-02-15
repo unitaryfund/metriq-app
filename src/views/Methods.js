@@ -4,6 +4,7 @@ import config from './../config'
 import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
+import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 
 class Methods extends React.Component {
@@ -13,14 +14,26 @@ class Methods extends React.Component {
       alphabetical: [],
       popular: [],
       common: [],
+      allNames: [],
+      filterId: null,
       isRequestFailed: false,
       requestFailedMessage: ''
     }
+
+    this.handleOnFilter = this.handleOnFilter.bind(this)
+    this.handleOnSelect = this.handleOnSelect.bind(this)
+  }
+
+  handleOnFilter(value) {
+    this.setState({ filterId: value.id })
+  }
+
+  handleOnSelect(value) {
+    window.location.href = '/Method/' + value.id
   }
 
   componentDidMount () {
-    const route = config.api.getUriPrefix() + '/method/submissionCount'
-    axios.get(route)
+    axios.get(config.api.getUriPrefix() + '/method/submissionCount')
       .then(res => {
         const common = [...res.data.data]
         common.sort(function (a, b) {
@@ -87,12 +100,38 @@ class Methods extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
+
+      axios.get(config.api.getUriPrefix() + '/method/names')
+      .then(res => {
+        this.setState({
+          isRequestFailed: false,
+          requestFailedMessage: '',
+          allNames: res.data.data
+        })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   render () {
     return (
       <div id='metriq-main-content' className='container'>
         <header><h4>Methods</h4></header>
+        <br />
+        <div className='row'>
+          <div className='col-md-12 search-bar'>
+            <FormFieldTypeaheadRow
+              options={this.state.allNames}
+              labelKey='name'
+              inputName='nameOrUrl'
+              label='Search title or URL'
+              value=''
+              onChange={(field, value) => this.handleOnFilter(value)}
+              onSelect={this.handleOnSelect}
+            />
+          </div>
+        </div>
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>

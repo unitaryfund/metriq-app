@@ -51,10 +51,16 @@ class FormFieldTypeaheadRow extends React.Component {
         <Typeahead
           id={this.props.inputName}
           name={this.props.inputName}
+          labelKey={this.props.labelKey ? this.props.labelKey : undefined}
           className='col-md-6'
           options={this.props.options}
           defaultSelected={[this.props.value ? this.props.value : '']}
-          onChange={selected => this.handleOnFieldChange(selected[0])}
+          onChange={selected => {
+            this.handleOnFieldChange(selected[0]);
+            if (this.props.onSelect) {
+              this.props.onSelect(selected[0])
+            }
+          }}
           onInputChange={(input, event) => this.handleOnFieldChange(input)}
           onBlur={this.handleOnFieldBlur}
         />
