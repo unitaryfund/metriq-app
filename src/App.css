@@ -28,6 +28,13 @@
   text-align: center;
 }
 
+.image-center {
+  margin: auto;
+  padding: 10px;
+  display: flex;
+  column-gap: 20px;
+}
+
 .display-linebreak {
   white-space: pre-line;
 }
