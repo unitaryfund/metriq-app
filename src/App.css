@@ -24,6 +24,14 @@
   font-size: calc(10px + 2vmin);
 }
 
+textarea {
+  border: 2px solid;
+  padding: 20px; 
+  width: 300px;
+  resize: both;
+  overflow: auto;
+}
+
 .text-center {
   text-align: center;
 }
