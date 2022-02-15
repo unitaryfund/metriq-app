@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -647,6 +648,20 @@ class Submission extends React.Component {
               </span>}
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
               <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+              <button className='submission-button btn-secondary'>
+                <FacebookShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
+                  <FacebookIcon size={32} />
+                </FacebookShareButton>
+              </button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+              <button className='submission-button btn-secondary'>
+                <TwitterShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
+                  <TwitterIcon size={32} />
+                </TwitterShareButton>
+              </button>
             </OverlayTrigger>
           </div>
         </div>
