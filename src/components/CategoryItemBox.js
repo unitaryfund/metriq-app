@@ -13,21 +13,24 @@ class CategoryItemBox extends React.Component {
     return (
       <tr>
         <td>
-          <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item.id)}>
-            <div className='submission-heading'>{this.props.item.name}</div>
-          </Link>
-        </td>
-        <td className='task-method-item-spacer' />
-        <td>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
-            <span><FontAwesomeIcon icon={faExternalLinkAlt} />: {this.props.item.submissionCount}</span>
-          </OverlayTrigger>
-        </td>
-        <td className='task-method-item-spacer' />
-        <td>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
-            <span><FontAwesomeIcon icon={faHeart} />: {this.props.item.upvoteTotal}</span>
-          </OverlayTrigger>
+          <div className='row submission'>
+            <div className='col-md-8'>
+              <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item.id)}>
+                <div className='submission-heading'>{this.props.item.name}</div>
+                <div className='submission-description'>{this.props.item.description}</div>
+              </Link>
+            </div>
+            <div className='col-md-2'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+                <span><FontAwesomeIcon icon={faExternalLinkAlt} />: {this.props.item.submissionCount}</span>
+              </OverlayTrigger>
+            </div>
+            <div className='col-md-2'>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+                <span><FontAwesomeIcon icon={faHeart} />: {this.props.item.upvoteTotal}</span>
+              </OverlayTrigger>
+            </div>
+          </div>
         </td>
       </tr>
     )

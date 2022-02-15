@@ -160,7 +160,7 @@ class Method extends React.Component {
               </div>
               <br />
             </div>}
-          <br/>
+          <br />
           <h2>Submissions</h2>
           <div className='row'>
             <div className='col-md-12'>
