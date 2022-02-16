@@ -24,11 +24,11 @@ class Methods extends React.Component {
     this.handleOnSelect = this.handleOnSelect.bind(this)
   }
 
-  handleOnFilter(value) {
+  handleOnFilter (value) {
     this.setState({ filterId: value.id })
   }
 
-  handleOnSelect(value) {
+  handleOnSelect (value) {
     window.location.href = '/Method/' + value.id
   }
 
@@ -37,8 +37,8 @@ class Methods extends React.Component {
       .then(res => {
         const common = [...res.data.data]
         common.sort(function (a, b) {
-          const keyA = a.submissionCount
-          const keyB = b.submissionCount
+          const keyA = parseInt(a.submissionCount)
+          const keyB = parseInt(b.submissionCount)
           if (keyA < keyB) {
             return 1
           }
@@ -63,8 +63,8 @@ class Methods extends React.Component {
 
         const popular = [...res.data.data]
         popular.sort(function (a, b) {
-          const keyA = a.upvoteTotal
-          const keyB = b.upvoteTotal
+          const keyA = parseInt(a.upvoteTotal)
+          const keyB = parseInt(b.upvoteTotal)
           if (keyA < keyB) {
             return 1
           }
@@ -101,7 +101,7 @@ class Methods extends React.Component {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
 
-      axios.get(config.api.getUriPrefix() + '/method/names')
+    axios.get(config.api.getUriPrefix() + '/method/names')
       .then(res => {
         this.setState({
           isRequestFailed: false,

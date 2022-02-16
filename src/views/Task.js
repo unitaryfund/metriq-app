@@ -230,7 +230,7 @@ class Task extends React.Component {
           <div className='row'>
             <div className='col-md-12'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
                 <button className='submission-button btn-secondary'>

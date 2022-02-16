@@ -56,7 +56,7 @@ class FormFieldTypeaheadRow extends React.Component {
           options={this.props.options}
           defaultSelected={[this.props.value ? this.props.value : '']}
           onChange={selected => {
-            this.handleOnFieldChange(selected[0]);
+            this.handleOnFieldChange(selected[0])
             if (this.props.onSelect) {
               this.props.onSelect(selected[0])
             }
