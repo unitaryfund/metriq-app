@@ -958,7 +958,6 @@ class Submission extends React.Component {
                         <FormFieldSelectRow
                           inputName='parentTask'
                           label='Parent task<br/>(if any)'
-                          isNullDefault
                           options={this.state.allTaskNames}
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           tooltip='Optionally, the new task is a sub-task of a "parent" task.'
