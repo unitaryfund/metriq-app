@@ -24,8 +24,9 @@ class Task extends React.Component {
       isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
-      task: { description: '' },
-      item: { submissions: [], childTasks: [] },
+      task: { description: '', parentTask: 0 },
+      item: { submissions: [], childTasks: [], parentTask: {} },
+      allTaskNames: [],
       results: [],
       chartData: {},
       chartKey: '',
@@ -37,6 +38,7 @@ class Task extends React.Component {
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
   }
 
@@ -45,7 +47,7 @@ class Task extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const task = { description: this.state.item.description }
+    const task = { description: this.state.item.description, parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name } }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
 
@@ -58,9 +60,9 @@ class Task extends React.Component {
       window.location.href = '/Login'
     }
 
-    const reqBody = {}
-    if (this.state.task.description) {
-      reqBody.description = this.state.task.description
+    const reqBody = {
+      description: this.state.task.description,
+      parentTask: this.state.task.parentTask
     }
 
     axios.post(config.api.getUriPrefix() + '/task/' + this.props.match.params.id, reqBody)
@@ -85,12 +87,37 @@ class Task extends React.Component {
     }
   }
 
+  handleTrimTasks (taskId, tasks) {
+    for (let j = 0; j < tasks.length; j++) {
+      if (taskId === tasks[j].id) {
+        tasks.splice(j, 1)
+        break
+      }
+    }
+    tasks.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
   componentDidMount () {
     const methodRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {
         const task = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
+
+        const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+        axios.get(taskNamesRoute)
+          .then(res => {
+            const tasks = [...res.data.data]
+            this.handleTrimTasks(task.id, tasks)
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: tasks })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
 
         const results = task.results
         results.sort(function (a, b) {
@@ -404,6 +431,14 @@ class Task extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
+                <FormFieldSelectRow
+                  inputName='parentTask'
+                  label='Parent task'
+                  options={this.state.allTaskNames}
+                  value={this.state.task.parentTask.id}
+                  onChange={(field, value) => this.handleOnChange('task', field, value)}
+                  tooltip='The new task is a sub-task of a "parent" task.'
+                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'
                   value={this.state.task.description}
