@@ -101,7 +101,9 @@ class Submission extends React.Component {
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
     this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
+    this.handleSortTasks = this.handleSortTasks.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
+    this.handleSortMethods = this.handleSortMethods.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
@@ -209,6 +211,7 @@ class Submission extends React.Component {
         .then(res => {
           const submission = res.data.data
           const methods = [...this.state.allMethodNames]
+          this.handleSortMethods(methods)
           this.handleTrimMethods(submission, methods)
           this.setState({ item: submission, methodNames: methods })
         })
@@ -436,6 +439,14 @@ class Submission extends React.Component {
     this.setState({ showRemoveModal: false })
   }
 
+  handleSortTasks (tasks) {
+    tasks.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
   handleTrimTasks (submission, tasks) {
     for (let i = 0; i < submission.tasks.length; i++) {
       for (let j = 0; j < tasks.length; j++) {
@@ -445,7 +456,10 @@ class Submission extends React.Component {
         }
       }
     }
-    tasks.sort(function (a, b) {
+  }
+
+  handleSortMethods (methods) {
+    methods.sort(function (a, b) {
       if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
       if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
       return 0
@@ -461,11 +475,6 @@ class Submission extends React.Component {
         }
       }
     }
-    methods.sort(function (a, b) {
-      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
-      return 0
-    })
   }
 
   handleTrimTags (submission, tags) {
@@ -549,6 +558,7 @@ class Submission extends React.Component {
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
           .then(res => {
+            this.handleSortTasks(res.data.data)
             const tasks = [...res.data.data]
             this.handleTrimTasks(submission, tasks)
 
@@ -562,6 +572,7 @@ class Submission extends React.Component {
             const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
             axios.get(methodNamesRoute)
               .then(res => {
+                this.handleSortMethods(res.data.data)
                 const methods = [...res.data.data]
                 this.handleTrimMethods(submission, methods)
 
