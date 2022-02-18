@@ -629,7 +629,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div className='submission-description'>
-              <b>Submitted by {this.state.item.user.username} on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
+              <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
             </div>
           </div>
         </div>
