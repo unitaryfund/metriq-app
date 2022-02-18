@@ -4,6 +4,7 @@ import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { Button, Modal } from 'react-bootstrap'
@@ -22,13 +23,15 @@ class Method extends React.Component {
       isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
-      method: { description: '' },
-      item: {}
+      method: { description: '', parentMethod: 0 },
+      item: { parentMethod: {} },
+      allMethodNames: []
     }
 
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
+    this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
   }
 
@@ -37,7 +40,12 @@ class Method extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const method = { description: this.state.item.description }
+    const method = {
+      description: this.state.item.description,
+      parentMethod: this.state.item.parentMethod
+        ? { id: this.state.item.parentMethod.id, name: this.state.item.parentMethod.id }
+        : { id: 0, name: '(None)' }
+    }
     this.setState({ showEditModal: true, modalMode: mode, method: method })
   }
 
@@ -50,9 +58,9 @@ class Method extends React.Component {
       window.location.href = '/Login'
     }
 
-    const reqBody = {}
-    if (this.state.method.description) {
-      reqBody.description = this.state.method.description
+    const reqBody = {
+      description: this.state.method.description,
+      parentMethod: this.state.method.parentMethod ? this.state.method.parentMethod : null
     }
 
     axios.post(config.api.getUriPrefix() + '/method/' + this.props.match.params.id, reqBody)
@@ -77,11 +85,38 @@ class Method extends React.Component {
     }
   }
 
+  handleTrimMethods (methodId, methods) {
+    for (let j = 0; j < methods.length; j++) {
+      if (methodId === methods[j].id) {
+        methods.splice(j, 1)
+        break
+      }
+    }
+    methods.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
   componentDidMount () {
     const methodRoute = config.api.getUriPrefix() + '/method/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+        const method = res.data.data
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method })
+
+        const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
+        axios.get(methodNamesRoute)
+          .then(res => {
+            let methods = [...res.data.data]
+            this.handleTrimMethods(method.id, methods)
+            methods = [{ id: 0, name: '(None)' }, ...methods]
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: methods })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -218,6 +253,14 @@ class Method extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
+                <FormFieldSelectRow
+                  inputName='parentMethod'
+                  label='Parent method<br/>(if any)'
+                  options={this.state.allMethodNames}
+                  value={this.state.method.parentMethod.id}
+                  onChange={(field, value) => this.handleOnChange('method', field, value)}
+                  tooltip='Optionally, the new method is a sub-method of a "parent" method.'
+                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'
                   value={this.state.method.description}

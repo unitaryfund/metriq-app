@@ -58,7 +58,7 @@ class FormFieldSelectRow extends React.Component {
             {this.props.isNullDefault &&
               <option value=''>(None)</option>}
             {this.props.options.map(option =>
-              <option key={option.id} value={option.id}>{option.name}</option>
+              <option key={option.id} value={option.id} selected={option.id === this.props.value}>{option.name}</option>
             )}
           </select>
         </div>
