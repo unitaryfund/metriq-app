@@ -14,6 +14,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+import moment from 'moment'
 
 library.add(faEdit)
 
@@ -184,7 +185,7 @@ class Task extends React.Component {
       ({
         method: row.methodName,
         metric: row.metricName,
-        label: new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt),
+        label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter
       }))
@@ -244,7 +245,7 @@ class Task extends React.Component {
                   tooltip='A metric performance measure of any "method" on this "task"'
                 />
               </div>
-              <SotaChart data={this.state.chartData[this.state.chartKey]} height={400} xLabel='Date' xType='time' yLabel={this.state.chartKey} yType='number' isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+              <SotaChart data={this.state.chartData[this.state.chartKey]} yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
             </div>}
           <div className='row'>
             <div className='col-md-12'>
