@@ -50,8 +50,7 @@ class SotaChart extends React.Component {
       options: {
         layout: {
           padding: {
-            left: 64,
-            right: 64
+            right: 160
           }
         },
         scales: {
@@ -84,6 +83,7 @@ class SotaChart extends React.Component {
             }
           },
           datalabels: {
+            align: 'right',
             formatter: function (value, context) {
               return value.isShowLabel ? value.label : ''
             }
