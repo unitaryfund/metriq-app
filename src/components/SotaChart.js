@@ -7,30 +7,6 @@ import { Chart, LinearScale, TimeScale, PointElement, LineElement, Tooltip, Lege
 import { Line } from 'react-chartjs-2'
 import 'chartjs-adapter-moment'
 
-const options = {
-  scales: {
-    x: {
-      type: 'time'
-    }
-  },
-  plugins: {
-    tooltip: {
-      callbacks: {
-        label: function (ctx) {
-          // console.log(ctx);
-          let label = ctx.dataset.labels[ctx.dataIndex]
-          label += ' (' + ctx.parsed.y + ')'
-          return label
-        }
-      },
-      filter: function (tooltipItem) {
-        const type = tooltipItem.dataset.type
-        return (type === 'scatter')
-      }
-    }
-  }
-}
-
 class SotaChart extends React.Component {
   constructor (props) {
     super(props)
@@ -69,12 +45,47 @@ class SotaChart extends React.Component {
           borderColor: 'rgb(60, 210, 249)',
           data: sotaData.map((obj, index) => { return { x: obj.label, y: obj.value } })
         }]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            title: {
+              display: true,
+              text: this.props.xLabel ? this.props.xLabel : 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: this.props.yLabel ? this.props.yLabel : 'Metric value'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (ctx) {
+                // console.log(ctx);
+                let label = ctx.dataset.labels[ctx.dataIndex]
+                label += ' (' + ctx.parsed.y + ')'
+                return label
+              }
+            },
+            filter: function (tooltipItem) {
+              const type = tooltipItem.dataset.type
+              return (type === 'scatter')
+            }
+          }
+        }
       }
     }
   }
 
+  // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
+  // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
   render () {
-    return <Line data={this.state.data} options={options} />
+    return <Line data={this.state.data} options={this.state.options} key={Math.random()} />
   }
 }
 
