@@ -25,11 +25,7 @@ const options = {
       },
       filter: function (tooltipItem) {
         const type = tooltipItem.dataset.type
-        if (type === 'scatter') {
-          return true
-        } else {
-          return false
-        }
+        return (type === 'scatter')
       }
     }
   }
