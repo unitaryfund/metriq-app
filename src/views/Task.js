@@ -227,25 +227,25 @@ class Task extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
-          <div>
-            <div className='container'>
-              <FormFieldSelectRow
-                inputName='chartKey'
-                label='Chart Metric:'
-                labelClass='metric-chart-label'
-                options={this.state.metricNames.map(name =>
-                  ({
-                    id: name,
-                    name: name
-                  }))}
-                onChange={(field, value) => this.handleOnChange('', field, value)}
-                tooltip='A metric performance measure of any "method" on this "task"'
-              />
-            </div>
-            <SotaChart data={this.state.chartData[this.state.chartKey]} height={400} xLabel='Date' xType='time' yLabel={this.state.chartKey} yType='number' isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
-          </div>}
         <div className='container submission-detail-container'>
+          {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
+            <div>
+              <div className='container'>
+                <FormFieldSelectRow
+                  inputName='chartKey'
+                  label='Chart Metric:'
+                  labelClass='metric-chart-label'
+                  options={this.state.metricNames.map(name =>
+                    ({
+                      id: name,
+                      name: name
+                    }))}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A metric performance measure of any "method" on this "task"'
+                />
+              </div>
+              <SotaChart data={this.state.chartData[this.state.chartKey]} height={400} xLabel='Date' xType='time' yLabel={this.state.chartKey} yType='number' isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+            </div>}
           <div className='row'>
             <div className='col-md-12'>
               <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
