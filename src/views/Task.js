@@ -245,7 +245,7 @@ class Task extends React.Component {
                   tooltip='A metric performance measure of any "method" on this "task"'
                 />
               </div>
-              <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Date' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+              <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
             </div>}
           <div className='row'>
             <div className='col-md-12'>

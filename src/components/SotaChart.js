@@ -58,7 +58,7 @@ class SotaChart extends React.Component {
             type: 'time',
             title: {
               display: true,
-              text: this.props.xLabel ? this.props.xLabel : 'Date'
+              text: this.props.xLabel ? this.props.xLabel : 'Time'
             },
             time: {
               displayFormats: {
