@@ -59,6 +59,19 @@ class SotaChart extends React.Component {
             title: {
               display: true,
               text: this.props.xLabel ? this.props.xLabel : 'Date'
+            },
+            time: {
+              displayFormats: {
+                millisecond: 'YYYY-MM-DD HH:MM:ss.SSS',
+                second: 'YYYY-MM-DD HH:MM:ss',
+                minute: 'YYYY-MM-DD HH:MM',
+                hour: 'YYYY-MM-DD HH',
+                day: 'YYYY-MM-DD',
+                week: 'YYYY-MM-DD',
+                month: 'YYYY-MM',
+                quarter: 'YYYY-MM',
+                year: 'YYYY'
+              }
             }
           },
           y: {
