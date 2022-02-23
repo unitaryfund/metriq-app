@@ -40,7 +40,7 @@ will need to request to be added to the Postman account associated with
 Run the `metriq-api` component from the root of the `metriq-api` project:
 
 ```bash
-nodemon index.html
+nodemon start index.js
 ```
 
 You should see output that looks like the following to indicate that it is
