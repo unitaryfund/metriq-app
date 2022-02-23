@@ -38,9 +38,10 @@ textarea {
 
 .image-center {
   margin: auto;
-  padding: 10px;
-  display: flex;
   column-gap: 20px;
+  overflow: auto;
+  display: auto;
+  flex: auto;
 }
 
 .display-linebreak {
