@@ -3,7 +3,7 @@
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React from 'react'
-import { Chart, LinearScale, TimeScale, PointElement, LineElement, Tooltip, Legend } from 'chart.js'
+import { Chart, LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Line } from 'react-chartjs-2'
 import 'chartjs-adapter-moment'
@@ -11,7 +11,7 @@ import 'chartjs-adapter-moment'
 class SotaChart extends React.Component {
   constructor (props) {
     super(props)
-    Chart.register([LinearScale, PointElement, LineElement, TimeScale, Tooltip, Legend, ChartDataLabels])
+    Chart.register([LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
     Chart.defaults.font.size = 16
 
     const data = this.props.data
