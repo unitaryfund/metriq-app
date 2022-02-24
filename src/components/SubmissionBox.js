@@ -98,13 +98,13 @@ class SubmissionBox extends React.Component {
           <div className='col-md-9 h-100'>
             <div className='submission-subheading'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>User submissions link</Tooltip>}>
-                <Link to={'/User/' + this.props.item.userId + '/Submissions'}>Submitted by {this.props.item.username}</Link>
+                <Link to={'/User/' + this.props.item.userId + '/Submissions'}><span className='link'>Submitted by {this.props.item.username}</span></Link>
               </OverlayTrigger> •
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
-                <span onClick={this.handleExternalLinkClick}>
-                  {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''} •
+                <span onClick={this.handleExternalLinkClick} className='link'>
+                  {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
                 </span>
-              </OverlayTrigger>
+              </OverlayTrigger> •
             </div>
           </div>
           <div className='col-md-1 text-center'>
