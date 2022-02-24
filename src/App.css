@@ -32,20 +32,12 @@ textarea {
   overflow: auto;
 }
 
-.text-center {
-  text-align: center;
-}
-
 .image-center {
   margin: auto;
   column-gap: 20px;
   overflow: auto;
   display: auto;
   flex: auto;
-}
-
-.display-linebreak {
-  white-space: pre-line;
 }
 
 .search-bar {
@@ -122,18 +114,10 @@ form > .row > label {
   text-decoration: underline;
 }
 
-.hide {
-  visibility: hidden;
-}
-
 .form-field-validator {
   display: inline;
   color: red;
   padding-left: 5px;
-}
-
-.break-all {
-  word-wrap: break-word;
 }
 
 .logo-image {
@@ -214,9 +198,6 @@ form > .row > label {
   display: inline-block;
   text-align: left;
 }
-.task-method-item-spacer {
-  width: 20px;
-}
 
 .edit-button {
   width: 80px;
@@ -263,11 +244,6 @@ form > .row > label {
   color: white;
 }
 
-
-.max-width {
-  max-width: 100%;
-}
-
 .container .submission a {
   color: #000000;
   text-decoration: none;
@@ -287,28 +263,45 @@ form > .row > label {
   padding-top: 8px;
 }
 
-/* D3.js: */
-
-.grid line {
-  stroke: lightgrey;
-  stroke-opacity: 0.7;
-  shape-rendering: crispEdges;
+@media(min-width:600px) {
+  .sota-chart-message {
+    display: none;
+  }
 }
 
-.link {
-  stroke: #aaa;
+@media(max-width:599px) {
+  .sota-chart {
+    display: none;
+  }
+
+  .sota-chart-message {
+    text-align: center;
+  }
 }
 
-.node text {
-  stroke:#333;
-  cursor:pointer;
+/** Simple generic styling */
+
+.text-center {
+  text-align: center;
 }
 
-.node circle{
-  stroke:#fff;
-  stroke-width:3px;
-  fill:#555;
+.display-linebreak {
+  white-space: pre-line;
 }
+
+.hide {
+  visibility: hidden;
+}
+
+.break-all {
+  word-wrap: break-word;
+}
+
+.max-width {
+  max-width: 100%;
+}
+
+/** Pure CSS heart icon */
 
 #heart {
   display: inline-block;

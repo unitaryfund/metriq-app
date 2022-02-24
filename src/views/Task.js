@@ -231,21 +231,24 @@ class Task extends React.Component {
         <div className='container submission-detail-container'>
           {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
             <div>
-              <div className='container'>
-                <FormFieldSelectRow
-                  inputName='chartKey'
-                  label='Chart Metric:'
-                  labelClass='metric-chart-label'
-                  options={this.state.metricNames.map(name =>
-                    ({
-                      id: name,
-                      name: name
-                    }))}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A metric performance measure of any "method" on this "task"'
-                />
+              <div className='sota-chart'>
+                <div className='container'>
+                  <FormFieldSelectRow
+                    inputName='chartKey'
+                    label='Chart Metric:'
+                    labelClass='metric-chart-label'
+                    options={this.state.metricNames.map(name =>
+                      ({
+                        id: name,
+                        name: name
+                      }))}
+                    onChange={(field, value) => this.handleOnChange('', field, value)}
+                    tooltip='A metric performance measure of any "method" on this "task"'
+                  />
+                </div>
+                <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
               </div>
-              <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+              <div className='sota-chart-message'><i>(Your screen is too small for charts! If you're on mobile, try landscape view.)</i></div>
             </div>}
           <div className='row'>
             <div className='col-md-12'>
