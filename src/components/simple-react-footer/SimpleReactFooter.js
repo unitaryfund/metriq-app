@@ -44,7 +44,7 @@ class SimpleReactFooter extends React.Component {
         <div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></div>
           <div>
-            <label for='mce-EMAIL'>Stay up to date on metriq.info!</label>
+            <label>Stay up to date on metriq.info!</label>
             <MailchimpSubscribe url='https://fund.us18.list-manage.com/subscribe/post?u=104796c75ced8350ebd01eebd&amp;id=a2c9e5ac2a' />
           </div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>All content on this website is openly licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA</a>. Members agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a>.</div>
