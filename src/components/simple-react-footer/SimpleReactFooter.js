@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import './SimpleReactFooter.sass'
+import MailchimpSubscribe from 'react-mailchimp-subscribe'
 import { FaDiscord, FaGithub, FaPinterestSquare, FaTwitterSquare } from 'react-icons/fa'
 import { ImFacebook2, ImInstagram, ImLinkedin, ImTwitch, ImYoutube } from 'react-icons/im'
 import logo from './../../images/unitary_fund_logo.png'
@@ -43,21 +44,8 @@ class SimpleReactFooter extends React.Component {
         <div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></div>
           <div>
-            <link href='//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7_dtp.css' rel='stylesheet' type='text/css' />
-            <div id='mc_embed_signup'>
-              <form action='https://fund.us18.list-manage.com/subscribe/post?u=104796c75ced8350ebd01eebd&amp;id=a2c9e5ac2a' method='post' id='mc-embedded-subscribe-form' name='mc-embedded-subscribe-form' class='validate' target='_blank' novalidate=''>
-                <div id='mc_embed_signup_scroll'>
-                  <label for='mce-EMAIL'>Stay up to date on metriq.info!</label>
-                  <input type='email' value='' name='EMAIL' class='email' id='mce-EMAIL' placeholder='email address' required='' />
-                  <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden='true'>
-                    <input type='text' name='b_104796c75ced8350ebd01eebd_a2c9e5ac2a' tabindex='-1' value='' />
-                  </div>
-                  <div class='clear foot'>
-                    <input type='submit' value='Subscribe' name='subscribe' id='mc-embedded-subscribe' />
-                  </div>
-                </div>
-              </form>
-            </div>
+            <label for='mce-EMAIL'>Stay up to date on metriq.info!</label>
+            <MailchimpSubscribe url='https://fund.us18.list-manage.com/subscribe/post?u=104796c75ced8350ebd01eebd&amp;id=a2c9e5ac2a' />
           </div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>All content on this website is openly licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA</a>. Members agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a>.</div>
           <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Copyright &copy; {this.props.copyright}</div>
