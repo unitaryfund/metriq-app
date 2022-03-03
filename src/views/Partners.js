@@ -18,15 +18,13 @@ const Partners = () => {
             <p>
               If your organization or institution would like to become a partner, please contact us at <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.
             </p>
-            <center>
-              <div className='image-center'>
-                <a href='https://www.iqt.org/'><img src={iqtLogo} alt='IQT partner logo' className='logo-image' /></a>
-                <a href='https://unitary.fund/'><img src={ufLogo} alt='UF partner logo' className='logo-image' /></a><br></br>
-                <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a>
-                <a href='https://cambridgequantum.com/'><img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' /></a>
-                <a href='https://www.riken.jp/en/'><img src={rikenLogo} alt='Riken University logo' className='logo-image' /></a>
-              </div>
-            </center>
+            <div className='text-center'>
+              <a href='https://www.iqt.org/'><img src={iqtLogo} alt='IQT partner logo' className='logo-image' /></a>
+              <a href='https://unitary.fund/'><img src={ufLogo} alt='UF partner logo' className='logo-image' /></a><br />
+              <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a>
+              <a href='https://cambridgequantum.com/'><img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' /></a>
+              <a href='https://www.riken.jp/en/'><img src={rikenLogo} alt='Riken University logo' className='logo-image' /></a>
+            </div>
           </div>
         </div>
         <div className='col-md-2' />

@@ -32,16 +32,6 @@ textarea {
   overflow: auto;
 }
 
-.image-center {
-  margin: auto;
-  column-gap: 20px;
-  overflow: auto;
-  flex: auto;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .search-bar {
   padding-top: 10px;
 }
@@ -128,7 +118,7 @@ form > .row > label {
   height: auto;
   max-width: 180px;
   max-height: 180px;
-  padding: 2px;
+  padding: 12px;
 }
 
 .submission {
