@@ -25,11 +25,15 @@ class Tasks extends React.Component {
   }
 
   handleOnFilter (value) {
-    this.setState({ filterId: value.id })
+    if (value) {
+      this.setState({ filterId: value.id })
+    }
   }
 
   handleOnSelect (value) {
-    window.location.href = '/Task/' + value.id
+    if (value) {
+      window.location.href = '/Task/' + value.id
+    }
   }
 
   componentDidMount () {
