@@ -36,8 +36,10 @@ textarea {
   margin: auto;
   column-gap: 20px;
   overflow: auto;
-  display: auto;
   flex: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .search-bar {
