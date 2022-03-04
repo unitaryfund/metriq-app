@@ -17,6 +17,7 @@ class SimpleReactFooter extends React.Component {
     this.handleOnClick = this.handleOnClick.bind(this)
     this.handleHoverFocus = this.handleHoverFocus.bind(this)
     this.handleHoverFocusLeave = this.handleHoverFocusLeave.bind(this)
+    this.handleStopPropagation = this.handleStopPropagation.bind(this)
   }
 
   handleOnClick () {
@@ -33,6 +34,10 @@ class SimpleReactFooter extends React.Component {
 
   handleHoverFocusLeave () {
     this.setState({ bottom: -this.state.height * 0.8, arrowOpacity: 1.0 })
+  }
+
+  handleStopPropagation (e) {
+    e.stopPropagation()
   }
 
   componentDidMount () {
@@ -60,13 +65,13 @@ class SimpleReactFooter extends React.Component {
             <div className='social-media-col'>
               <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title row'>
                 <div className='float-left col-sm-1'><FaArrowDown className='footer-arrows' style={{ opacity: this.state.arrowOpacity }} /></div>
-                <div className='col-sm-10'>Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a></div>
+                <div className='col-sm-10'>Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app' onClick={this.handleStopPropagation}>community contributors</a></div>
                 <div className='float-right col-sm-1'><FaArrowDown className='footer-arrows' style={{ opacity: this.state.arrowOpacity }} /></div>
               </div>
               <div className='stay-connected-subtitle'>
                 made with <div id='heart' /> by <a href='https://unitary.fund'><img width='64px' src={logo} alt='Unitary Fund logo' /></a>
               </div>
-              <div className='social-media'>
+              <div className='social-media' onClick={this.handleStopPropagation}>
                 {this.props.facebook !== undefined ? <a href={`https://www.facebook.com/${this.props.facebook}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><ImFacebook2 color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
                 {this.props.twitter !== undefined ? <a href={`https://www.twitter.com/${this.props.twitter}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><FaTwitterSquare color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
                 {this.props.github !== undefined ? <a href={`https://github.com/${this.props.github}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><FaGithub color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}
@@ -79,7 +84,7 @@ class SimpleReactFooter extends React.Component {
               </div>
             </div>}
 
-          <div>
+          <div onClick={this.handleStopPropagation}>
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></div>
             <div>
               <label>Stay up to date on metriq.info!</label>
