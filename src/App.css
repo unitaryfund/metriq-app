@@ -148,6 +148,10 @@ form > .row > label {
   padding: 0 8px 8px 8px
 }
 
+.submission-heading-only {
+  font-weight: bold;
+}
+
 .submission-subheading {
   font-size: 80%;
   padding: 0 8px 8px 8px

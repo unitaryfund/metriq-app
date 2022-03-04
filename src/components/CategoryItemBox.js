@@ -16,8 +16,13 @@ class CategoryItemBox extends React.Component {
           <div className='row submission'>
             <div className='col-md-8'>
               <Link to={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item.id)}>
-                <div className='submission-heading'>{this.props.item.name}</div>
-                <div className='submission-description'>{this.props.item.description}</div>
+                {this.props.item.description &&
+                  <div>
+                    <div className='submission-heading'>{this.props.item.name}</div>
+                    <div className='submission-description'>{this.props.item.description}</div>
+                  </div>}
+                {!this.props.item.description &&
+                  <div className='submission-heading-only'>{this.props.item.name}</div>}
               </Link>
             </div>
             <div className='col-md-2'>
