@@ -18,8 +18,11 @@ class SubmissionBox extends React.Component {
     this.state = {
       upvotes: props.item.upvotesCount || 0,
       isUpvoted: props.item.isUpvoted,
+      tags: props.item.tags.map((obj, ind) => obj.name),
       description: !this.props.item.description ? '' : ((this.props.item.description.length > 500) ? (this.props.item.description.substring(0, 497) + '...') : this.props.item.description)
     }
+
+    console.log(this.state.tags)
 
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleDeleteOnClick = this.handleDeleteOnClick.bind(this)
@@ -89,6 +92,10 @@ class SubmissionBox extends React.Component {
               <div className='submission-description'>
                 {this.state.description ? this.state.description.replace(/\0.*$/g, '').split('. ')[0] + '.' : <i>(No description provided.)</i>}
               </div>
+              {this.state.tags.length > 0 &&
+                <div className='submission-description'>
+                  <b>Tags: </b>{this.state.tags.map((obj, ind) => <span key={obj}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + obj}><span className='link'>{obj}</span></Link></span>)}
+                </div>}
             </div>
             <div className='col-md-2 col-sm-12 h-100' />
           </div>
