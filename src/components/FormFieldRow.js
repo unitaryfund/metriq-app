@@ -66,6 +66,7 @@ class FormFieldRow extends React.Component {
                   onBlur={this.handleOnFieldBlur}
                   rows={this.props.rows}
                   cols={this.props.cols}
+                  placeholder={this.props.placeholder}
                 >
                   {this.props.value}
                 </textarea>}
