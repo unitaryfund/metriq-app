@@ -137,6 +137,7 @@ class AddSubmission extends React.Component {
           </div>
           <FormFieldRow
             inputName='description' inputType='textarea' label='Description'
+            placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
             onChange={this.handleOnChange}
           />
           <div className='row'>
