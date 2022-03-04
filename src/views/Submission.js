@@ -338,7 +338,14 @@ class Submission extends React.Component {
 
     if (this.state.modalMode === 'Task') {
       if (this.state.showAccordion) {
-        axios.post(config.api.getUriPrefix() + '/task', this.state.task)
+        const task = this.state.task
+        if (!task.fullName) {
+          task.fullName = task.name
+        }
+        if (!task.description) {
+          task.description = ''
+        }
+        axios.post(config.api.getUriPrefix() + '/task', task)
           .then(res => {
             window.location.reload()
           })
@@ -364,7 +371,14 @@ class Submission extends React.Component {
       }
     } else if (this.state.modalMode === 'Method') {
       if (this.state.showAccordion) {
-        axios.post(config.api.getUriPrefix() + '/method', this.state.method)
+        const method = this.state.method
+        if (!method.fullName) {
+          method.fullName = method.name
+        }
+        if (!method.description) {
+          method.description = ''
+        }
+        axios.post(config.api.getUriPrefix() + '/method', method)
           .then(res => {
             window.location.reload()
           })
@@ -501,18 +515,12 @@ class Submission extends React.Component {
         if (!taskNameRegex.test(this.state.task.name)) {
           return false
         }
-        if (!taskNameRegex.test(this.state.task.fullName)) {
-          return false
-        }
       } else if (!this.state.taskId) {
         return false
       }
     } else if (this.state.modalMode === 'Method') {
       if (this.state.showAccordion) {
         if (!methodNameRegex.test(this.state.method.name)) {
-          return false
-        }
-        if (!methodNameRegex.test(this.state.method.fullName)) {
           return false
         }
       } else if (!this.state.methodId) {
@@ -901,7 +909,7 @@ class Submission extends React.Component {
                         <FormFieldRow
                           inputName='fullName'
                           inputType='text'
-                          label='Full name'
+                          label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
                           validRegex={methodNameRegex}
                           tooltip='Long name of new method'
@@ -917,7 +925,7 @@ class Submission extends React.Component {
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'
-                          label='Description'
+                          label='Description (optional)'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
                           tooltip='Long description of new method'
                         />
@@ -957,7 +965,7 @@ class Submission extends React.Component {
                         <FormFieldRow
                           inputName='fullName'
                           inputType='text'
-                          label='Full name'
+                          label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           validRegex={taskNameRegex}
                           tooltip='Long name of new task'
@@ -972,7 +980,7 @@ class Submission extends React.Component {
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'
-                          label='Description'
+                          label='Description (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           tooltip='Long description of new task'
                         />
