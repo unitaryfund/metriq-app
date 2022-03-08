@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
-import { ExportToCsv } from 'export-to-csv'
+import { parse } from 'json2csv'
 
 library.add(faEdit)
 
@@ -239,19 +239,20 @@ class Task extends React.Component {
   }
 
   handleCsvExport () {
-    const options = {
-      filename: this.state.item.name,
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalSeparator: '.',
-      showLabels: true,
-      showTitle: false,
-      useTextFile: false,
-      useBom: true,
-      useKeysAsHeaders: true
-    }
-    const csvExporter = new ExportToCsv(options)
-    csvExporter.generateCsv(this.state.resultsJson)
+    const fields = Object.keys(this.state.resultsJson[0])
+    const opts = { fields }
+    const csv = parse(this.state.resultsJson, opts)
+
+    const element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv))
+    element.setAttribute('download', this.state.item.name)
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
   }
 
   render () {
