@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
+import { parse } from 'json2csv'
 
 library.add(faEdit)
 
@@ -29,6 +30,7 @@ class Task extends React.Component {
       item: { submissions: [], childTasks: [], parentTask: {} },
       allTaskNames: [],
       results: [],
+      resultsJson: [],
       chartData: {},
       chartKey: '',
       metricNames: [],
@@ -41,6 +43,7 @@ class Task extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
+    this.handleCsvExport = this.handleCsvExport.bind(this)
   }
 
   handleShowEditModal () {
@@ -150,7 +153,17 @@ class Task extends React.Component {
             return 0
           }
         })
-        this.setState({ results: results })
+        const resultsJson = results.map(row =>
+          ({
+            key: row.id,
+            submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
+            name: row.submissionName,
+            methodName: row.methodName,
+            metricName: row.metricName,
+            metricValue: row.metricValue,
+            tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
+          }))
+        this.setState({ results: results, resultsJson: resultsJson })
         this.sliceChartData(results)
       })
       .catch(err => {
@@ -223,6 +236,23 @@ class Task extends React.Component {
       }
     }
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
+  }
+
+  handleCsvExport () {
+    const fields = Object.keys(this.state.resultsJson[0])
+    const opts = { fields }
+    const csv = parse(this.state.resultsJson, opts)
+
+    const element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv))
+    element.setAttribute('download', this.state.item.name)
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
   }
 
   render () {
@@ -357,7 +387,7 @@ class Task extends React.Component {
               </div>
               <br />
               {(this.state.results.length > 0) &&
-                <h2>Results</h2>}
+                <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
               {(this.state.results.length > 0) &&
                 <div className='row'>
                   <div className='col-md-12'>
@@ -393,16 +423,7 @@ class Task extends React.Component {
                         key: 'metricValue',
                         width: 300
                       }]}
-                      data={this.state.results.map(row =>
-                        ({
-                          key: row.id,
-                          submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
-                          name: row.submissionName,
-                          methodName: row.methodName,
-                          metricName: row.metricName,
-                          metricValue: row.metricValue,
-                          tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
-                        }))}
+                      data={this.state.resultsJson}
                       onRow={(record) => ({
                         onClick () { window.location.href = '/Submission/' + record.submissionId }
                       })}
