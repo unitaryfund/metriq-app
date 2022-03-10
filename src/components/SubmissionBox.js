@@ -22,8 +22,6 @@ class SubmissionBox extends React.Component {
       description: !this.props.item.description ? '' : ((this.props.item.description.length > 500) ? (this.props.item.description.substring(0, 497) + '...') : this.props.item.description)
     }
 
-    console.log(this.state.tags)
-
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleDeleteOnClick = this.handleDeleteOnClick.bind(this)
     this.handleExternalLinkClick = this.handleExternalLinkClick.bind(this)
