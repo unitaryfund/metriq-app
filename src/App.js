@@ -43,6 +43,7 @@ class App extends React.Component {
       <div className='App'>
         <MainNavbar isLoggedIn={this.state.isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>} />
         <MainRouter id='metriq-main-content' isLoggedIn={this.state.isLoggedIn} onLogin={this.handleLogin} onLogout={this.handleLogout} />
+        <div className='footer-shim' />
         <SimpleReactFooter
           title='metriq'
           description='Quantum computing benchmarks by community contributors'

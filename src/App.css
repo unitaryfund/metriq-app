@@ -24,6 +24,10 @@
   font-size: calc(10px + 2vmin);
 }
 
+.footer-shim {
+  height: 128px;
+}
+
 textarea {
   border: 2px solid;
   padding: 20px; 
