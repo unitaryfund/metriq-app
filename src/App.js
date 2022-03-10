@@ -47,7 +47,7 @@ class App extends React.Component {
         <SimpleReactFooter
           title='metriq'
           description='Quantum computing benchmarks by community contributors'
-          copyright='2021 Unitary Fund'
+          copyright='2021, 2022 Unitary Fund'
           discord='unitary.fund'
           github='unitaryfund'
           twitch='unitaryfund'
