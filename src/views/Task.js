@@ -265,6 +265,7 @@ class Task extends React.Component {
                 <div className='container'>
                   <FormFieldSelectRow
                     inputName='chartKey'
+                    value={this.state.chartKey}
                     label='Chart Metric:'
                     labelClass='metric-chart-label'
                     options={this.state.metricNames.map(name =>
@@ -276,7 +277,7 @@ class Task extends React.Component {
                     tooltip='A metric performance measure of any "method" on this "task"'
                   />
                 </div>
-                <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} />
+                <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} />
               </div>
               <div className='sota-chart-message'><i>(Your screen is too small for charts! If you're on mobile, try landscape view.)</i></div>
             </div>}
