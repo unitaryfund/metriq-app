@@ -15,6 +15,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+import logo from './../images/metriq_logo_secondary_blue.png'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -35,6 +36,7 @@ class Submission extends React.Component {
       isArxiv: false,
       vanityUrl: '',
       bibtexUrl: '',
+      thumbnailUrl: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [], user: [] },
       metricNames: [],
       methodNames: [],
@@ -551,6 +553,7 @@ class Submission extends React.Component {
         let isArxiv = false
         let vanityUrl = ''
         let bibtexUrl = ''
+        let thumbnailUrl = submission.thumbnailUrl
         const url = submission.contentUrl
         if (url.toLowerCase().startsWith('https://arxiv.org/')) {
           isArxiv = true
@@ -561,7 +564,7 @@ class Submission extends React.Component {
         }
 
         // Just get the view populated as quickly as possible, before we "trim."
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, bibtexUrl: bibtexUrl })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
@@ -633,6 +636,9 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <div><h1>{this.state.item.name}</h1></div>
           </div>
+        </div>
+        <div className='text-center'>
+              <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
         </div>
         <div className='row'>
           <div className='col-md-12'>
