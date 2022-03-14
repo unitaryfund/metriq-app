@@ -131,7 +131,7 @@ class AddSubmission extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
+              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
             </div>
             <div className='col-md-3' />
           </div>

@@ -84,7 +84,7 @@ class Submission extends React.Component {
       tag: ''
     }
 
-    this.handleAddDescription = this.handleAddDescription.bind(this)
+    this.handleEditSubmissionDetails = this.handleEditSubmissionDetails.bind(this)
     this.handleModerationReport = this.handleModerationReport.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
@@ -111,12 +111,12 @@ class Submission extends React.Component {
     this.isAllValid = this.isAllValid.bind(this)
   }
 
-  handleAddDescription () {
+  handleEditSubmissionDetails () {
     let mode = 'Edit'
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const submission = { description: this.state.item.description }
+    const submission = { thumbnailUrl: this.state.item.thumbnailUrl, description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, submission: submission })
   }
 
@@ -126,7 +126,7 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const submission = { description: this.state.item.description }
+    const submission = { thumbnailUrl: this.state.item.thumbnailUrl, description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, modalTextMode: modalTextMode, submission: submission })
   }
 
@@ -142,9 +142,10 @@ class Submission extends React.Component {
     const isModerationReport = (this.state.modalMode === 'Moderation')
 
     const reqBody = {}
-    if (isModerationReport && this.state.moderationReport.description) {
+    if (isModerationReport) {
       reqBody.description = this.state.moderationReport.description
-    } else if (this.state.submission.description) {
+    } else {
+      reqBody.thumbnailUrl = this.state.submission.thumbnailUrl
       reqBody.description = this.state.submission.description
     }
 
@@ -553,7 +554,7 @@ class Submission extends React.Component {
         let isArxiv = false
         let vanityUrl = ''
         let bibtexUrl = ''
-        let thumbnailUrl = submission.thumbnailUrl
+        const thumbnailUrl = submission.thumbnailUrl
         const url = submission.contentUrl
         if (url.toLowerCase().startsWith('https://arxiv.org/')) {
           isArxiv = true
@@ -638,7 +639,7 @@ class Submission extends React.Component {
           </div>
         </div>
         <div className='text-center'>
-              <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
+          <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
         </div>
         <div className='row'>
           <div className='col-md-12'>
@@ -650,7 +651,7 @@ class Submission extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             <div className='submission-description'>
-              {this.state.item.description ? this.state.item.description : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleAddDescription}>Add one.</button></div></div>}
+              {this.state.item.description ? this.state.item.description : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleEditSubmissionDetails}>Add one.</button></div></div>}
             </div>
           </div>
         </div>
@@ -672,7 +673,7 @@ class Submission extends React.Component {
                 </OverlayTrigger>
               </span>}
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={this.handleAddDescription}><FontAwesomeIcon icon='edit' /></button>
+              <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
             </OverlayTrigger>
             <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
               <FacebookShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
@@ -1194,11 +1195,24 @@ class Submission extends React.Component {
                     onChange={(field, value) => this.handleOnChange('moderationReport', field, value)}
                   />}
                 {(this.state.modalMode !== 'Moderation') &&
-                  <FormFieldRow
-                    inputName='description' inputType='textarea' label='Description' rows='12'
-                    value={this.state.submission.description}
-                    onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                  />}
+                  <div>
+                    <FormFieldRow
+                      inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
+                      onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                    />
+                    <div className='row'>
+                      <div className='col-md-3' />
+                      <div className='col-md-6'>
+                        <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                      </div>
+                      <div className='col-md-3' />
+                    </div>
+                    <FormFieldRow
+                      inputName='description' inputType='textarea' label='Description' rows='12'
+                      value={this.state.submission.description}
+                      onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                    />
+                  </div>}
               </span>}
           </Modal.Body>
           <Modal.Footer>
