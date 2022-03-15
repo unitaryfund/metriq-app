@@ -16,6 +16,7 @@ import SotaChart from '../components/SotaChart'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
 import { parse } from 'json2csv'
+import { Helmet } from 'react-helmet'
 
 library.add(faEdit)
 
@@ -258,6 +259,10 @@ class Task extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
+        <Helmet>
+          <title>{'Metriq - ' + this.state.item.name}</title>
+          <meta property='og:image' content='/social_image.png' />
+        </Helmet>
         <div className='container submission-detail-container'>
           {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
             <div>
