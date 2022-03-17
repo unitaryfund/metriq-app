@@ -104,11 +104,7 @@ class Method extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const method = res.data.data
-        let shortTitle = method.name
-        if (shortTitle.length > 50) {
-          shortTitle = shortTitle.substring(0, 47) + '...'
-        }
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method, shortTitle: shortTitle })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
         axios.get(methodNamesRoute)
