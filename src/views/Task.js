@@ -111,6 +111,25 @@ class Task extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const task = res.data.data
+        task.childTasks.sort(function (a, b) {
+          const rca = parseInt(a.resultCount)
+          const rcb = parseInt(b.resultCount)
+          if (rca > rcb) {
+            return -1
+          }
+          if (rcb > rca) {
+            return 1
+          }
+          const tna = a.name.toLowerCase()
+          const tnb = b.name.toLowerCase()
+          if (tna < tnb) {
+            return -1
+          }
+          if (tnb < tna) {
+            return 1
+          }
+          return 0
+        })
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
