@@ -13,7 +13,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
-import { Helmet } from 'react-helmet'
 
 library.add(faEdit)
 
@@ -105,7 +104,11 @@ class Method extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const method = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method })
+        let shortTitle = method.name
+        if (shortTitle.length > 50) {
+          shortTitle = shortTitle.substring(0, 47) + '...'
+        }
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method, shortTitle: shortTitle })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
         axios.get(methodNamesRoute)
@@ -127,10 +130,6 @@ class Method extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <Helmet>
-          <title>{'Metriq - ' + this.state.item.name}</title>
-          <meta property='og:image' content='/social_image.png' />
-        </Helmet>
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
