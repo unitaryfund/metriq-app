@@ -15,7 +15,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
-import { Helmet } from 'react-helmet'
 import logo from './../images/metriq_logo_secondary_blue.png'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
@@ -634,10 +633,6 @@ class Submission extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container submission-detail-container'>
-        <Helmet>
-          <title>{'Metriq - ' + this.state.item.name}</title>
-          <meta property='og:image' content={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : '/social_image.png'} />
-        </Helmet>
         <div className='row'>
           <div className='col-md-12'>
             <div><h1>{this.state.item.name}</h1></div>

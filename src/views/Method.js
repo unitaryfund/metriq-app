@@ -13,7 +13,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
-import { Helmet } from 'react-helmet'
 
 library.add(faEdit)
 
@@ -127,10 +126,6 @@ class Method extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <Helmet>
-          <title>{'Metriq - ' + this.state.item.name}</title>
-          <meta property='og:image' content='/social_image.png' />
-        </Helmet>
         <div className='container submission-detail-container'>
           <div className='row'>
             <div className='col-md-12'>
