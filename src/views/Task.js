@@ -13,6 +13,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
+import CategoryScroll from '../components/CategoryScroll'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
 import { parse } from 'json2csv'
@@ -319,31 +320,54 @@ class Task extends React.Component {
           {(this.state.item.childTasks && (this.state.item.childTasks.length > 0)) &&
             <div>
               <h2>Child Tasks</h2>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <Table
-                    className='detail-table'
-                    columns={[{
-                      title: 'Name',
-                      dataIndex: 'name',
-                      key: 'name',
-                      width: 700
-                    }]}
-                    data={this.state.item.childTasks
-                      ? this.state.item.childTasks.map(row => ({
-                          key: row.id,
-                          name: row.name
-                        }))
-                      : []}
-                    onRow={(record) => ({
-                      onClick () { window.location.href = '/Task/' + record.key }
-                    })}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </div>
+              <CategoryScroll type='task' items={this.state.item.childTasks} isLoggedIn={this.props.isLoggedIn} />
               <br />
+            </div>}
+          {(this.state.results.length > 0) &&
+            <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
+          {(this.state.results.length > 0) &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <Table
+                  className='detail-table'
+                  columns={[{
+                    title: 'Submission',
+                    dataIndex: 'name',
+                    key: 'name',
+                    width: 300
+                  },
+                  {
+                    title: 'Method',
+                    dataIndex: 'methodName',
+                    key: 'methodName',
+                    width: 300
+                  },
+                  {
+                    title: 'Date',
+                    dataIndex: 'tableDate',
+                    key: 'tableDate',
+                    width: 300
+                  },
+                  {
+                    title: 'Metric',
+                    dataIndex: 'metricName',
+                    key: 'metricName',
+                    width: 300
+                  },
+                  {
+                    title: 'Value',
+                    dataIndex: 'metricValue',
+                    key: 'metricValue',
+                    width: 300
+                  }]}
+                  data={this.state.resultsJson}
+                  onRow={(record) => ({
+                    onClick () { window.location.href = '/Submission/' + record.submissionId }
+                  })}
+                  tableLayout='auto'
+                  rowClassName='link'
+                />
+              </div>
             </div>}
           {(this.state.item.submissions.length > 0) &&
             <div>
@@ -387,52 +411,6 @@ class Task extends React.Component {
                 </div>
               </div>
               <br />
-              {(this.state.results.length > 0) &&
-                <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
-              {(this.state.results.length > 0) &&
-                <div className='row'>
-                  <div className='col-md-12'>
-                    <Table
-                      className='detail-table'
-                      columns={[{
-                        title: 'Submission',
-                        dataIndex: 'name',
-                        key: 'name',
-                        width: 300
-                      },
-                      {
-                        title: 'Method',
-                        dataIndex: 'methodName',
-                        key: 'methodName',
-                        width: 300
-                      },
-                      {
-                        title: 'Date',
-                        dataIndex: 'tableDate',
-                        key: 'tableDate',
-                        width: 300
-                      },
-                      {
-                        title: 'Metric',
-                        dataIndex: 'metricName',
-                        key: 'metricName',
-                        width: 300
-                      },
-                      {
-                        title: 'Value',
-                        dataIndex: 'metricValue',
-                        key: 'metricValue',
-                        width: 300
-                      }]}
-                      data={this.state.resultsJson}
-                      onRow={(record) => ({
-                        onClick () { window.location.href = '/Submission/' + record.submissionId }
-                      })}
-                      tableLayout='auto'
-                      rowClassName='link'
-                    />
-                  </div>
-                </div>}
             </div>}
           <div />
         </div>
