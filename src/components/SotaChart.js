@@ -36,7 +36,7 @@ class SotaChart extends React.Component {
       data: {
         datasets: [{
           type: 'scatter',
-          label: 'All',
+          label: 'All (±95% CI, when provided)',
           labels: this.props.data.map((obj, index) => obj.method),
           backgroundColor: 'rgb(0, 0, 0)',
           borderColor: 'rgb(0, 0, 0)',
@@ -53,7 +53,7 @@ class SotaChart extends React.Component {
         },
         {
           type: 'scatterWithErrorBars',
-          label: '95% CI',
+          label: '[HIDE LABEL] 1',
           backgroundColor: 'rgb(128, 128, 128)',
           borderColor: 'rgb(128, 128, 128)',
           data: this.props.data.map((obj, index) => {
@@ -139,7 +139,7 @@ class SotaChart extends React.Component {
             labels: {
               filter: function (item, chart) {
                 // Logic to remove a particular legend item goes here
-                return !item.text.includes('95% CI')
+                return !item.text.includes('[HIDE LABEL]')
               }
             }
           }
