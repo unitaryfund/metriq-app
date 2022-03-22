@@ -25,11 +25,15 @@ class Methods extends React.Component {
   }
 
   handleOnFilter (value) {
-    this.setState({ filterId: value.id })
+    if (value) {
+      this.setState({ filterId: value.id })
+    }
   }
 
   handleOnSelect (value) {
-    window.location.href = '/Method/' + value.id
+    if (value) {
+      window.location.href = '/Method/' + value.id
+    }
   }
 
   componentDidMount () {
@@ -124,8 +128,8 @@ class Methods extends React.Component {
             <FormFieldTypeaheadRow
               options={this.state.allNames}
               labelKey='name'
-              inputName='nameOrUrl'
-              label='Search title or URL'
+              inputName='name'
+              label='Search name'
               value=''
               onChange={(field, value) => this.handleOnFilter(value)}
               onSelect={this.handleOnSelect}
