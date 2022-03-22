@@ -5,12 +5,16 @@
 import React from 'react'
 import { Chart, LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { Line } from 'react-chartjs-2'
+import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import 'chartjs-adapter-moment'
 
 class SotaChart extends React.Component {
   constructor (props) {
     super(props)
+
+    this.percentileZ = this.percentileZ.bind(this)
+    const z95 = this.percentileZ(0.95)
+
     Chart.register([LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
     Chart.defaults.font.size = 16
 
@@ -32,11 +36,34 @@ class SotaChart extends React.Component {
       data: {
         datasets: [{
           type: 'scatter',
-          label: 'All',
+          label: 'All (±95% CI, when provided)',
           labels: this.props.data.map((obj, index) => obj.method),
           backgroundColor: 'rgb(0, 0, 0)',
           borderColor: 'rgb(0, 0, 0)',
-          data: this.props.data.map((obj, index) => { return { label: obj.method, isShowLabel: false, x: obj.label, y: obj.value } })
+          data: this.props.data.map((obj, index) => {
+            return {
+              label: obj.method,
+              isShowLabel: false,
+              x: obj.label,
+              y: obj.value,
+              yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
+              yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+            }
+          })
+        },
+        {
+          type: 'scatterWithErrorBars',
+          label: '[HIDE LABEL] 1',
+          backgroundColor: 'rgb(128, 128, 128)',
+          borderColor: 'rgb(128, 128, 128)',
+          data: this.props.data.map((obj, index) => {
+            return {
+              x: obj.label,
+              y: obj.value,
+              yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
+              yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+            }
+          })
         },
         {
           type: 'line',
@@ -44,7 +71,14 @@ class SotaChart extends React.Component {
           labels: sotaData.map((obj, index) => obj.method),
           backgroundColor: 'rgb(60, 210, 249)',
           borderColor: 'rgb(60, 210, 249)',
-          data: sotaData.map((obj, index) => { return { label: obj.method, isShowLabel: true, x: obj.label, y: obj.value } })
+          data: sotaData.map((obj, index) => {
+            return {
+              label: obj.method,
+              isShowLabel: true,
+              x: obj.label,
+              y: obj.value
+            }
+          })
         }]
       },
       options: {
@@ -100,16 +134,47 @@ class SotaChart extends React.Component {
             formatter: function (value, context) {
               return value.isShowLabel ? value.label : ''
             }
+          },
+          legend: {
+            labels: {
+              filter: function (item, chart) {
+                // Logic to remove a particular legend item goes here
+                return !item.text.includes('[HIDE LABEL]')
+              }
+            }
           }
         }
       }
     }
   }
 
+  componentDidMount () {
+    (() => new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas').getContext('2d'), {
+      data: this.state.data,
+      options: this.state.options
+    }))()
+  }
+
+  // See https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score#answer-36577594
+  percentileZ (p) {
+    if (p < 0.5) return -this.percentileZ(1 - p)
+
+    if (p > 0.92) {
+      if (p === 1) return Infinity
+      const r = Math.sqrt(-Math.log(1 - p))
+      return (((2.3212128 * r + 4.8501413) * r - 2.2979648) * r - 2.7871893) /
+               ((1.6370678 * r + 3.5438892) * r + 1)
+    }
+    p -= 0.5
+    const r = p * p
+    return p * (((-25.4410605 * r + 41.3911977) * r - 18.6150006) * r + 2.5066282) /
+             ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
+  }
+
   // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
   // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
   render () {
-    return <Line data={this.state.data} options={this.state.options} key={Math.random()} />
+    return <canvas id='sota-chart-canvas' key={Math.random()} />
   }
 }
 

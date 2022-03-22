@@ -25,6 +25,8 @@ const methodNameRegex = /.{1,}/
 const taskNameRegex = /.{1,}/
 const tagNameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
+const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
+const sampleSizeRegex = /^[0-9]+$/
 
 class Submission extends React.Component {
   constructor (props) {
@@ -1022,14 +1024,14 @@ class Submission extends React.Component {
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   validRegex={metricNameRegex}
                   options={this.state.metricNames}
-                  tooltip='The name of the measure of performance, for this combination of task and method, for this submission.'
+                  tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
                 /><br />
                 <FormFieldRow
                   inputName='metricValue' inputType='number' label='Metric value'
                   value={this.state.result.metricValue}
                   validRegex={metricValueRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='The value of the measure of performance, for this combination of task and method, for this submission.'
+                  tooltip='The value of the measure of performance, for this combination of task and method, for this submission'
                 /><br />
                 <FormFieldRow
                   inputName='evaluatedAt' inputType='date' label='Evaluated'
@@ -1043,6 +1045,20 @@ class Submission extends React.Component {
                   checked={this.state.result.isHigherBetter}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
+                /><br />
+                <FormFieldRow
+                  inputName='standardError' inputType='number' label='Standard error (optional)'
+                  value={this.state.result.standardError}
+                  validRegex={standardErrorRegex}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='Report the Gaussian standard error of the (mean) metric value. (The combination of standard error and sample size will be used to calculate other statistics, like confidence intervals.)'
+                /><br />
+                <FormFieldRow
+                  inputName='sampleSize' inputType='number' label='Sample size (optional)'
+                  value={this.state.result.sampleSize}
+                  validRegex={sampleSizeRegex}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='Report the sample size used to calculate the metric value. (The combination of standard error and sample size will be used to calculate other statistics, like confidence intervals.)'
                 /><br />
                 <FormFieldRow
                   inputName='notes' inputType='textarea' label='Notes'
