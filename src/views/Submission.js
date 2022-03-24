@@ -1051,7 +1051,7 @@ class Submission extends React.Component {
                   value={this.state.result.standardError}
                   validRegex={standardErrorRegex}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Confidence intervals will be calculated as ± standard error times z-score, if you report a standard error. This is self-consistent if your statistics are Gaussian or Poisson, for example, over a linear scale of the metric. (If Gaussian or Poisson statistics emerge over a different, non-linear scale of the metric, consider reporting your metric value with rescaled units.)'
+                  tooltip='Confidence intervals will be calculated as (mean) result metric value ± standard error times z-score, if you report a standard error. This is self-consistent if your statistics are Gaussian or Poisson, for example, over a linear scale of the metric. (If Gaussian or Poisson statistics emerge over a different, non-linear scale of the metric, consider reporting your metric value with rescaled units.)'
                 /><br />
                 <FormFieldRow
                   inputName='sampleSize' inputType='number' label='Sample size (optional)'
