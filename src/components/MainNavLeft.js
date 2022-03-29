@@ -6,6 +6,7 @@ const MainNavLeft = () => {
     <Nav className='metriq-navbar'>
       <Nav.Link href='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
       <Nav.Link href='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
+      <Nav.Link href='/Architectures' className='metriq-navbar-text'>Architectures</Nav.Link>
       <Nav.Link href='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
       <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item href='/About'><p class='font-weight-bold'>About</p></NavDropdown.Item>
