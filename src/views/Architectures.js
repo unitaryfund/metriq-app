@@ -37,7 +37,7 @@ class Architectures extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/architecture/resultCount')
+    axios.get(config.api.getUriPrefix() + '/architecture/submissionCount')
       .then(res => {
         const common = [...res.data.data]
         common.sort(function (a, b) {

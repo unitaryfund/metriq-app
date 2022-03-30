@@ -8,13 +8,29 @@ import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
 class CategoryItemBox extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      detailUrl: '',
+    }
+    if (this.props.type === 'tag') {
+      this.state.detailUrl = ('/Tag/' + this.props.item.name)
+    } else if (this.props.type === 'task') {
+      this.state.detailUrl  = ('/Task/' + this.props.item.id)
+    } else if (this.props.type === 'method') {
+      this.state.detailUrl = ('/Method/' + this.props.item.id)
+    } else if (this.props.type === 'architecture') {
+      this.state.detailUrl = ('/Architecture/' + this.props.item.id)
+    }
+  }
+
   render () {
     return (
       <tr>
         <td>
           <div className='row submission'>
             <div className='col-md-9'>
-              <a href={(this.props.type === 'tag') ? ('/Tag/' + this.props.item.name) : (((this.props.type === 'task') ? '/Task/' : '/Method/') + this.props.item.id)}>
+              <a href={this.state.detailUrl}>
                 {this.props.type !== 'tag' && this.props.item.description &&
                   <div>
                     <div className='submission-heading'>{this.props.item.name}</div>
@@ -25,17 +41,17 @@ class CategoryItemBox extends React.Component {
               </a>
             </div>
             <div className='col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of results, with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of results, with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faChartLine} /><br />{this.props.item.resultCount}</span>
               </OverlayTrigger>
             </div>
             <div className='col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faExternalLinkAlt} /><br />{this.props.item.submissionCount}</span>
               </OverlayTrigger>
             </div>
             <div className='col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {(this.props.type === 'tag') ? ('tag') : (((this.props.type === 'task') ? 'task' : 'method'))}</Tooltip>}>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faHeart} /><br />{this.props.item.upvoteTotal}</span>
               </OverlayTrigger>
             </div>
