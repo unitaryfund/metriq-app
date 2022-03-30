@@ -1,7 +1,9 @@
 import axios from 'axios'
 import React from 'react'
 import config from '../config'
+import Table from 'rc-table'
 import ErrorHandler from '../components/ErrorHandler'
+import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
@@ -20,16 +22,28 @@ class Architecture extends React.Component {
     this.state = {
       isRequestFailed: false,
       requestFailedMessage: '',
+      showAddModal: false,
+      showRemoveModal: false,
       showEditModal: false,
       architecture: { description: '' },
-      item: { parentArchitecture: {} },
-      allArchitectureNames: []
+      item: {
+        properties: []
+      },
+      allArchitectureNames: [],
+      property: {
+        id: '',
+        name: '',
+        type: '',
+        value: ''
+      }
     }
 
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnClickAddProperty = this.handleOnClickAddProperty.bind(this)
+    this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
   }
 
   handleShowEditModal () {
@@ -38,6 +52,7 @@ class Architecture extends React.Component {
       mode = 'Login'
     }
     const architecture = {
+      properties: this.state.item.properties,
       description: this.state.item.description
     }
     this.setState({ showEditModal: true, modalMode: mode, architecture: architecture })
@@ -78,6 +93,31 @@ class Architecture extends React.Component {
     }
   }
 
+  handleOnClickAddProperty () {
+    const property = {
+      id: '',
+      name: '',
+      type: '',
+      value: ''
+    }
+    this.setState({ property: property })
+    this.handleOnClickAdd('Property')
+  }
+
+  handleOnClickAdd (mode) {
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
+    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
+  }
+
+  handleOnClickRemove (mode) {
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
+    this.setState({ showRemoveModal: true, modalMode: mode })
+  }
+
   componentDidMount () {
     const architectureRoute = config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id
     axios.get(architectureRoute)
@@ -104,7 +144,7 @@ class Architecture extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit architecture</Tooltip>}>
+              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit description</Tooltip>}>
                 <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
@@ -120,6 +160,64 @@ class Architecture extends React.Component {
             </div>
           </div>
           <br />
+          <div className='row'>
+            <div className='col-md-12'>
+              <div>
+                <h2>Properties
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddProperty()}
+                    onClickRemove={() => this.handleOnClickRemove('Property')}
+                  />
+                </h2>
+                <hr />
+              </div>
+              {(this.state.item.properties.length > 0) &&
+                <Table
+                  columns={[
+                    {
+                      title: 'Name',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 386
+                    },
+                    {
+                      title: 'Type',
+                      dataIndex: 'type',
+                      key: 'type',
+                      width: 386
+                    },
+                    {
+                      title: 'Value',
+                      dataIndex: 'value',
+                      key: 'value',
+                      width: 386
+                    },
+                    {
+                      title: '',
+                      dataIndex: 'edit',
+                      key: 'edit',
+                      width: 42,
+                      render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} /></div>
+                    }
+                  ]}
+                  data={this.state.item.properties.length
+                    ? this.state.item.properties.map(row =>
+                        ({
+                          key: row.id,
+                          name: row.name,
+                          type: row.type,
+                          value: row.value
+                        }))
+                    : []}
+                  tableLayout='auto'
+                />}
+              {(this.state.item.properties.length === 0) &&
+                <div className='card bg-light'>
+                  <div className='card-body'>There are no associated results, yet.</div>
+                </div>}
+            </div>
+          </div>
         </div>
         <Modal
           show={this.state.showEditModal}
@@ -129,7 +227,7 @@ class Architecture extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Submission</Modal.Title>
+            <Modal.Title>Edit Architecture</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&

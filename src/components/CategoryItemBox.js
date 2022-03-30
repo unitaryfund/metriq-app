@@ -11,12 +11,12 @@ class CategoryItemBox extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      detailUrl: '',
+      detailUrl: ''
     }
     if (this.props.type === 'tag') {
       this.state.detailUrl = ('/Tag/' + this.props.item.name)
     } else if (this.props.type === 'task') {
-      this.state.detailUrl  = ('/Task/' + this.props.item.id)
+      this.state.detailUrl = ('/Task/' + this.props.item.id)
     } else if (this.props.type === 'method') {
       this.state.detailUrl = ('/Method/' + this.props.item.id)
     } else if (this.props.type === 'architecture') {
