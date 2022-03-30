@@ -20,10 +20,7 @@ import logo from './../images/metriq_logo_secondary_blue.png'
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-const metricNameRegex = /.{1,}/
-const methodNameRegex = /.{1,}/
-const taskNameRegex = /.{1,}/
-const tagNameRegex = /.{1,}/
+const nameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
 const sampleSizeRegex = /^[0-9]+$/
@@ -47,6 +44,7 @@ class Submission extends React.Component {
       allMethodNames: [],
       allTaskNames: [],
       allTagNames: [],
+      allArchitectureNames: [],
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
@@ -63,6 +61,7 @@ class Submission extends React.Component {
         id: '',
         task: '',
         method: '',
+        architecture: '',
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -81,8 +80,14 @@ class Submission extends React.Component {
         description: '',
         submissions: this.props.match.params.id
       },
+      architecture: {
+        name: '',
+        fullName: '',
+        description: ''
+      },
       taskId: '',
       methodId: '',
+      architectureId: '',
       tag: ''
     }
 
@@ -307,6 +312,7 @@ class Submission extends React.Component {
       id: '',
       task: '',
       method: '',
+      architecture: '',
       metricName: '',
       metricValue: 0,
       isHigherBetter: false,
@@ -425,30 +431,52 @@ class Submission extends React.Component {
         })
     } else if (this.state.modalMode === 'Result') {
       const result = this.state.result
-      if (!result.task) {
-        result.task = this.state.item.tasks[0].id
-      }
-      if (!result.method) {
-        result.method = this.state.item.methods[0].id
-      }
       if (!result.metricName) {
         window.alert('Error: Metric Name cannot be blank.')
       }
       if (!result.metricValue) {
         window.alert('Error: Metric Value cannot be blank.')
       }
+      if (!result.task) {
+        result.task = this.state.item.tasks[0].id
+      }
+      if (!result.method) {
+        result.method = this.state.item.methods[0].id
+      }
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
-      const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-      const request = axios.post(resultRoute, result)
-      request
-        .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
+      if (this.state.showAccordion) {
+        const architectureRoute = config.api.getUriPrefix() + '/architecture'
+        axios.post(architectureRoute, this.state.architecture)
+          .then(res => {
+            result.architecture = res.data.data.id
+            const architectureNames = this.state.architectureNames
+            architectureNames.push(res.data.data.name)
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', architectureNames: architectureNames })
+
+            const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
+            axios.post(resultRoute, result)
+              .then(res => {
+                this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+              })
+              .catch(err => {
+                window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+              })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      } else {
+        const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
+        axios.post(resultRoute, result)
+          .then(res => {
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      }
     }
 
     this.setState({ showAddModal: false })
@@ -517,7 +545,7 @@ class Submission extends React.Component {
 
     if (this.state.modalMode === 'Task') {
       if (this.state.showAccordion) {
-        if (!taskNameRegex.test(this.state.task.name)) {
+        if (!nameRegex.test(this.state.task.name)) {
           return false
         }
       } else if (!this.state.taskId) {
@@ -525,14 +553,14 @@ class Submission extends React.Component {
       }
     } else if (this.state.modalMode === 'Method') {
       if (this.state.showAccordion) {
-        if (!methodNameRegex.test(this.state.method.name)) {
+        if (!nameRegex.test(this.state.method.name)) {
           return false
         }
       } else if (!this.state.methodId) {
         return false
       }
     } else if (this.state.modalMode === 'Result') {
-      if (!metricNameRegex.test(this.state.result.metricName)) {
+      if (!nameRegex.test(this.state.result.metricName)) {
         return false
       }
       if (!metricValueRegex.test(this.state.result.metricValue)) {
@@ -604,6 +632,15 @@ class Submission extends React.Component {
                     this.handleTrimTags(submission, tags)
 
                     this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+
+                    const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
+                    axios.get(architectureNamesRoute)
+                      .then(res => {
+                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allArchitectureNames: res.data.data, architectureNames: res.data.data })
+                      })
+                      .catch(err => {
+                        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                      })
                   })
                   .catch(err => {
                     this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -912,7 +949,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={methodNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Short name of new method'
                         /><br />
                         <FormFieldRow
@@ -920,7 +957,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={methodNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
@@ -968,7 +1005,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={taskNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Short name of new task'
                         /><br />
                         <FormFieldRow
@@ -976,7 +1013,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={taskNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Long name of new task'
                         /><br />
                         <FormFieldSelectRow
@@ -1022,7 +1059,7 @@ class Submission extends React.Component {
                   inputName='metricName' label='Metric name'
                   value={this.state.result.metricName}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  validRegex={metricNameRegex}
+                  validRegex={nameRegex}
                   options={this.state.metricNames}
                   tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
                 /><br />
@@ -1065,14 +1102,60 @@ class Submission extends React.Component {
                   value={this.state.result.notes}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
-                />
+                /><br />
+                <FormFieldSelectRow
+                  inputName='architecture'
+                  label='Architecture'
+                  isNullDefault
+                  options={this.state.architectureNames}
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='The quantum computer architecture used by the method for this result'
+                  disabled={this.state.showAccordion}
+                /><br />
+                Not in the list?<br />
+                <Accordion defaultActiveKey='0'>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                        <FontAwesomeIcon icon='plus' /> Create a new architecture.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey='1'>
+                      <Card.Body>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Short name of new architecture'
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name (optional)'
+                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Long name of new architecture'
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description (optional)'
+                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                          tooltip='Long description of new architecture'
+                        />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
               </span>}
             {(this.state.modalMode === 'Tag') &&
               <span>
                 <FormFieldTypeaheadRow
                   inputName='tag' label='Tag'
                   onChange={(field, value) => this.handleOnChange('', field, value)}
-                  validRegex={tagNameRegex}
+                  validRegex={nameRegex}
                   options={this.state.tagNames.map(item => item.name)}
                   tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
