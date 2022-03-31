@@ -1107,6 +1107,7 @@ class Submission extends React.Component {
                   inputName='architecture'
                   label='Architecture'
                   isNullDefault
+                  value={this.state.architectureId}
                   options={this.state.architectureNames}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='The quantum computer architecture used by the method for this result'

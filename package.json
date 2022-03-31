@@ -34,6 +34,7 @@
     "react-share": "^4.4.0",
     "sass": "^1.43.4",
     "standard": "^16.0.3",
+    "update": "^0.7.4",
     "web-vitals": "^1.1.2"
   },
   "proxy": "http://localhost:8080",
