@@ -16,6 +16,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 
 const nameRegex = /.{1,}/
+// const integerRegex = /^([+-]?[1-9]\d*|0)$/
+// const decimalRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
 
 library.add(faEdit)
 
@@ -38,6 +40,9 @@ class Architecture extends React.Component {
       allArchitectureNames: [],
       allDataTypeNames: [],
       propertyNames: [],
+      propertyId: '',
+      propertyValue: '',
+      propertyRegex: nameRegex,
       property: {
         id: '',
         name: '',
@@ -308,6 +313,14 @@ class Architecture extends React.Component {
                   tooltip='An explicitely-typed key/value property of this architecture'
                   disabled={this.state.showAccordion}
                 /><br />
+                <FormFieldRow
+                  inputName='propertyValue'
+                  inputType='text'
+                  label='Value'
+                  validRegex={this.state.propertyRegex}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='Architecture value of selected property'
+                /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
                   <Card>
@@ -346,7 +359,7 @@ class Architecture extends React.Component {
                           inputType='text'
                           label='Value'
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          validRegex={nameRegex}
+                          validRegex={this.state.propertyRegex}
                           tooltip='Value of new property'
                         /><br />
                         <FormFieldRow
