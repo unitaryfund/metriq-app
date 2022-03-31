@@ -56,6 +56,7 @@ class Architecture extends React.Component {
     this.handleOnClickAddProperty = this.handleOnClickAddProperty.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
+    this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
   }
 
   handleAccordionToggle () {
@@ -138,12 +139,25 @@ class Architecture extends React.Component {
     this.setState({ showRemoveModal: true, modalMode: mode })
   }
 
+  handleRemoveModalDone () {
+    this.setState({ showRemoveModal: false })
+  }
+
   componentDidMount () {
     const architectureRoute = config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id
     axios.get(architectureRoute)
       .then(res => {
         const architecture = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: architecture })
+
+        const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
+        axios.get(dataTypeNamesRoute)
+          .then(res => {
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -310,22 +324,30 @@ class Architecture extends React.Component {
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
                           validRegex={nameRegex}
-                          tooltip='Short ame of new property'
+                          tooltip='Short name of new property'
                         /><br />
                         <FormFieldRow
                           inputName='fullName'
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          validRegex={nameRegex}
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
                           inputName='type'
                           label='Type'
+                          value={this.state.allDataTypeNames.length ? this.state.allDataTypeNames[0].id : 0}
                           options={this.state.allDataTypeNames}
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
                           tooltip='Explicit data type of new property'
+                        /><br />
+                        <FormFieldRow
+                          inputName='value'
+                          inputType='text'
+                          label='Value'
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Value of new property'
                         /><br />
                         <FormFieldRow
                           inputName='description'
