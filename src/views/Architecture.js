@@ -52,7 +52,8 @@ class Architecture extends React.Component {
         name: '',
         fullName: '',
         type: '',
-        value: ''
+        value: '',
+        inputType: 'textarea'
       }
     }
 
@@ -120,11 +121,30 @@ class Architecture extends React.Component {
   }
 
   handleOnClickAddProperty () {
+    let inputType = 'textarea'
+    if (this.state.property.friendlyType === 'bool') {
+      inputType = 'checkbox'
+    } else if (this.state.property.friendlyType === 'date') {
+      inputType = 'date'
+    } else if (this.state.property.friendlyType === 'datetime') {
+      inputType = 'datetime'
+    }
+
+    let inputRegex = defaultRegex
+    if (this.state.property.friendlyType === 'int') {
+      inputRegex = intRegex
+    } else if (this.state.property.friendlyType === 'number') {
+      inputRegex = numberRegex
+    }
+
     const property = {
       id: '',
       name: '',
+      fullName: '',
       type: '',
-      value: ''
+      value: '',
+      inputType,
+      inputRegex
     }
     this.setState({ property: property })
     this.handleOnClickAdd('Property')
@@ -319,19 +339,9 @@ class Architecture extends React.Component {
                 /><br />
                 <FormFieldRow
                   inputName='propertyValue'
-                  inputType={
-                    this.state.property.friendlyType === 'bool'
-                      ? 'checkbox'
-                      : this.state.property.friendlyType === 'date'
-                        ? 'date'
-                        : this.state.property.friendlyType === 'datetime' ? 'datetime' : 'textarea'
-                  }
+                  inputType={this.state.property.inputType}
                   label='Value'
-                  validRegex={
-                    this.state.property.friendlyType === 'int'
-                      ? intRegex
-                      : this.state.property.friendlyType === 'number' ? numberRegex : defaultRegex
-                  }
+                  validRegex={this.state.property.inputRegex}
                   onChange={(field, value) => this.handleOnChange('', field, value)}
                   tooltip='Architecture value of selected property'
                 /><br />
