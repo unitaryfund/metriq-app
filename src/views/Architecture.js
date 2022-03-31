@@ -5,14 +5,17 @@ import Table from 'rc-table'
 import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { Button, Modal } from 'react-bootstrap'
+import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+
+const nameRegex = /.{1,}/
 
 library.add(faEdit)
 
@@ -25,25 +28,38 @@ class Architecture extends React.Component {
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
+      showAccordion: false,
+      isValidated: false,
+      modalMode: '',
       architecture: { description: '' },
       item: {
         properties: []
       },
       allArchitectureNames: [],
+      allDataTypeNames: [],
+      propertyNames: [],
       property: {
         id: '',
         name: '',
+        fullName: '',
         type: '',
         value: ''
       }
     }
 
+    this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickAddProperty = this.handleOnClickAddProperty.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
+    this.handleHideAddModal = this.handleHideAddModal.bind(this)
+  }
+
+  handleAccordionToggle () {
+    this.setState({ showAccordion: !this.state.showAccordion, isValidated: false })
   }
 
   handleShowEditModal () {
@@ -109,6 +125,10 @@ class Architecture extends React.Component {
       mode = 'Login'
     }
     this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
+  }
+
+  handleHideAddModal () {
+    this.setState({ showAddModal: false, showAccordion: false })
   }
 
   handleOnClickRemove (mode) {
@@ -241,6 +261,83 @@ class Architecture extends React.Component {
                   value={this.state.architecture.description}
                   onChange={(field, value) => this.handleOnChange('architecture', field, value)}
                 />
+              </span>}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.handleEditModalDone}>
+              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal
+          show={this.state.showAddModal}
+          onHide={this.handleHideAddModal}
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Add Property</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {(this.state.modalMode === 'Login') &&
+              <span>
+                Please <Link to='/Login'>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'Login') &&
+              <span>
+                <FormFieldSelectRow
+                  inputName='propertyId'
+                  label='Property'
+                  options={this.state.propertyNames}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='An explicitely-typed key/value property of this architecture'
+                  disabled={this.state.showAccordion}
+                /><br />
+                Not in the list?<br />
+                <Accordion defaultActiveKey='0'>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                        <FontAwesomeIcon icon='plus' /> Create a new property.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey='1'>
+                      <Card.Body>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Short ame of new property'
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name (optional)'
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Long name of new method'
+                        /><br />
+                        <FormFieldSelectRow
+                          inputName='type'
+                          label='Type'
+                          options={this.state.allDataTypeNames}
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          tooltip='Explicit data type of new property'
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description (optional)'
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          tooltip='Long description of new method'
+                        />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
               </span>}
           </Modal.Body>
           <Modal.Footer>
