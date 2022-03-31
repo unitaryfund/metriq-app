@@ -443,6 +443,9 @@ class Submission extends React.Component {
       if (!result.method) {
         result.method = this.state.item.methods[0].id
       }
+      if (!result.architecture) {
+        result.architecture = null
+      }
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
@@ -1104,11 +1107,10 @@ class Submission extends React.Component {
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
                 /><br />
                 <FormFieldSelectRow
-                  inputName='architecture'
-                  label='Architecture'
+                  inputName='architecture' label='Architecture'
+                  options={this.state.allArchitectureNames}
+                  value={this.state.result.architecture ? this.state.result.architecture.id : 0}
                   isNullDefault
-                  value={this.state.architectureId}
-                  options={this.state.architectureNames}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='The quantum computer architecture used by the method for this result'
                   disabled={this.state.showAccordion}
