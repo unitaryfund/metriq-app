@@ -1111,7 +1111,12 @@ class Submission extends React.Component {
                   options={this.state.allArchitectureNames}
                   value={this.state.result.architecture ? this.state.result.architecture.id : 0}
                   isNullDefault
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  onChange={(field, value) => {
+                    const result = this.state.result
+                    result.architecture = this.state.allArchitectureNames.find(x => x.id === value)
+                    this.setState({ result: result })
+                    this.handleOnChange('result', field, value)
+                  }}
                   tooltip='The quantum computer architecture used by the method for this result'
                   disabled={this.state.showAccordion}
                 /><br />

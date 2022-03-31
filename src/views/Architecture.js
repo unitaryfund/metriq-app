@@ -15,9 +15,13 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 
+const defaultRegex = /.+/
 const nameRegex = /.{1,}/
-// const integerRegex = /^([+-]?[1-9]\d*|0)$/
-// const decimalRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
+const intRegex = /^([+-]?[1-9]\d*|0)$/
+const numberRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
+// bool is handled by checkbox FormFieldRow
+// datetime is handled by date/time picker FormFieldRow
+// date is handled by date-only picker FormFieldRow
 
 library.add(faEdit)
 
@@ -42,7 +46,7 @@ class Architecture extends React.Component {
       propertyNames: [],
       propertyId: '',
       propertyValue: '',
-      propertyRegex: nameRegex,
+      propertyRegex: defaultRegex,
       property: {
         id: '',
         name: '',
@@ -315,9 +319,19 @@ class Architecture extends React.Component {
                 /><br />
                 <FormFieldRow
                   inputName='propertyValue'
-                  inputType='text'
+                  inputType={
+                    this.state.property.friendlyType === 'bool'
+                      ? 'checkbox'
+                      : this.state.property.friendlyType === 'date'
+                        ? 'date'
+                        : this.state.property.friendlyType === 'datetime' ? 'datetime' : 'textarea'
+                  }
                   label='Value'
-                  validRegex={this.state.propertyRegex}
+                  validRegex={
+                    this.state.property.friendlyType === 'int'
+                      ? intRegex
+                      : this.state.property.friendlyType === 'number' ? numberRegex : defaultRegex
+                  }
                   onChange={(field, value) => this.handleOnChange('', field, value)}
                   tooltip='Architecture value of selected property'
                 /><br />
