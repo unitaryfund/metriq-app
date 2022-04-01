@@ -7,7 +7,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 
-class Architectures extends React.Component {
+class Platforms extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -32,12 +32,12 @@ class Architectures extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      window.location.href = '/Architecture/' + value.id
+      window.location.href = '/Platform/' + value.id
     }
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/architecture/submissionCount')
+    axios.get(config.api.getUriPrefix() + '/platform/submissionCount')
       .then(res => {
         const common = [...res.data.data]
         common.sort(function (a, b) {
@@ -105,7 +105,7 @@ class Architectures extends React.Component {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
 
-    axios.get(config.api.getUriPrefix() + '/architecture/names')
+    axios.get(config.api.getUriPrefix() + '/platform/names')
       .then(res => {
         this.setState({
           isRequestFailed: false,
@@ -121,7 +121,7 @@ class Architectures extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Architectures</h4></header>
+        <header><h4>Platforms</h4></header>
         <br />
         <div className='row'>
           <div className='col-md-12 search-bar'>
@@ -139,13 +139,13 @@ class Architectures extends React.Component {
         <br />
         <Tabs defaultActiveKey='common' id='categories-tabs'>
           <Tab eventKey='common' title='Common'>
-            <CategoryScroll type='architecture' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+            <CategoryScroll type='platform' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
           </Tab>
           <Tab eventKey='popular' title='Popular'>
-            <CategoryScroll type='architecture' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+            <CategoryScroll type='platform' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
           </Tab>
           <Tab eventKey='alphabetical' title='Alphabetical'>
-            <CategoryScroll type='architecture' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+            <CategoryScroll type='platform' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
           </Tab>
         </Tabs>
         <div className='row'>
@@ -160,4 +160,4 @@ class Architectures extends React.Component {
   }
 }
 
-export default Architectures
+export default Platforms

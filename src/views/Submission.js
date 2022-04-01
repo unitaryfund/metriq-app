@@ -44,7 +44,7 @@ class Submission extends React.Component {
       allMethodNames: [],
       allTaskNames: [],
       allTagNames: [],
-      allArchitectureNames: [],
+      allPlatformNames: [],
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
@@ -61,7 +61,7 @@ class Submission extends React.Component {
         id: '',
         task: '',
         method: '',
-        architecture: '',
+        platform: '',
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -80,14 +80,14 @@ class Submission extends React.Component {
         description: '',
         submissions: this.props.match.params.id
       },
-      architecture: {
+      platform: {
         name: '',
         fullName: '',
         description: ''
       },
       taskId: '',
       methodId: '',
-      architectureId: '',
+      platformId: '',
       tag: ''
     }
 
@@ -312,7 +312,7 @@ class Submission extends React.Component {
       id: '',
       task: '',
       method: '',
-      architecture: '',
+      platform: '',
       metricName: '',
       metricValue: 0,
       isHigherBetter: false,
@@ -443,20 +443,20 @@ class Submission extends React.Component {
       if (!result.method) {
         result.method = this.state.item.methods[0].id
       }
-      if (!result.architecture) {
-        result.architecture = null
+      if (!result.platform) {
+        result.platform = null
       }
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
       if (this.state.showAccordion) {
-        const architectureRoute = config.api.getUriPrefix() + '/architecture'
-        axios.post(architectureRoute, this.state.architecture)
+        const platformRoute = config.api.getUriPrefix() + '/platform'
+        axios.post(platformRoute, this.state.platform)
           .then(res => {
-            result.architecture = res.data.data.id
-            const architectureNames = this.state.architectureNames
-            architectureNames.push(res.data.data.name)
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', architectureNames: architectureNames })
+            result.platform = res.data.data.id
+            const platformNames = this.state.platformNames
+            platformNames.push(res.data.data.name)
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platformNames })
 
             const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
             axios.post(resultRoute, result)
@@ -636,10 +636,10 @@ class Submission extends React.Component {
 
                     this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
 
-                    const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
-                    axios.get(architectureNamesRoute)
+                    const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+                    axios.get(platformNamesRoute)
                       .then(res => {
-                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allArchitectureNames: res.data.data, architectureNames: res.data.data })
+                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: res.data.data })
                       })
                       .catch(err => {
                         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -1107,17 +1107,17 @@ class Submission extends React.Component {
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
                 /><br />
                 <FormFieldSelectRow
-                  inputName='architecture' label='Architecture'
-                  options={this.state.allArchitectureNames}
-                  value={this.state.result.architecture ? this.state.result.architecture.id : 0}
+                  inputName='platform' label='Platform'
+                  options={this.state.allPlatformNames}
+                  value={this.state.result.platform ? this.state.result.platform.id : 0}
                   isNullDefault
                   onChange={(field, value) => {
                     const result = this.state.result
-                    result.architecture = this.state.allArchitectureNames.find(x => x.id === value)
+                    result.platform = this.state.allPlatformNames.find(x => x.id === value)
                     this.setState({ result: result })
                     this.handleOnChange('result', field, value)
                   }}
-                  tooltip='The quantum computer architecture used by the method for this result'
+                  tooltip='The quantum computer platform used by the method for this result'
                   disabled={this.state.showAccordion}
                 /><br />
                 Not in the list?<br />
@@ -1125,7 +1125,7 @@ class Submission extends React.Component {
                   <Card>
                     <Card.Header>
                       <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new architecture.
+                        <FontAwesomeIcon icon='plus' /> Create a new platform.
                       </Accordion.Toggle>
                     </Card.Header>
                     <Accordion.Collapse eventKey='1'>
@@ -1134,24 +1134,24 @@ class Submission extends React.Component {
                           inputName='name'
                           inputType='text'
                           label='Name'
-                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
                           validRegex={nameRegex}
-                          tooltip='Short name of new architecture'
+                          tooltip='Short name of new platform'
                         /><br />
                         <FormFieldRow
                           inputName='fullName'
                           inputType='text'
                           label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
                           validRegex={nameRegex}
-                          tooltip='Long name of new architecture'
+                          tooltip='Long name of new platform'
                         /><br />
                         <FormFieldRow
                           inputName='description'
                           inputType='textarea'
                           label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('architecture', field, value)}
-                          tooltip='Long description of new architecture'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='Long description of new platform'
                         />
                       </Card.Body>
                     </Accordion.Collapse>

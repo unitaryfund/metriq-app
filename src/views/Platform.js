@@ -25,7 +25,7 @@ const numberRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
 
 library.add(faEdit)
 
-class Architecture extends React.Component {
+class Platform extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -37,11 +37,11 @@ class Architecture extends React.Component {
       showAccordion: false,
       isValidated: false,
       modalMode: '',
-      architecture: { description: '' },
+      platform: { description: '' },
       item: {
         properties: []
       },
-      allArchitectureNames: [],
+      allPlatformNames: [],
       allDataTypeNames: [],
       propertyNames: [],
       property: {
@@ -78,11 +78,11 @@ class Architecture extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const architecture = {
+    const platform = {
       properties: this.state.item.properties,
       description: this.state.item.description
     }
-    this.setState({ showEditModal: true, modalMode: mode, architecture: architecture })
+    this.setState({ showEditModal: true, modalMode: mode, platform: platform })
   }
 
   handleHideEditModal () {
@@ -95,10 +95,10 @@ class Architecture extends React.Component {
     }
 
     const reqBody = {
-      description: this.state.architecture.description
+      description: this.state.platform.description
     }
 
-    axios.post(config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id, reqBody)
+    axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
       .then(res => {
         this.setState({ item: res.data.data, showEditModal: false })
       })
@@ -181,11 +181,11 @@ class Architecture extends React.Component {
   }
 
   componentDidMount () {
-    const architectureRoute = config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id
-    axios.get(architectureRoute)
+    const platformRoute = config.api.getUriPrefix() + '/platform/' + this.props.match.params.id
+    axios.get(platformRoute)
       .then(res => {
-        const architecture = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: architecture })
+        const platform = res.data.data
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
 
         const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
         axios.get(dataTypeNamesRoute)
@@ -219,12 +219,12 @@ class Architecture extends React.Component {
                 <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id}>
+                <FacebookShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
                   <FacebookIcon size={32} />
                 </FacebookShareButton>
               </OverlayTrigger>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/architecture/' + this.props.match.params.id}>
+                <TwitterShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
                   <TwitterIcon size={32} />
                 </TwitterShareButton>
               </OverlayTrigger>
@@ -298,7 +298,7 @@ class Architecture extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Architecture</Modal.Title>
+            <Modal.Title>Edit Platform</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
@@ -309,8 +309,8 @@ class Architecture extends React.Component {
               <span>
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.architecture.description}
-                  onChange={(field, value) => this.handleOnChange('architecture', field, value)}
+                  value={this.state.platform.description}
+                  onChange={(field, value) => this.handleOnChange('platform', field, value)}
                 />
               </span>}
           </Modal.Body>
@@ -342,7 +342,7 @@ class Architecture extends React.Component {
                   label='Property'
                   options={this.state.propertyNames}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
-                  tooltip='An explicitely-typed key/value property of this architecture'
+                  tooltip='An explicitely-typed key/value property of this platform'
                   disabled={this.state.showAccordion}
                 /><br />
                 <FormFieldRow
@@ -351,7 +351,7 @@ class Architecture extends React.Component {
                   label='Value'
                   validRegex={this.state.property.inputRegex}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
-                  tooltip='Architecture value of selected property'
+                  tooltip='Platform value of selected property'
                 /><br />
                 Not in the list?<br />
                 <Accordion defaultActiveKey='0'>
@@ -418,4 +418,4 @@ class Architecture extends React.Component {
   }
 }
 
-export default Architecture
+export default Platform

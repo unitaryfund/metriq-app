@@ -16,12 +16,12 @@ import Token from './views/Token'
 import Password from './views/Password'
 import Methods from './views/Methods'
 import Tasks from './views/Tasks'
-import Architectures from './views/Architectures'
+import Platforms from './views/Platforms'
 import Tags from './views/Tags'
 import Submission from './views/Submission'
 import Method from './views/Method'
 import Task from './views/Task'
-import Architecture from './views/Architecture'
+import Platform from './views/Platform'
 
 const MainRouter = (props) => {
   return (
@@ -46,9 +46,9 @@ const MainRouter = (props) => {
       </Route>
       <Route
         exact
-        path='/Architectures'
+        path='/Platforms'
       >
-        <Architectures isLoggedIn={props.isLoggedIn} />
+        <Platforms isLoggedIn={props.isLoggedIn} />
       </Route>
       <Route
         exact
@@ -163,8 +163,8 @@ const MainRouter = (props) => {
       />
       <Route
         exact
-        path='/Architecture/:id'
-        render={(p) => <Architecture {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+        path='/Platform/:id'
+        render={(p) => <Platform {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
       />
     </Router>
   )
