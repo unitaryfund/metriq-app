@@ -124,6 +124,7 @@ class Architecture extends React.Component {
     const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === typeId).friendlyType : 'bool'
 
     let inputType = 'textarea'
+    let inputRegex = defaultRegex
     if (friendlyType === 'bool') {
       inputType = 'checkbox'
     } else if (friendlyType === 'date') {
@@ -131,11 +132,11 @@ class Architecture extends React.Component {
     } else if (friendlyType === 'datetime') {
       inputType = 'datetime-local'
     }
-
-    let inputRegex = defaultRegex
     if (friendlyType === 'int') {
+      inputType = 'number'
       inputRegex = intRegex
     } else if (friendlyType === 'number') {
+      inputType = 'number'
       inputRegex = numberRegex
     }
 
