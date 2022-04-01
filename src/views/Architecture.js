@@ -44,16 +44,15 @@ class Architecture extends React.Component {
       allArchitectureNames: [],
       allDataTypeNames: [],
       propertyNames: [],
-      propertyId: '',
-      propertyValue: '',
-      propertyRegex: defaultRegex,
       property: {
         id: '',
         name: '',
         fullName: '',
-        type: '',
+        typeId: 1,
+        friendlyType: 'bool',
         value: '',
-        inputType: 'textarea'
+        inputType: 'checkbox',
+        inputRegex: defaultRegex
       }
     }
 
@@ -67,6 +66,7 @@ class Architecture extends React.Component {
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
+    this.handleOnTypeChange = this.handleOnTypeChange.bind(this)
   }
 
   handleAccordionToggle () {
@@ -120,33 +120,40 @@ class Architecture extends React.Component {
     }
   }
 
-  handleOnClickAddProperty () {
+  handleOnTypeChange (typeId, id, name, fullName, value) {
+    const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === typeId).friendlyType : 'bool'
+
     let inputType = 'textarea'
-    if (this.state.property.friendlyType === 'bool') {
+    if (friendlyType === 'bool') {
       inputType = 'checkbox'
-    } else if (this.state.property.friendlyType === 'date') {
+    } else if (friendlyType === 'date') {
       inputType = 'date'
-    } else if (this.state.property.friendlyType === 'datetime') {
-      inputType = 'datetime'
+    } else if (friendlyType === 'datetime') {
+      inputType = 'datetime-local'
     }
 
     let inputRegex = defaultRegex
-    if (this.state.property.friendlyType === 'int') {
+    if (friendlyType === 'int') {
       inputRegex = intRegex
-    } else if (this.state.property.friendlyType === 'number') {
+    } else if (friendlyType === 'number') {
       inputRegex = numberRegex
     }
 
-    const property = {
-      id: '',
-      name: '',
-      fullName: '',
-      type: '',
-      value: '',
-      inputType,
-      inputRegex
-    }
+    const property = this.state.property
+    property.typeId = typeId
+    property.friendlyType = friendlyType
+    property.inputType = inputType
+    property.inputRegex = inputRegex
+    property.id = id === undefined ? 0 : id
+    property.name = name === undefined ? '' : name
+    property.fullName = fullName === undefined ? property.name : fullName
+    property.value = value === undefined ? '' : value
+
     this.setState({ property: property })
+  }
+
+  handleOnClickAddProperty () {
+    this.handleOnTypeChange(1)
     this.handleOnClickAdd('Property')
   }
 
@@ -269,7 +276,7 @@ class Architecture extends React.Component {
                         ({
                           key: row.id,
                           name: row.name,
-                          type: row.type,
+                          friendlyType: row.friendlyType,
                           value: row.value
                         }))
                     : []}
@@ -330,19 +337,19 @@ class Architecture extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <FormFieldSelectRow
-                  inputName='propertyId'
+                  inputName='id'
                   label='Property'
                   options={this.state.propertyNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  onChange={(field, value) => this.handleOnChange('property', field, value)}
                   tooltip='An explicitely-typed key/value property of this architecture'
                   disabled={this.state.showAccordion}
                 /><br />
                 <FormFieldRow
-                  inputName='propertyValue'
+                  inputName='value'
                   inputType={this.state.property.inputType}
                   label='Value'
                   validRegex={this.state.property.inputRegex}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  onChange={(field, value) => this.handleOnChange('property', field, value)}
                   tooltip='Architecture value of selected property'
                 /><br />
                 Not in the list?<br />
@@ -371,19 +378,19 @@ class Architecture extends React.Component {
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
-                          inputName='type'
+                          inputName='typeId'
                           label='Type'
-                          value={this.state.allDataTypeNames.length ? this.state.allDataTypeNames[0].id : 0}
                           options={this.state.allDataTypeNames}
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          value={this.state.property.typeId}
+                          onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
                           tooltip='Explicit data type of new property'
                         /><br />
                         <FormFieldRow
                           inputName='value'
-                          inputType='text'
+                          inputType={this.state.property.inputType}
                           label='Value'
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          validRegex={this.state.propertyRegex}
+                          validRegex={this.state.property.inputRegex}
                           tooltip='Value of new property'
                         /><br />
                         <FormFieldRow
