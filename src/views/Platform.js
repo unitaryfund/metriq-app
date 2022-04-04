@@ -39,16 +39,17 @@ class Platform extends React.Component {
       modalMode: '',
       platform: { description: '' },
       item: {
+        id: 0,
         properties: []
       },
       allPlatformNames: [],
       allDataTypeNames: [],
       propertyNames: [],
       property: {
-        id: '',
+        id: 0,
         name: '',
         fullName: '',
-        typeId: 1,
+        dataTypeId: 1,
         friendlyType: 'bool',
         value: '',
         inputType: 'checkbox',
@@ -60,6 +61,7 @@ class Platform extends React.Component {
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
+    this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickAddProperty = this.handleOnClickAddProperty.bind(this)
@@ -107,6 +109,41 @@ class Platform extends React.Component {
       })
   }
 
+  handleAddModalSubmit () {
+    if (!this.props.isLoggedIn) {
+      window.location.href = '/Login'
+    }
+
+    const property = {
+      id: this.state.property.id,
+      name: this.state.property.name,
+      fullName: this.state.property.fullName,
+      value: this.state.property.value,
+      dataTypeId: this.state.property.dataTypeId
+    }
+    if (!property.name) {
+      window.alert('Error: Property name cannot be blank.')
+    }
+    if (!property.value) {
+      window.alert('Error: Property value cannot be blank.')
+    }
+    if (!property.dataTypeId) {
+      window.alert('Error: Property type cannot be null.')
+    }
+    if (!property.fullName) {
+      property.fullName = property.name
+    }
+
+    const propertyRoute = config.api.getUriPrefix() + '/platform/' + this.state.item.id + '/property'
+    axios.post(propertyRoute, property)
+      .then(res => {
+        window.location.reload()
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
+  }
+
   handleOnChange (key1, key2, value) {
     if (!value && value !== false) {
       value = null
@@ -120,8 +157,8 @@ class Platform extends React.Component {
     }
   }
 
-  handleOnTypeChange (typeId, id, name, fullName, value) {
-    const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === typeId).friendlyType : 'bool'
+  handleOnTypeChange (dataTypeId, id, name, fullName, value) {
+    const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).friendlyType : 'bool'
 
     let inputType = 'textarea'
     let inputRegex = defaultRegex
@@ -141,7 +178,7 @@ class Platform extends React.Component {
     }
 
     const property = this.state.property
-    property.typeId = typeId
+    property.dataTypeId = dataTypeId
     property.friendlyType = friendlyType
     property.inputType = inputType
     property.inputRegex = inputRegex
@@ -379,10 +416,10 @@ class Platform extends React.Component {
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
-                          inputName='typeId'
+                          inputName='dataTypeId'
                           label='Type'
                           options={this.state.allDataTypeNames}
-                          value={this.state.property.typeId}
+                          value={this.state.property.dataTypeId}
                           onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
                           tooltip='Explicit data type of new property'
                         /><br />
@@ -408,7 +445,7 @@ class Platform extends React.Component {
               </span>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleEditModalDone}>
+            <Button variant='primary' onClick={this.handleAddModalSubmit}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>
