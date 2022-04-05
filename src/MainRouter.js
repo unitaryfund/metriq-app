@@ -21,11 +21,8 @@ import Tags from './views/Tags'
 import Submission from './views/Submission'
 import Method from './views/Method'
 import Task from './views/Task'
-<<<<<<< HEAD
 import Platform from './views/Platform'
-=======
 import NotFound from './views/NotFound'
->>>>>>> main
 
 const MainRouter = (props) => {
   return (

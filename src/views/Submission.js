@@ -36,7 +36,7 @@ class Submission extends React.Component {
       vanityUrl: '',
       bibtexUrl: '',
       thumbnailUrl: '',
-      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [], user: [] },
+      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -731,7 +731,7 @@ class Submission extends React.Component {
         </div>
         <br />
         <div className='row'>
-          <div className='col-md-6'>
+          <div className='col-md-4'>
             <div>
               <h2>Tasks
                 <EditButton
@@ -767,7 +767,7 @@ class Submission extends React.Component {
                 <div className='card-body'>There are no associated tasks, yet.</div>
               </div>}
           </div>
-          <div className='col-md-6'>
+          <div className='col-md-4'>
             <div>
               <h2>Methods
                 <EditButton
@@ -801,6 +801,42 @@ class Submission extends React.Component {
             {(this.state.item.methods.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated methods, yet.</div>
+              </div>}
+          </div>
+          <div className='col-md-4'>
+            <div>
+              <h2>Platforms
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Platform')}
+                  onClickRemove={() => this.handleOnClickRemove('Platform')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.platforms.length > 0) &&
+              <Table
+                columns={[{
+                  title: 'Task',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 700
+                }]}
+                data={this.state.item.platforms.map(row =>
+                  ({
+                    key: row.id,
+                    name: row.name
+                  }))}
+                onRow={(record) => ({
+                  onClick () { window.location.href = '/Platform/' + record.key }
+                })}
+                tableLayout='auto'
+                rowClassName='link'
+                showHeader={false}
+              />}
+            {(this.state.item.platforms.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated platforms, yet.</div>
               </div>}
           </div>
         </div>
