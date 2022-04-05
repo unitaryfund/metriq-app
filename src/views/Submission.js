@@ -110,12 +110,15 @@ class Submission extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
+    this.handleOnPlatformRemove = this.handleOnPlatformRemove.bind(this)
     this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleSortTasks = this.handleSortTasks.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleSortMethods = this.handleSortMethods.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
+    this.handleSortPlatforms = this.handleSortPlatforms.bind(this)
+    this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
   }
@@ -226,6 +229,27 @@ class Submission extends React.Component {
           this.handleSortMethods(methods)
           this.handleTrimMethods(submission, methods)
           this.setState({ item: submission, methodNames: methods })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location.href = '/Login'
+    }
+  }
+
+  handleOnPlatformRemove (platformId) {
+    if (!window.confirm('Are you sure you want to remove this platform from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + platformId)
+        .then(res => {
+          const submission = res.data.data
+          const platforms = [...this.state.allPlatformNames]
+          this.handleSortPlatforms(platforms)
+          this.handleTrimPlatforms(submission, platforms)
+          this.setState({ item: submission, platformNames: platforms })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -484,37 +508,14 @@ class Submission extends React.Component {
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
-      if (this.state.showAccordion) {
-        const platformRoute = config.api.getUriPrefix() + '/platform'
-        axios.post(platformRoute, this.state.platform)
-          .then(res => {
-            result.platform = res.data.data.id
-            const platformNames = this.state.platformNames
-            platformNames.push(res.data.data.name)
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platformNames })
-
-            const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-            axios.post(resultRoute, result)
-              .then(res => {
-                this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
-              })
-              .catch(err => {
-                window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-              })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-        axios.post(resultRoute, result)
-          .then(res => {
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
+      const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
+      axios.post(resultRoute, result)
+        .then(res => {
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
     }
 
     this.setState({ showAddModal: false })
@@ -556,6 +557,25 @@ class Submission extends React.Component {
       for (let j = 0; j < methods.length; j++) {
         if (submission.methods[i].id === methods[j].id) {
           methods.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
+  handleSortPlatforms (platforms) {
+    platforms.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
+  handleTrimPlatforms (submission, platforms) {
+    for (let i = 0; i < submission.platforms.length; i++) {
+      for (let j = 0; j < platforms.length; j++) {
+        if (submission.platforms[i].id === platforms[j].id) {
+          platforms.splice(j, 1)
           break
         }
       }
@@ -671,18 +691,37 @@ class Submission extends React.Component {
 
                 this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
 
-                const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
-                axios.get(tagNamesRoute)
+                const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+                axios.get(platformNamesRoute)
                   .then(res => {
-                    const tags = [...res.data.data]
-                    this.handleTrimTags(submission, tags)
+                    this.handleSortPlatforms(res.data.data)
+                    const platforms = [...res.data.data]
+                    this.handleTrimPlatforms(submission, platforms)
 
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+                    let defPlatform = ''
+                    if (platforms.length) {
+                      console.log('Hit')
+                      defPlatform = platforms[0].id
+                    }
 
-                    const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
-                    axios.get(platformNamesRoute)
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+
+                    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+                    axios.get(tagNamesRoute)
                       .then(res => {
-                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: res.data.data })
+                        const tags = [...res.data.data]
+                        this.handleTrimTags(submission, tags)
+
+                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+
+                        const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+                        axios.get(platformNamesRoute)
+                          .then(res => {
+                            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: res.data.data })
+                          })
+                          .catch(err => {
+                            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                          })
                       })
                       .catch(err => {
                         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -1162,7 +1201,8 @@ class Submission extends React.Component {
                         /><br />
                         <FormFieldSelectRow
                           inputName='parentPlatform'
-                          label='Parent platform'
+                          label='Parent platform<br/>(if any)'
+                          isNullDefault
                           options={this.state.allPlatformNames}
                           onChange={(field, value) => this.handleOnChange('platform', field, value)}
                           tooltip='The new platform inherits the properties of its "parent" platform.'
@@ -1321,6 +1361,26 @@ class Submission extends React.Component {
                   )}
                 {(this.state.item.methods.length === 0) &&
                   <span><i>There are no attached methods.</i></span>}
+              </span>}
+            {(this.state.modalMode === 'Platform') &&
+              <span>
+                <b>Attached platforms:</b><br />
+                {(this.state.item.platforms.length > 0) &&
+                  this.state.item.platforms.map(platform =>
+                    <div key={platform.id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {platform.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnPlatformRemove(platform.id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.platforms.length === 0) &&
+                  <span><i>There are no attached platforms.</i></span>}
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>
