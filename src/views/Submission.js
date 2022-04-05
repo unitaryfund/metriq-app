@@ -83,7 +83,9 @@ class Submission extends React.Component {
       platform: {
         name: '',
         fullName: '',
-        description: ''
+        parentPlatform: '',
+        description: '',
+        submissions: this.props.match.params.id
       },
       taskId: '',
       methodId: '',
@@ -413,6 +415,39 @@ class Submission extends React.Component {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
           })
       }
+    } else if (this.state.modalMode === 'Platform') {
+      if (this.state.showAccordion) {
+        const platform = this.state.platform
+        if (!platform.fullName) {
+          platform.fullName = platform.name
+        }
+        if (!platform.description) {
+          platform.description = ''
+        }
+        axios.post(config.api.getUriPrefix() + '/platform', platform)
+          .then(res => {
+            window.location.reload()
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      } else {
+        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
+          .then(res => {
+            const submission = res.data.data
+            const tasks = [...this.state.taskNames]
+            for (let j = 0; j < tasks.length; j++) {
+              if (this.state.taskId === tasks[j].id) {
+                tasks.splice(j, 1)
+                break
+              }
+            }
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      }
     } else if (this.state.modalMode === 'Tag') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
         .then(res => {
@@ -560,6 +595,14 @@ class Submission extends React.Component {
           return false
         }
       } else if (!this.state.methodId) {
+        return false
+      }
+    } else if (this.state.modalMode === 'Platform') {
+      if (this.state.showAccordion) {
+        if (!nameRegex.test(this.state.platform.name)) {
+          return false
+        }
+      } else if (!this.state.platformId) {
         return false
       }
     } else if (this.state.modalMode === 'Result') {
@@ -817,7 +860,7 @@ class Submission extends React.Component {
             {(this.state.item.platforms.length > 0) &&
               <Table
                 columns={[{
-                  title: 'Task',
+                  title: 'Platform',
                   dataIndex: 'name',
                   key: 'name',
                   width: 700
@@ -860,25 +903,31 @@ class Submission extends React.Component {
                     title: 'Task',
                     dataIndex: 'taskName',
                     key: 'taskName',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Method',
                     dataIndex: 'methodName',
                     key: 'methodName',
-                    width: 280
+                    width: 224
+                  },
+                  {
+                    title: 'Platform',
+                    dataIndex: 'platformName',
+                    key: 'platformName',
+                    width: 224
                   },
                   {
                     title: 'Metric',
                     dataIndex: 'metricName',
                     key: 'metricName',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Value',
                     dataIndex: 'metricValue',
                     key: 'metricValue',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Notes',
@@ -901,6 +950,7 @@ class Submission extends React.Component {
                         key: row.id,
                         taskName: row.task.name,
                         methodName: row.method.name,
+                        platformName: row.platform ? row.platform.name : '(None)',
                         metricName: row.metricName,
                         metricValue: row.metricValue,
                         notes: row.notes
@@ -1074,6 +1124,61 @@ class Submission extends React.Component {
                   </Card>
                 </Accordion>
               </span>}
+            {(this.state.modalMode === 'Platform') &&
+              <span>
+                <FormFieldSelectRow
+                  inputName='platformId'
+                  label='Platform'
+                  options={this.state.platformNames}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A platform used by a method in this submission'
+                  disabled={this.state.showAccordion}
+                /><br />
+                Not in the list?<br />
+                <Accordion defaultActiveKey='0'>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                        <FontAwesomeIcon icon='plus' /> Create a new platform.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey='1'>
+                      <Card.Body>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Short name of new platform'
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name (optional)'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Long name of new platform'
+                        /><br />
+                        <FormFieldSelectRow
+                          inputName='parentPlatform'
+                          label='Parent platform'
+                          options={this.state.allPlatformNames}
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='The new platform inherits the properties of its "parent" platform.'
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description (optional)'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='Long description of new platform'
+                        />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </span>}
             {(this.state.modalMode === 'Result') && ((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
               <span>
                 A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
@@ -1093,6 +1198,14 @@ class Submission extends React.Component {
                   value={this.state.result.method}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Method from submission, used in this result'
+                /><br />
+                <FormFieldSelectRow
+                  inputName='platform' label='Platform'
+                  options={this.state.item.platforms}
+                  value={this.state.result.platform ? this.state.result.platform.id : 0}
+                  isNullDefault
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='The quantum computer platform used by the method for this result'
                 /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
@@ -1141,58 +1254,7 @@ class Submission extends React.Component {
                   value={this.state.result.notes}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
-                /><br />
-                <FormFieldSelectRow
-                  inputName='platform' label='Platform'
-                  options={this.state.allPlatformNames}
-                  value={this.state.result.platform ? this.state.result.platform.id : 0}
-                  isNullDefault
-                  onChange={(field, value) => {
-                    const result = this.state.result
-                    result.platform = this.state.allPlatformNames.find(x => x.id === value)
-                    this.setState({ result: result })
-                    this.handleOnChange('result', field, value)
-                  }}
-                  tooltip='The quantum computer platform used by the method for this result'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new platform.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nameRegex}
-                          tooltip='Short name of new platform'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nameRegex}
-                          tooltip='Long name of new platform'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='Long description of new platform'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
+                />
               </span>}
             {(this.state.modalMode === 'Tag') &&
               <span>
