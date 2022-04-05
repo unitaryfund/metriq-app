@@ -123,12 +123,19 @@ class Platform extends React.Component {
     }
     if (!property.name) {
       window.alert('Error: Property name cannot be blank.')
-    }
-    if (!property.value) {
-      window.alert('Error: Property value cannot be blank.')
+      return
     }
     if (!property.dataTypeId) {
       window.alert('Error: Property type cannot be null.')
+      return
+    }
+    if (!property.value) {
+      if (property.dataTypeId === 1) {
+        property.value = false
+      } else {
+        window.alert('Error: Property value cannot be blank.')
+        return
+      }
     }
     if (!property.fullName) {
       property.fullName = property.name
