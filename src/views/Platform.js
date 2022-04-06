@@ -50,7 +50,7 @@ class Platform extends React.Component {
         name: '',
         fullName: '',
         dataTypeId: 1,
-        friendlyType: 'bool',
+        typeFriendlyName: 'bool',
         typeDescription: '',
         value: '',
         inputType: 'checkbox',
@@ -167,28 +167,28 @@ class Platform extends React.Component {
   }
 
   handleOnTypeChange (dataTypeId, id, name, fullName, value) {
-    const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).friendlyType : 'bool'
+    const typeFriendlyName = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).typeFriendlyName : 'bool'
 
     let inputType = 'textarea'
     let inputRegex = defaultRegex
-    if (friendlyType === 'bool') {
+    if (typeFriendlyName === 'bool') {
       inputType = 'checkbox'
-    } else if (friendlyType === 'date') {
+    } else if (typeFriendlyName === 'date') {
       inputType = 'date'
-    } else if (friendlyType === 'datetime') {
+    } else if (typeFriendlyName === 'datetime') {
       inputType = 'datetime-local'
     }
-    if (friendlyType === 'int') {
+    if (typeFriendlyName === 'int') {
       inputType = 'number'
       inputRegex = intRegex
-    } else if (friendlyType === 'number') {
+    } else if (typeFriendlyName === 'number') {
       inputType = 'number'
       inputRegex = numberRegex
     }
 
     const property = this.state.property
     property.dataTypeId = dataTypeId
-    property.friendlyType = friendlyType
+    property.typeFriendlyName = typeFriendlyName
     property.inputType = inputType
     property.inputRegex = inputRegex
     property.id = id === undefined ? 0 : id
@@ -232,6 +232,7 @@ class Platform extends React.Component {
       .then(res => {
         const platform = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+        console.log(platform)
 
         const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
         axios.get(dataTypeNamesRoute)
@@ -323,7 +324,7 @@ class Platform extends React.Component {
                         ({
                           key: row.id,
                           name: row.name,
-                          friendlyType: row.friendlyType,
+                          type: row.typeFriendlyName,
                           value: row.value
                         }))
                     : []}
