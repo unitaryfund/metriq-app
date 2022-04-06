@@ -37,6 +37,7 @@ class Platform extends React.Component {
       showAccordion: false,
       isValidated: false,
       modalMode: '',
+      modalEditMode: '',
       platform: { description: '', parentPlatform: 0 },
       item: {
         id: 0,
@@ -85,7 +86,7 @@ class Platform extends React.Component {
   }
 
   handleShowEditModal () {
-    let mode = 'Edit'
+    let mode = 'Property'
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
@@ -94,7 +95,7 @@ class Platform extends React.Component {
       description: this.state.item.description,
       parentPlatform: this.state.item.parentPlatform
     }
-    this.setState({ showEditModal: true, modalMode: mode, platform: platform })
+    this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform: platform })
   }
 
   handleHideEditModal () {
@@ -124,6 +125,8 @@ class Platform extends React.Component {
     if (!this.props.isLoggedIn) {
       window.location.href = '/Login'
     }
+
+    console.log(this.state.property)
 
     const property = {
       id: this.state.property.id,
@@ -204,9 +207,9 @@ class Platform extends React.Component {
     property.inputType = inputType
     property.inputRegex = inputRegex
     property.id = id === undefined ? 0 : id
-    property.name = name === undefined ? '' : name
+    property.name = name === undefined ? this.state.property.name : name
     property.fullName = fullName === undefined ? property.name : fullName
-    property.value = value === undefined ? '' : value
+    property.value = value === undefined ? this.state.property.value : value
 
     this.setState({ property: property })
   }
@@ -225,7 +228,7 @@ class Platform extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
+    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, modalEditMode: 'Add', isValidated: false })
   }
 
   handleHideAddModal () {
@@ -236,7 +239,7 @@ class Platform extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showRemoveModal: true, modalMode: mode })
+    this.setState({ showRemoveModal: true, modalMode: mode, modalEditMode: 'Remove' })
   }
 
   handleRemoveModalDone () {
@@ -258,14 +261,17 @@ class Platform extends React.Component {
   handleCombineParentProperties (platform) {
     const parentProperties = []
     while (platform.parentPlatform) {
-      for (let i = 0; i < platform.parentProperties.length; i++) {
-        const property = platform.parentProperties[i]
+      const properties = platform.parentPlatform.properties
+      for (let i = 0; i < properties.length; i++) {
+        const property = properties[i]
         property.key = property.id
+        property.type = property.typeFriendlyName
         property.platform = platform.parentPlatform.name
         parentProperties.push(property)
       }
       platform = platform.parentPlatform
     }
+    console.log(parentProperties)
 
     this.setState({ parentProperties })
   }
@@ -506,7 +512,7 @@ class Platform extends React.Component {
             {(this.state.modalMode === 'Login') &&
               <Modal.Title>Add Property</Modal.Title>}
             {(this.state.modalMode !== 'Login') &&
-              <Modal.Title>{(this.state.property.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>}
+              <Modal.Title>{this.state.modalEditMode} {this.state.modalMode}</Modal.Title>}
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
@@ -531,10 +537,10 @@ class Platform extends React.Component {
                   validRegex={this.state.property.inputRegex}
                   value={this.state.property.value}
                   checked={this.state.property.inputType === 'checkbox' ? this.state.property.value === 'true' : undefined}
-                  onChange={(field, value) => this.handleOnChange('property', field, value.toString())}
+                  onChange={(field, value) => this.handleOnChange('property', field, (this.state.property.inputType === 'checkbox') ? value.toString() : value)}
                   tooltip='Platform value of selected property'
                 />
-                {!this.state.property.id &&
+                {(this.state.modalEditMode === 'Add') &&
                   <span>
                     <br />Not in the list?<br />
                     <Accordion defaultActiveKey='0'>
