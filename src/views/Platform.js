@@ -146,7 +146,7 @@ class Platform extends React.Component {
       property.fullName = property.name
     }
 
-    const propertyRoute = config.api.getUriPrefix() + (this.state.property.id ? '/property' + this.state.property.id : '/platform/' + this.state.item.id + '/property')
+    const propertyRoute = config.api.getUriPrefix() + (this.state.property.id ? '/property/' + this.state.property.id : '/platform/' + this.state.item.id + '/property')
     axios.post(propertyRoute, property)
       .then(res => {
         window.location.reload()
@@ -201,8 +201,6 @@ class Platform extends React.Component {
     property.name = name === undefined ? '' : name
     property.fullName = fullName === undefined ? property.name : fullName
     property.value = value === undefined ? '' : value
-
-    console.log(property)
 
     this.setState({ property: property })
   }
@@ -436,7 +434,7 @@ class Platform extends React.Component {
                   validRegex={this.state.property.inputRegex}
                   value={this.state.property.value}
                   checked={this.state.property.inputType === 'checkbox' ? this.state.property.value === 'true' : undefined}
-                  onChange={(field, value) => this.handleOnChange('property', field, value)}
+                  onChange={(field, value) => this.handleOnChange('property', field, value.toString())}
                   tooltip='Platform value of selected property'
                 />
                 {!this.state.property.id &&
