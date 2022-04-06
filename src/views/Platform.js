@@ -48,6 +48,7 @@ class Platform extends React.Component {
       allPropertyNames: [],
       allDataTypeNames: [],
       propertyNames: [],
+      parentProperties: [],
       property: {
         id: 0,
         name: '',
@@ -76,6 +77,7 @@ class Platform extends React.Component {
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnTypeChange = this.handleOnTypeChange.bind(this)
     this.handleOnClickEditProperty = this.handleOnClickEditProperty.bind(this)
+    this.handleCombineParentProperties = this.handleCombineParentProperties.bind(this)
   }
 
   handleAccordionToggle () {
@@ -253,12 +255,28 @@ class Platform extends React.Component {
     this.handleOnClickAdd('property')
   }
 
+  handleCombineParentProperties (platform) {
+    const parentProperties = []
+    while (platform.parentPlatform) {
+      for (let i = 0; i < platform.parentProperties.length; i++) {
+        const property = platform.parentProperties[i]
+        property.key = property.id
+        property.platform = platform.parentPlatform.name
+        parentProperties.push(property)
+      }
+      platform = platform.parentPlatform
+    }
+
+    this.setState({ parentProperties })
+  }
+
   componentDidMount () {
     const platformRoute = config.api.getUriPrefix() + '/platform/' + this.props.match.params.id
     axios.get(platformRoute)
       .then(res => {
         const platform = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+        this.handleCombineParentProperties(platform)
 
         const propertyRoute = config.api.getUriPrefix() + '/property/names'
         axios.get(propertyRoute)
@@ -338,9 +356,9 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
-          {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
+          {(this.state.parentProperties.length > 0) &&
             <div>
-              <h2>Child Properties</h2>
+              <h2>Parent Properties</h2>
               <div className='row'>
                 <div className='col-md-12'>
                   <Table
@@ -349,14 +367,27 @@ class Platform extends React.Component {
                       title: 'Name',
                       dataIndex: 'name',
                       key: 'name',
-                      width: 700
+                      width: 300
+                    },
+                    {
+                      title: 'Type',
+                      dataIndex: 'type',
+                      key: 'type',
+                      width: 300
+                    },
+                    {
+                      title: 'Value',
+                      dataIndex: 'value',
+                      key: 'value',
+                      width: 300
+                    },
+                    {
+                      title: 'Platform',
+                      dataIndex: 'platform',
+                      key: 'platform',
+                      width: 300
                     }]}
-                    data={this.state.item.childPlatforms
-                      ? this.state.item.childPlatforms.map(row => ({
-                          key: row.id,
-                          name: row.name
-                        }))
-                      : []}
+                    data={this.state.parentProperties}
                     onRow={(record) => ({
                       onClick () { window.location.href = '/Platform/' + record.key }
                     })}
