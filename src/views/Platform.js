@@ -51,9 +51,11 @@ class Platform extends React.Component {
         fullName: '',
         dataTypeId: 1,
         friendlyType: 'bool',
+        typeDescription: '',
         value: '',
         inputType: 'checkbox',
-        inputRegex: defaultRegex
+        inputRegex: defaultRegex,
+        valueDescription: ''
       }
     }
 
@@ -439,11 +441,18 @@ class Platform extends React.Component {
                           tooltip='Value of new property'
                         /><br />
                         <FormFieldRow
-                          inputName='description'
+                          inputName='typeDescription'
                           inputType='textarea'
-                          label='Description (optional)'
+                          label='Type Description<br/>(optional)'
                           onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          tooltip='Long description of new method'
+                          tooltip='Long description of new property type'
+                        /><br />
+                        <FormFieldRow
+                          inputName='valueDescription'
+                          inputType='textarea'
+                          label='Value Description<br/>(optional)'
+                          onChange={(field, value) => this.handleOnChange('property', field, value)}
+                          tooltip='Long description of new property value'
                         />
                       </Card.Body>
                     </Accordion.Collapse>
