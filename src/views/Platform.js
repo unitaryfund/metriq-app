@@ -43,6 +43,7 @@ class Platform extends React.Component {
         properties: []
       },
       allPlatformNames: [],
+      allPropertyNames: [],
       allDataTypeNames: [],
       propertyNames: [],
       property: {
@@ -232,12 +233,20 @@ class Platform extends React.Component {
       .then(res => {
         const platform = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
-        console.log(platform)
 
-        const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
-        axios.get(dataTypeNamesRoute)
+        const propertyRoute = config.api.getUriPrefix() + '/property/names'
+        axios.get(propertyRoute)
           .then(res => {
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPropertyNames: res.data.data })
+
+            const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
+            axios.get(dataTypeNamesRoute)
+              .then(res => {
+                this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+              })
+              .catch(err => {
+                this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+              })
           })
           .catch(err => {
             this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -387,7 +396,7 @@ class Platform extends React.Component {
                 <FormFieldSelectRow
                   inputName='id'
                   label='Property'
-                  options={this.state.propertyNames}
+                  options={this.state.allPropertyNames}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
                   tooltip='An explicitely-typed key/value property of this platform'
                   disabled={this.state.showAccordion}
