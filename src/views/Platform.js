@@ -73,6 +73,7 @@ class Platform extends React.Component {
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnTypeChange = this.handleOnTypeChange.bind(this)
+    this.handleOnClickEditProperty = this.handleOnClickEditProperty.bind(this)
   }
 
   handleAccordionToggle () {
@@ -145,7 +146,7 @@ class Platform extends React.Component {
       property.fullName = property.name
     }
 
-    const propertyRoute = config.api.getUriPrefix() + '/platform/' + this.state.item.id + '/property'
+    const propertyRoute = config.api.getUriPrefix() + (this.state.property.id ? '/property' + this.state.property.id : '/platform/' + this.state.item.id + '/property')
     axios.post(propertyRoute, property)
       .then(res => {
         window.location.reload()
@@ -175,10 +176,13 @@ class Platform extends React.Component {
     let inputRegex = defaultRegex
     if (friendlyType === 'bool') {
       inputType = 'checkbox'
+      inputRegex = undefined
     } else if (friendlyType === 'date') {
       inputType = 'date'
+      inputRegex = undefined
     } else if (friendlyType === 'datetime') {
       inputType = 'datetime-local'
+      inputRegex = undefined
     }
     if (friendlyType === 'int') {
       inputType = 'number'
@@ -198,11 +202,18 @@ class Platform extends React.Component {
     property.fullName = fullName === undefined ? property.name : fullName
     property.value = value === undefined ? '' : value
 
+    console.log(property)
+
     this.setState({ property: property })
   }
 
   handleOnClickAddProperty () {
-    this.handleOnTypeChange(1)
+    if (this.state.allPropertyNames.length) {
+      const property = this.state.allPropertyNames[0]
+      this.handleOnTypeChange(property.dataTypeId, property.id, property.name, property.fullName)
+    } else {
+      this.handleOnTypeChange(1)
+    }
     this.handleOnClickAdd('Property')
   }
 
@@ -226,6 +237,18 @@ class Platform extends React.Component {
 
   handleRemoveModalDone () {
     this.setState({ showRemoveModal: false })
+  }
+
+  handleOnClickEditProperty (propertyId) {
+    for (let i = 0; i < this.state.item.properties.length; i++) {
+      if (this.state.item.properties[i].id === propertyId) {
+        const property = this.state.item.properties[i]
+        property.submissionId = this.state.item.id
+        this.handleOnTypeChange(property.dataTypeId, propertyId, property.name, property.fullName, property.value)
+        break
+      }
+    }
+    this.handleOnClickAdd('property')
   }
 
   componentDidMount () {
@@ -326,7 +349,7 @@ class Platform extends React.Component {
                       dataIndex: 'edit',
                       key: 'edit',
                       width: 42,
-                      render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} /></div>
+                      render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.key)} /></div>
                     }
                   ]}
                   data={this.state.item.properties.length
@@ -342,7 +365,7 @@ class Platform extends React.Component {
                 />}
               {(this.state.item.properties.length === 0) &&
                 <div className='card bg-light'>
-                  <div className='card-body'>There are no associated results, yet.</div>
+                  <div className='card-body'>There are no associated properties, yet.</div>
                 </div>}
             </div>
           </div>
@@ -385,7 +408,10 @@ class Platform extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add Property</Modal.Title>
+            {(this.state.modalMode === 'Login') &&
+              <Modal.Title>Add Result</Modal.Title>}
+            {(this.state.modalMode !== 'Login') &&
+              <Modal.Title>{(this.state.property.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>}
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
@@ -398,6 +424,7 @@ class Platform extends React.Component {
                   inputName='id'
                   label='Property'
                   options={this.state.allPropertyNames}
+                  value={this.state.property.id}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
                   tooltip='An explicitely-typed key/value property of this platform'
                   disabled={this.state.showAccordion}
@@ -407,68 +434,73 @@ class Platform extends React.Component {
                   inputType={this.state.property.inputType}
                   label='Value'
                   validRegex={this.state.property.inputRegex}
+                  value={this.state.property.value}
+                  checked={this.state.property.inputType === 'checkbox' ? this.state.property.value === 'true' : undefined}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
                   tooltip='Platform value of selected property'
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new property.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          validRegex={nameRegex}
-                          tooltip='Short name of new property'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          tooltip='Long name of new method'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='dataTypeId'
-                          label='Type'
-                          options={this.state.allDataTypeNames}
-                          value={this.state.property.dataTypeId}
-                          onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
-                          tooltip='Explicit data type of new property'
-                        /><br />
-                        <FormFieldRow
-                          inputName='value'
-                          inputType={this.state.property.inputType}
-                          label='Value'
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          validRegex={this.state.property.inputRegex}
-                          tooltip='Value of new property'
-                        /><br />
-                        <FormFieldRow
-                          inputName='typeDescription'
-                          inputType='textarea'
-                          label='Type Description<br/>(optional)'
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          tooltip='Long description of new property type'
-                        /><br />
-                        <FormFieldRow
-                          inputName='valueDescription'
-                          inputType='textarea'
-                          label='Value Description<br/>(optional)'
-                          onChange={(field, value) => this.handleOnChange('property', field, value)}
-                          tooltip='Long description of new property value'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
+                />
+                {!this.state.property.id &&
+                  <span>
+                    <br />Not in the list?<br />
+                    <Accordion defaultActiveKey='0'>
+                      <Card>
+                        <Card.Header>
+                          <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                            <FontAwesomeIcon icon='plus' /> Create a new property.
+                          </Accordion.Toggle>
+                        </Card.Header>
+                        <Accordion.Collapse eventKey='1'>
+                          <Card.Body>
+                            <FormFieldRow
+                              inputName='name'
+                              inputType='text'
+                              label='Name'
+                              onChange={(field, value) => this.handleOnChange('property', field, value)}
+                              validRegex={nameRegex}
+                              tooltip='Short name of new property'
+                            /><br />
+                            <FormFieldRow
+                              inputName='fullName'
+                              inputType='text'
+                              label='Full name (optional)'
+                              onChange={(field, value) => this.handleOnChange('property', field, value)}
+                              tooltip='Long name of new method'
+                            /><br />
+                            <FormFieldSelectRow
+                              inputName='dataTypeId'
+                              label='Type'
+                              options={this.state.allDataTypeNames}
+                              value={this.state.property.dataTypeId}
+                              onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
+                              tooltip='Explicit data type of new property'
+                            /><br />
+                            <FormFieldRow
+                              inputName='value'
+                              inputType={this.state.property.inputType}
+                              label='Value'
+                              onChange={(field, value) => this.handleOnChange('property', field, value)}
+                              validRegex={this.state.property.inputRegex}
+                              tooltip='Value of new property'
+                            /><br />
+                            <FormFieldRow
+                              inputName='typeDescription'
+                              inputType='textarea'
+                              label='Type Description<br/>(optional)'
+                              onChange={(field, value) => this.handleOnChange('property', field, value)}
+                              tooltip='Long description of new property type'
+                            /><br />
+                            <FormFieldRow
+                              inputName='valueDescription'
+                              inputType='textarea'
+                              label='Value Description<br/>(optional)'
+                              onChange={(field, value) => this.handleOnChange('property', field, value)}
+                              tooltip='Long description of new property value'
+                            />
+                          </Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                    </Accordion>
+                  </span>}
               </span>}
           </Modal.Body>
           <Modal.Footer>

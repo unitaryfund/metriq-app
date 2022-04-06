@@ -813,7 +813,7 @@ class Submission extends React.Component {
         </div>
         <br />
         <div className='row'>
-          <div className='col-md-4'>
+          <div className='col-md-6'>
             <div>
               <h2>Tasks
                 <EditButton
@@ -849,7 +849,7 @@ class Submission extends React.Component {
                 <div className='card-body'>There are no associated tasks, yet.</div>
               </div>}
           </div>
-          <div className='col-md-4'>
+          <div className='col-md-6'>
             <div>
               <h2>Methods
                 <EditButton
@@ -885,7 +885,10 @@ class Submission extends React.Component {
                 <div className='card-body'>There are no associated methods, yet.</div>
               </div>}
           </div>
-          <div className='col-md-4'>
+        </div>
+        <br />
+        <div className='row'>
+          <div className='col-md-6'>
             <div>
               <h2>Platforms
                 <EditButton
@@ -919,6 +922,24 @@ class Submission extends React.Component {
             {(this.state.item.platforms.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated platforms, yet.</div>
+              </div>}
+          </div>
+          <div className='col-md-6'>
+            <div>
+              <h2>Tags
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Tag')}
+                  onClickRemove={() => this.handleOnClickRemove('Tag')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.tags.length > 0) &&
+              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+            {(this.state.item.tags.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tags, yet.</div>
               </div>}
           </div>
         </div>
@@ -1006,27 +1027,6 @@ class Submission extends React.Component {
         <br />
         <div className='row'>
           <div className='col-md-12'>
-            <div>
-              <h2>Tags
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Tag')}
-                  onClickRemove={() => this.handleOnClickRemove('Tag')}
-                />
-              </h2>
-              <hr />
-            </div>
-            {(this.state.item.tags.length > 0) &&
-              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
-            {(this.state.item.tags.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated tags, yet.</div>
-              </div>}
-          </div>
-        </div>
-        <br />
-        <div className='row'>
-          <div className='col-md-12'>
             <hr />
             <div className='text-center'>
               Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
@@ -1085,7 +1085,6 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={nameRegex}
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
@@ -1141,7 +1140,6 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={nameRegex}
                           tooltip='Long name of new task'
                         /><br />
                         <FormFieldSelectRow
@@ -1196,7 +1194,6 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nameRegex}
                           tooltip='Long name of new platform'
                         /><br />
                         <FormFieldSelectRow
