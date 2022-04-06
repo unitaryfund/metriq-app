@@ -37,9 +37,11 @@ class Platform extends React.Component {
       showAccordion: false,
       isValidated: false,
       modalMode: '',
-      platform: { description: '' },
+      platform: { description: '', parentPlatform: 0 },
       item: {
         id: 0,
+        description: '',
+        parentPlatform: null,
         properties: []
       },
       allPlatformNames: [],
@@ -87,7 +89,8 @@ class Platform extends React.Component {
     }
     const platform = {
       properties: this.state.item.properties,
-      description: this.state.item.description
+      description: this.state.item.description,
+      parentPlatform: this.state.item.parentPlatform
     }
     this.setState({ showEditModal: true, modalMode: mode, platform: platform })
   }
@@ -102,7 +105,8 @@ class Platform extends React.Component {
     }
 
     const reqBody = {
-      description: this.state.platform.description
+      description: this.state.platform.description,
+      parentPlatform: this.state.platform.parentPlatform
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -261,10 +265,26 @@ class Platform extends React.Component {
           .then(res => {
             this.setState({ isRequestFailed: false, requestFailedMessage: '', allPropertyNames: res.data.data })
 
-            const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
-            axios.get(dataTypeNamesRoute)
+            const platformsRoute = config.api.getUriPrefix() + '/platform/names'
+            axios.get(platformsRoute)
               .then(res => {
-                this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+                const platforms = [{ id: 0, name: '(None)' }, ...res.data.data]
+                for (let i = 0; i < platforms.length; i++) {
+                  if (platforms[i].id === platform.id) {
+                    platforms.splice(i, 1)
+                    break
+                  }
+                }
+                this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: platforms })
+
+                const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
+                axios.get(dataTypeNamesRoute)
+                  .then(res => {
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+                  })
+                  .catch(err => {
+                    this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                  })
               })
               .catch(err => {
                 this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -309,6 +329,44 @@ class Platform extends React.Component {
             </div>
           </div>
           <br />
+          {this.state.item.parentPlatform &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Parent platform:</b> <a href={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</a>
+                </div>
+              </div>
+              <br />
+            </div>}
+          {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
+            <div>
+              <h2>Child Properties</h2>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <Table
+                    className='detail-table'
+                    columns={[{
+                      title: 'Name',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.childPlatforms
+                      ? this.state.item.childPlatforms.map(row => ({
+                          key: row.id,
+                          name: row.name
+                        }))
+                      : []}
+                    onRow={(record) => ({
+                      onClick () { window.location.href = '/Platform/' + record.key }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>
+              </div>
+              <br />
+            </div>}
           <div className='row'>
             <div className='col-md-12'>
               <div>
@@ -385,6 +443,14 @@ class Platform extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
+                <FormFieldSelectRow
+                  inputName='parentPlatform'
+                  label='Parent platform<br/>(if any)'
+                  options={this.state.allPlatformNames}
+                  value={this.state.platform.parentPlatform}
+                  onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                  tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
+                /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'
                   value={this.state.platform.description}
@@ -407,7 +473,7 @@ class Platform extends React.Component {
         >
           <Modal.Header closeButton>
             {(this.state.modalMode === 'Login') &&
-              <Modal.Title>Add Result</Modal.Title>}
+              <Modal.Title>Add Property</Modal.Title>}
             {(this.state.modalMode !== 'Login') &&
               <Modal.Title>{(this.state.property.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>}
           </Modal.Header>
@@ -424,7 +490,7 @@ class Platform extends React.Component {
                   options={this.state.allPropertyNames}
                   value={this.state.property.id}
                   onChange={(field, value) => this.handleOnChange('property', field, value)}
-                  tooltip='An explicitely-typed key/value property of this platform'
+                  tooltip='An explicitly-typed key/value property of this platform'
                   disabled={this.state.showAccordion}
                 /><br />
                 <FormFieldRow
@@ -462,7 +528,7 @@ class Platform extends React.Component {
                               inputType='text'
                               label='Full name (optional)'
                               onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              tooltip='Long name of new method'
+                              tooltip='Long name of new property'
                             /><br />
                             <FormFieldSelectRow
                               inputName='dataTypeId'
