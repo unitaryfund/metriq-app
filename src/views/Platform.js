@@ -353,6 +353,35 @@ class Platform extends React.Component {
             </div>
           </div>
           <br />
+          {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
+            <div>
+              <h2>Child Platforms</h2>
+              <div className='row'>
+                <div className='col-md-12'>
+                  <Table
+                    className='detail-table'
+                    columns={[{
+                      title: 'Name',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.childPlatforms
+                      ? this.state.item.childPlatforms.map(row => ({
+                          key: row.id,
+                          name: row.name
+                        }))
+                      : []}
+                    onRow={(record) => ({
+                      onClick () { window.location.href = '/Platform/' + record.key }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>
+              </div>
+              <br />
+            </div>}
           {this.state.item.parentPlatform &&
             <div className='row'>
               <div className='col-md-12'>
