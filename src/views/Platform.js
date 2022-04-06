@@ -56,7 +56,8 @@ class Platform extends React.Component {
         value: '',
         inputType: 'checkbox',
         inputRegex: defaultRegex,
-        valueDescription: ''
+        valueDescription: '',
+        platformId: this.props.match.params.id
       }
     }
 
@@ -168,28 +169,28 @@ class Platform extends React.Component {
   }
 
   handleOnTypeChange (dataTypeId, id, name, fullName, value) {
-    const typeFriendlyName = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).typeFriendlyName : 'bool'
+    const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).friendlyType : 'bool'
 
     let inputType = 'textarea'
     let inputRegex = defaultRegex
-    if (typeFriendlyName === 'bool') {
+    if (friendlyType === 'bool') {
       inputType = 'checkbox'
-    } else if (typeFriendlyName === 'date') {
+    } else if (friendlyType === 'date') {
       inputType = 'date'
-    } else if (typeFriendlyName === 'datetime') {
+    } else if (friendlyType === 'datetime') {
       inputType = 'datetime-local'
     }
-    if (typeFriendlyName === 'int') {
+    if (friendlyType === 'int') {
       inputType = 'number'
       inputRegex = intRegex
-    } else if (typeFriendlyName === 'number') {
+    } else if (friendlyType === 'number') {
       inputType = 'number'
       inputRegex = numberRegex
     }
 
     const property = this.state.property
     property.dataTypeId = dataTypeId
-    property.typeFriendlyName = typeFriendlyName
+    property.typeFriendlyName = friendlyType
     property.inputType = inputType
     property.inputRegex = inputRegex
     property.id = id === undefined ? 0 : id
