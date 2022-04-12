@@ -456,17 +456,17 @@ class Submission extends React.Component {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
           })
       } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
+        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + this.state.platformId, {})
           .then(res => {
             const submission = res.data.data
-            const tasks = [...this.state.taskNames]
-            for (let j = 0; j < tasks.length; j++) {
-              if (this.state.taskId === tasks[j].id) {
-                tasks.splice(j, 1)
+            const platforms = [...this.state.platformNames]
+            for (let j = 0; j < platforms.length; j++) {
+              if (this.state.platformId === platforms[j].id) {
+                platforms.splice(j, 1)
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platforms, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
