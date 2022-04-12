@@ -16,10 +16,12 @@ import Token from './views/Token'
 import Password from './views/Password'
 import Methods from './views/Methods'
 import Tasks from './views/Tasks'
+import Platforms from './views/Platforms'
 import Tags from './views/Tags'
 import Submission from './views/Submission'
 import Method from './views/Method'
 import Task from './views/Task'
+import Platform from './views/Platform'
 import NotFound from './views/NotFound'
 
 const MainRouter = (props) => {
@@ -43,6 +45,12 @@ const MainRouter = (props) => {
           path='/Tasks'
         >
           <Tasks isLoggedIn={props.isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Platforms'
+        >
+          <Platforms isLoggedIn={props.isLoggedIn} />
         </Route>
         <Route
           exact
@@ -154,6 +162,11 @@ const MainRouter = (props) => {
           exact
           path='/Task/:id'
           render={(p) => <Task {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+        />
+        <Route
+          exact
+          path='/Platform/:id'
+          render={(p) => <Platform {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
         />
         <Route component={NotFound} />
       </Switch>

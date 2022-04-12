@@ -20,10 +20,7 @@ import logo from './../images/metriq_logo_secondary_blue.png'
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-const metricNameRegex = /.{1,}/
-const methodNameRegex = /.{1,}/
-const taskNameRegex = /.{1,}/
-const tagNameRegex = /.{1,}/
+const nameRegex = /.{1,}/
 const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
 const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
 const sampleSizeRegex = /^[0-9]+$/
@@ -39,7 +36,7 @@ class Submission extends React.Component {
       vanityUrl: '',
       bibtexUrl: '',
       thumbnailUrl: '',
-      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], results: [], user: [] },
+      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -47,6 +44,7 @@ class Submission extends React.Component {
       allMethodNames: [],
       allTaskNames: [],
       allTagNames: [],
+      allPlatformNames: [],
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
@@ -63,6 +61,7 @@ class Submission extends React.Component {
         id: '',
         task: '',
         method: '',
+        platform: '',
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
@@ -81,8 +80,16 @@ class Submission extends React.Component {
         description: '',
         submissions: this.props.match.params.id
       },
+      platform: {
+        name: '',
+        fullName: '',
+        parentPlatform: '',
+        description: '',
+        submissions: this.props.match.params.id
+      },
       taskId: '',
       methodId: '',
+      platformId: '',
       tag: ''
     }
 
@@ -103,12 +110,15 @@ class Submission extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
     this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
+    this.handleOnPlatformRemove = this.handleOnPlatformRemove.bind(this)
     this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
     this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleSortTasks = this.handleSortTasks.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleSortMethods = this.handleSortMethods.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
+    this.handleSortPlatforms = this.handleSortPlatforms.bind(this)
+    this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
   }
@@ -228,6 +238,27 @@ class Submission extends React.Component {
     }
   }
 
+  handleOnPlatformRemove (platformId) {
+    if (!window.confirm('Are you sure you want to remove this platform from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + platformId)
+        .then(res => {
+          const submission = res.data.data
+          const platforms = [...this.state.allPlatformNames]
+          this.handleSortPlatforms(platforms)
+          this.handleTrimPlatforms(submission, platforms)
+          this.setState({ item: submission, platformNames: platforms })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location.href = '/Login'
+    }
+  }
+
   handleOnTagRemove (tagName) {
     if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
       return
@@ -307,6 +338,7 @@ class Submission extends React.Component {
       id: '',
       task: '',
       method: '',
+      platform: '',
       metricName: '',
       metricValue: 0,
       isHigherBetter: false,
@@ -407,6 +439,39 @@ class Submission extends React.Component {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
           })
       }
+    } else if (this.state.modalMode === 'Platform') {
+      if (this.state.showAccordion) {
+        const platform = this.state.platform
+        if (!platform.fullName) {
+          platform.fullName = platform.name
+        }
+        if (!platform.description) {
+          platform.description = ''
+        }
+        axios.post(config.api.getUriPrefix() + '/platform', platform)
+          .then(res => {
+            window.location.reload()
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      } else {
+        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
+          .then(res => {
+            const submission = res.data.data
+            const tasks = [...this.state.taskNames]
+            for (let j = 0; j < tasks.length; j++) {
+              if (this.state.taskId === tasks[j].id) {
+                tasks.splice(j, 1)
+                break
+              }
+            }
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      }
     } else if (this.state.modalMode === 'Tag') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
         .then(res => {
@@ -425,24 +490,26 @@ class Submission extends React.Component {
         })
     } else if (this.state.modalMode === 'Result') {
       const result = this.state.result
-      if (!result.task) {
-        result.task = this.state.item.tasks[0].id
-      }
-      if (!result.method) {
-        result.method = this.state.item.methods[0].id
-      }
       if (!result.metricName) {
         window.alert('Error: Metric Name cannot be blank.')
       }
       if (!result.metricValue) {
         window.alert('Error: Metric Value cannot be blank.')
       }
+      if (!result.task) {
+        result.task = this.state.item.tasks[0].id
+      }
+      if (!result.method) {
+        result.method = this.state.item.methods[0].id
+      }
+      if (!result.platform) {
+        result.platform = null
+      }
       if (!result.evaluatedDate) {
         result.evaluatedDate = new Date()
       }
       const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-      const request = axios.post(resultRoute, result)
-      request
+      axios.post(resultRoute, result)
         .then(res => {
           this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
         })
@@ -496,6 +563,25 @@ class Submission extends React.Component {
     }
   }
 
+  handleSortPlatforms (platforms) {
+    platforms.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
+  handleTrimPlatforms (submission, platforms) {
+    for (let i = 0; i < submission.platforms.length; i++) {
+      for (let j = 0; j < platforms.length; j++) {
+        if (submission.platforms[i].id === platforms[j].id) {
+          platforms.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
   handleTrimTags (submission, tags) {
     for (let i = 0; i < submission.tags.length; i++) {
       for (let j = 0; j < tags.length; j++) {
@@ -517,7 +603,7 @@ class Submission extends React.Component {
 
     if (this.state.modalMode === 'Task') {
       if (this.state.showAccordion) {
-        if (!taskNameRegex.test(this.state.task.name)) {
+        if (!nameRegex.test(this.state.task.name)) {
           return false
         }
       } else if (!this.state.taskId) {
@@ -525,14 +611,22 @@ class Submission extends React.Component {
       }
     } else if (this.state.modalMode === 'Method') {
       if (this.state.showAccordion) {
-        if (!methodNameRegex.test(this.state.method.name)) {
+        if (!nameRegex.test(this.state.method.name)) {
           return false
         }
       } else if (!this.state.methodId) {
         return false
       }
+    } else if (this.state.modalMode === 'Platform') {
+      if (this.state.showAccordion) {
+        if (!nameRegex.test(this.state.platform.name)) {
+          return false
+        }
+      } else if (!this.state.platformId) {
+        return false
+      }
     } else if (this.state.modalMode === 'Result') {
-      if (!metricNameRegex.test(this.state.result.metricName)) {
+      if (!nameRegex.test(this.state.result.metricName)) {
         return false
       }
       if (!metricValueRegex.test(this.state.result.metricValue)) {
@@ -597,13 +691,41 @@ class Submission extends React.Component {
 
                 this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
 
-                const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
-                axios.get(tagNamesRoute)
+                const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+                axios.get(platformNamesRoute)
                   .then(res => {
-                    const tags = [...res.data.data]
-                    this.handleTrimTags(submission, tags)
+                    this.handleSortPlatforms(res.data.data)
+                    const platforms = [...res.data.data]
+                    this.handleTrimPlatforms(submission, platforms)
 
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+                    let defPlatform = ''
+                    if (platforms.length) {
+                      console.log('Hit')
+                      defPlatform = platforms[0].id
+                    }
+
+                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+
+                    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+                    axios.get(tagNamesRoute)
+                      .then(res => {
+                        const tags = [...res.data.data]
+                        this.handleTrimTags(submission, tags)
+
+                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+
+                        const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+                        axios.get(platformNamesRoute)
+                          .then(res => {
+                            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: res.data.data })
+                          })
+                          .catch(err => {
+                            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                          })
+                      })
+                      .catch(err => {
+                        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                      })
                   })
                   .catch(err => {
                     this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -766,6 +888,63 @@ class Submission extends React.Component {
         </div>
         <br />
         <div className='row'>
+          <div className='col-md-6'>
+            <div>
+              <h2>Platforms
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Platform')}
+                  onClickRemove={() => this.handleOnClickRemove('Platform')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.platforms.length > 0) &&
+              <Table
+                columns={[{
+                  title: 'Platform',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 700
+                }]}
+                data={this.state.item.platforms.map(row =>
+                  ({
+                    key: row.id,
+                    name: row.name
+                  }))}
+                onRow={(record) => ({
+                  onClick () { window.location.href = '/Platform/' + record.key }
+                })}
+                tableLayout='auto'
+                rowClassName='link'
+                showHeader={false}
+              />}
+            {(this.state.item.platforms.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated platforms, yet.</div>
+              </div>}
+          </div>
+          <div className='col-md-6'>
+            <div>
+              <h2>Tags
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAdd('Tag')}
+                  onClickRemove={() => this.handleOnClickRemove('Tag')}
+                />
+              </h2>
+              <hr />
+            </div>
+            {(this.state.item.tags.length > 0) &&
+              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+            {(this.state.item.tags.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tags, yet.</div>
+              </div>}
+          </div>
+        </div>
+        <br />
+        <div className='row'>
           <div className='col-md-12'>
             <div>
               <h2>Results
@@ -784,25 +963,31 @@ class Submission extends React.Component {
                     title: 'Task',
                     dataIndex: 'taskName',
                     key: 'taskName',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Method',
                     dataIndex: 'methodName',
                     key: 'methodName',
-                    width: 280
+                    width: 224
+                  },
+                  {
+                    title: 'Platform',
+                    dataIndex: 'platformName',
+                    key: 'platformName',
+                    width: 224
                   },
                   {
                     title: 'Metric',
                     dataIndex: 'metricName',
                     key: 'metricName',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Value',
                     dataIndex: 'metricValue',
                     key: 'metricValue',
-                    width: 280
+                    width: 224
                   },
                   {
                     title: 'Notes',
@@ -825,6 +1010,7 @@ class Submission extends React.Component {
                         key: row.id,
                         taskName: row.task.name,
                         methodName: row.method.name,
+                        platformName: row.platform ? row.platform.name : '(None)',
                         metricName: row.metricName,
                         metricValue: row.metricValue,
                         notes: row.notes
@@ -835,27 +1021,6 @@ class Submission extends React.Component {
             {(this.state.item.results.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated results, yet.</div>
-              </div>}
-          </div>
-        </div>
-        <br />
-        <div className='row'>
-          <div className='col-md-12'>
-            <div>
-              <h2>Tags
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Tag')}
-                  onClickRemove={() => this.handleOnClickRemove('Tag')}
-                />
-              </h2>
-              <hr />
-            </div>
-            {(this.state.item.tags.length > 0) &&
-              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
-            {(this.state.item.tags.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated tags, yet.</div>
               </div>}
           </div>
         </div>
@@ -912,7 +1077,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={methodNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Short name of new method'
                         /><br />
                         <FormFieldRow
@@ -920,7 +1085,6 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={methodNameRegex}
                           tooltip='Long name of new method'
                         /><br />
                         <FormFieldSelectRow
@@ -968,7 +1132,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={taskNameRegex}
+                          validRegex={nameRegex}
                           tooltip='Short name of new task'
                         /><br />
                         <FormFieldRow
@@ -976,7 +1140,6 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Full name (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={taskNameRegex}
                           tooltip='Long name of new task'
                         /><br />
                         <FormFieldSelectRow
@@ -992,6 +1155,61 @@ class Submission extends React.Component {
                           label='Description (optional)'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           tooltip='Long description of new task'
+                        />
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </span>}
+            {(this.state.modalMode === 'Platform') &&
+              <span>
+                <FormFieldSelectRow
+                  inputName='platformId'
+                  label='Platform'
+                  options={this.state.platformNames}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A platform used by a method in this submission'
+                  disabled={this.state.showAccordion}
+                /><br />
+                Not in the list?<br />
+                <Accordion defaultActiveKey='0'>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                        <FontAwesomeIcon icon='plus' /> Create a new platform.
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey='1'>
+                      <Card.Body>
+                        <FormFieldRow
+                          inputName='name'
+                          inputType='text'
+                          label='Name'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          validRegex={nameRegex}
+                          tooltip='Short name of new platform'
+                        /><br />
+                        <FormFieldRow
+                          inputName='fullName'
+                          inputType='text'
+                          label='Full name (optional)'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='Long name of new platform'
+                        /><br />
+                        <FormFieldSelectRow
+                          inputName='parentPlatform'
+                          label='Parent platform<br/>(if any)'
+                          isNullDefault
+                          options={this.state.allPlatformNames}
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='The new platform inherits the properties of its "parent" platform.'
+                        /><br />
+                        <FormFieldRow
+                          inputName='description'
+                          inputType='textarea'
+                          label='Description (optional)'
+                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                          tooltip='Long description of new platform'
                         />
                       </Card.Body>
                     </Accordion.Collapse>
@@ -1018,11 +1236,19 @@ class Submission extends React.Component {
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Method from submission, used in this result'
                 /><br />
+                <FormFieldSelectRow
+                  inputName='platform' label='Platform'
+                  options={this.state.item.platforms}
+                  value={this.state.result.platform ? this.state.result.platform.id : 0}
+                  isNullDefault
+                  onChange={(field, value) => this.handleOnChange('result', field, value)}
+                  tooltip='The quantum computer platform used by the method for this result'
+                /><br />
                 <FormFieldTypeaheadRow
                   inputName='metricName' label='Metric name'
                   value={this.state.result.metricName}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  validRegex={metricNameRegex}
+                  validRegex={nameRegex}
                   options={this.state.metricNames}
                   tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
                 /><br />
@@ -1072,7 +1298,7 @@ class Submission extends React.Component {
                 <FormFieldTypeaheadRow
                   inputName='tag' label='Tag'
                   onChange={(field, value) => this.handleOnChange('', field, value)}
-                  validRegex={tagNameRegex}
+                  validRegex={nameRegex}
                   options={this.state.tagNames.map(item => item.name)}
                   tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
@@ -1132,6 +1358,26 @@ class Submission extends React.Component {
                   )}
                 {(this.state.item.methods.length === 0) &&
                   <span><i>There are no attached methods.</i></span>}
+              </span>}
+            {(this.state.modalMode === 'Platform') &&
+              <span>
+                <b>Attached platforms:</b><br />
+                {(this.state.item.platforms.length > 0) &&
+                  this.state.item.platforms.map(platform =>
+                    <div key={platform.id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {platform.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnPlatformRemove(platform.id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.platforms.length === 0) &&
+                  <span><i>There are no attached platforms.</i></span>}
               </span>}
             {(this.state.modalMode === 'Result') &&
               <span>

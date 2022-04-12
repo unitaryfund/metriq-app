@@ -259,7 +259,7 @@ class Method extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>Edit Submission</Modal.Title>
+            <Modal.Title>Edit Method</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&

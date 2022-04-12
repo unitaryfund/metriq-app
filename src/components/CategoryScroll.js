@@ -23,7 +23,7 @@ class CategoryScroll extends React.Component {
         <div className='row'>
           <div className='col-md-12'>
             {!this.props.items.length && <p><b>There are no approved items, yet.</b></p>}
-            {this.props.items.length &&
+            {(this.props.items.length > 0) &&
               <div className='task'>
                 <div className='row h-100'>
                   <div className='col-md col h-100'>
