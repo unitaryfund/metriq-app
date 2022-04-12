@@ -126,10 +126,8 @@ class Platform extends React.Component {
       window.location.href = '/Login'
     }
 
-    console.log(this.state.property)
-
     const property = {
-      id: this.state.property.id,
+      id: this.state.showAccordion ? undefined : this.state.property.id,
       name: this.state.property.name,
       fullName: this.state.property.fullName,
       value: this.state.property.value,
