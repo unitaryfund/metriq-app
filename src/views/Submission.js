@@ -21,7 +21,7 @@ library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, fa
 
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/
 const nameRegex = /.{1,}/
-const metricValueRegex = /^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/
+const metricValueRegex = /(^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$)|([+-]?\d(\.\d+)?[Ee][+-]?\d+)/
 const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
 const sampleSizeRegex = /^[0-9]+$/
 
