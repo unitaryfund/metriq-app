@@ -700,7 +700,6 @@ class Submission extends React.Component {
 
                     let defPlatform = ''
                     if (platforms.length) {
-                      console.log('Hit')
                       defPlatform = platforms[0].id
                     }
 
@@ -1225,21 +1224,21 @@ class Submission extends React.Component {
                 <FormFieldSelectRow
                   inputName='task' label='Task'
                   options={this.state.item.tasks}
-                  value={this.state.result.task}
+                  value={this.state.result.task.id}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Task from submission, used in this result'
                 /><br />
                 <FormFieldSelectRow
                   inputName='method' label='Method'
                   options={this.state.item.methods}
-                  value={this.state.result.method}
+                  value={this.state.result.method.id}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='Method from submission, used in this result'
                 /><br />
                 <FormFieldSelectRow
                   inputName='platform' label='Platform'
                   options={this.state.item.platforms}
-                  value={this.state.result.platform ? this.state.result.platform.id : 0}
+                  value={this.state.result.platform ? this.state.result.platform.id : ''}
                   isNullDefault
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
                   tooltip='The quantum computer platform used by the method for this result'
