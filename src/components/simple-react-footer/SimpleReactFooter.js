@@ -28,7 +28,7 @@ class SimpleReactFooter extends React.Component {
 
   handleOnClick () {
     if (this.state.bottom !== 0) {
-      this.handleHoverFocus()
+      this.setState({ isHover: true, bottom: 0, arrowOpacity: 0.0 })
     } else {
       this.handleHoverFocusLeave()
     }
