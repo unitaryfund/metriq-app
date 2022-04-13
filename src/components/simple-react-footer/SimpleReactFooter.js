@@ -11,13 +11,19 @@ class SimpleReactFooter extends React.Component {
     super(props)
     this.state = {
       bottom: -140,
-      arrowOpacity: 1.0
+      arrowOpacity: 1.0,
+      isHover: false
     }
 
+    this.timeout = this.timeout.bind(this)
     this.handleOnClick = this.handleOnClick.bind(this)
     this.handleHoverFocus = this.handleHoverFocus.bind(this)
     this.handleHoverFocusLeave = this.handleHoverFocusLeave.bind(this)
     this.handleStopPropagation = this.handleStopPropagation.bind(this)
+  }
+
+  async timeout(delay) {
+    return new Promise( res => setTimeout(res, delay) );
   }
 
   handleOnClick () {
@@ -28,12 +34,16 @@ class SimpleReactFooter extends React.Component {
     }
   }
 
-  handleHoverFocus () {
-    this.setState({ bottom: 0, arrowOpacity: 0.0 })
+  async handleHoverFocus () {
+    this.setState({ isHover: true })
+    await this.timeout(333)
+    if (this.state.isHover) {
+      this.setState({ bottom: 0, arrowOpacity: 0.0 })
+    }
   }
 
   handleHoverFocusLeave () {
-    this.setState({ bottom: -this.state.height * 0.8, arrowOpacity: 1.0 })
+    this.setState({ isHover: false, bottom: -this.state.height * 0.8, arrowOpacity: 1.0 })
   }
 
   handleStopPropagation (e) {
