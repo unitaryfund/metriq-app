@@ -384,6 +384,46 @@ class Platform extends React.Component {
             </div>
           </div>
           <br />
+          <h2>Submissions</h2>
+          <div className='row'>
+            <div className='col-md-12'>
+              <Table
+                className='detail-table'
+                columns={[{
+                  title: 'Name',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 700
+                },
+                {
+                  title: 'Submitted',
+                  dataIndex: 'createdAt',
+                  key: 'createdAt',
+                  width: 200
+                },
+                {
+                  title: 'Up-votes',
+                  dataIndex: 'upvoteCount',
+                  key: 'upvoteCount',
+                  width: 200
+                }]}
+                data={this.state.item.submissions
+                  ? this.state.item.submissions.map(row => ({
+                      key: row.id,
+                      name: row.name,
+                      createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                      upvoteCount: row.upvoteCount || 0
+                    }))
+                  : []}
+                onRow={(record) => ({
+                  onClick () { window.location.href = '/Submission/' + record.key }
+                })}
+                tableLayout='auto'
+                rowClassName='link'
+              />
+            </div>
+          </div>
+          <br />
           {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
             <div>
               <h2>Child Platforms</h2>
