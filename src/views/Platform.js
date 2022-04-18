@@ -71,6 +71,7 @@ class Platform extends React.Component {
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnChangePropertyId = this.handleOnChangePropertyId.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
     this.handleOnClickAddProperty = this.handleOnClickAddProperty.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
@@ -79,6 +80,7 @@ class Platform extends React.Component {
     this.handleOnTypeChange = this.handleOnTypeChange.bind(this)
     this.handleOnClickEditProperty = this.handleOnClickEditProperty.bind(this)
     this.handleCombineParentProperties = this.handleCombineParentProperties.bind(this)
+    this.handleOnPropertyRemove = this.handleOnPropertyRemove.bind(this)
   }
 
   handleAccordionToggle () {
@@ -153,7 +155,7 @@ class Platform extends React.Component {
       property.fullName = property.name
     }
 
-    const propertyRoute = config.api.getUriPrefix() + (property.id ? '/property/' + property.id : '/platform/' + this.state.item.id + '/property')
+    const propertyRoute = config.api.getUriPrefix() + (this.state.showAccordion ? ('/property/' + property.id) : ('/platform/' + this.state.item.id + '/property'))
     axios.post(propertyRoute, property)
       .then(res => {
         window.location.reload()
@@ -161,6 +163,10 @@ class Platform extends React.Component {
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
       })
+  }
+
+  handleRemoveModalDone () {
+    this.setState({ showRemoveModal: false })
   }
 
   handleOnChange (key1, key2, value) {
@@ -173,6 +179,18 @@ class Platform extends React.Component {
       this.setState({ [key1]: k1 })
     } else {
       this.setState({ [key2]: value })
+    }
+  }
+
+  handleOnChangePropertyId (value) {
+    const property = this.state.property
+    property.id = parseInt(value)
+    for (let i = 0; i < this.state.allPropertyNames.length; i++) {
+      const propName = this.state.allPropertyNames[i]
+      if (property.id === propName.id) {
+        this.handleOnTypeChange(propName.dataTypeId, propName.id, propName.name, propName.fullName)
+        break
+      }
     }
   }
 
@@ -226,6 +244,7 @@ class Platform extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
+    this.handleOnChangePropertyId(this.state.allPlatformNames.length ? this.state.allPlatformNames[0].id : 0)
     this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, modalEditMode: 'Add', isValidated: false })
   }
 
@@ -240,8 +259,23 @@ class Platform extends React.Component {
     this.setState({ showRemoveModal: true, modalMode: mode, modalEditMode: 'Remove' })
   }
 
-  handleRemoveModalDone () {
-    this.setState({ showRemoveModal: false })
+  handleOnPropertyRemove (propertyId) {
+    if (!window.confirm('Are you sure you want to remove this property from the submission?')) {
+      return
+    }
+    if (this.props.isLoggedIn) {
+      axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
+        .then(res => {
+          const platform = res.data.data
+          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+          this.handleCombineParentProperties(platform)
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.location.href = '/Login'
+    }
   }
 
   handleOnClickEditProperty (propertyId) {
@@ -552,7 +586,7 @@ class Platform extends React.Component {
                   label='Property'
                   options={this.state.allPropertyNames}
                   value={this.state.property.id}
-                  onChange={(field, value) => this.handleOnChange('property', field, value)}
+                  onChange={(field, value) => this.handleOnChangePropertyId(value)}
                   tooltip='An explicitly-typed key/value property of this platform'
                   disabled={this.state.showAccordion}
                 /><br />
@@ -632,6 +666,42 @@ class Platform extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button variant='primary' onClick={this.handleAddModalSubmit}>
+              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Remove</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {(this.state.modalMode === 'Login') &&
+              <span>
+                Please <Link to='/Login'>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'Login') &&
+              <span>
+                <b>Attached properties:</b><br />
+                {(this.state.item.properties.length > 0) &&
+                  this.state.item.properties.map(property =>
+                    <div key={property.id}>
+                      <hr />
+                      <div className='row'>
+                        <div className='col-md-10'>
+                          {property.name}
+                        </div>
+                        <div className='col-md-2'>
+                          <button className='btn btn-danger' onClick={() => this.handleOnPropertyRemove(property.id)}><FontAwesomeIcon icon='trash' /> </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(this.state.item.properties.length === 0) &&
+                  <span><i>There are no attached properties.</i></span>}
+              </span>}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.handleRemoveModalDone}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>

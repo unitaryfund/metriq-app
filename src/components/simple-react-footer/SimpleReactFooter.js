@@ -22,8 +22,8 @@ class SimpleReactFooter extends React.Component {
     this.handleStopPropagation = this.handleStopPropagation.bind(this)
   }
 
-  async timeout(delay) {
-    return new Promise( res => setTimeout(res, delay) );
+  async timeout (delay) {
+    return new Promise((resolve, reject) => setTimeout(resolve, delay))
   }
 
   handleOnClick () {
