@@ -155,7 +155,7 @@ class Platform extends React.Component {
       property.fullName = property.name
     }
 
-    const propertyRoute = config.api.getUriPrefix() + (this.state.showAccordion ? ('/property/' + property.id) : ('/platform/' + this.state.item.id + '/property'))
+    const propertyRoute = config.api.getUriPrefix() + '/platform/' + this.state.item.id + '/property'
     axios.post(propertyRoute, property)
       .then(res => {
         window.location.reload()
