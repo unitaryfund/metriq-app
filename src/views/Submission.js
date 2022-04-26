@@ -1144,6 +1144,7 @@ class Submission extends React.Component {
                         <FormFieldSelectRow
                           inputName='parentTask'
                           label='Parent task'
+                          specialOptGrouplabel='Top level categories'
                           options={this.state.allTaskNames}
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
                           tooltip='The new task is a sub-task of a "parent" task.'
