@@ -15,7 +15,7 @@ config.wiki = {}
 config.wiki.url = 'wiki.metriq.info'
 config.wiki.protocol = 'https://'
 config.wiki.getUriPrefix = () => {
-  return config.api.protocol + config.api.url
+  return config.wiki.protocol + config.wiki.url
 }
 
 module.exports = config
