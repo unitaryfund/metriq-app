@@ -6,8 +6,23 @@ class FormFieldSelectRow extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      value: this.props.defaultValue ? this.props.defaultValue : ''
+    const options = this.props.options
+    if (options.length && options[0].top !== undefined) {
+      options.sort((a, b) => (a.top < b.top) ? 1 : -1)
+      const specialOptions = options.filter(x => x.top === 1)
+      const commonOptions = options.filter(x => x.top === 0)
+
+      this.state = {
+        value: this.props.defaultValue ? this.props.defaultValue : '',
+        specialOptions: specialOptions,
+        commonOptions: commonOptions
+      }
+    } else {
+      this.state = {
+        value: this.props.defaultValue ? this.props.defaultValue : '',
+        specialOptions: {},
+        commonOptions: options
+      }
     }
 
     this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
@@ -58,8 +73,12 @@ class FormFieldSelectRow extends React.Component {
           >
             {this.props.isNullDefault &&
               <option value=''>(None)</option>}
-            {this.props.options.map(option =>
-              <option key={option.id} value={option.id}>{option.name}</option>
+            {this.state.specialOptions.length &&
+              <optgroup label={this.props.specialOptGrouplabel ? this.props.specialOptGrouplabel : 'Special'}>
+                {this.state.specialOptions.map(option => <option key={option.id} value={option.id} className='bold'>{option.name}</option>)}
+              </optgroup>}
+            {this.state.commonOptions.length && this.state.commonOptions.map(option =>
+              <option key={option.id} value={option.id} className='bold'>{option.name}</option>
             )}
           </select>
         </div>
