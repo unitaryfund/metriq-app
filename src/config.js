@@ -3,7 +3,7 @@ const config = {}
 config.isDebug = true
 
 config.api = {}
-config.api.url = config.isDebug ? 'localhost:3000' : 'metriq.info'
+config.api.url = config.isDebug ? 'qa.metriq.info' : 'metriq.info'
 config.api.protocol = config.isDebug ? 'http://' : 'https://'
 config.api.endpoint = '/api'
 config.api.serverSideUrl = 'http://localhost:8080'
@@ -12,8 +12,8 @@ config.api.getUriPrefix = () => {
 }
 
 config.wiki = {}
-config.wiki.url = 'wiki.metriq.info'
-config.wiki.protocol = 'https://'
+config.wiki.url = config.isDebug ? 'qa-wiki.metriq.info' : 'wiki.metriq.info'
+config.wiki.protocol = config.isDebug ? 'http://' : 'https://'
 config.wiki.getUriPrefix = () => {
   return config.wiki.protocol + config.wiki.url
 }
