@@ -562,6 +562,14 @@ class Platform extends React.Component {
                 </div>}
             </div>
           </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <hr />
+              <div className='text-center'>
+                Want to discuss this platform? <a href={config.wiki.getUriPrefix() + '/platforms/' + encodeURI(this.state.item.name)}>Create or add to its page on wiki.metriq.info.</a>
+              </div>
+            </div>
+          </div>
         </div>
         <Modal
           show={this.state.showEditModal}

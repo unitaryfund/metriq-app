@@ -431,6 +431,14 @@ class Task extends React.Component {
               </div>
               <br />
             </div>}
+          <div className='row'>
+            <div className='col-md-12'>
+              <hr />
+              <div className='text-center'>
+                Want to discuss this task? <a href={config.wiki.getUriPrefix() + '/tasks/' + encodeURI(this.state.item.name)}>Create or add to its page on wiki.metriq.info.</a>
+              </div>
+            </div>
+          </div>
           <div />
         </div>
         <Modal
