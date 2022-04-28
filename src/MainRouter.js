@@ -23,6 +23,7 @@ import Method from './views/Method'
 import Task from './views/Task'
 import Platform from './views/Platform'
 import NotFound from './views/NotFound'
+import UserGuidelines from './views/UserGuidelines'
 
 const MainRouter = (props) => {
   return (
@@ -112,6 +113,11 @@ const MainRouter = (props) => {
           exact
           path='/FAQ'
           component={FAQ}
+        />
+        <Route
+          exact
+          path='/UserGuidelines'
+          component={UserGuidelines}
         />
         <Route
           exact

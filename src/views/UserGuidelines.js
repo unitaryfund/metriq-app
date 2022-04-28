@@ -10,12 +10,12 @@ const UserGuidelines = () => {
           <div>
             <p>
               Metriq is a platform to benchmark quantum computers, https://metriq.info/. It covers benchmarks on high-level applications like:
-              <p><i><a href='https://metriq.info/Task/3'>“How good are quantum computers at solving instances of the Maximum Cut problem?”</a></i></p>
-              or
-              <p><i><a href='https://metriq.info/Task/69'>“What’s the most difficult Traveling Salesman problem solved by a quantum algorithm?”</a></i></p>
-              down to the inner-workings of quantum computer devices and platforms themselves, like
-              <p><i><a href='https://metriq.info/Task/25'>“What is the best result a given compiler can do for a given quantum program, e.g., in terms of minimum quantum circuit depth?”</a></i></p>
             </p>
+            <p><i><a href='https://metriq.info/Task/3'>“How good are quantum computers at solving instances of the Maximum Cut problem?”</a></i></p>
+            <p>or</p>
+            <p><i><a href='https://metriq.info/Task/69'>“What’s the most difficult Traveling Salesman problem solved by a quantum algorithm?”</a></i></p>
+            <p>down to the inner-workings of quantum computer devices and platforms themselves, like</p>
+            <p><i><a href='https://metriq.info/Task/25'>“What is the best result a given compiler can do for a given quantum program, e.g., in terms of minimum quantum circuit depth?”</a></i></p>
           </div>
           <br />
           <h2 className='text-center'>Submissions, Tags, Methods, Platforms, Metrics and Results</h2>
