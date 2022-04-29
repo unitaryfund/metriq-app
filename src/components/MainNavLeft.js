@@ -12,6 +12,7 @@ const MainNavLeft = () => {
         <NavDropdown.Item href='/About'><p class='font-weight-bold'>About</p></NavDropdown.Item>
         <NavDropdown.Item href='/Partners'><p class='font-weight-bold'>Partners</p></NavDropdown.Item>
         <NavDropdown.Item href='/FAQ'><p class='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
+        <NavDropdown.Item href='/UserGuidelines'><p class='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
       </NavDropdown>
     </Nav>
   )
