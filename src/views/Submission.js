@@ -1028,9 +1028,6 @@ class Submission extends React.Component {
           <div className='col-md-12'>
             <hr />
             <div className='text-center'>
-              Want to discuss this submission? <a href={config.wiki.getUriPrefix() + '/submissions/' + encodeURI(this.state.item.name)}>Create or add to its page on wiki.metriq.info.</a>
-            </div>
-            <div className='text-center'>
               Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
             </div>
           </div>
