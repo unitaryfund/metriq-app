@@ -3,6 +3,7 @@ import iqtLogo from './../images/iqt_logo.png'
 import rikenLogo from './../images/riken_logo.png'
 import ufLogo from './../images/unitary_fund_logo.png'
 import usraLogo from './../images/usra_logo.png'
+import strangeworksLogo from './../images/strangeworks_logo.png'
 
 const Partners = () => {
   return (
@@ -20,10 +21,11 @@ const Partners = () => {
             </p>
             <div className='text-center'>
               <a href='https://www.iqt.org/'><img src={iqtLogo} alt='IQT partner logo' className='logo-image' /></a>
-              <a href='https://unitary.fund/'><img src={ufLogo} alt='UF partner logo' className='logo-image' /></a><br />
-              <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a>
+              <a href='https://unitary.fund/'><img src={ufLogo} alt='UF partner logo' className='logo-image' /></a>
+              <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a><br />
               <a href='https://cambridgequantum.com/'><img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' /></a>
               <a href='https://www.riken.jp/en/'><img src={rikenLogo} alt='Riken University logo' className='logo-image' /></a>
+              <a href='https://strangeworks.com/'><img src={strangeworksLogo} alt='Strangeworks logo' className='logo-image' /></a>
             </div>
           </div>
         </div>
