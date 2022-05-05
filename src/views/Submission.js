@@ -353,6 +353,15 @@ class Submission extends React.Component {
       if (this.state.item.results[i].id === resultId) {
         const result = this.state.item.results[i]
         result.submissionId = this.state.item.id
+        if (result.task.id !== undefined) {
+          result.task = result.task.id
+        }
+        if (result.method.id !== undefined) {
+          result.method = result.method.id
+        }
+        if ((result.platform !== null) && (result.platform.id !== undefined)) {
+          result.platform = result.platform.id
+        }
         this.setState({ result: result })
         break
       }
@@ -497,10 +506,10 @@ class Submission extends React.Component {
         window.alert('Error: Metric Value cannot be blank.')
       }
       if (!result.task) {
-        result.task = this.state.item.tasks[0].id
+        result.task = this.state.item.tasks[0]
       }
       if (!result.method) {
-        result.method = this.state.item.methods[0].id
+        result.method = this.state.item.methods[0]
       }
       if (!result.platform) {
         result.platform = null
