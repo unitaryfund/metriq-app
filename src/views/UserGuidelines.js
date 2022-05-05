@@ -123,7 +123,7 @@ const UserGuidelines = () => {
               </li>
             </ul>
           </div>
-          <h2 className='text-center'>Platforms</h2>
+          <h2 className='text-center'>Results</h2>
           <div>
             <ul>
               <li>
