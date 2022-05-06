@@ -944,7 +944,7 @@ class Submission extends React.Component {
               <hr />
             </div>
             {(this.state.item.tags.length > 0) &&
-              this.state.item.tags.map(tag => <span key={tag.id}><Link to={'/Tag/' + tag.name}>{tag.name}</Link> </span>)}
+                this.state.item.tags.map((tag, ind) => <span key={tag.id}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + tag.name}><span className='link'>{tag.name}</span></Link></span>)}
             {(this.state.item.tags.length === 0) &&
               <div className='card bg-light'>
                 <div className='card-body'>There are no associated tags, yet.</div>
