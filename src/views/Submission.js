@@ -185,7 +185,7 @@ class Submission extends React.Component {
   }
 
   handleOnChange (key1, key2, value) {
-    if (!value && value !== false) {
+    if (!value && value !== false && value !== 0) {
       value = null
     }
     if (key1) {
@@ -502,14 +502,14 @@ class Submission extends React.Component {
       if (!result.metricName) {
         window.alert('Error: Metric Name cannot be blank.')
       }
-      if (!result.metricValue) {
+      if (!result.metricValue && result.metricValue !== 0) {
         window.alert('Error: Metric Value cannot be blank.')
       }
       if (!result.task) {
-        result.task = this.state.item.tasks[0]
+        result.task = this.state.item.tasks[0].id
       }
       if (!result.method) {
-        result.method = this.state.item.methods[0]
+        result.method = this.state.item.methods[0].id
       }
       if (!result.platform) {
         result.platform = null
