@@ -721,15 +721,6 @@ class Submission extends React.Component {
                         this.handleTrimTags(submission, tags)
 
                         this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
-
-                        const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
-                        axios.get(platformNamesRoute)
-                          .then(res => {
-                            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: res.data.data })
-                          })
-                          .catch(err => {
-                            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-                          })
                       })
                       .catch(err => {
                         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
