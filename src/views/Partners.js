@@ -1,3 +1,4 @@
+import angostiqLogo from './../images/agnostiq_logo.png'
 import cqcLogo from './../images/cqc_logo.png'
 import iqtLogo from './../images/iqt_logo.png'
 import rikenLogo from './../images/riken_logo.png'
@@ -31,6 +32,7 @@ const Partners = () => {
               <div className='text-center'>
                 <a href='https://sqms.fnal.gov/'><img src={sqmsLogo} alt='SQMS logo' className='logo-image' /></a>
                 <a href='https://www.quantonation.com/'><img src={quantonationLogo} alt='Quantonation logo' className='logo-image' /></a>
+                <a href='https://agnostiq.ai/'><img src={angostiqLogo} alt='Agnostiq logo' className='logo-image' /></a>
               </div>
             </div>
           </div>
