@@ -1411,7 +1411,7 @@ class Submission extends React.Component {
             {(this.state.modalMode === 'Tag') &&
               <span>
                 <b>Attached tags:</b><br />
-                {(this.state.item.results.length > 0) &&
+                {(this.state.item.tags.length > 0) &&
                   this.state.item.tags.map(tag =>
                     <div key={tag.id}>
                       <hr />
