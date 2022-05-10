@@ -16,9 +16,9 @@ the following lines into your `.bashrc`, making sure to alter the values of the
 ```bash
 export METRIQ_SECRET_KEY='[REDACTED]'
 export METRIQ_SUPPORT_EMAIL_SERVICE='gmail'
-export METRIQ_SUPPORT_EMAIL_ACCOUNT='support@unitary.fund'
+export METRIQ_SUPPORT_EMAIL_ACCOUNT='metriq@unitary.fund'
 export METRIQ_SUPPORT_EMAIL_PASSWORD='[REDACTED]'
-export METRIQ_SUPPORT_EMAIL_ADDRESS='support@unitary.fund'
+export METRIQ_SUPPORT_EMAIL_ADDRESS='metriq@unitary.fund'
 ```
 
 `METRIQ_SECRET_KEY` can be anything, but, for a realistic secret key, start the API project without this environment variable set at all. The app will automatically generate and print a random secret key for temporary use, and this can copied and pasted into `export METRIQ_SECRET_KEY=...` for permanent use.
