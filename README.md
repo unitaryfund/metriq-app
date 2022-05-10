@@ -58,6 +58,8 @@ Support email is configured.
 Running RestHub on port 8080
 ```
 
+Initialize submodules with `git submodule init` and `git submodule update`.
+
 Run the `metriq-app` component from the root of the `metriq-app` project:
 
 ```bash
