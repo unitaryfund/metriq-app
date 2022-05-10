@@ -706,7 +706,6 @@ class Submission extends React.Component {
                     this.handleSortPlatforms(res.data.data)
                     const platforms = [...res.data.data]
                     this.handleTrimPlatforms(submission, platforms)
-                    console.log(platforms)
 
                     let defPlatform = ''
                     if (platforms.length) {
