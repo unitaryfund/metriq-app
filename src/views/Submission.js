@@ -821,6 +821,7 @@ class Submission extends React.Component {
                   onClickRemove={() => this.handleOnClickRemove('Task')}
                 />
               </h2>
+              <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
               <hr />
             </div>
             {(this.state.item.tasks.length > 0) &&
@@ -857,6 +858,7 @@ class Submission extends React.Component {
                   onClickRemove={() => this.handleOnClickRemove('Method')}
                 />
               </h2>
+              <small><i>Methods can be techniques, protocols, or procedures</i></small>
               <hr />
             </div>
             {(this.state.item.methods.length > 0) &&
@@ -896,6 +898,7 @@ class Submission extends React.Component {
                   onClickRemove={() => this.handleOnClickRemove('Platform')}
                 />
               </h2>
+              <small><i>Platforms refer to real or simulated hardware & software environments</i></small>
               <hr />
             </div>
             {(this.state.item.platforms.length > 0) &&
@@ -932,6 +935,7 @@ class Submission extends React.Component {
                   onClickRemove={() => this.handleOnClickRemove('Tag')}
                 />
               </h2>
+              <small><i>Use tags to classify and discover the state of the art</i></small>
               <hr />
             </div>
             {(this.state.item.tags.length > 0) &&
@@ -953,6 +957,7 @@ class Submission extends React.Component {
                   onClickRemove={() => this.handleOnClickRemove('Result')}
                 />
               </h2>
+              <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
               <hr />
             </div>
             {(this.state.item.results.length > 0) &&
