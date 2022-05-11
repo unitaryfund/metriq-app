@@ -35,7 +35,7 @@ const About = () => {
           <h1 className='text-center'>Community</h1>
           <div>
             <p>
-              The Metriq community is growing. The <a href='https://discord.com/channels/764231928676089909/818208195612639304'>#metriq</a>channel on the Unitary Fund <a href='https://discord.com/invite/JqVGmpkP96'>Discord</a> server is visited by folks who share and collaborate on understanding the landscape of quantum benchmarks
+              The Metriq community is growing. The <a href='https://discord.com/channels/764231928676089909/818208195612639304'>#metriq</a> channel on the Unitary Fund <a href='https://discord.com/invite/JqVGmpkP96'>Discord</a> server is visited by folks who share and collaborate on understanding the landscape of quantum benchmarks
             </p>
           </div>
         </div>
