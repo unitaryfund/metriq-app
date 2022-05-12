@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import logo from './../images/metriq_logo_secondary_blue.png'
+import Commento from '../components/Commento'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -1035,6 +1036,12 @@ class Submission extends React.Component {
             <div className='text-center'>
               Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
             </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <hr />
+            <Commento id={'submission-' + toString(this.state.item.id)} />
           </div>
         </div>
         <Modal
