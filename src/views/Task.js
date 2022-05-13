@@ -17,6 +17,7 @@ import CategoryScroll from '../components/CategoryScroll'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
 import { parse } from 'json2csv'
+import Commento from '../components/Commento'
 
 library.add(faEdit)
 
@@ -432,6 +433,12 @@ class Task extends React.Component {
               <br />
             </div>}
           <div />
+          <div className='row'>
+            <div className='col-md-12'>
+              <hr />
+              <Commento id={'task-' + toString(this.state.item.id)} />
+            </div>
+          </div>
         </div>
         <Modal
           show={this.state.showEditModal}

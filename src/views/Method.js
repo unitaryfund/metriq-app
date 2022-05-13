@@ -7,6 +7,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
+import Commento from '../components/Commento'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -248,6 +249,12 @@ class Method extends React.Component {
                 tableLayout='auto'
                 rowClassName='link'
               />
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <hr />
+              <Commento id={'method-' + toString(this.state.item.id)} />
             </div>
           </div>
         </div>
