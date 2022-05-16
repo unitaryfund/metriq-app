@@ -7,6 +7,7 @@ import usraLogo from './../images/usra_logo.png'
 import strangeworksLogo from './../images/strangeworks_logo.png'
 import quantonationLogo from './../images/quantonation_logo.png'
 import sqmsLogo from './../images/sqms_logo.png'
+import supertechLogo from './../images/supertech_logo.png'
 
 const Partners = () => {
   return (
@@ -29,11 +30,10 @@ const Partners = () => {
               <a href='https://cambridgequantum.com/'><img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' /></a>
               <a href='https://www.riken.jp/en/'><img src={rikenLogo} alt='Riken University logo' className='logo-image' /></a>
               <a href='https://strangeworks.com/'><img src={strangeworksLogo} alt='Strangeworks logo' className='logo-image' /></a>
-              <div className='text-center'>
-                <a href='https://sqms.fnal.gov/'><img src={sqmsLogo} alt='SQMS logo' className='logo-image' /></a>
-                <a href='https://www.quantonation.com/'><img src={quantonationLogo} alt='Quantonation logo' className='logo-image' /></a>
-                <a href='https://agnostiq.ai/'><img src={angostiqLogo} alt='Agnostiq logo' className='logo-image' /></a>
-              </div>
+              <a href='https://sqms.fnal.gov/'><img src={sqmsLogo} alt='SQMS logo' className='logo-image' /></a><br />
+              <a href='https://www.quantonation.com/'><img src={quantonationLogo} alt='Quantonation logo' className='logo-image' /></a>
+              <a href='https://agnostiq.ai/'><img src={angostiqLogo} alt='Agnostiq logo' className='logo-image' /></a>
+              <a href='https://super.tech/'><img src={supertechLogo} alt='Super.Tech logo' class='logo-image' /></a>
             </div>
           </div>
         </div>
