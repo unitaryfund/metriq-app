@@ -74,7 +74,7 @@ const UserGuidelines = () => {
                 Tags can be added either at the time of submission creation or at a later time, on the specific Submission page.
               </li>
               <li>
-              "Tags should be as <b>explicit</b> as possible ('variational quantum algorithm' rather than 'vqa') and <b>single</b> is preferred to plural ('algorithm' rather than 'algorithms').
+                "Tags should be as <b>explicit</b> as possible ('variational quantum algorithm' rather than 'vqa') and <b>single</b> is preferred to plural ('algorithm' rather than 'algorithms').
               </li>
             </ul>
           </div>

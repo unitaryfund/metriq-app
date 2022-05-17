@@ -179,6 +179,7 @@ class Task extends React.Component {
             key: row.id,
             submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
             name: row.submissionName,
+            platformName: row.platformName,
             methodName: row.methodName,
             metricName: row.metricName,
             metricValue: row.metricValue,
@@ -218,6 +219,7 @@ class Task extends React.Component {
     const allData = sortedResults.map(row =>
       ({
         method: row.methodName,
+        platform: row.platformName,
         metric: row.metricName,
         label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
@@ -354,31 +356,37 @@ class Task extends React.Component {
                     title: 'Submission',
                     dataIndex: 'name',
                     key: 'name',
-                    width: 300
+                    width: 250
                   },
                   {
                     title: 'Method',
                     dataIndex: 'methodName',
                     key: 'methodName',
-                    width: 300
+                    width: 250
+                  },
+                  {
+                    title: 'Platform',
+                    dataIndex: 'platformName',
+                    key: 'platformName',
+                    width: 250
                   },
                   {
                     title: 'Date',
                     dataIndex: 'tableDate',
                     key: 'tableDate',
-                    width: 300
+                    width: 250
                   },
                   {
                     title: 'Metric',
                     dataIndex: 'metricName',
                     key: 'metricName',
-                    width: 300
+                    width: 250
                   },
                   {
                     title: 'Value',
                     dataIndex: 'metricValue',
                     key: 'metricValue',
-                    width: 300
+                    width: 250
                   }]}
                   data={this.state.resultsJson}
                   onRow={(record) => ({
