@@ -37,12 +37,12 @@ class SotaChart extends React.Component {
         datasets: [{
           type: 'scatter',
           label: 'All (±95% CI, when provided)',
-          labels: this.props.data.map((obj, index) => obj.method),
+          labels: this.props.data.map((obj, index) => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
           backgroundColor: 'rgb(0, 0, 0)',
           borderColor: 'rgb(0, 0, 0)',
           data: this.props.data.map((obj, index) => {
             return {
-              label: obj.method,
+              label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
               isShowLabel: false,
               x: obj.label,
               y: obj.value,
@@ -68,12 +68,12 @@ class SotaChart extends React.Component {
         {
           type: 'line',
           label: 'State-of-the-art',
-          labels: sotaData.map((obj, index) => obj.method),
+          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
           backgroundColor: 'rgb(60, 210, 249)',
           borderColor: 'rgb(60, 210, 249)',
           data: sotaData.map((obj, index) => {
             return {
-              label: obj.method,
+              label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
               isShowLabel: true,
               x: obj.label,
               y: obj.value
