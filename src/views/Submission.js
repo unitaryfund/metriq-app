@@ -352,7 +352,7 @@ class Submission extends React.Component {
   handleOnClickEditResult (resultId) {
     for (let i = 0; i < this.state.item.results.length; i++) {
       if (this.state.item.results[i].id === resultId) {
-        const result = this.state.item.results[i]
+        const result = { ...this.state.item.results[i] }
         result.submissionId = this.state.item.id
         if (result.task.id !== undefined) {
           result.task = result.task.id
