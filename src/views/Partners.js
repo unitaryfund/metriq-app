@@ -8,6 +8,7 @@ import strangeworksLogo from './../images/strangeworks_logo.png'
 import quantonationLogo from './../images/quantonation_logo.png'
 import sqmsLogo from './../images/sqms_logo.png'
 import supertechLogo from './../images/supertech_logo.png'
+import quantumcomputingreportLogo from './../images/quantumcomputingreport_logo.png'
 
 const Partners = () => {
   return (
@@ -34,6 +35,7 @@ const Partners = () => {
               <a href='https://www.quantonation.com/'><img src={quantonationLogo} alt='Quantonation logo' className='logo-image' /></a>
               <a href='https://agnostiq.ai/'><img src={angostiqLogo} alt='Agnostiq logo' className='logo-image' /></a>
               <a href='https://super.tech/'><img src={supertechLogo} alt='Super.Tech logo' class='logo-image' /></a>
+              <a href='https://quantumcomputingreport.com/'><img src={quantumcomputingreportLogo} alt='Quantum Computing Report logo' class='logo-image' /></a>
             </div>
           </div>
         </div>
