@@ -68,12 +68,12 @@ class SotaChart extends React.Component {
         {
           type: 'line',
           label: 'State-of-the-art',
-          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
           backgroundColor: 'rgb(60, 210, 249)',
           borderColor: 'rgb(60, 210, 249)',
           data: sotaData.map((obj, index) => {
             return {
-              label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
+              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
               isShowLabel: true,
               x: obj.label,
               y: obj.value
