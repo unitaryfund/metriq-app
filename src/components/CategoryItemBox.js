@@ -29,7 +29,7 @@ class CategoryItemBox extends React.Component {
       <tr>
         <td>
           <div className='row submission'>
-            <div className='col-md-9'>
+            <div className='col-12 col-md-9'>
               <a href={this.state.detailUrl}>
                 {this.props.type !== 'tag' && this.props.item.description &&
                   <div>
@@ -40,17 +40,17 @@ class CategoryItemBox extends React.Component {
                   <div className='submission-heading-only'>{this.props.item.name}</div>}
               </a>
             </div>
-            <div className='col-md-1'>
+            <div className='col-4 col-md-1'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of results, with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faChartLine} /><br />{this.props.item.resultCount}</span>
               </OverlayTrigger>
             </div>
-            <div className='col-md-1'>
+            <div className='col-4 col-md-1'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faExternalLinkAlt} /><br />{this.props.item.submissionCount}</span>
               </OverlayTrigger>
             </div>
-            <div className='col-md-1'>
+            <div className='col-4 col-md-1'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {this.props.type}</Tooltip>}>
                 <span><FontAwesomeIcon icon={faHeart} /><br />{this.props.item.upvoteTotal}</span>
               </OverlayTrigger>
