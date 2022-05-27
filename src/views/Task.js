@@ -18,6 +18,7 @@ import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } fr
 import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
+import SotaChartMobile from '../components/SotaChartMobile'
 
 library.add(faEdit)
 
@@ -302,7 +303,7 @@ class Task extends React.Component {
                 </div>
                 <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} />
               </div>
-              <div className='sota-chart-message'><i>(Your screen is too small for charts! If you're on mobile, try landscape view.)</i></div>
+              <div className='sota-chart-message'><SotaChartMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} /></div>
             </div>}
           <div className='row'>
             <div className='col-md-12'>
