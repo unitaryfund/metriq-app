@@ -263,13 +263,13 @@ form > .row > label {
   padding-top: 8px;
 }
 
-@media(min-width:600px) {
+@media(min-width:820px) {
   .sota-chart-message {
     display: none;
   }
 }
 
-@media(max-width:599px) {
+@media(max-width:819px) {
   .sota-chart {
     display: none;
   }
