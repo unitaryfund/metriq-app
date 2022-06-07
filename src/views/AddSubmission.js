@@ -61,6 +61,29 @@ class AddSubmission extends React.Component {
       tags: this.state.tags
     }
 
+    
+    const validURL = (str) =>  {
+      const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+      return !!pattern.test(str);
+    }
+
+    let validated_passed = true
+    if (!validURL(request.contentUrl)){
+      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid content url'}}  }) })
+      validated_passed = false
+    }
+
+    if (!validURL(request.thumbnailUrl)){
+      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid thumbnail url'}}  }) })
+      validated_passed = false
+    }
+
+    if (validated_passed){
     axios.post(config.api.getUriPrefix() + '/submission', request)
       .then(res => {
         window.location.href = '/Submissions'
@@ -68,6 +91,7 @@ class AddSubmission extends React.Component {
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
       })
+    }
     event.preventDefault()
   }
 
