@@ -38,7 +38,10 @@ class FormFieldRow extends React.Component {
   }
 
   handleOnFieldBlur (event) {
-    this.setState({ invalid: !this.isValidValue(this.state.value) })
+    // this.setState({ invalid: !this.isValidValue(this.state.value) })    
+    const fieldName = event.target.name
+    const fieldValue = (this.props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    this.props.onBlur && this.props.onBlur(fieldName, fieldValue)
   }
 
   handleShowImagePreview (event) {
@@ -67,6 +70,7 @@ class FormFieldRow extends React.Component {
                   rows={this.props.rows}
                   cols={this.props.cols}
                   placeholder={this.props.placeholder}
+                  value={this.props.value}
                 >
                   {this.props.value}
                 </textarea>}

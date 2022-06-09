@@ -30,13 +30,46 @@ class AddSubmission extends React.Component {
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
+  }
+
+  validURL (str) {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
   }
 
   handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
     this.setState({ [field]: value, isValidated: false })
+  }
+
+  handleOnFieldBlur(field, value){
+    if ( field === 'thumbnailUrl'   || field === 'contentUrl'){
+
+        if (value.trim().length <= 0 ){
+          this.setState({ 'name': '', isValidated: false })
+          this.setState({ 'description': '', isValidated: false })
+        }
+        else if (this.validURL(value.trim())){
+          axios.post(config.api.getUriPrefix() + '/pagemetadata', {url: value.trim()})
+          .then(res => {
+            this.setState({ 'name': res.data.data.og.title, isValidated: false })
+            this.setState({ 'description': res.data.data.og.description, isValidated: false })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
+        }
+
+    }
+  
   }
 
   isAllValid () {
@@ -62,23 +95,15 @@ class AddSubmission extends React.Component {
     }
 
     
-    const validURL = (str) =>  {
-      const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-      return !!pattern.test(str);
-    }
+
 
     let validated_passed = true
-    if (!validURL(request.contentUrl)){
+    if (!this.validURL(request.contentUrl)){
       this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid content url'}}  }) })
       validated_passed = false
     }
 
-    if (!validURL(request.thumbnailUrl)){
+    if (!this.validURL(request.thumbnailUrl)){
       this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid thumbnail url'}}  }) })
       validated_passed = false
     }
@@ -127,6 +152,7 @@ class AddSubmission extends React.Component {
             validatorMessage={requiredFieldMissingError}
             onChange={this.handleOnChange}
             validRegex={nonblankRegex}
+            value={this.state.name}
           />
           <div className='row'>
             <div className='col-md-3' />
@@ -139,6 +165,7 @@ class AddSubmission extends React.Component {
             inputName='contentUrl' inputType='text' label='Content URL'
             validatorMessage={requiredFieldMissingError}
             onChange={this.handleOnChange}
+            onBlur={this.handleOnFieldBlur}
             validRegex={nonblankRegex}
           />
           <div className='row'>
@@ -163,6 +190,7 @@ class AddSubmission extends React.Component {
             inputName='description' inputType='textarea' label='Description'
             placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
             onChange={this.handleOnChange}
+            value={this.state.description}
           />
           <div className='row'>
             <div className='col-md-3' />
