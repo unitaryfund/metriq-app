@@ -3,7 +3,7 @@
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React from 'react'
-import { Chart, LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
+import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import 'chartjs-adapter-moment'
@@ -15,7 +15,7 @@ class SotaChart extends React.Component {
     this.percentileZ = this.percentileZ.bind(this)
     const z95 = this.percentileZ(0.95)
 
-    Chart.register([LinearScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
+    Chart.register([LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
     Chart.defaults.font.size = 16
 
     const data = this.props.data
@@ -111,8 +111,9 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: this.props.yLabel ? this.props.yLabel : 'Metric value'
-            }
+              text: this.props.yLabel ? this.props.yLabel : 'Metric value',            
+            },
+            type: this.props.isLog ? 'logarithmic' : 'linear'
           }
         },
         plugins: {
