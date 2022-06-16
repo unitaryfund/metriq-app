@@ -94,6 +94,10 @@ class SotaChart extends React.Component {
               display: true,
               text: this.props.xLabel ? this.props.xLabel : 'Time'
             },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10
+            },
             time: {
               displayFormats: {
                 millisecond: 'YYYY-MM-DD HH:MM:ss.SSS',
