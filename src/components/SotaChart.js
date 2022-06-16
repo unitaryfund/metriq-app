@@ -111,7 +111,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: this.props.yLabel ? this.props.yLabel : 'Metric value',            
+              text: this.props.yLabel ? this.props.yLabel : 'Metric value'
             },
             type: this.props.isLog ? 'logarithmic' : 'linear'
           }

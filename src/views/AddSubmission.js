@@ -36,13 +36,13 @@ class AddSubmission extends React.Component {
   }
 
   validURL (str) {
-    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return !!pattern.test(str);
+    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+    return !!pattern.test(str)
   }
 
   handleOnChange (field, value) {
@@ -50,26 +50,22 @@ class AddSubmission extends React.Component {
     this.setState({ [field]: value, isValidated: false })
   }
 
-  handleOnFieldBlur(field, value){
-    if ( field === 'thumbnailUrl'   || field === 'contentUrl'){
-
-        if (value.trim().length <= 0 ){
-          this.setState({ 'name': '', isValidated: false })
-          this.setState({ 'description': '', isValidated: false })
-        }
-        else if (this.validURL(value.trim())){
-          axios.post(config.api.getUriPrefix() + '/pagemetadata', {url: value.trim()})
+  handleOnFieldBlur (field, value) {
+    if (field === 'thumbnailUrl' || field === 'contentUrl') {
+      if (value.trim().length <= 0) {
+        this.setState({ name: '', isValidated: false })
+        this.setState({ description: '', isValidated: false })
+      } else if (this.validURL(value.trim())) {
+        axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
           .then(res => {
-            this.setState({ 'name': res.data.data.og.title, isValidated: false })
-            this.setState({ 'description': res.data.data.og.description, isValidated: false })
+            this.setState({ name: res.data.data.og.title, isValidated: false })
+            this.setState({ description: res.data.data.og.description, isValidated: false })
           })
           .catch(err => {
             this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
           })
-        }
-
+      }
     }
-  
   }
 
   isAllValid () {
@@ -94,28 +90,25 @@ class AddSubmission extends React.Component {
       tags: this.state.tags
     }
 
-    
-
-
-    let validated_passed = true
-    if (!this.validURL(request.contentUrl)){
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid content url'}}  }) })
-      validated_passed = false
+    let validatedPassed = true
+    if (!this.validURL(request.contentUrl)) {
+      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
+      validatedPassed = false
     }
 
-    if (!this.validURL(request.thumbnailUrl)){
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: {data: {message: 'Invalid thumbnail url'}}  }) })
-      validated_passed = false
+    if (!this.validURL(request.thumbnailUrl)) {
+      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
+      validatedPassed = false
     }
 
-    if (validated_passed){
-    axios.post(config.api.getUriPrefix() + '/submission', request)
-      .then(res => {
-        window.location.href = '/Submissions'
-      })
-      .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-      })
+    if (validatedPassed) {
+      axios.post(config.api.getUriPrefix() + '/submission', request)
+        .then(res => {
+          window.location.href = '/Submissions'
+        })
+        .catch(err => {
+          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        })
     }
     event.preventDefault()
   }

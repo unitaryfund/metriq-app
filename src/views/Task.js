@@ -48,7 +48,7 @@ class Task extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
     this.handleCsvExport = this.handleCsvExport.bind(this)
-    this.toggleLog = this.toggleLog.bind(this)
+    this.handleToggleLog = this.handleToggleLog.bind(this)
   }
 
   handleShowEditModal () {
@@ -264,10 +264,9 @@ class Task extends React.Component {
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
   }
 
-  toggleLog(){
-    this.setState({ 'isLog': !this.state.isLog })
+  handleToggleLog () {
+    this.setState({ isLog: !this.state.isLog })
   }
-
 
   handleCsvExport () {
     const fields = Object.keys(this.state.resultsJson[0])
@@ -307,14 +306,13 @@ class Task extends React.Component {
                     onChange={(field, value) => this.handleOnChange('', field, value)}
                     tooltip='A metric performance measure of any "method" on this "task"'
                   />
-
-                  <div className='row'>
-                    <span htmlFor={'logcheckbox'} className={'col-md-3 form-field-label metric-chart-label'} dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }} />
-                    <div className="col-md-6">
-                      <input type="checkbox" id="logcheckbox" name="logcheckbox" className="form-control" checked={this.state.islog} onChange={this.toggleLog} />
-                    </div> 
+                  <div className='row' style={{ 'margin-top': '5px' }}>
+                    <span htmlFor='logcheckbox' className='col-md-3 form-field-label metric-chart-label' dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }} />
+                    <div className='col-md-6'>
+                      <input type='checkbox' id='logcheckbox' name='logcheckbox' className='form-control' checked={this.state.islog} onChange={this.handleToggleLog} />
+                    </div>
                   </div>
-      
+
                 </div>
                 <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} />
               </div>
