@@ -78,17 +78,19 @@ class Tags extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h4>Tags</h4></header>
         <br />
-        <Tabs defaultActiveKey='common' id='categories-tabs'>
-          <Tab eventKey='common' title='Common'>
-            <CategoryScroll type='tag' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
-          </Tab>
-          <Tab eventKey='popular' title='Popular'>
-            <CategoryScroll type='tag' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
-          </Tab>
-          <Tab eventKey='alphabetical' title='Alphabetical'>
-            <CategoryScroll type='tag' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
-          </Tab>
-        </Tabs>
+        <div className='centered-tabs'>
+          <Tabs defaultActiveKey='common' id='categories-tabs'>
+            <Tab eventKey='common' title='Common'>
+              <CategoryScroll type='tag' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+            </Tab>
+            <Tab eventKey='popular' title='Popular'>
+              <CategoryScroll type='tag' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+            </Tab>
+            <Tab eventKey='alphabetical' title='Alphabetical'>
+              <CategoryScroll type='tag' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+            </Tab>
+          </Tabs>
+        </div>
         <div className='row'>
           <div className='col-md-3' />
           <div className='col-md-6'>
