@@ -28,6 +28,12 @@
   height: 128px;
 }
 
+.centered-tabs > nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 textarea {
   border: 2px solid;
   padding: 20px; 
