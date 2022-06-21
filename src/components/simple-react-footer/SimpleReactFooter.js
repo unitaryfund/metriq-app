@@ -20,6 +20,8 @@ class SimpleReactFooter extends React.Component {
     this.handleHoverFocus = this.handleHoverFocus.bind(this)
     this.handleHoverFocusLeave = this.handleHoverFocusLeave.bind(this)
     this.handleStopPropagation = this.handleStopPropagation.bind(this)
+
+    window.addEventListener('resize', this.handleOnClick)
   }
 
   async timeout (delay) {
@@ -28,7 +30,8 @@ class SimpleReactFooter extends React.Component {
 
   handleOnClick () {
     if (this.state.bottom !== 0) {
-      this.setState({ isHover: true, bottom: 0, arrowOpacity: 0.0 })
+      const height = this.divElement.clientHeight
+      this.setState({ isHover: true, bottom: 0, arrowOpacity: 0.0, height })
     } else {
       this.handleHoverFocusLeave()
     }
@@ -36,9 +39,10 @@ class SimpleReactFooter extends React.Component {
 
   async handleHoverFocus () {
     this.setState({ isHover: true })
-    await this.timeout(333)
+    await this.timeout(500)
     if (this.state.isHover) {
-      this.setState({ bottom: 0, arrowOpacity: 0.0 })
+      const height = this.divElement.clientHeight
+      this.setState({ bottom: 0, arrowOpacity: 0.0, height })
     }
   }
 
