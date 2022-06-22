@@ -61,10 +61,9 @@ const MainRouter = (props) => {
         </Route>
         <Route
           exact
-          path='/Login/AddSubmission'
-        >
-          {props.isLoggedIn ? <Redirect to='/AddSubmission' /> : <LogIn onLogin={props.onLogin} nextLocation='/AddSubmission' />}
-        </Route>
+          path='/Login/:next'
+          render={p => props.isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <LogIn {...props} next={p.match.params.next} />}
+        />
         <Route
           exact
           path='/Login'
@@ -73,10 +72,9 @@ const MainRouter = (props) => {
         </Route>
         <Route
           exact
-          path='/Register/AddSubmission'
-        >
-          {props.isLoggedIn ? <Redirect to='/AddSubmission' /> : <Register onLogin={props.onLogin} nextLocation='/AddSubmission' />}
-        </Route>
+          path='/Register/:next'
+          render={p => props.isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <Register {...props} />}
+        />
         <Route
           exact
           path='/Register'

@@ -417,7 +417,7 @@ class Platform extends React.Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent platform:</b> <a href={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</a>
+                  <b>Parent platform:</b> <Link to={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</Link>
                 </div>
               </div>
               <br />

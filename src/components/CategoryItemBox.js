@@ -1,6 +1,7 @@
 import React from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
@@ -30,7 +31,7 @@ class CategoryItemBox extends React.Component {
         <td>
           <div className='row submission'>
             <div className='col-12 col-md-9'>
-              <a href={this.state.detailUrl}>
+              <Link to={this.state.detailUrl}>
                 {this.props.type !== 'tag' && this.props.item.description &&
                   <div>
                     <div className='submission-heading'>{this.props.item.name}</div>
@@ -38,7 +39,7 @@ class CategoryItemBox extends React.Component {
                   </div>}
                 {(this.props.type === 'tag' || !this.props.item.description) &&
                   <div className='submission-heading-only'>{this.props.item.name}</div>}
-              </a>
+              </Link>
             </div>
             <div className='col-4 col-md-1'>
               <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of results, with {this.props.type}</Tooltip>}>

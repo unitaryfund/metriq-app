@@ -66,7 +66,7 @@ class Task extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
 
     const reqBody = {
@@ -186,7 +186,8 @@ class Task extends React.Component {
             methodName: row.methodName,
             metricName: row.metricName,
             metricValue: row.metricValue,
-            tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
+            tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString(),
+            props: this.props
           }))
         this.setState({ results: results, resultsJson: resultsJson })
         this.sliceChartData(results)
@@ -348,7 +349,7 @@ class Task extends React.Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent task:</b> <a href={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</a>
+                  <b>Parent task:</b><Link to={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</Link>
                 </div>
               </div>
               <br />
@@ -404,7 +405,7 @@ class Task extends React.Component {
                   }]}
                   data={this.state.resultsJson}
                   onRow={(record) => ({
-                    onClick () { window.location.href = '/Submission/' + record.submissionId }
+                    onClick () { record.props.history.push('/Submission/' + record.key) }
                   })}
                   tableLayout='auto'
                   rowClassName='link'
@@ -441,11 +442,12 @@ class Task extends React.Component {
                           key: row.id,
                           name: row.name,
                           createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                          upvoteCount: row.upvoteCount || 0
+                          upvoteCount: row.upvoteCount || 0,
+                          props: this.props
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Submission/' + record.key }
+                      onClick () { record.props.history.push('/Submission/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'

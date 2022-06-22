@@ -214,7 +214,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -235,7 +235,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -256,7 +256,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -276,7 +276,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -301,7 +301,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -315,7 +315,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
     event.preventDefault()
   }
@@ -836,10 +836,11 @@ class Submission extends React.Component {
                 data={this.state.item.tasks.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    props: this.props
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Task/' + record.key }
+                  onClick () { record.props.history.push('/Task/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -873,10 +874,11 @@ class Submission extends React.Component {
                 data={this.state.item.methods.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    props: this.props
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Method/' + record.key }
+                  onClick () { record.props.history.push('/Method/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -1061,7 +1063,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode === 'Method') &&
               <span>
@@ -1329,7 +1331,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
@@ -1451,7 +1453,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before {this.state.modalTextMode === 'Moderation' ? 'filing a report' : 'editing'}.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before {this.state.modalTextMode === 'Moderation' ? 'filing a report' : 'editing'}.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
