@@ -16,17 +16,17 @@ class SotaChart extends React.Component {
     const z95 = this.percentileZ(0.95)
 
     Chart.register([LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
-    Chart.defaults.font.size = 16
+    Chart.defaults.font.size = 12
 
     const data = this.props.data
     const sotaData = data.length ? [data[0]] : []
     for (let i = 1; i < data.length; i++) {
       if (this.props.isLowerBetter) {
-        if (data[i].value <= sotaData[sotaData.length - 1].value) {
+        if (data[i].value < sotaData[sotaData.length - 1].value) {
           sotaData.push(data[i])
         }
       } else {
-        if (data[i].value >= sotaData[sotaData.length - 1].value) {
+        if (data[i].value > sotaData[sotaData.length - 1].value) {
           sotaData.push(data[i])
         }
       }
@@ -135,7 +135,7 @@ class SotaChart extends React.Component {
             }
           },
           datalabels: {
-            align: 'right',
+            align: 'center',
             formatter: function (value, context) {
               return value.isShowLabel ? value.label : ''
             }
