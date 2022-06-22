@@ -836,10 +836,11 @@ class Submission extends React.Component {
                 data={this.state.item.tasks.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    props: this.props
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Task/' + record.key }
+                  onClick () { record.props.history.push('/Task/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -873,10 +874,11 @@ class Submission extends React.Component {
                 data={this.state.item.methods.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    props: this.props
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Method/' + record.key }
+                  onClick () { record.props.history.push('/Method/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'

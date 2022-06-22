@@ -177,7 +177,7 @@ class Method extends React.Component {
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent method:</b> <a href={'/Method/' + this.state.item.parentMethod.id}>{this.state.item.parentMethod.name}</a>
+                  <b>Parent method:</b> <Link to={'/Method/' + this.state.item.parentMethod.id}>{this.state.item.parentMethod.name}</Link>
                 </div>
               </div>
               <br />
@@ -198,11 +198,12 @@ class Method extends React.Component {
                     data={this.state.item.childMethods
                       ? this.state.item.childMethods.map(row => ({
                           key: row.id,
-                          name: row.name
+                          name: row.name,
+                          props: this.props
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Method/' + record.key }
+                      onClick () { record.props.history.push('/Method/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -240,11 +241,12 @@ class Method extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0
+                      upvoteCount: row.upvoteCount || 0,
+                      props: this.props
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Submission/' + record.key }
+                  onClick () { record.props.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'

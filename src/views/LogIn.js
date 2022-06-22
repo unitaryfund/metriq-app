@@ -63,6 +63,8 @@ class LogIn extends React.Component {
 
         if (this.props.nextLocation) {
           this.context.history.push(this.props.nextLocation)
+        } else {
+          this.context.history.pop()
         }
       })
       .catch(err => {
