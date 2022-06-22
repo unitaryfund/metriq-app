@@ -214,7 +214,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -235,7 +235,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -256,7 +256,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -276,7 +276,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -301,7 +301,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
   }
 
@@ -315,7 +315,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
     }
     event.preventDefault()
   }
