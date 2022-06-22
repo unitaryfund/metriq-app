@@ -60,12 +60,6 @@ class LogIn extends React.Component {
     axios.post(config.api.getUriPrefix() + '/login', request)
       .then(res => {
         this.props.onLogin()
-
-        if (this.props.nextLocation) {
-          this.context.history.push(this.props.nextLocation)
-        } else {
-          this.context.history.pop()
-        }
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -106,7 +100,7 @@ class LogIn extends React.Component {
             </div>
           </div>
         </form>
-        <Link to={this.props.nextLocation ? '/Register' + this.props.nextLocation : '/Register'}>Create a new account</Link><br />
+        <Link to={this.props.next ? '/Register/' + this.props.next : '/Register'}>Create a new account</Link><br />
         <Link to='/Forgot'>Forgot username/password?</Link>
       </div>
     )

@@ -96,10 +96,6 @@ class Register extends React.Component {
     axios.post(config.api.getUriPrefix() + '/register', this.state)
       .then(res => {
         this.props.onLogin()
-
-        if (this.props.nextLocation) {
-          this.context.history.push(this.props.nextLocation)
-        }
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })

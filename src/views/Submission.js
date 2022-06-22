@@ -1063,7 +1063,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode === 'Method') &&
               <span>
@@ -1331,7 +1331,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode === 'Task') &&
               <span>
@@ -1453,7 +1453,7 @@ class Submission extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before {this.state.modalTextMode === 'Moderation' ? 'filing a report' : 'editing'}.
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before {this.state.modalTextMode === 'Moderation' ? 'filing a report' : 'editing'}.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
