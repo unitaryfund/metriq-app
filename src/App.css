@@ -285,6 +285,10 @@ form > .row > label {
   }
 }
 
+#sota-chart-mobile-canvas {
+  min-height: 300px;
+}
+
 /** Simple generic styling */
 
 .text-center {
