@@ -160,12 +160,12 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Method/:id'
-          render={(p) => <Method {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+          render={(p) => <Method {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} key={Math.random()} />}
         />
         <Route
           exact
           path='/Task/:id'
-          render={(p) => <Task {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+          render={(p) => <Task {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} key={Math.random()} />}
         />
         <Route
           exact

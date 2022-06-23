@@ -307,7 +307,7 @@ class Task extends React.Component {
                     onChange={(field, value) => this.handleOnChange('', field, value)}
                     tooltip='A metric performance measure of any "method" on this "task"'
                   />
-                  <div className='row' style={{ 'margin-top': '5px' }}>
+                  <div className='row' style={{ marginTop: '5px' }}>
                     <span htmlFor='logcheckbox' className='col-md-3 form-field-label metric-chart-label' dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }} />
                     <div className='col-md-6'>
                       <input type='checkbox' id='logcheckbox' name='logcheckbox' className='form-control' checked={this.state.islog} onChange={this.handleToggleLog} />
