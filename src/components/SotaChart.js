@@ -6,6 +6,7 @@ import React from 'react'
 import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
+import moment from 'moment'
 import 'chartjs-adapter-moment'
 
 class SotaChart extends React.Component {
@@ -100,10 +101,10 @@ class SotaChart extends React.Component {
             },
             time: {
               displayFormats: {
-                millisecond: 'YYYY-MM-DD HH:MM:ss.SSS',
-                second: 'YYYY-MM-DD HH:MM:ss',
-                minute: 'YYYY-MM-DD HH:MM',
-                hour: 'YYYY-MM-DD HH',
+                millisecond: 'YYYY-MM-DD',
+                second: 'YYYY-MM-DD',
+                minute: 'YYYY-MM-DD',
+                hour: 'YYYY-MM-DD',
                 day: 'YYYY-MM-DD',
                 week: 'YYYY-MM-DD',
                 month: 'YYYY-MM',
@@ -123,6 +124,9 @@ class SotaChart extends React.Component {
         plugins: {
           tooltip: {
             callbacks: {
+              title: function(ctx) {
+                return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
+              },
               label: function (ctx) {
                 let label = ctx.dataset.labels[ctx.dataIndex]
                 label += ' (' + ctx.parsed.y + ')'
