@@ -141,20 +141,6 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='name' inputType='text' label='Submission Name'
-            validatorMessage={requiredFieldMissingError}
-            onChange={this.handleOnChange}
-            validRegex={nonblankRegex}
-            value={this.state.name}
-          />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>The submission name must be unique.</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <FormFieldRow
             inputName='contentUrl' inputType='text' label='Content URL'
             validatorMessage={requiredFieldMissingError}
             onChange={this.handleOnChange}
@@ -165,6 +151,20 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <FormFieldRow
+            inputName='name' inputType='text' label='Submission Name'
+            validatorMessage={requiredFieldMissingError}
+            onChange={this.handleOnChange}
+            validRegex={nonblankRegex}
+            value={this.state.name}
+          />
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <b>The submission name must be unique.</b>
             </div>
             <div className='col-md-3' />
           </div>
