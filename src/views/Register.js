@@ -115,6 +115,10 @@ class Register extends React.Component {
             validRegex={usernameValidRegex}
           />
           <FormFieldRow
+            inputName='name' inputType='text' label='Name'
+            onChange={this.handleOnChange}
+          />
+          <FormFieldRow
             inputName='email' inputType='email' label='Email'
             validatorMessage={emailBadFormatError}
             onChange={this.handleOnChange}

@@ -12,7 +12,7 @@ class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: { affiliation: '' },
+      data: { affiliation: '', name: ''},
       showEditModal: false,
       isRequestFailed: false,
       requestFailedMessage: ''
@@ -77,6 +77,7 @@ class Profile extends React.Component {
           <FieldRow fieldName='usernameNormal' label='Normalized Username' value={this.state.data.usernameNormal} />
           <FieldRow fieldName='email' label='Email' value={this.state.data.email} />
           <FieldRow fieldName='affiliation' label='Affiliation' value={this.state.data.affiliation} />
+          <FieldRow fieldName='name' label='Name' value={this.state.data.name} />
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientTokenCreated ? 'Active' : 'None'} />
           <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
           <div className='row'>
