@@ -13,7 +13,7 @@ class FormFieldTypeaheadRow extends React.Component {
       value: this.props.defaultValue ? this.props.defaultValue : ''
     }
 
-    this.typeahead = null;
+    this.typeahead = null
 
     this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
     this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
@@ -48,11 +48,9 @@ class FormFieldTypeaheadRow extends React.Component {
   handleOnButtonClick () {
     const value = this.state.value
     if (this.typeahead) {
-      const typeahead = this.typeahead.getInstance()
-      typeahead.clear()
-      typeahead.focus()
+      this.typeahead.clear()
     }
-    this.setState({ value: ''})
+    this.setState({ value: '' })
     this.props.onClickButton(value)
   }
 
@@ -66,7 +64,7 @@ class FormFieldTypeaheadRow extends React.Component {
         {!this.props.tooltip &&
           <label htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />}
         <Typeahead
-          ref={(ref) => this.typeahead = ref}
+          ref={(ref) => { this.typeahead = ref }}
           id={this.props.inputName}
           name={this.props.inputName}
           labelKey={this.props.labelKey ? this.props.labelKey : undefined}

@@ -97,7 +97,7 @@ class AddSubmission extends React.Component {
       contentUrl: this.state.contentUrl,
       thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
-      tags: this.state.tags.join(",")
+      tags: this.state.tags.join(',')
     }
 
     let validatedPassed = true
@@ -106,7 +106,8 @@ class AddSubmission extends React.Component {
       validatedPassed = false
     }
 
-    if (!this.validURL(request.thumbnailUrl)) {
+    console.log(request.thumbnailUrl)
+    if (request.thumbnailUrl && !this.validURL(request.thumbnailUrl)) {
       this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
       validatedPassed = false
     }
@@ -125,11 +126,16 @@ class AddSubmission extends React.Component {
 
   handleOnClickAddTag () {
     const tags = this.state.tags
-    tags.push(this.state.tag)
-    this.setState({ tags: tags, tag: '' })
+    if (tags.indexOf(this.state.tag) < 0) {
+      tags.push(this.state.tag)
+      this.setState({ tags: tags, tag: '' })
+    }
   }
-  handleOnClickRemoveTag (index) {
-    this.setState({ tags: this.state.tags.splice(index, 1) })
+
+  handleOnClickRemoveTag (tag) {
+    const tags = this.state.tags
+    tags.splice(tags.indexOf(tag), 1)
+    this.setState({ tags: tags })
   }
 
   componentDidMount () {
@@ -225,9 +231,9 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               {(this.state.tags.length > 0) &&
-                  <div className='text-left'>
-                    {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnTagRemove(index)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
-                  </div>}
+                <div className='text-left'>
+                  {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
+                </div>}
               {(this.state.tags.length === 0) &&
                 <div className='card bg-light'>
                   <div className='card-body'>There are no associated tags, yet.</div>
