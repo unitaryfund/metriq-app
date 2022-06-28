@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-bootstrap'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import FormFieldValidator from './FormFieldValidator'
@@ -87,7 +88,7 @@ class FormFieldRow extends React.Component {
                   onBlur={this.handleOnFieldBlur}
                 />}
             </div>
-            {this.props.imageUrl ? <span className='btn btn-primary' onClick={this.handleShowImagePreview}>Preview</span> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
+            {this.props.imageUrl ? <Button variant='primary' onClick={this.handleShowImagePreview}>Preview</Button> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
           </div>
           {this.state.imagePreview &&
             <div className='row'>

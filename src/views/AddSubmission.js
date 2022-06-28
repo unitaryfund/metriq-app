@@ -5,6 +5,12 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import { Button } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPlus, faTrash)
 
 const requiredFieldMissingError = 'Required field.'
 
@@ -18,8 +24,10 @@ class AddSubmission extends React.Component {
       contentUrl: '',
       thumbnailUrl: '',
       description: '',
-      tags: '',
+      tags: [],
+      tag: '',
       tagNames: [],
+      showRemoveModal: false,
       isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false
@@ -33,6 +41,8 @@ class AddSubmission extends React.Component {
     this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
+    this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
+    this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
   }
 
   validURL (str) {
@@ -87,7 +97,7 @@ class AddSubmission extends React.Component {
       contentUrl: this.state.contentUrl,
       thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
-      tags: this.state.tags
+      tags: this.state.tags.join(",")
     }
 
     let validatedPassed = true
@@ -111,6 +121,15 @@ class AddSubmission extends React.Component {
         })
     }
     event.preventDefault()
+  }
+
+  handleOnClickAddTag () {
+    const tags = this.state.tags
+    tags.push(this.state.tag)
+    this.setState({ tags: tags, tag: '' })
+  }
+  handleOnClickRemoveTag (index) {
+    this.setState({ tags: this.state.tags.splice(index, 1) })
   }
 
   componentDidMount () {
@@ -169,17 +188,6 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
           </div>
           <FormFieldRow
-            inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
-            onChange={this.handleOnChange}
-          />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <FormFieldRow
             inputName='description' inputType='textarea' label='Description'
             placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
             onChange={this.handleOnChange}
@@ -192,15 +200,45 @@ class AddSubmission extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
-          <FormFieldTypeaheadRow
-            inputName='tags' label='Tags'
+          <FormFieldRow
+            inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
             onChange={this.handleOnChange}
-            options={this.state.tagNames.map(item => item.name)}
           />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              <b>"Tags" are a comma-separated list of descriptive labels.<br />(Tags can contain spaces.)</b>
+              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <FormFieldTypeaheadRow
+                inputName='tag' label='Tags' buttonLabel='Add tag'
+                onChange={this.handleOnChange}
+                options={this.state.tagNames.map(item => item.name)}
+                onClickButton={this.handleOnClickAddTag}
+              />
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              {(this.state.tags.length > 0) &&
+                  <div className='text-left'>
+                    {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnTagRemove(index)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
+                  </div>}
+              {(this.state.tags.length === 0) &&
+                <div className='card bg-light'>
+                  <div className='card-body'>There are no associated tags, yet.</div>
+                </div>}
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
             </div>
             <div className='col-md-3' />
           </div>
