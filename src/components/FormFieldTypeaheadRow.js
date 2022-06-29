@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-bootstrap'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { Typeahead } from 'react-bootstrap-typeahead'
@@ -12,8 +13,11 @@ class FormFieldTypeaheadRow extends React.Component {
       value: this.props.defaultValue ? this.props.defaultValue : ''
     }
 
+    this.typeahead = null
+
     this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
     this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
+    this.handleOnButtonClick = this.handleOnButtonClick.bind(this)
     this.isValidValue = this.isValidValue.bind(this)
   }
 
@@ -32,11 +36,22 @@ class FormFieldTypeaheadRow extends React.Component {
     if (this.isValidValue(fieldValue)) {
       this.setState({ invalid: false })
     }
-    this.props.onChange(fieldName, fieldValue)
+    if (this.props.inputName) {
+      this.props.onChange(fieldName, fieldValue)
+    }
   }
 
   handleOnFieldBlur (event) {
     this.setState({ invalid: !this.isValidValue(this.state.value) })
+  }
+
+  handleOnButtonClick () {
+    const value = this.state.value
+    if (this.typeahead) {
+      this.typeahead.clear()
+    }
+    this.setState({ value: '' })
+    this.props.onClickButton(value)
   }
 
   render () {
@@ -49,6 +64,7 @@ class FormFieldTypeaheadRow extends React.Component {
         {!this.props.tooltip &&
           <label htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />}
         <Typeahead
+          ref={(ref) => { this.typeahead = ref }}
           id={this.props.inputName}
           name={this.props.inputName}
           labelKey={this.props.labelKey ? this.props.labelKey : undefined}
@@ -64,6 +80,7 @@ class FormFieldTypeaheadRow extends React.Component {
           onInputChange={(input, event) => this.handleOnFieldChange(input)}
           onBlur={this.handleOnFieldBlur}
         />
+        {this.props.onClickButton ? <Button variant='primary' onClick={this.handleOnButtonClick} disabled={!this.state.value}>{this.props.buttonLabel ? this.props.buttonLabel : 'Add'}</Button> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
         <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
       </div>
     )

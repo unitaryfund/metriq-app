@@ -120,7 +120,7 @@ class SotaChartMobile extends React.Component {
         plugins: {
           tooltip: {
             callbacks: {
-              title: function(ctx) {
+              title: function (ctx) {
                 return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
               },
               label: function (ctx) {
