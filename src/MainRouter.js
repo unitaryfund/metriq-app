@@ -3,6 +3,7 @@ import Home from './views/Home'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
 import Delete from './views/Delete'
+import EditDetails from './views/EditDetails'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
@@ -141,6 +142,11 @@ const MainRouter = (props) => {
           exact
           path='/Password'
           component={Password}
+        />
+        <Route
+          exact
+          path='/EditDetails'
+          component={EditDetails}
         />
         <Route
           exact

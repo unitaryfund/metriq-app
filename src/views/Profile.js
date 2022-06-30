@@ -90,7 +90,7 @@ class Profile extends React.Component {
           <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
-              <Button variant='primary' onClick={this.handleShowModal}>Edit Details</Button>
+              <Link to='/EditDetails'><button className='btn btn-primary'>Edit Details</button></Link>
             </div>
           </div>
           <br />
