@@ -28,6 +28,7 @@ class AddSubmission extends React.Component {
       tasks: [],
       task: '',
       taskNames: [],
+      updateTaskSelect: 0,
       tags: [],
       tag: '',
       tagNames: [],
@@ -113,7 +114,6 @@ class AddSubmission extends React.Component {
       validatedPassed = false
     }
 
-    console.log(request.thumbnailUrl)
     if (request.thumbnailUrl && !this.validURL(request.thumbnailUrl)) {
       this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
       validatedPassed = false
@@ -173,7 +173,7 @@ class AddSubmission extends React.Component {
       .then(res => {
         const tasks = res.data.data
         this.handleSortNames(tasks)
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, updateTaskSelect: Math.random() })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -296,6 +296,7 @@ class AddSubmission extends React.Component {
                 onChange={this.handleOnChange}
                 options={this.state.taskNames}
                 onClickButton={this.handleOnClickAddTask}
+                key={this.state.updateTaskSelect}
               />
             </div>
           </div>
