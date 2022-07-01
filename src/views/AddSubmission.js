@@ -46,10 +46,10 @@ class AddSubmission extends React.Component {
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
-    this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
-    this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
     this.handleOnClickRemoveTask = this.handleOnClickRemoveTask.bind(this)
     this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
+    this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
+    this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
   }
 
   validURL (str) {
@@ -130,6 +130,21 @@ class AddSubmission extends React.Component {
     event.preventDefault()
   }
 
+  handleOnClickAddTask () {
+    console.log(this.state.task)
+    const tasks = this.state.tasks
+    if (tasks.indexOf(this.state.task) < 0) {
+      tasks.push(this.state.task)
+      this.setState({ tasks: tasks, task: {} })
+    }
+  }
+
+  handleOnClickRemoveTask (task) {
+    const tasks = this.state.tasks
+    tasks.splice(tasks.indexOf(task.id), 1)
+    this.setState({ tasks: tasks })
+  }
+
   handleOnClickAddTag () {
     const tags = this.state.tags
     if (tags.indexOf(this.state.tag) < 0) {
@@ -142,20 +157,6 @@ class AddSubmission extends React.Component {
     const tags = this.state.tags
     tags.splice(tags.indexOf(tag), 1)
     this.setState({ tags: tags })
-  }
-
-  handleOnClickAddTask () {
-    const tasks = this.state.tasks
-    if (tasks.indexOf(this.state) < 0) {
-      tasks.push(this.state.task)
-      this.setState({ tasks: tasks })
-    }
-  }
-
-  handleOnClickRemoveTask (task) {
-    const tasks = this.state.tasks
-    tasks.splice(tasks.indexOf(task), 1)
-    this.setState({ tasks: tasks })
   }
 
   handleSortNames (names) {
@@ -302,7 +303,7 @@ class AddSubmission extends React.Component {
             options={this.state.tagNames.map(item => item.name)}
             onClickButton={this.handleOnClickAddTag}
           />
-          <FormFieldRowDeleter options={this.state.tags} handleOnClickRemove={this.handleOnClickRemoveTag} />
+          <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} handleOnClickRemove={this.handleOnClickRemoveTag} />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
