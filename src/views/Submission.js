@@ -686,54 +686,54 @@ class Submission extends React.Component {
             }
 
             this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
 
-            const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
-            axios.get(methodNamesRoute)
-              .then(res => {
-                this.handleSortMethods(res.data.data)
-                const methods = [...res.data.data]
-                this.handleTrimMethods(submission, methods)
+        const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
+        axios.get(methodNamesRoute)
+          .then(res => {
+            this.handleSortMethods(res.data.data)
+            const methods = [...res.data.data]
+            this.handleTrimMethods(submission, methods)
 
-                let defMethod = ''
-                if (methods.length) {
-                  defMethod = methods[0].id
-                }
+            let defMethod = ''
+            if (methods.length) {
+              defMethod = methods[0].id
+            }
 
-                this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
 
-                const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
-                axios.get(platformNamesRoute)
-                  .then(res => {
-                    this.handleSortPlatforms(res.data.data)
-                    const platforms = [...res.data.data]
-                    this.handleTrimPlatforms(submission, platforms)
+        const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+        axios.get(platformNamesRoute)
+          .then(res => {
+            this.handleSortPlatforms(res.data.data)
+            const platforms = [...res.data.data]
+            this.handleTrimPlatforms(submission, platforms)
 
-                    let defPlatform = ''
-                    if (platforms.length) {
-                      defPlatform = platforms[0].id
-                    }
+            let defPlatform = ''
+            if (platforms.length) {
+              defPlatform = platforms[0].id
+            }
 
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+          })
+          .catch(err => {
+            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          })
 
-                    const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
-                    axios.get(tagNamesRoute)
-                      .then(res => {
-                        const tags = [...res.data.data]
-                        this.handleTrimTags(submission, tags)
+        const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
+        axios.get(tagNamesRoute)
+          .then(res => {
+            const tags = [...res.data.data]
+            this.handleTrimTags(submission, tags)
 
-                        this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
-                      })
-                      .catch(err => {
-                        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-                      })
-                  })
-                  .catch(err => {
-                    this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-                  })
-              })
-              .catch(err => {
-                this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
-              })
+            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
           })
           .catch(err => {
             this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })

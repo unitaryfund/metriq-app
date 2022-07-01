@@ -12,7 +12,7 @@ class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: { affiliation: '', name: ''},
+      data: { affiliation: '', name: '' },
       showEditModal: false,
       isRequestFailed: false,
       requestFailedMessage: ''
