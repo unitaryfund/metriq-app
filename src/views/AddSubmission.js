@@ -289,17 +289,13 @@ class AddSubmission extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <FormFieldSelectRow
-                inputName='task' label='Tasks' buttonLabel='Add task'
-                onChange={this.handleOnChange}
-                options={this.state.taskNames}
-                onClickButton={this.handleOnClickAddTask}
-                key={this.state.updateTaskSelect}
-              />
-            </div>
-          </div>
+          <FormFieldSelectRow
+            inputName='task' label='Tasks' buttonLabel='Add task'
+            onChange={this.handleOnChange}
+            options={this.state.taskNames}
+            onClickButton={this.handleOnClickAddTask}
+            key={this.state.updateTaskSelect}
+          />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
@@ -324,16 +320,12 @@ class AddSubmission extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <FormFieldTypeaheadRow
-                inputName='tag' label='Tags' buttonLabel='Add tag'
-                onChange={this.handleOnChange}
-                options={this.state.tagNames.map(item => item.name)}
-                onClickButton={this.handleOnClickAddTag}
-              />
-            </div>
-          </div>
+          <FormFieldTypeaheadRow
+            inputName='tag' label='Tags' buttonLabel='Add tag'
+            onChange={this.handleOnChange}
+            options={this.state.tagNames.map(item => item.name)}
+            onClickButton={this.handleOnClickAddTag}
+          />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>

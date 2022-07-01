@@ -111,6 +111,10 @@ form > .row > label {
   text-align: right;
 }
 
+form > span > .row > label {
+  text-align: right;
+}
+
 .container a {
   color: #007bff;
 }
