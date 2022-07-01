@@ -81,7 +81,6 @@ class FormFieldTypeaheadRow extends React.Component {
           onBlur={this.handleOnFieldBlur}
         />
         {this.props.onClickButton ? <Button variant='primary' onClick={this.handleOnButtonClick} disabled={!this.state.value}>{this.props.buttonLabel ? this.props.buttonLabel : 'Add'}</Button> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
-        <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />
       </div>
     )
   }
