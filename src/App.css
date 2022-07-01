@@ -59,6 +59,10 @@ textarea {
   background-color: white;
 }
 
+.metriq-submission-ref-row {
+  margin-bottom: 8px;
+}
+
 .navbar-nav {
   border-radius: 16px;
   border: none;

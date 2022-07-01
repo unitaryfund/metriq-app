@@ -231,9 +231,19 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               {(this.state.tags.length > 0) &&
-                <div className='text-left'>
-                  {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
-                </div>}
+                  this.state.tags.map((tag, index) =>
+                    <div key={index}>
+                      <div className='row metriq-submission-ref-row'>
+                        <div className='col-md-10 text-left'>{tag}</div>
+                        <div className='col-md-2'>
+                          <Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}>
+                            <FontAwesomeIcon icon='trash' />
+                          </Button>
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                  )}
               {(this.state.tags.length === 0) &&
                 <div className='card bg-light'>
                   <div className='card-body'>There are no associated tags, yet.</div>
