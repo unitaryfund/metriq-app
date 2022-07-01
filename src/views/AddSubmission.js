@@ -299,7 +299,7 @@ class AddSubmission extends React.Component {
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
-              {(this.state.tags.length > 0) &&
+              {(this.state.tasks.length > 0) &&
                   this.state.tasks.map((task, index) =>
                     <div key={index}>
                       <div className='row metriq-submission-ref-row'>
@@ -313,7 +313,7 @@ class AddSubmission extends React.Component {
                       <hr />
                     </div>
                   )}
-              {(this.state.tags.length === 0) &&
+              {(this.state.tasks.length === 0) &&
                 <div className='card bg-light'>
                   <div className='card-body'>There are no associated tasks, yet.</div>
                 </div>}
