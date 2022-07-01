@@ -2,16 +2,15 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldRowDeleter from '../components/FormFieldRowDeleter'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
-import { Button } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faPlus, faTrash)
+library.add(faPlus)
 
 const requiredFieldMissingError = 'Required field.'
 
@@ -296,60 +295,14 @@ class AddSubmission extends React.Component {
             onClickButton={this.handleOnClickAddTask}
             key={this.state.updateTaskSelect}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              {(this.state.tasks.length > 0) &&
-                  this.state.tasks.map((task, index) =>
-                    <div key={index}>
-                      <div className='row metriq-submission-ref-row'>
-                        <div className='col-md-10 text-left'>{task.name}</div>
-                        <div className='col-md-2'>
-                          <Button variant='danger' onClick={() => this.handleOnClickRemoveTask(task)}>
-                            <FontAwesomeIcon icon='trash' />
-                          </Button>
-                        </div>
-                      </div>
-                      <hr />
-                    </div>
-                  )}
-              {(this.state.tasks.length === 0) &&
-                <div className='card bg-light'>
-                  <div className='card-body'>There are no associated tasks, yet.</div>
-                </div>}
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldRowDeleter options={this.state.tasks} handleOnClickRemove={this.handleOnClickRemoveTask} />
           <FormFieldTypeaheadRow
             inputName='tag' label='Tags' buttonLabel='Add tag'
             onChange={this.handleOnChange}
             options={this.state.tagNames.map(item => item.name)}
             onClickButton={this.handleOnClickAddTag}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              {(this.state.tags.length > 0) &&
-                  this.state.tags.map((tag, index) =>
-                    <div key={index}>
-                      <div className='row metriq-submission-ref-row'>
-                        <div className='col-md-10 text-left'>{tag}</div>
-                        <div className='col-md-2'>
-                          <Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}>
-                            <FontAwesomeIcon icon='trash' />
-                          </Button>
-                        </div>
-                      </div>
-                      <hr />
-                    </div>
-                  )}
-              {(this.state.tags.length === 0) &&
-                <div className='card bg-light'>
-                  <div className='card-body'>There are no associated tags, yet.</div>
-                </div>}
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldRowDeleter options={this.state.tags} handleOnClickRemove={this.handleOnClickRemoveTag} />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
