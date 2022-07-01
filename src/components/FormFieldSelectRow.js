@@ -1,6 +1,7 @@
 import React from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { Button } from 'react-bootstrap'
 
 class FormFieldSelectRow extends React.Component {
   constructor (props) {
@@ -57,10 +58,10 @@ class FormFieldSelectRow extends React.Component {
       <div className='row'>
         {this.props.tooltip &&
           <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <span htmlFor={this.props.inputName} className={'col-md-3 form-field-label ' + this.props.labelClass} dangerouslySetInnerHTML={{ __html: this.props.label }} />
+            <span htmlFor={this.props.inputName} className={this.props.labelClass ? 'col-md-3 form-field-label ' + this.props.labelClass : 'col-md-3 form-field-label'} dangerouslySetInnerHTML={{ __html: this.props.label }} />
           </OverlayTrigger>}
         {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className={'col-md-3 form-field-label ' + this.props.labelClass} dangerouslySetInnerHTML={{ __html: this.props.label }} />}
+          <label htmlFor={this.props.inputName} className={this.props.labelClass ? 'col-md-3 form-field-label ' + this.props.labelClass : 'col-md-3 form-field-label'} dangerouslySetInnerHTML={{ __html: this.props.label }} />}
         <div className='col-md-6'>
           <select
             id={this.props.inputName}
@@ -82,7 +83,7 @@ class FormFieldSelectRow extends React.Component {
             )}
           </select>
         </div>
-        <div className='col-md-3' />
+        {this.props.onClickButton && <Button variant='primary' onClick={() => this.props.onClickButton(this.state.value)}>{this.props.buttonLabel ? this.props.buttonLabel : 'Add'}</Button>}
       </div>
     )
   }

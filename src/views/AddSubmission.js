@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
@@ -24,6 +25,9 @@ class AddSubmission extends React.Component {
       contentUrl: '',
       thumbnailUrl: '',
       description: '',
+      tasks: [],
+      task: '',
+      taskNames: [],
       tags: [],
       tag: '',
       tagNames: [],
@@ -43,6 +47,9 @@ class AddSubmission extends React.Component {
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
     this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
+    this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
+    this.handleOnClickRemoveTask = this.handleOnClickRemoveTask.bind(this)
+    this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
   }
 
   validURL (str) {
@@ -138,12 +145,77 @@ class AddSubmission extends React.Component {
     this.setState({ tags: tags })
   }
 
+  handleOnClickAddTask () {
+    const tasks = this.state.tasks
+    if (tasks.indexOf(this.state) < 0) {
+      tasks.push(this.state.task)
+      this.setState({ tasks: tasks })
+    }
+  }
+
+  handleOnClickRemoveTask (task) {
+    const tasks = this.state.tasks
+    tasks.splice(tasks.indexOf(task), 1)
+    this.setState({ tasks: tasks })
+  }
+
+  handleSortNames (names) {
+    names.sort(function (a, b) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+      if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
+      return 0
+    })
+  }
+
   componentDidMount () {
+    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+    axios.get(taskNamesRoute)
+      .then(res => {
+        const tasks = res.data.data
+        this.handleSortNames(tasks)
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+
+    const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
+    axios.get(methodNamesRoute)
+      .then(res => {
+        const methods = res.data.data
+        this.handleSortNames(methods)
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+
+    const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
+    axios.get(platformNamesRoute)
+      .then(res => {
+        const platforms = res.data.data
+        this.handleSortNames(platforms)
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platforms })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+
     const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
     axios.get(tagNamesRoute)
       .then(res => {
-        const tags = [...res.data.data]
+        const tags = res.data.data
         this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags })
+      })
+      .catch(err => {
+        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+      })
+
+    const metricNameRoute = config.api.getUriPrefix() + '/result/metricNames'
+    axios.get(metricNameRoute)
+      .then(subRes => {
+        const metricNames = subRes.data.data
+        this.setState({ metricNames: metricNames })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -214,6 +286,40 @@ class AddSubmission extends React.Component {
             <div className='col-md-3' />
             <div className='col-md-6'>
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+            </div>
+            <div className='col-md-3' />
+          </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <FormFieldSelectRow
+                inputName='task' label='Tasks' buttonLabel='Add task'
+                onChange={this.handleOnChange}
+                options={this.state.taskNames}
+                onClickButton={this.handleOnClickAddTask}
+              />
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-3' />
+            <div className='col-md-6'>
+              {(this.state.tags.length > 0) &&
+                  this.state.tasks.map((task, index) =>
+                    <div key={index}>
+                      <div className='row metriq-submission-ref-row'>
+                        <div className='col-md-10 text-left'>{task.name}</div>
+                        <div className='col-md-2'>
+                          <Button variant='danger' onClick={() => this.handleOnClickRemoveTask(task)}>
+                            <FontAwesomeIcon icon='trash' />
+                          </Button>
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                  )}
+              {(this.state.tags.length === 0) &&
+                <div className='card bg-light'>
+                  <div className='card-body'>There are no associated tasks, yet.</div>
+                </div>}
             </div>
             <div className='col-md-3' />
           </div>
