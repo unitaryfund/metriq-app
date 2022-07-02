@@ -17,10 +17,12 @@ const FormFieldTypeaheadRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (props.onChange && (fieldValue !== value)) {
-      props.onChange(fieldName, fieldValue)
+    if (fieldValue !== value) {
+      if (props.onChange) {
+        props.onChange(fieldName, fieldValue)
+      }
+      setValue(fieldValue)
     }
-    setValue(fieldValue)
   }
 
   const handleOnFieldBlur = (input) => {
@@ -30,10 +32,12 @@ const FormFieldTypeaheadRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (props.onBlur && (fieldValue !== value)) {
-      props.onBlur(fieldName, fieldValue)
+    if (fieldValue !== value) {
+      if (props.onBlur) {
+        props.onBlur(fieldName, fieldValue)
+      }
+      setValue(fieldValue)
     }
-    setValue(fieldValue)
   }
 
   const handleOnButtonClick = () => {

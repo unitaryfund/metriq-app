@@ -20,19 +20,23 @@ const FormFieldSelectRow = (props) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
     const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    if (props.onChange && (fieldValue !== value)) {
-      props.onChange(fieldName, fieldValue)
+    if (fieldValue !== value) {
+      if (props.onChange) {
+        props.onChange(fieldName, fieldValue)
+      }
+      setValue(fieldValue)
     }
-    setValue(fieldValue)
   }
 
   const handleOnFieldBlur = (event) => {
     const fieldName = event.target.name
     const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    if (props.onBlur && (fieldValue !== value)) {
-      props.onBlur(fieldName, fieldValue)
+    if (fieldValue !== value) {
+      if (props.onBlur) {
+        props.onBlur(fieldName, fieldValue)
+      }
+      setValue(fieldValue)
     }
-    setValue(fieldValue)
   }
 
   return (
