@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -12,28 +12,20 @@ import ErrorHandler from './ErrorHandler'
 
 library.add(faExternalLinkAlt)
 
-class SubmissionBox extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      upvotes: props.item.upvotesCount || 0,
-      isUpvoted: props.item.isUpvoted,
-      tags: props.item.tags ? props.item.tags.map((obj, ind) => obj.name) : [],
-      description: !this.props.item.description ? '' : ((this.props.item.description.length > 500) ? (this.props.item.description.substring(0, 497) + '...') : this.props.item.description)
-    }
+const SubmissionBox = (props) => {
+  const description = !props.item.description ? '' : ((props.item.description.length > 500) ? (props.item.description.substring(0, 497) + '...') : props.item.description)
+  const tags = props.item.tags ? props.item.tags.map((obj, ind) => obj.name) : []
 
-    this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
-    this.handleDeleteOnClick = this.handleDeleteOnClick.bind(this)
-    this.handleExternalLinkClick = this.handleExternalLinkClick.bind(this)
-  }
+  const [upvotes, setUpvotes] = useState(props.item.upvotesCount || 0)
+  const [isUpvoted, setIsUpvoted] = useState(props.item.isUpvoted)
 
-  handleDeleteOnClick (event) {
-    let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + this.props.item.name, '')
+  const handleDeleteOnClick = (event) => {
+    let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + props.item.name, '')
     if (confirmString) {
       confirmString = confirmString.trim().toLowerCase()
     }
-    if (confirmString && (confirmString === this.props.item.nameNormal)) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.item.id, {})
+    if (confirmString && (confirmString === props.item.nameNormal)) {
+      axios.delete(config.api.getUriPrefix() + '/submission/' + props.item.id, {})
         .then(res => {
           window.location = '/Submissions'
         })
@@ -46,11 +38,12 @@ class SubmissionBox extends React.Component {
     event.preventDefault()
   }
 
-  handleUpVoteOnClick (event) {
-    if (this.props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.item.id + '/upvote', {})
+  const handleUpVoteOnClick = (event) => {
+    if (props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/submission/' + props.item.id + '/upvote', {})
         .then(res => {
-          this.setState({ upvotes: res.data.data.upvotesCount, isUpvoted: res.data.data.isUpvoted })
+          setUpvotes(res.data.data.upvotesCount)
+          setIsUpvoted(res.data.data.isUpvoted)
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -61,13 +54,13 @@ class SubmissionBox extends React.Component {
     event.preventDefault()
   }
 
-  handleExternalLinkClick (event) {
-    window.open(this.props.item.contentUrl, '_blank')
+  const handleExternalLinkClick = (event) => {
+    window.open(props.item.contentUrl, '_blank')
     event.preventDefault()
   }
 
-  parseContentUrl () {
-    const urlStr = String(this.props.item.contentUrl)
+  const parseContentUrl = () => {
+    const urlStr = String(props.item.contentUrl)
     if (urlStr.includes('arxiv')) {
       return <span> <FontAwesomeIcon icon={faExternalLinkAlt} /> arXiv:{urlStr.split('/abs/')[1]} </span>
     } else if (urlStr.includes('github')) {
@@ -77,58 +70,56 @@ class SubmissionBox extends React.Component {
     }
   }
 
-  render () {
-    return (
-      <div className='submission'>
-        <Link to={'/Submission/' + this.props.item.id}>
-          <div className='row h-100'>
-            <div className='col-md-2 col-sm-12 h-100'>
-              <img src={this.props.item.thumbnailUrl ? this.props.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
+  return (
+    <div className='submission'>
+      <Link to={'/Submission/' + props.item.id}>
+        <div className='row h-100'>
+          <div className='col-md-2 col-sm-12 h-100'>
+            <img src={props.item.thumbnailUrl ? props.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
+          </div>
+          <div className='col-md-8 col-sm-12 h-100'>
+            <div className='submission-heading'>{props.item.name} {props.isEditView && ' - '} {props.isEditView && <b>{props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+            <div className='submission-description'>
+              {description ? description.replace(/\0.*$/g, '').split('. ')[0] + '.' : <i>(No description provided.)</i>}
             </div>
-            <div className='col-md-8 col-sm-12 h-100'>
-              <div className='submission-heading'>{this.props.item.name} {this.props.isEditView && ' - '} {this.props.isEditView && <b>{this.props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
+            {tags.length > 0 &&
               <div className='submission-description'>
-                {this.state.description ? this.state.description.replace(/\0.*$/g, '').split('. ')[0] + '.' : <i>(No description provided.)</i>}
-              </div>
-              {this.state.tags.length > 0 &&
-                <div className='submission-description'>
-                  <b>Tags: </b>{this.state.tags.map((obj, ind) => <span key={obj}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + obj}><span className='link'>{obj}</span></Link></span>)}
-                </div>}
-            </div>
-            <div className='col-md-2 col-sm-12 h-100' />
+                <b>Tags: </b>{tags.map((obj, ind) => <span key={obj}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + obj}><span className='link'>{obj}</span></Link></span>)}
+              </div>}
           </div>
-        </Link>
-        <hr />
-        <div className='row submission-social-row'>
-          <div className='col-md-9 h-100'>
-            <div className='submission-subheading'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>User submissions link</Tooltip>}>
-                <Link to={'/User/' + this.props.item.userId + '/Submissions'}><span className='link'>Submitted by {this.props.item.username}</span></Link>
-              </OverlayTrigger> •
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
-                <span onClick={this.handleExternalLinkClick} className='link'>
-                  {this.parseContentUrl()} • {this.props.item.createdAt ? new Date(this.props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
-                </span>
-              </OverlayTrigger> •
-            </div>
-          </div>
-          <div className='col-md-1 text-center'>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
-              <span>{this.props.isEditView && <button className='delete-button btn btn-danger' onClick={this.handleDeleteOnClick}>Delete</button>}</span>
-            </OverlayTrigger>
-          </div>
-          <div className='col-md-2 text-center'>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-              <div>
-                <div id={this.state.isUpvoted ? 'heart-full' : 'heart-empty'} onClick={this.handleUpVoteOnClick} />
-                <span className='submission-like-count'>{this.state.upvotes}</span>
-              </div>
-            </OverlayTrigger>
+          <div className='col-md-2 col-sm-12 h-100' />
+        </div>
+      </Link>
+      <hr />
+      <div className='row submission-social-row'>
+        <div className='col-md-9 h-100'>
+          <div className='submission-subheading'>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>User submissions link</Tooltip>}>
+              <Link to={'/User/' + props.item.userId + '/Submissions'}><span className='link'>Submitted by {props.item.username}</span></Link>
+            </OverlayTrigger> •
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
+              <span onClick={handleExternalLinkClick} className='link'>
+                {parseContentUrl()} • {props.item.createdAt ? new Date(props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
+              </span>
+            </OverlayTrigger> •
           </div>
         </div>
+        <div className='col-md-1 text-center'>
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
+            <span>{props.isEditView && <button className='delete-button btn btn-danger' onClick={handleDeleteOnClick}>Delete</button>}</span>
+          </OverlayTrigger>
+        </div>
+        <div className='col-md-2 text-center'>
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+            <div>
+              <div id={isUpvoted ? 'heart-full' : 'heart-empty'} onClick={handleUpVoteOnClick} />
+              <span className='submission-like-count'>{upvotes}</span>
+            </div>
+          </OverlayTrigger>
+        </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default SubmissionBox
