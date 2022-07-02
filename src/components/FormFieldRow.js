@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import FormFieldValidator from './FormFieldValidator'
 import FormFieldWideRow from './FormFieldWideRow'
+import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
   const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
@@ -43,9 +42,9 @@ const FormFieldRow = (props) => {
     <FormFieldWideRow>
       <div className='row'>
         {props.tooltip &&
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{props.tooltip}</Tooltip>}>
+          <TooltipTrigger message={props.tooltip}>
             <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-          </OverlayTrigger>}
+          </TooltipTrigger>}
         {!props.tooltip &&
           <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
         <div className='col-md-6 '>

@@ -6,8 +6,6 @@ import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -19,6 +17,7 @@ import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } fr
 import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
+import TooltipTrigger from '../components/TooltipTrigger'
 
 library.add(faEdit)
 
@@ -326,19 +325,21 @@ class Task extends React.Component {
             </div>
           </FormFieldWideRow>
           <FormFieldWideRow>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+            <TooltipTrigger message='Edit task'>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}>
+                <FontAwesomeIcon icon='edit' />
+              </button>
+            </TooltipTrigger>
+            <TooltipTrigger message='Share via Facebook'>
               <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
                 <FacebookIcon size={32} />
               </FacebookShareButton>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+            </TooltipTrigger>
+            <TooltipTrigger message='Share via Twitter'>
               <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
                 <TwitterIcon size={32} />
               </TwitterShareButton>
-            </OverlayTrigger>
+            </TooltipTrigger>
           </FormFieldWideRow>
           <br />
           {this.state.item.parentTask &&

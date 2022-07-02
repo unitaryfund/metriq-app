@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldSelectRow = (props) => {
   const options = props.options
@@ -42,9 +41,9 @@ const FormFieldSelectRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{props.tooltip}</Tooltip>}>
+        <TooltipTrigger message={props.tooltip}>
           <span htmlFor={props.inputName} className={'col-md-3 form-field-label ' + props.labelClass} dangerouslySetInnerHTML={{ __html: props.label }} />
-        </OverlayTrigger>}
+        </TooltipTrigger>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className={'col-md-3 form-field-label ' + props.labelClass} dangerouslySetInnerHTML={{ __html: props.label }} />}
       <div className='col-md-6'>

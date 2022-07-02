@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react'
 import { Button } from 'react-bootstrap'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import FormFieldValidator from './FormFieldValidator'
+import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldTypeaheadRow = (props) => {
   const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
@@ -51,9 +50,9 @@ const FormFieldTypeaheadRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{props.tooltip}</Tooltip>}>
+        <TooltipTrigger message={props.tooltip}>
           <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-        </OverlayTrigger>}
+        </TooltipTrigger>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead

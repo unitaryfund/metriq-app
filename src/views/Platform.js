@@ -6,8 +6,6 @@ import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -15,6 +13,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import TooltipTrigger from '../components/TooltipTrigger'
 
 const defaultRegex = /.+/
 const nameRegex = /.{1,}/
@@ -366,19 +365,19 @@ class Platform extends React.Component {
             </div>
           </FormFieldWideRow>
           <FormFieldWideRow>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit description</Tooltip>}>
+            <TooltipTrigger message='Edit description'>
               <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+            </TooltipTrigger>
+            <TooltipTrigger message='Share via Facebook'>
               <FacebookShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
                 <FacebookIcon size={32} />
               </FacebookShareButton>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+            </TooltipTrigger>
+            <TooltipTrigger message='Share via Twitter'>
               <TwitterShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
                 <TwitterIcon size={32} />
               </TwitterShareButton>
-            </OverlayTrigger>
+            </TooltipTrigger>
           </FormFieldWideRow>
           <br />
           {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&

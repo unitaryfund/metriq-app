@@ -7,8 +7,7 @@ import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+import TooltipTrigger from '../components/TooltipTrigger'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -758,34 +757,34 @@ class Submission extends React.Component {
           </div>
         </FormFieldWideRow>
         <FormFieldWideRow>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+          <TooltipTrigger message='Upvote submission'>
             <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
-          </OverlayTrigger>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
+          </TooltipTrigger>
+          <TooltipTrigger message='Submission link'>
             <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
-          </OverlayTrigger>
+          </TooltipTrigger>
           {this.state.isArxiv &&
             <span>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Mobile view preprint</Tooltip>}>
+              <TooltipTrigger message='Mobile view preprint'>
                 <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>BibTex reference</Tooltip>}>
+              </TooltipTrigger>
+              <TooltipTrigger message='BibTex reference'>
                 <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
-              </OverlayTrigger>
+              </TooltipTrigger>
             </span>}
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
+          <TooltipTrigger message='Edit submission'>
             <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
-          </OverlayTrigger>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+          </TooltipTrigger>
+          <TooltipTrigger message='Share via Facebook'>
             <FacebookShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
               <FacebookIcon size={32} />
             </FacebookShareButton>
-          </OverlayTrigger>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+          </TooltipTrigger>
+          <TooltipTrigger message='Share via Twitter'>
             <TwitterShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
               <TwitterIcon size={32} />
             </TwitterShareButton>
-          </OverlayTrigger>
+          </TooltipTrigger>
         </FormFieldWideRow>
         <br />
         <div className='row'>
@@ -976,14 +975,23 @@ class Submission extends React.Component {
                   dataIndex: 'notes',
                   key: 'notes',
                   width: 40,
-                  render: (value, row, index) => <div className='text-center'>{row.notes && <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}><span className='display-linebreak'>{row.notes}</span></Tooltip>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></OverlayTrigger>}</div>
+                  render: (value, row, index) =>
+                    <div className='text-center'>
+                      {row.notes &&
+                        <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
+                          <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
+                        </TooltipTrigger>}
+                    </div>
                 },
                 {
                   title: '',
                   dataIndex: 'edit',
                   key: 'edit',
                   width: 40,
-                  render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} /></div>
+                  render: (value, row, index) =>
+                    <div className='text-center'>
+                      <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} />
+                    </div>
                 }
               ]}
               data={this.state.item.results.length

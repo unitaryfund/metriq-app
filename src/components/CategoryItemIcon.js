@@ -1,13 +1,12 @@
 import React from 'react'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import TooltipTrigger from './TooltipTrigger'
 
 const CategoryItemBox = (props) =>
   <div className='col-4 col-md-1'>
-    <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of {props.word}, with {props.type}</Tooltip>}>
+    <TooltipTrigger message={'Count of ' + props.word + ', with ' + props.type}>
       <span><FontAwesomeIcon icon={props.icon} /><br />{props.count}</span>
-    </OverlayTrigger>
+    </TooltipTrigger>
   </div>
 
 export default CategoryItemBox
