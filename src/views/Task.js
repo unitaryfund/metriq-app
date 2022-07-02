@@ -4,6 +4,7 @@ import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
@@ -18,8 +19,6 @@ import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } fr
 import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
-import SotaChartMobile from '../components/SotaChartMobile'
-import FormFieldWideRow from '../components/FormFieldWideRow'
 
 library.add(faEdit)
 
@@ -318,7 +317,7 @@ class Task extends React.Component {
                 </div>
                 <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} />
               </div>
-              <div className='sota-chart-message'><SotaChartMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} /></div>
+              <div className='sota-chart-message'><SotaChart isMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} /></div>
             </div>}
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>

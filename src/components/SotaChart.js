@@ -16,7 +16,12 @@ class SotaChart extends React.Component {
     this.percentileZ = this.percentileZ.bind(this)
     const z95 = this.percentileZ(0.95)
 
-    Chart.register([LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels])
+    const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
+    if (!props.isMobile) {
+      chartComponents.push(ChartDataLabels)
+    }
+
+    Chart.register(chartComponents)
     Chart.defaults.font.size = 12
 
     const data = this.props.data
@@ -34,6 +39,7 @@ class SotaChart extends React.Component {
     }
 
     this.state = {
+      key: Math.random(),
       data: {
         datasets: [{
           type: 'scatter',
@@ -83,6 +89,8 @@ class SotaChart extends React.Component {
         }]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         layout: {
           padding: {
             right: 160
@@ -138,12 +146,14 @@ class SotaChart extends React.Component {
               return (type === 'scatter')
             }
           },
-          datalabels: {
-            align: 'center',
-            formatter: function (value, context) {
-              return value.isShowLabel ? value.label : ''
-            }
-          },
+          datalabels: props.isMobile
+            ? { display: false }
+            : {
+                align: 'center',
+                formatter: function (value, context) {
+                  return value.isShowLabel ? value.label : ''
+                }
+              },
           legend: {
             labels: {
               filter: function (item, chart) {
@@ -158,7 +168,7 @@ class SotaChart extends React.Component {
   }
 
   componentDidMount () {
-    (() => new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas').getContext('2d'), {
+    (() => new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.state.key).getContext('2d'), {
       data: this.state.data,
       options: this.state.options
     }))()
@@ -183,7 +193,7 @@ class SotaChart extends React.Component {
   // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
   // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
   render () {
-    return <canvas id='sota-chart-canvas' key={Math.random()} />
+    return <canvas id={'sota-chart-canvas-' + this.state.key} key={Math.random()} />
   }
 }
 
