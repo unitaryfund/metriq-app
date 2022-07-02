@@ -14,25 +14,25 @@ const FormFieldRow = (props) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
     const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    setValue(fieldValue)
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (props.onChange) {
+    if (props.onChange && (fieldValue !== value)) {
       props.onChange(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   const handleOnFieldBlur = (event) => {
     const fieldName = event.target.name
     const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    setValue(fieldValue)
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (props.onBlur) {
+    if (props.onBlur && (fieldValue !== value)) {
       props.onBlur(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   return (
@@ -53,7 +53,7 @@ const FormFieldRow = (props) => {
               rows={props.rows}
               cols={props.cols}
               placeholder={props.placeholder}
-              value={props.value}
+              value={value}
               onChange={handleOnFieldChange}
               onBlur={handleOnFieldBlur}
             >
