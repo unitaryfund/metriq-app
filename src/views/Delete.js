@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
+import FormFieldAlert from '../components/FormFieldAlert'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 
@@ -58,21 +59,13 @@ class Delete extends React.Component {
           <div className='col-md-2' />
         </div>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <span>If you still want to delete your account, press the button below, and you will be prompted to confirm the action one more time.</span>
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlert>
+          If you still want to delete your account, press the button below, and you will be prompted to confirm the action one more time.
+        </FormFieldAlert>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlert>
+          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+        </FormFieldAlert>
         <br />
         <div className='row'>
           <div className='col-md-12 text-center'>
