@@ -89,8 +89,8 @@ class SotaChart extends React.Component {
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: this.props.isMobile,
+        maintainAspectRatio: !this.props.isMobile,
         layout: {
           padding: {
             right: 160
