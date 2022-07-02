@@ -6,6 +6,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlert from '../components/FormFieldAlert'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -87,13 +88,9 @@ class LogIn extends React.Component {
             inputName='isPasswordVisible'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          </FormFieldAlert>
           <div className='row'>
             <div className='col-md-12 text-center'>
               <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />

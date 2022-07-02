@@ -3,6 +3,7 @@ import React from 'react'
 import config from './../config'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlert from '../components/FormFieldAlert'
 
 const isActiveTokenPrefix = 'You have an active API token, created '
 const isNoTokenMessage = 'You do not have an active token.'
@@ -132,13 +133,9 @@ class Token extends React.Component {
             </div>
           </div>
           <br />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          </FormFieldAlert>
         </div>
       </div>
     )

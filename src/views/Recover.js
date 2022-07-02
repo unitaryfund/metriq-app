@@ -4,6 +4,7 @@ import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlert from '../components/FormFieldAlert'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -99,13 +100,12 @@ class Recover extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h4>Account Recovery</h4></header>
         <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>You can log in with either your username or email for your account, with your password.</b></span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>You can log in with either your username or email for your account, with your password.</b><br />
+          </FormFieldAlert>
+          <FormFieldAlert>
+            <b>If you have forgotten your password,</b> enter either your username or account email below, and your new password. If your account recovery link is valid, your password will be changed, and you will be redirected to the homepage.<br />
+          </FormFieldAlert>
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>

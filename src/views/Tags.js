@@ -5,6 +5,7 @@ import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import CategoryScroll from '../components/CategoryScroll'
+import FormFieldAlert from '../components/FormFieldAlert'
 
 class Tags extends React.Component {
   constructor (props) {
@@ -91,13 +92,9 @@ class Tags extends React.Component {
             </Tab>
           </Tabs>
         </div>
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlert>
+          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+        </FormFieldAlert>
       </div>
     )
   }
