@@ -13,11 +13,11 @@ import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -775,16 +775,7 @@ class Submission extends React.Component {
           <TooltipTrigger message='Edit submission'>
             <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
           </TooltipTrigger>
-          <TooltipTrigger message='Share via Facebook'>
-            <FacebookShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
-              <FacebookIcon size={32} />
-            </FacebookShareButton>
-          </TooltipTrigger>
-          <TooltipTrigger message='Share via Twitter'>
-            <TwitterShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
-              <TwitterIcon size={32} />
-            </TwitterShareButton>
-          </TooltipTrigger>
+          <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
         <br />
         <div className='row'>

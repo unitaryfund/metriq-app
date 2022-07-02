@@ -13,11 +13,11 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
 import CategoryScroll from '../components/CategoryScroll'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 library.add(faEdit)
 
@@ -330,16 +330,7 @@ class Task extends React.Component {
                 <FontAwesomeIcon icon='edit' />
               </button>
             </TooltipTrigger>
-            <TooltipTrigger message='Share via Facebook'>
-              <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                <FacebookIcon size={32} />
-              </FacebookShareButton>
-            </TooltipTrigger>
-            <TooltipTrigger message='Share via Twitter'>
-              <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                <TwitterIcon size={32} />
-              </TwitterShareButton>
-            </TooltipTrigger>
+            <SocialShareIcons url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
           {this.state.item.parentTask &&

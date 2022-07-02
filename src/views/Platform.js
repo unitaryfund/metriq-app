@@ -11,9 +11,9 @@ import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 const defaultRegex = /.+/
 const nameRegex = /.{1,}/
@@ -368,16 +368,7 @@ class Platform extends React.Component {
             <TooltipTrigger message='Edit description'>
               <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
             </TooltipTrigger>
-            <TooltipTrigger message='Share via Facebook'>
-              <FacebookShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
-                <FacebookIcon size={32} />
-              </FacebookShareButton>
-            </TooltipTrigger>
-            <TooltipTrigger message='Share via Twitter'>
-              <TwitterShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
-                <TwitterIcon size={32} />
-              </TwitterShareButton>
-            </TooltipTrigger>
+            <SocialShareIcons url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
           {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
