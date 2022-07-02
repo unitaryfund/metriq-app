@@ -6,6 +6,7 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
+import FormFieldAlert from '../components/FormFieldAlert'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -150,13 +151,9 @@ class Methods extends React.Component {
             </Tab>
           </Tabs>
         </div>
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlert>
+          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+        </FormFieldAlert>
       </div>
     )
   }
