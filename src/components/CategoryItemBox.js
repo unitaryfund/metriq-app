@@ -1,9 +1,7 @@
 import React from 'react'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+import CategoryItemIcon from './CategoryItemIcon'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
@@ -41,21 +39,9 @@ class CategoryItemBox extends React.Component {
                   <div className='submission-heading-only'>{this.props.item.name}</div>}
               </Link>
             </div>
-            <div className='col-4 col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of results, with {this.props.type}</Tooltip>}>
-                <span><FontAwesomeIcon icon={faChartLine} /><br />{this.props.item.resultCount}</span>
-              </OverlayTrigger>
-            </div>
-            <div className='col-4 col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of submissions, with {this.props.type}</Tooltip>}>
-                <span><FontAwesomeIcon icon={faExternalLinkAlt} /><br />{this.props.item.submissionCount}</span>
-              </OverlayTrigger>
-            </div>
-            <div className='col-4 col-md-1'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Count of up-votes, for all submissions with {this.props.type}</Tooltip>}>
-                <span><FontAwesomeIcon icon={faHeart} /><br />{this.props.item.upvoteTotal}</span>
-              </OverlayTrigger>
-            </div>
+            <CategoryItemIcon count={this.props.item.resultCount} type={this.props.type} word='results' icon={faChartLine} />
+            <CategoryItemIcon count={this.props.item.submissionCount} type={this.props.type} word='submissions' icon={faExternalLinkAlt} />
+            <CategoryItemIcon count={this.props.item.upvoteTotal} type={this.props.type} word='up-votes' icon={faHeart} />
           </div>
         </td>
       </tr>
