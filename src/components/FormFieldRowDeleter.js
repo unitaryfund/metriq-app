@@ -27,7 +27,7 @@ const FormFieldRowDeleter = (props) =>
             )}
         {(props.options.length === 0) &&
           <div className='card bg-light'>
-            <div className='card-body'>There are no associated tasks, yet.</div>
+            <div className='card-body'>{props.emptyMessage}</div>
           </div>}
       </div>
       <div className='col-md-3' />

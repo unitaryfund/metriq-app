@@ -131,7 +131,6 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickAddTask () {
-    console.log(this.state.task)
     const tasks = this.state.tasks
     if (tasks.indexOf(this.state.task) < 0) {
       tasks.push(this.state.task)
@@ -296,14 +295,14 @@ class AddSubmission extends React.Component {
             onClickButton={this.handleOnClickAddTask}
             key={this.state.updateTaskSelect}
           />
-          <FormFieldRowDeleter options={this.state.tasks} handleOnClickRemove={this.handleOnClickRemoveTask} />
+          <FormFieldRowDeleter options={this.state.tasks} handleOnClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
           <FormFieldTypeaheadRow
             inputName='tag' label='Tags' buttonLabel='Add tag'
             onChange={this.handleOnChange}
             options={this.state.tagNames.map(item => item.name)}
             onClickButton={this.handleOnClickAddTag}
           />
-          <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} handleOnClickRemove={this.handleOnClickRemoveTag} />
+          <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} handleOnClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
