@@ -1,6 +1,5 @@
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
-
 import { Button, Nav } from 'react-bootstrap'
 
 const AnonNavRight = () => {
