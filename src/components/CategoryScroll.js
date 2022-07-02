@@ -1,5 +1,6 @@
 import React from 'react'
 import FormFieldValidator from './FormFieldValidator'
+import FormFieldAlertRow from './FormFieldAlertRow'
 import CategoryItemBox from './CategoryItemBox'
 
 class CategoryScroll extends React.Component {
@@ -38,13 +39,9 @@ class CategoryScroll extends React.Component {
           </div>
         </div>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlertRow>
+          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+        </FormFieldAlertRow>
       </div>
     )
   }

@@ -6,6 +6,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import SubmissionBox from '../components/SubmissionBox'
 import ErrorHandler from './ErrorHandler'
 import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
+import FormFieldAlertRow from './FormFieldAlertRow'
 
 class SubmissionScroll extends React.Component {
   constructor (props) {
@@ -126,13 +127,9 @@ class SubmissionScroll extends React.Component {
           </div>
         </div>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlertRow>
+          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+        </FormFieldAlertRow>
       </div>
     )
   }
