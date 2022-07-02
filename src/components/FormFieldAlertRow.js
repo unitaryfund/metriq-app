@@ -1,4 +1,4 @@
-const FormFieldAlert = (props) => {
+const FormFieldAlertRow = (props) => {
   return (
     <div className='row'>
       <div className='col-md-3' />
@@ -10,4 +10,4 @@ const FormFieldAlert = (props) => {
   )
 }
 
-export default FormFieldAlert
+export default FormFieldAlertRow

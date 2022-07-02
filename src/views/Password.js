@@ -5,6 +5,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
@@ -98,13 +99,9 @@ class Password extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h4>Change Password</h4></header>
         <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>Enter your current password below, then enter and confirm your new password.</b></span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <b>Enter your current password below, then enter and confirm your new password.</b><br />
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='oldPassword' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Current Password'
             validatorMessage={passwordRequiredError}
@@ -127,14 +124,10 @@ class Password extends React.Component {
             inputName='isPasswordVisible'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
+            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
           <div className='row'>
             <div className='col-md-12 text-center'>
               <input className='btn btn-primary' type='submit' value='Submit' />

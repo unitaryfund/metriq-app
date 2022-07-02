@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
-import FormFieldAlert from '../components/FormFieldAlert'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 
@@ -59,13 +59,13 @@ class Delete extends React.Component {
           <div className='col-md-2' />
         </div>
         <br />
-        <FormFieldAlert>
+        <FormFieldAlertRow>
           If you still want to delete your account, press the button below, and you will be prompted to confirm the action one more time.
-        </FormFieldAlert>
+        </FormFieldAlertRow>
         <br />
-        <FormFieldAlert>
+        <FormFieldAlertRow>
           <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-        </FormFieldAlert>
+        </FormFieldAlertRow>
         <br />
         <div className='row'>
           <div className='col-md-12 text-center'>

@@ -4,7 +4,7 @@ import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
-import FormFieldAlert from '../components/FormFieldAlert'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 
 const usernameMissingError = 'Username cannot be blank.'
 const usernameValidRegex = /^(?!\s*$).+/
@@ -63,9 +63,9 @@ class Forgot extends React.Component {
         <div id='metriq-main-content' className='container'>
           <header>Account Recovery</header>
           <br />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             Your request has been received. If that account username or email exists, you will receive an email with further account recovery instructions. (Check your email inbox.)<br />
-          </FormFieldAlert>
+          </FormFieldAlertRow>
         </div>
       )
     }
@@ -73,21 +73,21 @@ class Forgot extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header>Account Recovery</header>
         <form onSubmit={this.handleOnSubmit}>
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <b>You can log in with either your username or email for your account, with your password.</b><br />
-          </FormFieldAlert>
-          <FormFieldAlert>
+          </FormFieldAlertRow>
+          <FormFieldAlertRow>
             <b>If you have forgotten your password,</b> enter either your username or account email below, and we will send a password recovery link to the associated account email, if it exists.<br />
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='user' inputType='text' label='Username/Email'
             validatorMessage={usernameMissingError}
             onChange={this.handleOnChange}
             validRegex={usernameValidRegex}
           />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <div className='row'>
             <div className='col-md-12 text-center'>
               <input className='btn btn-primary' type='submit' value='Submit' />

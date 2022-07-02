@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
-import FormFieldAlert from '../components/FormFieldAlert'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
@@ -156,16 +156,12 @@ class AddSubmission extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h4>Add Submission</h4></header>
         <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>
-                <p>If you have an article, code repository, or any URL constituting or presenting a "method" for quantum applications, use this form to create a unique page for it.</p>
-                <p>If you have independently recreated or validated the results of another submission on Metriq, you can add your new results to its page.</p>
-              </b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <b>
+              <p>If you have an article, code repository, or any URL constituting or presenting a "method" for quantum applications, use this form to create a unique page for it.</p>
+              <p>If you have independently recreated or validated the results of another submission on Metriq, you can add your new results to its page.</p>
+            </b>
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='contentUrl' inputType='text' label='Content URL'
             validatorMessage={requiredFieldMissingError}
@@ -173,9 +169,9 @@ class AddSubmission extends React.Component {
             onBlur={this.handleOnFieldBlur}
             validRegex={nonblankRegex}
           />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='name' inputType='text' label='Submission Name'
             validatorMessage={requiredFieldMissingError}
@@ -183,25 +179,25 @@ class AddSubmission extends React.Component {
             validRegex={nonblankRegex}
             value={this.state.name}
           />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <b>The submission name must be unique.</b>
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='description' inputType='textarea' label='Description'
             placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
             onChange={this.handleOnChange}
             value={this.state.description}
           />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <b>We encourage using an abstract, for the submission description.</b>
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
             onChange={this.handleOnChange}
           />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <div className='row'>
             <div className='col-md-12'>
               <FormFieldTypeaheadRow
@@ -212,30 +208,22 @@ class AddSubmission extends React.Component {
               />
             </div>
           </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              {(this.state.tags.length > 0) &&
-                <div className='text-left'>
-                  {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
-                </div>}
-              {(this.state.tags.length === 0) &&
-                <div className='card bg-light'>
-                  <div className='card-body'>There are no associated tags, yet.</div>
-                </div>}
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <FormFieldAlert>
+          <FormFieldAlertRow>
+            {(this.state.tags.length > 0) &&
+              <div className='text-left'>
+                {this.state.tags.map((tag, index) => <span key={index}>{index > 0 && <span> • </span>}<Button variant='danger' onClick={() => this.handleOnClickRemoveTag(tag)}><FontAwesomeIcon icon='trash' /> {tag}</Button></span>)}
+              </div>}
+            {(this.state.tags.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated tags, yet.</div>
+              </div>}
+          </FormFieldAlertRow>
+          <FormFieldAlertRow>
             <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
-          </FormFieldAlert>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          </FormFieldAlertRow>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
           <div className='row'>
             <div className='col-md-12 text-center'>
               <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />

@@ -7,7 +7,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import { Button, Modal } from 'react-bootstrap'
-import FormFieldAlert from '../components/FormFieldAlert'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -81,9 +81,9 @@ class Profile extends React.Component {
           <FieldRow fieldName='name' label='Name' value={this.state.data.name} />
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientTokenCreated ? 'Active' : 'None'} />
           <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
-          <FormFieldAlert>
+          <FormFieldAlertRow>
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </FormFieldAlert>
+          </FormFieldAlertRow>
           <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
