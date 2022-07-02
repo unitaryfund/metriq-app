@@ -8,6 +8,7 @@ import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -72,7 +73,7 @@ class LogIn extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Log In</h4></header>
+        <ViewHeader>Log In</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'

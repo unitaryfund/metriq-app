@@ -7,6 +7,7 @@ import ErrorHandler from '../components/ErrorHandler'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
@@ -98,7 +99,7 @@ class Password extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Change Password</h4></header>
+        <ViewHeader>Change Password</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldAlertRow>
             <b>Enter your current password below, then enter and confirm your new password.</b><br />

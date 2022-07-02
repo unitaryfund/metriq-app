@@ -5,6 +5,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const isActiveTokenPrefix = 'You have an active API token, created '
 const isNoTokenMessage = 'You do not have an active token.'
@@ -73,7 +74,7 @@ class Token extends React.Component {
     if (this.state.isGeneratedSuccess) {
       return (
         <div id='metriq-main-content' className='container'>
-          <header><h4>Get Token</h4></header>
+          <ViewHeader>Get Token</ViewHeader>
           <br />
           <div>
             <FormFieldWideRow>This is your new token:</FormFieldWideRow>
@@ -87,7 +88,7 @@ class Token extends React.Component {
     }
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Get Token</h5></header>
+        <ViewHeader>Get Token</ViewHeader>
         <br />
         <div>
           <FormFieldWideRow>

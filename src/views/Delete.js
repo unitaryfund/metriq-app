@@ -5,6 +5,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Delete extends React.Component {
   constructor (props) {
@@ -50,7 +51,7 @@ class Delete extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Delete Account</h4></header>
+        <ViewHeader>Delete Account</ViewHeader>
         <br />
         <div className='row'>
           <div className='col-md-2' />

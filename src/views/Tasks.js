@@ -8,6 +8,7 @@ import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -123,7 +124,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Tasks</h4></header>
+        <ViewHeader>Tasks</ViewHeader>
         <br />
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow

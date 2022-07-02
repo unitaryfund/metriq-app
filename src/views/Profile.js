@@ -9,6 +9,7 @@ import ErrorHandler from '../components/ErrorHandler'
 import { Button, Modal } from 'react-bootstrap'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -72,7 +73,7 @@ class Profile extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Profile</h4></header>
+        <ViewHeader>Profile</ViewHeader>
         <br />
         <div>
           <FieldRow fieldName='username' label='Username' value={this.state.data.username} />

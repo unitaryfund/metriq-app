@@ -6,6 +6,7 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Tags extends React.Component {
   constructor (props) {
@@ -77,7 +78,7 @@ class Tags extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Tags</h4></header>
+        <ViewHeader>Tags</ViewHeader>
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>

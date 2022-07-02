@@ -6,6 +6,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const usernameValidRegex = /^(?!\s*$).+/
@@ -62,7 +63,7 @@ class Forgot extends React.Component {
     if (this.state.isRequestReceived) {
       return (
         <div id='metriq-main-content' className='container'>
-          <header>Account Recovery</header>
+          <ViewHeader>Account Recovery</ViewHeader>
           <br />
           <FormFieldAlertRow>
             Your request has been received. If that account username or email exists, you will receive an email with further account recovery instructions. (Check your email inbox.)<br />
@@ -72,7 +73,7 @@ class Forgot extends React.Component {
     }
     return (
       <div id='metriq-main-content' className='container'>
-        <header>Account Recovery</header>
+        <ViewHeader>Account Recovery</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldAlertRow>
             <b>You can log in with either your username or email for your account, with your password.</b><br />

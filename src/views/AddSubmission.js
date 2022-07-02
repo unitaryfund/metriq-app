@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 library.add(faPlus, faTrash)
 
@@ -155,7 +156,7 @@ class AddSubmission extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Add Submission</h4></header>
+        <ViewHeader>Add Submission</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldAlertRow>
             <b>

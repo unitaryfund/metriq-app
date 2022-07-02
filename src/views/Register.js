@@ -7,6 +7,7 @@ import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const emailBadFormatError = 'Email is blank or invalid.'
@@ -108,7 +109,7 @@ class Register extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Register</h4></header>
+        <ViewHeader>Register</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
