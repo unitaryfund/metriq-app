@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
+import FormFieldAlert from '../components/FormFieldAlert'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
@@ -172,13 +173,9 @@ class AddSubmission extends React.Component {
             onBlur={this.handleOnFieldBlur}
             validRegex={nonblankRegex}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
+          </FormFieldAlert>
           <FormFieldRow
             inputName='name' inputType='text' label='Submission Name'
             validatorMessage={requiredFieldMissingError}
@@ -186,37 +183,25 @@ class AddSubmission extends React.Component {
             validRegex={nonblankRegex}
             value={this.state.name}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>The submission name must be unique.</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>The submission name must be unique.</b>
+          </FormFieldAlert>
           <FormFieldRow
             inputName='description' inputType='textarea' label='Description'
             placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
             onChange={this.handleOnChange}
             value={this.state.description}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>We encourage using an abstract, for the submission description.</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>We encourage using an abstract, for the submission description.</b>
+          </FormFieldAlert>
           <FormFieldRow
             inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+          </FormFieldAlert>
           <div className='row'>
             <div className='col-md-12'>
               <FormFieldTypeaheadRow
@@ -241,13 +226,9 @@ class AddSubmission extends React.Component {
             </div>
             <div className='col-md-3' />
           </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlert>
+            <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
+          </FormFieldAlert>
           <div className='row'>
             <div className='col-md-3' />
             <div className='col-md-6'>
