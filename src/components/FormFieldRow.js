@@ -1,102 +1,85 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import FormFieldValidator from './FormFieldValidator'
 import FormFieldWideRow from './FormFieldWideRow'
 
-class FormFieldRow extends React.Component {
-  constructor (props) {
-    super(props)
+const FormFieldRow = (props) => {
+  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
+  const [isValid, setIsValid] = useState(true)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-    this.state = {
-      value: this.props.defaultValue ? this.props.defaultValue : '',
-      imagePreview: false,
-      imagePreviewUrl: true
-    }
-
-    this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
-    this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
-    this.isValidValue = this.isValidValue.bind(this)
-    this.handleShowImagePreview = this.handleShowImagePreview.bind(this)
-  }
-
-  isValidValue (value) {
-    if (!this.props.validRegex) {
-      return true
-    }
-    return this.props.validRegex.test(value)
-  }
-
-  handleOnFieldChange (event) {
+  const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
-    const fieldValue = (this.props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    this.setState({ value: fieldValue })
-    if (this.isValidValue(fieldValue)) {
-      this.setState({ invalid: false })
+    const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    setValue(fieldValue)
+    if (props.validRegex) {
+      setIsValid(props.validRegex.test(fieldValue))
     }
-    this.props.onChange(fieldName, fieldValue)
+    if (props.onChange) {
+      props.onChange(fieldName, fieldValue)
+    }
   }
 
-  handleOnFieldBlur (event) {
-    // this.setState({ invalid: !this.isValidValue(this.state.value) })
+  const handleOnFieldBlur = (event) => {
     const fieldName = event.target.name
-    const fieldValue = (this.props.inputType === 'checkbox') ? event.target.checked : event.target.value
-    this.props.onBlur && this.props.onBlur(fieldName, fieldValue)
+    const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    setValue(fieldValue)
+    if (props.validRegex) {
+      setIsValid(props.validRegex.test(fieldValue))
+    }
+    if (props.onBlur) {
+      props.onBlur(fieldName, fieldValue)
+    }
   }
 
-  handleShowImagePreview (event) {
-    this.setState({ imagePreview: true, imagePreviewUrl: this.state.value })
-  }
-
-  render () {
-    return (
-      <FormFieldWideRow>
-        <div className='row'>
-          {this.props.tooltip &&
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-              <span htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />
-            </OverlayTrigger>}
-          {!this.props.tooltip &&
-            <label htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />}
-          <div className='col-md-6 '>
-            {(this.props.inputType === 'textarea') &&
-              <textarea
-                id={this.props.inputName}
-                name={this.props.inputName}
-                className='form-control'
-                onChange={this.handleOnFieldChange}
-                onBlur={this.handleOnFieldBlur}
-                rows={this.props.rows}
-                cols={this.props.cols}
-                placeholder={this.props.placeholder}
-                value={this.props.value}
-              >
-                {this.props.value}
-              </textarea>}
-            {(this.props.inputType !== 'textarea') &&
-              <input
-                id={this.props.inputName}
-                name={this.props.inputName}
-                className='form-control'
-                type={this.props.inputType}
-                selected={this.props.defaultValue}
-                value={this.props.value}
-                checked={this.props.checked}
-                onChange={this.handleOnFieldChange}
-                onBlur={this.handleOnFieldBlur}
-              />}
-          </div>
-          {this.props.imageUrl ? <Button variant='primary' onClick={this.handleShowImagePreview}>Preview</Button> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
+  return (
+    <FormFieldWideRow>
+      <div className='row'>
+        {props.tooltip &&
+          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{props.tooltip}</Tooltip>}>
+            <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+          </OverlayTrigger>}
+        {!props.tooltip &&
+          <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <div className='col-md-6 '>
+          {(props.inputType === 'textarea') &&
+            <textarea
+              id={props.inputName}
+              name={props.inputName}
+              className='form-control'
+              rows={props.rows}
+              cols={props.cols}
+              placeholder={props.placeholder}
+              value={props.value}
+              onChange={handleOnFieldChange}
+              onBlur={handleOnFieldBlur}
+            >
+              {props.value}
+            </textarea>}
+          {(props.inputType !== 'textarea') &&
+            <input
+              id={props.inputName}
+              name={props.inputName}
+              className='form-control'
+              type={props.inputType}
+              selected={props.defaultValue}
+              value={props.value}
+              checked={props.checked}
+              onChange={handleOnFieldChange}
+              onBlur={handleOnFieldBlur}
+            />}
         </div>
-        {this.state.imagePreview &&
-          <FormFieldWideRow className='text-center'>
-            <img src={this.state.imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
-          </FormFieldWideRow>}
-      </FormFieldWideRow>
-    )
-  }
-};
+        {props.imageUrl ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button> : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+      </div>
+      {imagePreviewUrl && isValid &&
+        <FormFieldWideRow className='text-center'>
+          <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
+        </FormFieldWideRow>}
+    </FormFieldWideRow>
+  )
+}
 
 export default FormFieldRow
