@@ -1,89 +1,77 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from 'react-bootstrap'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import FormFieldValidator from './FormFieldValidator'
 
-class FormFieldTypeaheadRow extends React.Component {
-  constructor (props) {
-    super(props)
+const FormFieldTypeaheadRow = (props) => {
+  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
+  const [isValid, setIsValid] = useState(true)
+  const typeahead = useRef(null)
 
-    this.state = {
-      value: this.props.defaultValue ? this.props.defaultValue : ''
-    }
-
-    this.typeahead = null
-
-    this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
-    this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
-    this.handleOnButtonClick = this.handleOnButtonClick.bind(this)
-    this.isValidValue = this.isValidValue.bind(this)
-  }
-
-  isValidValue (value) {
-    if (!this.props.validRegex) {
-      return true
-    }
-    return this.props.validRegex.test(value)
-  }
-
-  handleOnFieldChange (input) {
-    // for a regular input field, read field name and value from the event
-    const fieldName = this.props.inputName
+  const handleOnFieldChange = (input) => {
+    // For a regular input field, read field name and value from the event.
+    const fieldName = props.inputName
     const fieldValue = input
-    this.setState({ value: fieldValue })
-    if (this.isValidValue(fieldValue)) {
-      this.setState({ invalid: false })
+    if (props.validRegex) {
+      setIsValid(props.validRegex.test(fieldValue))
     }
-    if (this.props.inputName) {
-      this.props.onChange(fieldName, fieldValue)
+    if (props.onChange && (fieldValue !== value)) {
+      props.onChange(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
-  handleOnFieldBlur (event) {
-    this.setState({ invalid: !this.isValidValue(this.state.value) })
-  }
-
-  handleOnButtonClick () {
-    const value = this.state.value
-    if (this.typeahead) {
-      this.typeahead.clear()
+  const handleOnFieldBlur = (input) => {
+    // For a regular input field, read field name and value from the event.
+    const fieldName = props.inputName
+    const fieldValue = input
+    if (props.validRegex) {
+      setIsValid(props.validRegex.test(fieldValue))
     }
-    this.setState({ value: '' })
-    this.props.onClickButton(value)
+    if (props.onBlur && (fieldValue !== value)) {
+      props.onBlur(fieldName, fieldValue)
+    }
+    setValue(fieldValue)
   }
 
-  render () {
-    return (
-      <div className='row'>
-        {this.props.tooltip &&
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{this.props.tooltip}</Tooltip>}>
-            <span htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />
-          </OverlayTrigger>}
-        {!this.props.tooltip &&
-          <label htmlFor={this.props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: this.props.label }} />}
-        <Typeahead
-          ref={(ref) => { this.typeahead = ref }}
-          id={this.props.inputName}
-          name={this.props.inputName}
-          labelKey={this.props.labelKey ? this.props.labelKey : undefined}
-          className='col-md-6'
-          options={this.props.options}
-          defaultSelected={[this.props.value ? this.props.value : '']}
-          onChange={selected => {
-            this.handleOnFieldChange(selected[0])
-            if (this.props.onSelect) {
-              this.props.onSelect(selected[0])
-            }
-          }}
-          onInputChange={(input, event) => this.handleOnFieldChange(input)}
-          onBlur={this.handleOnFieldBlur}
-        />
-        {this.props.onClickButton ? <Button variant='primary' onClick={this.handleOnButtonClick} disabled={!this.state.value}>{this.props.buttonLabel ? this.props.buttonLabel : 'Add'}</Button> : <FormFieldValidator invalid={this.state.invalid} className='col-md-3' message={this.props.validatorMessage} />}
-      </div>
-    )
+  const handleOnButtonClick = () => {
+    if (typeahead) {
+      typeahead.clear()
+    }
+    props.onClickButton(value)
+    setValue('')
   }
-};
+
+  return (
+    <div className='row'>
+      {props.tooltip &&
+        <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>{props.tooltip}</Tooltip>}>
+          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+        </OverlayTrigger>}
+      {!props.tooltip &&
+        <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+      <Typeahead
+        ref={typeahead}
+        id={props.inputName}
+        name={props.inputName}
+        labelKey={props.labelKey ? props.labelKey : undefined}
+        className='col-md-6'
+        options={props.options}
+        defaultSelected={[props.value ? props.value : '']}
+        onChange={selected => {
+          handleOnFieldChange(selected[0])
+          if (props.onSelect) {
+            props.onSelect(selected[0])
+          }
+        }}
+        onInputChange={handleOnFieldChange}
+        onBlur={handleOnFieldBlur}
+      />
+      {props.onClickButton ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button> : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+    </div>
+  )
+}
 
 export default FormFieldTypeaheadRow
