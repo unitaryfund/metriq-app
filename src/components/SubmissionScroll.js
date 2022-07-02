@@ -7,6 +7,7 @@ import SubmissionBox from '../components/SubmissionBox'
 import ErrorHandler from './ErrorHandler'
 import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
 import FormFieldAlertRow from './FormFieldAlertRow'
+import FormFieldWideRow from './FormFieldWideRow'
 
 class SubmissionScroll extends React.Component {
   constructor (props) {
@@ -106,26 +107,22 @@ class SubmissionScroll extends React.Component {
   render () {
     return (
       <div className='container'>
-        <div className='row'>
-          <div className='col-md-12 search-bar'>
-            <FormFieldTypeaheadRow
-              options={this.state.filterOptions}
-              inputName='nameOrUrl'
-              label='Search title or URL'
-              value=''
-              onChange={(field, value) => this.onFilter(value)}
-            />
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-12'>
-            {this.state.items.length
-              ? (<InfiniteScroll dataLength={this.state.filteredItems.length} next={this.fetchMoreData} hasMore={this.state.hasMore} loader={<h4>Loading...</h4>} endMessage={<p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}>{this.state.filteredItems.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} isEditView={this.props.isEditView} isUnderReview={!(item.approvedAt)} />)}</InfiniteScroll>)
-              : (this.props.isEditView
-                  ? <p><b>You have no submissions, yet.</b></p>
-                  : <p><b>There are no approved submissions, yet.</b></p>)}
-          </div>
-        </div>
+        <FormFieldWideRow className='search-bar'>
+          <FormFieldTypeaheadRow
+            options={this.state.filterOptions}
+            inputName='nameOrUrl'
+            label='Search title or URL'
+            value=''
+            onChange={(field, value) => this.onFilter(value)}
+          />
+        </FormFieldWideRow>
+        <FormFieldWideRow>
+          {this.state.items.length
+            ? (<InfiniteScroll dataLength={this.state.filteredItems.length} next={this.fetchMoreData} hasMore={this.state.hasMore} loader={<h4>Loading...</h4>} endMessage={<p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}>{this.state.filteredItems.map((item, index) => <SubmissionBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} isEditView={this.props.isEditView} isUnderReview={!(item.approvedAt)} />)}</InfiniteScroll>)
+            : (this.props.isEditView
+                ? <p><b>You have no submissions, yet.</b></p>
+                : <p><b>There are no approved submissions, yet.</b></p>)}
+        </FormFieldWideRow>
         <br />
         <FormFieldAlertRow>
           <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />

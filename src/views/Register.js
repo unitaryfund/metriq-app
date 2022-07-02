@@ -6,6 +6,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 const usernameMissingError = 'Username cannot be blank.'
 const emailBadFormatError = 'Email is blank or invalid.'
@@ -154,11 +155,9 @@ class Register extends React.Component {
             <FormFieldValidator invalid={!this.state.isAgreedToTerms} message='You must agree to the Metriq Terms of Use' /><br />
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+          </FormFieldWideRow>
         </form>
       </div>
     )

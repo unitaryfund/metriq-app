@@ -19,6 +19,7 @@ import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import SotaChartMobile from '../components/SotaChartMobile'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 library.add(faEdit)
 
@@ -319,31 +320,27 @@ class Task extends React.Component {
               </div>
               <div className='sota-chart-message'><SotaChartMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} /></div>
             </div>}
-          <div className='row'>
-            <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-              <div className='submission-description'>
-                {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
-              </div>
+          <FormFieldWideRow>
+            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
+            <div className='submission-description'>
+              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                  <FacebookIcon size={32} />
-                </FacebookShareButton>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                  <TwitterIcon size={32} />
-                </TwitterShareButton>
-              </OverlayTrigger>
-            </div>
-          </div>
+          </FormFieldWideRow>
+          <FormFieldWideRow>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+              <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
+                <FacebookIcon size={32} />
+              </FacebookShareButton>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+              <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
+                <TwitterIcon size={32} />
+              </TwitterShareButton>
+            </OverlayTrigger>
+          </FormFieldWideRow>
           <br />
           {this.state.item.parentTask &&
             <div className='row'>
@@ -363,106 +360,100 @@ class Task extends React.Component {
           {(this.state.results.length > 0) &&
             <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
           {(this.state.results.length > 0) &&
-            <div className='row'>
-              <div className='col-md-12'>
+            <FormFieldWideRow>
+              <Table
+                className='detail-table'
+                columns={[{
+                  title: 'Submission',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 250
+                },
+                {
+                  title: 'Method',
+                  dataIndex: 'methodName',
+                  key: 'methodName',
+                  width: 250
+                },
+                {
+                  title: 'Platform',
+                  dataIndex: 'platformName',
+                  key: 'platformName',
+                  width: 250
+                },
+                {
+                  title: 'Date',
+                  dataIndex: 'tableDate',
+                  key: 'tableDate',
+                  width: 250
+                },
+                {
+                  title: 'Metric',
+                  dataIndex: 'metricName',
+                  key: 'metricName',
+                  width: 250
+                },
+                {
+                  title: 'Value',
+                  dataIndex: 'metricValue',
+                  key: 'metricValue',
+                  width: 250
+                }]}
+                data={this.state.resultsJson}
+                onRow={(record) => ({
+                  onClick () { record.props.history.push('/Submission/' + record.key) }
+                })}
+                tableLayout='auto'
+                rowClassName='link'
+              />
+            </FormFieldWideRow>}
+          {(this.state.item.submissions.length > 0) &&
+            <div>
+              <h2>Submissions</h2>
+              <FormFieldWideRow>
                 <Table
                   className='detail-table'
                   columns={[{
-                    title: 'Submission',
+                    title: 'Name',
                     dataIndex: 'name',
                     key: 'name',
-                    width: 250
+                    width: 700
                   },
                   {
-                    title: 'Method',
-                    dataIndex: 'methodName',
-                    key: 'methodName',
-                    width: 250
+                    title: 'Submitted',
+                    dataIndex: 'createdAt',
+                    key: 'createdAt',
+                    width: 200
                   },
                   {
-                    title: 'Platform',
-                    dataIndex: 'platformName',
-                    key: 'platformName',
-                    width: 250
-                  },
-                  {
-                    title: 'Date',
-                    dataIndex: 'tableDate',
-                    key: 'tableDate',
-                    width: 250
-                  },
-                  {
-                    title: 'Metric',
-                    dataIndex: 'metricName',
-                    key: 'metricName',
-                    width: 250
-                  },
-                  {
-                    title: 'Value',
-                    dataIndex: 'metricValue',
-                    key: 'metricValue',
-                    width: 250
+                    title: 'Up-votes',
+                    dataIndex: 'upvoteCount',
+                    key: 'upvoteCount',
+                    width: 200
                   }]}
-                  data={this.state.resultsJson}
+                  data={this.state.item.submissions
+                    ? this.state.item.submissions.map(row => ({
+                        key: row.id,
+                        name: row.name,
+                        createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                        upvoteCount: row.upvoteCount || 0,
+                        props: this.props
+                      }))
+                    : []}
                   onRow={(record) => ({
                     onClick () { record.props.history.push('/Submission/' + record.key) }
                   })}
                   tableLayout='auto'
                   rowClassName='link'
                 />
-              </div>
-            </div>}
-          {(this.state.item.submissions.length > 0) &&
-            <div>
-              <h2>Submissions</h2>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <Table
-                    className='detail-table'
-                    columns={[{
-                      title: 'Name',
-                      dataIndex: 'name',
-                      key: 'name',
-                      width: 700
-                    },
-                    {
-                      title: 'Submitted',
-                      dataIndex: 'createdAt',
-                      key: 'createdAt',
-                      width: 200
-                    },
-                    {
-                      title: 'Up-votes',
-                      dataIndex: 'upvoteCount',
-                      key: 'upvoteCount',
-                      width: 200
-                    }]}
-                    data={this.state.item.submissions
-                      ? this.state.item.submissions.map(row => ({
-                          key: row.id,
-                          name: row.name,
-                          createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                          upvoteCount: row.upvoteCount || 0,
-                          props: this.props
-                        }))
-                      : []}
-                    onRow={(record) => ({
-                      onClick () { record.props.history.push('/Submission/' + record.key) }
-                    })}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </div>
+              </FormFieldWideRow>
               <br />
             </div>}
           <div />
-          <div className='row'>
-            <div className='col-md-12'>
-              <hr />
-              <Commento id={'task-' + toString(this.state.item.id)} />
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <hr />
+            <Commento id={'task-' + toString(this.state.item.id)} />
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

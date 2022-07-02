@@ -4,6 +4,7 @@ import config from './../config'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 class Delete extends React.Component {
   constructor (props) {
@@ -67,11 +68,9 @@ class Delete extends React.Component {
           <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
         <br />
-        <div className='row'>
-          <div className='col-md-12 text-center'>
-            <button className='btn btn-danger' onClick={this.handleDeleteOnClick}>Delete Account</button>
-          </div>
-        </div>
+        <FormFieldWideRow className='text-center'>
+          <button className='btn btn-danger' onClick={this.handleDeleteOnClick}>Delete Account</button>
+        </FormFieldWideRow>
       </div>
     )
   }

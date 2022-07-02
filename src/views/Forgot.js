@@ -5,6 +5,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 const usernameMissingError = 'Username cannot be blank.'
 const usernameValidRegex = /^(?!\s*$).+/
@@ -88,11 +89,9 @@ class Forgot extends React.Component {
           <FormFieldAlertRow>
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' />
+          </FormFieldWideRow>
         </form>
       </div>
     )

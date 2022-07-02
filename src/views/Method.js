@@ -14,6 +14,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 library.add(faEdit)
 
@@ -147,31 +148,27 @@ class Method extends React.Component {
     return (
       <div id='metriq-main-content'>
         <div className='container submission-detail-container'>
-          <div className='row'>
-            <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-              <div className='submission-description'>
-                {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
-              </div>
+          <FormFieldWideRow>
+            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
+            <div className='submission-description'>
+              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit method</Tooltip>}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
-                  <FacebookIcon size={32} />
-                </FacebookShareButton>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
-                  <TwitterIcon size={32} />
-                </TwitterShareButton>
-              </OverlayTrigger>
-            </div>
-          </div>
+          </FormFieldWideRow>
+          <FormFieldWideRow>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit method</Tooltip>}>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
+              <FacebookShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
+                <FacebookIcon size={32} />
+              </FacebookShareButton>
+            </OverlayTrigger>
+            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
+              <TwitterShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
+                <TwitterIcon size={32} />
+              </TwitterShareButton>
+            </OverlayTrigger>
+          </FormFieldWideRow>
           <br />
           {this.state.item.parentMethod &&
             <div className='row'>
@@ -253,12 +250,10 @@ class Method extends React.Component {
               />
             </div>
           </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <hr />
-              <Commento id={'method-' + toString(this.state.item.id)} />
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <hr />
+            <Commento id={'method-' + toString(this.state.item.id)} />
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

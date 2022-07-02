@@ -6,6 +6,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
@@ -128,11 +129,9 @@ class Password extends React.Component {
             <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' />
+          </FormFieldWideRow>
         </form>
       </div>
     )

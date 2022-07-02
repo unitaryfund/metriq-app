@@ -7,6 +7,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -91,11 +92,9 @@ class LogIn extends React.Component {
           <FormFieldAlertRow>
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+          </FormFieldWideRow>
         </form>
         <Link to={this.props.next ? '/Register/' + this.props.next : '/Register'}>Create a new account</Link><br />
         <Link to='/Forgot'>Forgot username/password?</Link>

@@ -10,6 +10,7 @@ import { Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 library.add(faPlus, faTrash)
 
@@ -198,16 +199,12 @@ class AddSubmission extends React.Component {
           <FormFieldAlertRow>
             <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12'>
-              <FormFieldTypeaheadRow
-                inputName='tag' label='Tags' buttonLabel='Add tag'
-                onChange={this.handleOnChange}
-                options={this.state.tagNames.map(item => item.name)}
-                onClickButton={this.handleOnClickAddTag}
-              />
-            </div>
-          </div>
+          <FormFieldTypeaheadRow
+            inputName='tag' label='Tags' buttonLabel='Add tag'
+            onChange={this.handleOnChange}
+            options={this.state.tagNames.map(item => item.name)}
+            onClickButton={this.handleOnClickAddTag}
+          />
           <FormFieldAlertRow>
             {(this.state.tags.length > 0) &&
               <div className='text-left'>
@@ -224,11 +221,9 @@ class AddSubmission extends React.Component {
           <FormFieldAlertRow>
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+          </FormFieldWideRow>
         </form>
       </div>
     )

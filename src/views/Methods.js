@@ -7,6 +7,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -124,19 +125,17 @@ class Methods extends React.Component {
       <div id='metriq-main-content' className='container'>
         <header><h4>Methods</h4></header>
         <br />
-        <div className='row'>
-          <div className='col-md-12 search-bar'>
-            <FormFieldTypeaheadRow
-              options={this.state.allNames}
-              labelKey='name'
-              inputName='name'
-              label='Search name'
-              value=''
-              onChange={(field, value) => this.handleOnFilter(value)}
-              onSelect={this.handleOnSelect}
-            />
-          </div>
-        </div>
+        <FormFieldWideRow className='search-bar'>
+          <FormFieldTypeaheadRow
+            options={this.state.allNames}
+            labelKey='name'
+            inputName='name'
+            label='Search name'
+            value=''
+            onChange={(field, value) => this.handleOnFilter(value)}
+            onSelect={this.handleOnSelect}
+          />
+        </FormFieldWideRow>
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>

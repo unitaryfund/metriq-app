@@ -8,6 +8,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import { Button, Modal } from 'react-bootstrap'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -85,29 +86,21 @@ class Profile extends React.Component {
             <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Button variant='primary' onClick={this.handleShowModal}>Edit Details</Button>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Button variant='primary' onClick={this.handleShowModal}>Edit Details</Button>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}
