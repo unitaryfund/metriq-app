@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
-import { Redirect } from 'react-router-dom'
 import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
@@ -37,7 +36,7 @@ class Methods extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      return (<Redirect to={'/Method/' + value.id} />)
+      this.props.history.push('/Method/' + value.id)
     }
   }
 

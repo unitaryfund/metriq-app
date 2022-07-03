@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
+import { sortByCounts } from '../components/SortFunctions'
 
 library.add(faEdit)
 
@@ -106,25 +107,7 @@ class Method extends React.Component {
     axios.get(methodRoute)
       .then(res => {
         const method = res.data.data
-        method.childMethods.sort(function (a, b) {
-          const rca = parseInt(a.resultCount)
-          const rcb = parseInt(b.resultCount)
-          if (rca > rcb) {
-            return -1
-          }
-          if (rcb > rca) {
-            return 1
-          }
-          const tna = a.name.toLowerCase()
-          const tnb = b.name.toLowerCase()
-          if (tna < tnb) {
-            return -1
-          }
-          if (tnb < tna) {
-            return 1
-          }
-          return 0
-        })
+        method.childMethods.sort(sortByCounts)
         this.setState({ requestFailedMessage: '', item: method })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
@@ -187,11 +170,11 @@ class Method extends React.Component {
                       ? this.state.item.childMethods.map(row => ({
                           key: row.id,
                           name: row.name,
-                          props: this.props
+                          props: this.props.history
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { record.props.history.push('/Method/' + record.key) }
+                      onClick () { record.history.push('/Method/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -230,11 +213,11 @@ class Method extends React.Component {
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
                       upvoteCount: row.upvoteCount || 0,
-                      props: this.props
+                      history: this.props.history
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Submission/' + record.key) }
+                  onClick () { record.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'

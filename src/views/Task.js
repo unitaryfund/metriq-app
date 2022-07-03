@@ -18,6 +18,7 @@ import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
+import { sortByCounts } from '../components/SortFunctions'
 
 library.add(faEdit)
 
@@ -114,29 +115,11 @@ class Task extends React.Component {
   componentDidMount () {
     window.scrollTo(0, 0)
 
-    const methodRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
-    axios.get(methodRoute)
+    const taskRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
+    axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
-        task.childTasks.sort(function (a, b) {
-          const rca = parseInt(a.resultCount)
-          const rcb = parseInt(b.resultCount)
-          if (rca > rcb) {
-            return -1
-          }
-          if (rcb > rca) {
-            return 1
-          }
-          const tna = a.name.toLowerCase()
-          const tnb = b.name.toLowerCase()
-          if (tna < tnb) {
-            return -1
-          }
-          if (tnb < tna) {
-            return 1
-          }
-          return 0
-        })
+        task.childTasks.sort(sortByCounts)
         this.setState({ requestFailedMessage: '', item: task })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
@@ -190,7 +173,7 @@ class Task extends React.Component {
             metricName: row.metricName,
             metricValue: row.metricValue,
             tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString(),
-            props: this.props
+            history: this.props.history
           }))
         this.setState({ results: results, resultsJson: resultsJson })
         this.sliceChartData(results)
@@ -424,7 +407,7 @@ class Task extends React.Component {
                 }]}
                 data={this.state.resultsJson}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Submission/' + record.key) }
+                  onClick () { record.history.push('/Submission/' + record.submissionId) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -454,17 +437,15 @@ class Task extends React.Component {
                     key: 'upvoteCount',
                     width: 200
                   }]}
-                  data={this.state.item.submissions
-                    ? this.state.item.submissions.map(row => ({
-                        key: row.id,
-                        name: row.name,
-                        createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                        upvoteCount: row.upvoteCount || 0,
-                        props: this.props
-                      }))
-                    : []}
+                  data={this.state.item.submissions.map(row => ({
+                    key: row.id,
+                    name: row.name,
+                    createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                    upvoteCount: row.upvoteCount || 0,
+                    history: this.props.history
+                  }))}
                   onRow={(record) => ({
-                    onClick () { record.props.history.push('/Submission/' + record.key) }
+                    onClick () { record.history.push('/Submission/' + record.key) }
                   })}
                   tableLayout='auto'
                   rowClassName='link'
