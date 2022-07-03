@@ -219,7 +219,7 @@ class AddSubmission extends React.Component {
         this.setState({ metricNames: metricNames })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
