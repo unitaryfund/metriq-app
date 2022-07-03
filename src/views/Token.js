@@ -15,7 +15,6 @@ class Token extends React.Component {
     super(props)
     this.state = {
       data: {},
-      isRequestFailed: false,
       requestFailedMessage: '',
       isGeneratedSuccess: false,
       token: ''
@@ -30,12 +29,11 @@ class Token extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -44,13 +42,12 @@ class Token extends React.Component {
       .then(res => {
         this.setState({
           token: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: '',
           isGeneratedSuccess: true
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -60,13 +57,12 @@ class Token extends React.Component {
         this.setState({
           data: {},
           token: '',
-          isRequestFailed: true,
           requestFailedMessage: 'Token successfully deleted.',
           isGeneratedSuccess: false
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -112,7 +108,7 @@ class Token extends React.Component {
           </FormFieldWideRow>
           <br />
           <FormFieldAlertRow>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
         </div>
       </div>

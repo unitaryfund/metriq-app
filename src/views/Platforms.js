@@ -20,7 +20,6 @@ class Platforms extends React.Component {
       common: [],
       allNames: [],
       filterId: null,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -46,7 +45,6 @@ class Platforms extends React.Component {
         const common = [...res.data.data]
         common.sort(sortCommon)
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           common: common
         })
@@ -60,19 +58,18 @@ class Platforms extends React.Component {
         this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     axios.get(config.api.getUriPrefix() + '/platform/names')
       .then(res => {
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           allNames: res.data.data
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -107,7 +104,7 @@ class Platforms extends React.Component {
           </Tabs>
         </div>
         <FormFieldAlertRow>
-          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
       </div>
     )

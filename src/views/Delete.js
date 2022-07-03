@@ -12,7 +12,6 @@ class Delete extends React.Component {
     super(props)
     this.state = {
       data: {},
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -24,12 +23,11 @@ class Delete extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -41,10 +39,10 @@ class Delete extends React.Component {
           this.props.onLogout()
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     } else {
-      this.setState({ isRequestFailed: true, requestFailedMessage: 'Entered incorrect username/email!' })
+      this.setState({ requestFailedMessage: 'Entered incorrect username/email!' })
     }
   }
 
@@ -66,7 +64,7 @@ class Delete extends React.Component {
         </FormFieldAlertRow>
         <br />
         <FormFieldAlertRow>
-          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
         <br />
         <FormFieldWideRow className='text-center'>

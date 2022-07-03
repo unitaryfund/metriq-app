@@ -32,7 +32,6 @@ class Submission extends React.Component {
     super(props)
     this.state = {
       isValidated: false,
-      isRequestFailed: false,
       requestFailedMessage: '',
       isArxiv: false,
       vanityUrl: '',
@@ -409,7 +408,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+            this.setState({ requestFailedMessage: '', taskNames: tasks, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -442,7 +441,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods, item: submission })
+            this.setState({ requestFailedMessage: '', methodNames: methods, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -475,7 +474,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platforms, item: submission })
+            this.setState({ requestFailedMessage: '', platformNames: platforms, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -492,7 +491,7 @@ class Submission extends React.Component {
               break
             }
           }
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags, item: submission })
+          this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -520,7 +519,7 @@ class Submission extends React.Component {
       const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
       axios.post(resultRoute, result)
         .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+          this.setState({ requestFailedMessage: '', item: res.data.data })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -654,7 +653,7 @@ class Submission extends React.Component {
         }
 
         // Just get the view populated as quickly as possible, before we "trim."
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
+        this.setState({ requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
@@ -668,10 +667,10 @@ class Submission extends React.Component {
               defTask = tasks[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
+            this.setState({ requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
@@ -686,10 +685,10 @@ class Submission extends React.Component {
               defMethod = methods[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+            this.setState({ requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
@@ -704,10 +703,10 @@ class Submission extends React.Component {
               defPlatform = platforms[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+            this.setState({ requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
@@ -716,14 +715,14 @@ class Submission extends React.Component {
             const tags = [...res.data.data]
             this.handleTrimTags(submission, tags)
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+            this.setState({ requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const metricNameRoute = config.api.getUriPrefix() + '/result/metricNames'
@@ -733,7 +732,7 @@ class Submission extends React.Component {
         this.setState({ metricNames: metricNames })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 

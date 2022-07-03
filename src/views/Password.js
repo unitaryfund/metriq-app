@@ -24,7 +24,6 @@ class Password extends React.Component {
       password: '',
       passwordConfirm: '',
       isPasswordMatch: true,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -91,7 +90,7 @@ class Password extends React.Component {
         window.location.href = '/'
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -128,7 +127,7 @@ class Password extends React.Component {
           />
           <FormFieldAlertRow>
             <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <FormFieldWideRow className='text-center'>
             <input className='btn btn-primary' type='submit' value='Submit' />

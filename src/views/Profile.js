@@ -17,7 +17,6 @@ class Profile extends React.Component {
     this.state = {
       data: { affiliation: '', name: '' },
       showEditModal: false,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -47,12 +46,11 @@ class Profile extends React.Component {
         this.setState({
           data: res.data.data,
           showEditModal: false,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ showEditModal: false, isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ showEditModal: false, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -61,12 +59,11 @@ class Profile extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -84,7 +81,7 @@ class Profile extends React.Component {
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientTokenCreated ? 'Active' : 'None'} />
           <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
           <FormFieldAlertRow>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <br />
           <FormFieldWideRow className='text-center'>

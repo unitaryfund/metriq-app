@@ -21,7 +21,6 @@ class LogIn extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false,
       isPasswordVisible: false
@@ -65,7 +64,7 @@ class LogIn extends React.Component {
         this.props.onLogin()
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -91,7 +90,7 @@ class LogIn extends React.Component {
             onChange={this.handleOnChange}
           />
           <FormFieldAlertRow>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <FormFieldWideRow className='text-center'>
             <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />

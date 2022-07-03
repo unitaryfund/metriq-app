@@ -21,7 +21,6 @@ class Method extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
       method: { description: '', parentMethod: 0 },
@@ -124,7 +123,7 @@ class Method extends React.Component {
           }
           return 0
         })
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method })
+        this.setState({ requestFailedMessage: '', item: method })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
         axios.get(methodNamesRoute)
@@ -132,14 +131,14 @@ class Method extends React.Component {
             let methods = [...res.data.data]
             this.handleTrimMethods(method.id, methods)
             methods = [{ id: 0, name: '(None)' }, ...methods]
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: methods })
+            this.setState({ requestFailedMessage: '', allMethodNames: methods })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 

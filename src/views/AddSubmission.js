@@ -31,7 +31,6 @@ class AddSubmission extends React.Component {
       tag: '',
       tagNames: [],
       showRemoveModal: false,
-      isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false
     }
@@ -75,7 +74,7 @@ class AddSubmission extends React.Component {
             this.setState({ description: res.data.data.og.description, isValidated: false })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       }
     }
@@ -105,13 +104,13 @@ class AddSubmission extends React.Component {
 
     let validatedPassed = true
     if (!this.validURL(request.contentUrl)) {
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
       validatedPassed = false
     }
 
     console.log(request.thumbnailUrl)
     if (request.thumbnailUrl && !this.validURL(request.thumbnailUrl)) {
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
       validatedPassed = false
     }
 
@@ -121,7 +120,7 @@ class AddSubmission extends React.Component {
           window.location.href = '/Submissions'
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     }
     event.preventDefault()
@@ -146,10 +145,10 @@ class AddSubmission extends React.Component {
     axios.get(tagNamesRoute)
       .then(res => {
         const tags = [...res.data.data]
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags })
+        this.setState({ requestFailedMessage: '', tagNames: tags })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -220,7 +219,7 @@ class AddSubmission extends React.Component {
             <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
           </FormFieldAlertRow>
           <FormFieldAlertRow>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <FormFieldWideRow className='text-center'>
             <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />

@@ -29,7 +29,6 @@ class Platform extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showAddModal: false,
       showRemoveModal: false,
@@ -267,7 +266,7 @@ class Platform extends React.Component {
       axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
         .then(res => {
           const platform = res.data.data
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+          this.setState({ requestFailedMessage: '', item: platform })
           this.handleCombineParentProperties(platform)
         })
         .catch(err => {
@@ -312,13 +311,13 @@ class Platform extends React.Component {
     axios.get(platformRoute)
       .then(res => {
         const platform = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+        this.setState({ requestFailedMessage: '', item: platform })
         this.handleCombineParentProperties(platform)
 
         const propertyRoute = config.api.getUriPrefix() + '/property/names'
         axios.get(propertyRoute)
           .then(res => {
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPropertyNames: res.data.data })
+            this.setState({ requestFailedMessage: '', allPropertyNames: res.data.data })
 
             const platformsRoute = config.api.getUriPrefix() + '/platform/names'
             axios.get(platformsRoute)
@@ -330,27 +329,27 @@ class Platform extends React.Component {
                     break
                   }
                 }
-                this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: platforms })
+                this.setState({ requestFailedMessage: '', allPlatformNames: platforms })
 
                 const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
                 axios.get(dataTypeNamesRoute)
                   .then(res => {
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+                    this.setState({ requestFailedMessage: '', allDataTypeNames: res.data.data })
                   })
                   .catch(err => {
-                    this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
                   })
               })
               .catch(err => {
-                this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                this.setState({ requestFailedMessage: ErrorHandler(err) })
               })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 

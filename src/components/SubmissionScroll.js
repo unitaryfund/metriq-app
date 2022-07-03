@@ -18,7 +18,6 @@ class SubmissionScroll extends React.Component {
       items: [],
       filteredItems: [],
       hasMore: true,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -44,7 +43,6 @@ class SubmissionScroll extends React.Component {
           filterOptions.push(items[i].contentUrl)
         }
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           nextPage: 1,
           items: items,
@@ -53,7 +51,7 @@ class SubmissionScroll extends React.Component {
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -67,7 +65,7 @@ class SubmissionScroll extends React.Component {
               : config.api.getUriPrefix() + '/submission/' + this.props.sortType + '/' + this.state.nextPage))
     axios.get(route)
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
+        this.setState({ requestFailedMessage: '', nextPage: this.state.nextPage + 1 })
         const items = res.data.data
         const filterOptions = []
         for (let i = 0; i < items.length; i++) {
@@ -83,7 +81,7 @@ class SubmissionScroll extends React.Component {
         this.onFilter(this.state.filterText)
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -138,7 +136,7 @@ class SubmissionScroll extends React.Component {
         </FormFieldWideRow>
         <br />
         <FormFieldAlertRow>
-          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
       </div>
     )

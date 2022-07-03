@@ -17,7 +17,6 @@ class Forgot extends React.Component {
     this.state = {
       user: '',
       isRequestReceived: false,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -51,10 +50,10 @@ class Forgot extends React.Component {
 
     axios.post(config.api.getUriPrefix() + '/recover', request)
       .then(res => {
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', isRequestReceived: true })
+        this.setState({ requestFailedMessage: '', isRequestReceived: true })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -88,7 +87,7 @@ class Forgot extends React.Component {
             validRegex={usernameValidRegex}
           />
           <FormFieldAlertRow>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <FormFieldWideRow className='text-center'>
             <input className='btn btn-primary' type='submit' value='Submit' />

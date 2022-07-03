@@ -25,7 +25,6 @@ class Task extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
       task: { description: '', parentTask: 0 },
@@ -136,17 +135,17 @@ class Task extends React.Component {
           }
           return 0
         })
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
+        this.setState({ requestFailedMessage: '', item: task })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
           .then(res => {
             const tasks = [...res.data.data]
             this.handleTrimTasks(task.id, tasks)
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: tasks })
+            this.setState({ requestFailedMessage: '', allTaskNames: tasks })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const results = task.results
@@ -195,7 +194,7 @@ class Task extends React.Component {
         this.sliceChartData(results)
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 

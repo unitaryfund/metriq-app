@@ -16,7 +16,6 @@ class Tags extends React.Component {
       alphabetical: [],
       popular: [],
       common: [],
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
   }
@@ -28,7 +27,6 @@ class Tags extends React.Component {
         const common = [...res.data.data]
         common.sort(sortCommon)
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           common: common
         })
@@ -42,7 +40,7 @@ class Tags extends React.Component {
         this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -65,7 +63,7 @@ class Tags extends React.Component {
           </Tabs>
         </div>
         <FormFieldAlertRow>
-          <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
       </div>
     )
