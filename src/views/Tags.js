@@ -13,6 +13,7 @@ class Tags extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isLoading: true,
       alphabetical: [],
       popular: [],
       common: [],
@@ -37,7 +38,7 @@ class Tags extends React.Component {
 
         const alphabetical = res.data.data
         alphabetical.sort(sortAlphabetical)
-        this.setState({ alphabetical: alphabetical })
+        this.setState({ alphabetical: alphabetical, isLoading: false })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -52,13 +53,13 @@ class Tags extends React.Component {
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>
             <Tab eventKey='common' title='Common'>
-              <CategoryScroll type='tag' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+              <CategoryScroll type='tag' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
             </Tab>
             <Tab eventKey='popular' title='Popular'>
-              <CategoryScroll type='tag' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+              <CategoryScroll type='tag' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
             </Tab>
             <Tab eventKey='alphabetical' title='Alphabetical'>
-              <CategoryScroll type='tag' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+              <CategoryScroll type='tag' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
             </Tab>
           </Tabs>
         </div>

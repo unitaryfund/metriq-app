@@ -9,7 +9,10 @@ const CategoryScroll = (props) =>
         <b>{props.heading}</b>
       </FormFieldWideRow>}
     <FormFieldWideRow>
-      {!props.items.length && <p><b>There are no approved items, yet.</b></p>}
+      {!props.items.length &&
+        (props.isLoading
+          ? <p><b>Fetching items from server...</b></p>
+          : <p><b>There are no approved items, yet.</b></p>)}
       {(props.items.length > 0) &&
         <div className='task'>
           <div className='row h-100'>
