@@ -15,7 +15,7 @@ const FormFieldRowDeleter = (props) =>
             props.options.map((option, index) =>
               <div key={index}>
                 <div className='row metriq-submission-ref-row'>
-                  <div className='col-md-10 text-left'>{option.name}</div>
+                  <div className='col-md-10 metriq-submission-ref-row-label'>{option.name}</div>
                   <div className='col-md-2'>
                     <Button variant='danger' onClick={() => props.onClickRemove(option)}>
                       <FontAwesomeIcon icon='trash' />

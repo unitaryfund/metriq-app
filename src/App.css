@@ -63,6 +63,11 @@ textarea {
   margin-bottom: 8px;
 }
 
+.metriq-submission-ref-row-label {
+  text-align: left;
+  margin-top: 8px;
+}
+
 .navbar-nav {
   border-radius: 16px;
   border: none;
