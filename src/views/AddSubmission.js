@@ -31,7 +31,12 @@ class AddSubmission extends React.Component {
       tasks: [],
       task: '',
       taskNames: [],
-      updateTaskSelect: 0,
+      methods: [],
+      method: '',
+      methodNames: [],
+      platforms: [],
+      platform: '',
+      platformNames: [],
       tags: [],
       tag: '',
       tagNames: [],
@@ -47,6 +52,10 @@ class AddSubmission extends React.Component {
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
     this.handleOnClickRemoveTask = this.handleOnClickRemoveTask.bind(this)
     this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
+    this.handleOnClickRemoveMethod = this.handleOnClickRemoveMethod.bind(this)
+    this.handleOnClickAddMethod = this.handleOnClickAddMethod.bind(this)
+    this.handleOnClickRemovePlatform = this.handleOnClickRemovePlatform.bind(this)
+    this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
     this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
   }
@@ -134,7 +143,6 @@ class AddSubmission extends React.Component {
     const task = this.state.taskNames.find(x => x.id === parseInt(taskId))
     if (task && tasks.indexOf(task) < 0) {
       tasks.push(task)
-      console.log(tasks)
       this.setState({ tasks: tasks, task: {} })
     }
   }
@@ -144,6 +152,38 @@ class AddSubmission extends React.Component {
     const task = tasks.find(x => x.id === taskId)
     tasks.splice(tasks.indexOf(task), 1)
     this.setState({ tasks: tasks })
+  }
+
+  handleOnClickAddMethod (methodId) {
+    const methods = this.state.methods
+    const method = this.state.methodNames.find(x => x.id === parseInt(methodId))
+    if (method && methods.indexOf(method) < 0) {
+      methods.push(method)
+      this.setState({ methods: methods, method: {} })
+    }
+  }
+
+  handleOnClickRemoveMethod (methodId) {
+    const methods = this.state.methods
+    const method = methods.find(x => x.id === methodId)
+    methods.splice(methods.indexOf(method), 1)
+    this.setState({ methods: methods })
+  }
+
+  handleOnClickAddPlatform (platformId) {
+    const platforms = this.state.platforms
+    const platform = this.state.platformNames.find(x => x.id === parseInt(platformId))
+    if (platform && platforms.indexOf(platform) < 0) {
+      platforms.push(platform)
+      this.setState({ platforms: platforms, platform: {} })
+    }
+  }
+
+  handleOnClickRemovePlatform (platformId) {
+    const platforms = this.state.platforms
+    const platform = platforms.find(x => x.id === platformId)
+    platforms.splice(platforms.indexOf(platform), 1)
+    this.setState({ platforms: platforms })
   }
 
   handleOnClickAddTag () {
@@ -174,7 +214,7 @@ class AddSubmission extends React.Component {
       .then(res => {
         const tasks = res.data.data
         this.handleSortNames(tasks)
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, updateTaskSelect: Math.random() })
+        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
@@ -276,9 +316,22 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               options={this.state.taskNames}
               onClickButton={this.handleOnClickAddTask}
-              key={this.state.updateTaskSelect}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
+            <FormFieldSelectRow
+              inputName='method' label='Methods' buttonLabel='Add method'
+              onChange={this.handleOnChange}
+              options={this.state.methodNames}
+              onClickButton={this.handleOnClickAddMethod}
+            />
+            <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />
+            <FormFieldSelectRow
+              inputName='platform' label='Platforms' buttonLabel='Add platform'
+              onChange={this.handleOnChange}
+              options={this.state.platformNames}
+              onClickButton={this.handleOnClickAddPlatform}
+            />
+            <FormFieldRowDeleter options={this.state.platforms} onClickRemove={this.handleOnClickRemovePlatform} emptyMessage='There are no associated platforms, yet.' />
             <FormFieldTypeaheadRow
               inputName='tag' label='Tags' buttonLabel='Add tag'
               onChange={this.handleOnChange}
