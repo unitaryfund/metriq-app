@@ -39,51 +39,49 @@ const FormFieldRow = (props) => {
   }
 
   return (
-    <FormFieldWideRow>
-      <div className='row'>
-        {props.tooltip &&
-          <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-          </TooltipTrigger>}
-        {!props.tooltip &&
-          <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
-        <div className='col-md-6 '>
-          {(props.inputType === 'textarea') &&
-            <textarea
-              id={props.inputName}
-              name={props.inputName}
-              className='form-control'
-              rows={props.rows}
-              cols={props.cols}
-              placeholder={props.placeholder}
-              value={value}
-              onChange={handleOnFieldChange}
-              onBlur={handleOnFieldBlur}
-            >
-              {props.value}
-            </textarea>}
-          {(props.inputType !== 'textarea') &&
-            <input
-              id={props.inputName}
-              name={props.inputName}
-              className='form-control'
-              type={props.inputType}
-              selected={props.defaultValue}
-              value={props.value}
-              checked={props.checked}
-              onChange={handleOnFieldChange}
-              onBlur={handleOnFieldBlur}
-            />}
-        </div>
-        {props.imageUrl
-          ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
-          : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+    <div className='row'>
+      {props.tooltip &&
+        <TooltipTrigger message={props.tooltip}>
+          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+        </TooltipTrigger>}
+      {!props.tooltip &&
+        <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+      <div className='col-md-6 '>
+        {(props.inputType === 'textarea') &&
+          <textarea
+            id={props.inputName}
+            name={props.inputName}
+            className='form-control'
+            rows={props.rows}
+            cols={props.cols}
+            placeholder={props.placeholder}
+            value={value}
+            onChange={handleOnFieldChange}
+            onBlur={handleOnFieldBlur}
+          >
+            {props.value}
+          </textarea>}
+        {(props.inputType !== 'textarea') &&
+          <input
+            id={props.inputName}
+            name={props.inputName}
+            className='form-control'
+            type={props.inputType}
+            selected={props.defaultValue}
+            value={props.value}
+            checked={props.checked}
+            onChange={handleOnFieldChange}
+            onBlur={handleOnFieldBlur}
+          />}
       </div>
-      {imagePreviewUrl && isValid &&
-        <FormFieldWideRow className='text-center'>
-          <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
-        </FormFieldWideRow>}
-    </FormFieldWideRow>
+      {props.imageUrl
+        ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
+        : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+    {imagePreviewUrl && isValid &&
+      <FormFieldWideRow className='text-center'>
+        <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
+      </FormFieldWideRow>}
+    </div>
   )
 }
 
