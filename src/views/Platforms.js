@@ -6,17 +6,21 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
+import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 
 class Platforms extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isLoading: true,
       alphabetical: [],
       popular: [],
       common: [],
       allNames: [],
       filterId: null,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -32,7 +36,7 @@ class Platforms extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      window.location.href = '/Platform/' + value.id
+      this.props.history.push('/Platform/' + value.id)
     }
   }
 
@@ -40,123 +44,69 @@ class Platforms extends React.Component {
     axios.get(config.api.getUriPrefix() + '/platform/submissionCount')
       .then(res => {
         const common = [...res.data.data]
-        common.sort(function (a, b) {
-          const keyA = parseInt(a.submissionCount)
-          const keyB = parseInt(b.submissionCount)
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          const key2A = a.name
-          const key2B = b.name
-          if (key2A < key2B) {
-            return -1
-          }
-          if (key2B < key2A) {
-            return 1
-          }
-          return 0
-        })
+        common.sort(sortCommon)
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           common: common
         })
 
         const popular = [...res.data.data]
-        popular.sort(function (a, b) {
-          const keyA = parseInt(a.upvoteTotal)
-          const keyB = parseInt(b.upvoteTotal)
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          const key2A = a.name
-          const key2B = b.name
-          if (key2A < key2B) {
-            return -1
-          }
-          if (key2B < key2A) {
-            return 1
-          }
-          return 0
-        })
+        popular.sort(sortPopular)
         this.setState({ popular: popular })
 
         const alphabetical = res.data.data
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
-        this.setState({ alphabetical: alphabetical })
+        alphabetical.sort(sortAlphabetical)
+        this.setState({ alphabetical: alphabetical, isLoading: false })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     axios.get(config.api.getUriPrefix() + '/platform/names')
       .then(res => {
         this.setState({
-          isRequestFailed: false,
           requestFailedMessage: '',
           allNames: res.data.data
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Platforms</h4></header>
+        <ViewHeader>Platforms</ViewHeader>
         <br />
-        <div className='row'>
-          <div className='col-md-12 search-bar'>
-            <FormFieldTypeaheadRow
-              options={this.state.allNames}
-              labelKey='name'
-              inputName='name'
-              label='Search name'
-              value=''
-              onChange={(field, value) => this.handleOnFilter(value)}
-              onSelect={this.handleOnSelect}
-            />
-          </div>
-        </div>
+        <FormFieldWideRow className='search-bar'>
+          <FormFieldTypeaheadRow
+            options={this.state.allNames}
+            labelKey='name'
+            inputName='name'
+            label='Search name'
+            value=''
+            onChange={(field, value) => this.handleOnFilter(value)}
+            onSelect={this.handleOnSelect}
+          />
+        </FormFieldWideRow>
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>
             <Tab eventKey='common' title='Common'>
-              <CategoryScroll type='platform' items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+              <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
             </Tab>
             <Tab eventKey='popular' title='Popular'>
-              <CategoryScroll type='platform' items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+              <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
             </Tab>
             <Tab eventKey='alphabetical' title='Alphabetical'>
-              <CategoryScroll type='platform' items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+              <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
             </Tab>
           </Tabs>
         </div>
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlertRow>
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+        </FormFieldAlertRow>
       </div>
     )
   }

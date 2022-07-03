@@ -6,6 +6,9 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -18,7 +21,6 @@ class LogIn extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false,
       isPasswordVisible: false
@@ -62,7 +64,7 @@ class LogIn extends React.Component {
         this.props.onLogin()
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -70,7 +72,7 @@ class LogIn extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Log In</h4></header>
+        <ViewHeader>Log In</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
@@ -87,18 +89,12 @@ class LogIn extends React.Component {
             inputName='isPasswordVisible'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+          </FormFieldWideRow>
         </form>
         <Link to={this.props.next ? '/Register/' + this.props.next : '/Register'}>Create a new account</Link><br />
         <Link to='/Forgot'>Forgot username/password?</Link>

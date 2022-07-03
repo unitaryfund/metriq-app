@@ -5,6 +5,9 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const emailBadFormatError = 'Email is blank or invalid.'
@@ -25,7 +28,6 @@ class Register extends React.Component {
       passwordConfirm: '',
       isAgreedToTerms: false,
       isPasswordMatch: true,
-      isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false,
       isPasswordVisible: false
@@ -98,7 +100,7 @@ class Register extends React.Component {
         this.props.onLogin()
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -106,7 +108,7 @@ class Register extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Register</h4></header>
+        <ViewHeader>Register</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
@@ -144,28 +146,18 @@ class Register extends React.Component {
             inputName='isPasswordVisible'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <input type='checkbox' onChange={(event) => this.setState({ isAgreedToTerms: event.target.checked })} />
-              <b>&nbsp;I agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a></b>
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /><br />
-              <FormFieldValidator invalid={!this.state.isAgreedToTerms} message='You must agree to the Metriq Terms of Use' /><br />
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
+          <FormFieldAlertRow>
+            <input type='checkbox' onChange={(event) => this.setState({ isAgreedToTerms: event.target.checked })} />
+            <b>&nbsp;I agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a></b>
+          </FormFieldAlertRow>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /><br />
+            <FormFieldValidator invalid={!this.state.isAgreedToTerms} message='You must agree to the Metriq Terms of Use' /><br />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+          </FormFieldWideRow>
         </form>
       </div>
     )

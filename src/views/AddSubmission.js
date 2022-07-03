@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
-import FormFieldAlert from '../components/FormFieldAlert'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldRowDeleter from '../components/FormFieldRowDeleter'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
@@ -10,6 +10,9 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
+import { Redirect } from 'react-router-dom'
 
 library.add(faPlus)
 
@@ -33,13 +36,8 @@ class AddSubmission extends React.Component {
       tag: '',
       tagNames: [],
       showRemoveModal: false,
-      isRequestFailed: false,
       requestFailedMessage: '',
       isValidated: false
-    }
-
-    if (!this.props.isLoggedIn) {
-      window.location.href = '/LogIn/AddSubmission'
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -80,7 +78,7 @@ class AddSubmission extends React.Component {
             this.setState({ description: res.data.data.og.description, isValidated: false })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       }
     }
@@ -110,38 +108,41 @@ class AddSubmission extends React.Component {
 
     let validatedPassed = true
     if (!this.validURL(request.contentUrl)) {
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
       validatedPassed = false
     }
 
     if (request.thumbnailUrl && !this.validURL(request.thumbnailUrl)) {
-      this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
       validatedPassed = false
     }
 
     if (validatedPassed) {
       axios.post(config.api.getUriPrefix() + '/submission', request)
         .then(res => {
-          window.location.href = '/Submissions'
+          this.props.history.push('/Submissions')
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     }
     event.preventDefault()
   }
 
-  handleOnClickAddTask () {
+  handleOnClickAddTask (taskId) {
     const tasks = this.state.tasks
-    if (tasks.indexOf(this.state.task) < 0) {
-      tasks.push(this.state.task)
+    const task = this.state.taskNames.find(x => x.id === parseInt(taskId))
+    if (task && tasks.indexOf(task) < 0) {
+      tasks.push(task)
+      console.log(tasks)
       this.setState({ tasks: tasks, task: {} })
     }
   }
 
-  handleOnClickRemoveTask (task) {
+  handleOnClickRemoveTask (taskId) {
     const tasks = this.state.tasks
-    tasks.splice(tasks.indexOf(task.id), 1)
+    const task = tasks.find(x => x.id === taskId)
+    tasks.splice(tasks.indexOf(task), 1)
     this.setState({ tasks: tasks })
   }
 
@@ -205,10 +206,10 @@ class AddSubmission extends React.Component {
     axios.get(tagNamesRoute)
       .then(res => {
         const tags = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags })
+        this.setState({ requestFailedMessage: '', tagNames: tags })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const metricNameRoute = config.api.getUriPrefix() + '/result/metricNames'
@@ -223,92 +224,80 @@ class AddSubmission extends React.Component {
   }
 
   render () {
-    return (
-      <div id='metriq-main-content' className='container'>
-        <header><h4>Add Submission</h4></header>
-        <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
+    return ((!this.props.isLoggedIn && <Redirect to='/LogIn/AddSubmission' />) ||
+      (this.props.isLoggedIn &&
+        <div id='metriq-main-content' className='container'>
+          <ViewHeader>Add Submission</ViewHeader>
+          <form onSubmit={this.handleOnSubmit}>
+            <FormFieldAlertRow>
               <b>
                 <p>If you have an article, code repository, or any URL constituting or presenting a "method" for quantum applications, use this form to create a unique page for it.</p>
                 <p>If you have independently recreated or validated the results of another submission on Metriq, you can add your new results to its page.</p>
               </b>
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <FormFieldRow
-            inputName='contentUrl' inputType='text' label='Content URL'
-            validatorMessage={requiredFieldMissingError}
-            onChange={this.handleOnChange}
-            onBlur={this.handleOnFieldBlur}
-            validRegex={nonblankRegex}
-          />
-          <FormFieldAlert>
-            <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
-          </FormFieldAlert>
-          <FormFieldRow
-            inputName='name' inputType='text' label='Submission Name'
-            validatorMessage={requiredFieldMissingError}
-            onChange={this.handleOnChange}
-            validRegex={nonblankRegex}
-            value={this.state.name}
-          />
-          <FormFieldAlert>
-            <b>The submission name must be unique.</b>
-          </FormFieldAlert>
-          <FormFieldRow
-            inputName='description' inputType='textarea' label='Description'
-            placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
-            onChange={this.handleOnChange}
-            value={this.state.description}
-          />
-          <FormFieldAlert>
-            <b>We encourage using an abstract, for the submission description.</b>
-          </FormFieldAlert>
-          <FormFieldRow
-            inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
-            onChange={this.handleOnChange}
-          />
-          <FormFieldAlert>
-            <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-          </FormFieldAlert>
-          <FormFieldSelectRow
-            inputName='task' label='Tasks' buttonLabel='Add task'
-            onChange={this.handleOnChange}
-            options={this.state.taskNames}
-            onClickButton={this.handleOnClickAddTask}
-            key={this.state.updateTaskSelect}
-          />
-          <FormFieldRowDeleter options={this.state.tasks} handleOnClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
-          <FormFieldTypeaheadRow
-            inputName='tag' label='Tags' buttonLabel='Add tag'
-            onChange={this.handleOnChange}
-            options={this.state.tagNames.map(item => item.name)}
-            onClickButton={this.handleOnClickAddTag}
-          />
-          <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} handleOnClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='contentUrl' inputType='text' label='Content URL'
+              validatorMessage={requiredFieldMissingError}
+              onChange={this.handleOnChange}
+              onBlur={this.handleOnFieldBlur}
+              validRegex={nonblankRegex}
+            />
+            <FormFieldAlertRow>
+              <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='name' inputType='text' label='Submission Name'
+              validatorMessage={requiredFieldMissingError}
+              onChange={this.handleOnChange}
+              validRegex={nonblankRegex}
+              value={this.state.name}
+            />
+            <FormFieldAlertRow>
+              <b>The submission name must be unique.</b>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='description' inputType='textarea' label='Description'
+              placeholder='Explain the content of the submission URL at a high level, as one would with a peer-reviewed research article abstract...'
+              onChange={this.handleOnChange}
+              value={this.state.description}
+            />
+            <FormFieldAlertRow>
+              <b>We encourage using an abstract, for the submission description.</b>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
+              onChange={this.handleOnChange}
+            />
+            <FormFieldAlertRow>
+              <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+            </FormFieldAlertRow>
+            <FormFieldSelectRow
+              inputName='task' label='Tasks' buttonLabel='Add task'
+              onChange={this.handleOnChange}
+              options={this.state.taskNames}
+              onClickButton={this.handleOnClickAddTask}
+              key={this.state.updateTaskSelect}
+            />
+            <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
+            <FormFieldTypeaheadRow
+              inputName='tag' label='Tags' buttonLabel='Add tag'
+              onChange={this.handleOnChange}
+              options={this.state.tagNames.map(item => item.name)}
+              onClickButton={this.handleOnClickAddTag}
+            />
+            <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} onClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
+            <FormFieldAlertRow>
               <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
+            </FormFieldAlertRow>
+            <FormFieldAlertRow>
+              <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+            </FormFieldAlertRow>
+            <FormFieldWideRow className='text-center'>
               <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
-            </div>
-          </div>
-        </form>
-      </div>
+            </FormFieldWideRow>
+          </form>
+        </div>
+      )
     )
   }
 }

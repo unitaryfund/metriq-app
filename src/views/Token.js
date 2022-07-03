@@ -3,6 +3,9 @@ import React from 'react'
 import config from './../config'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const isActiveTokenPrefix = 'You have an active API token, created '
 const isNoTokenMessage = 'You do not have an active token.'
@@ -12,7 +15,6 @@ class Token extends React.Component {
     super(props)
     this.state = {
       data: {},
-      isRequestFailed: false,
       requestFailedMessage: '',
       isGeneratedSuccess: false,
       token: ''
@@ -27,12 +29,11 @@ class Token extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -41,13 +42,12 @@ class Token extends React.Component {
       .then(res => {
         this.setState({
           token: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: '',
           isGeneratedSuccess: true
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -57,13 +57,12 @@ class Token extends React.Component {
         this.setState({
           data: {},
           token: '',
-          isRequestFailed: true,
           requestFailedMessage: 'Token successfully deleted.',
           isGeneratedSuccess: false
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -71,74 +70,46 @@ class Token extends React.Component {
     if (this.state.isGeneratedSuccess) {
       return (
         <div id='metriq-main-content' className='container'>
-          <header><h4>Get Token</h4></header>
+          <ViewHeader>Get Token</ViewHeader>
           <br />
           <div>
-            <div className='row'>
-              <div className='col-md-12'>
-                <span>This is your new token:</span>
-              </div>
-            </div>
+            <FormFieldWideRow>This is your new token:</FormFieldWideRow>
             <br />
-            <div className='row'>
-              <div className='col-md-3' />
-              <div className='col-md-6 break-all'>
-                {this.state.token}
-              </div>
-              <div className='col-md-3' />
-            </div>
+            <FormFieldAlertRow className='break-all'>{this.state.token}</FormFieldAlertRow>
             <br />
-            <div className='row'>
-              <div className='col-md-12'>
-                <span>You <b>cannot</b> retrieve it here again.<br />Save it in a secure place.</span>
-              </div>
-            </div>
+            <FormFieldWideRow> You <b>cannot</b> retrieve it here again.<br />Save it in a secure place.</FormFieldWideRow>
           </div>
         </div>
       )
     }
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h5>Get Token</h5></header>
+        <ViewHeader>Get Token</ViewHeader>
         <br />
         <div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <span><b>{this.state.data.clientTokenCreated ? isActiveTokenPrefix + this.state.data.clientTokenCreated + '.' : isNoTokenMessage}</b></span>
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <b>{this.state.data.clientTokenCreated ? isActiveTokenPrefix + this.state.data.clientTokenCreated + '.' : isNoTokenMessage}</b>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12'>
-              <span>Generating a new token will invalidate <b>all</b> previous tokens.<br />When you generate a new token, it will be displayed to you <b>once</b>.<br />Save it securely for your records. This is your token for client software access.</span><br />
-            </div>
-          </div>
+          <FormFieldWideRow>
+            Generating a new token will invalidate <b>all</b> previous tokens.<br />When you generate a new token, it will be displayed to you <b>once</b>.<br />Save it securely for your records. This is your token for client software access.<br />
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12'>
-              <span><b>Are you sure you want to generate a new token?<br />All previous tokens will be invalidated.</b></span>
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <b>Are you sure you want to generate a new token?<br />All previous tokens will be invalidated.</b>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <button className='btn btn-primary' onClick={this.handleGenerateOnClick}>Generate new API Token</button>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <button className='btn btn-primary' onClick={this.handleGenerateOnClick}>Generate new API Token</button>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <button className='btn btn-primary' onClick={this.handleDeleteOnClick}>Disable API access</button>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <button className='btn btn-primary' onClick={this.handleDeleteOnClick}>Disable API access</button>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
         </div>
       </div>
     )
