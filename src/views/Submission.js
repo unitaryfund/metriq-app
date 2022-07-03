@@ -802,10 +802,10 @@ class Submission extends React.Component {
                   ({
                     key: row.id,
                     name: row.name,
-                    props: this.props
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Task/' + record.key) }
+                  onClick () { record.history.push('/Task/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -840,10 +840,10 @@ class Submission extends React.Component {
                   ({
                     key: row.id,
                     name: row.name,
-                    props: this.props
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Method/' + record.key) }
+                  onClick () { record.history.push('/Method/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -880,10 +880,11 @@ class Submission extends React.Component {
                 data={this.state.item.platforms.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Platform/' + record.key }
+                  onClick () { record.history.push('/Platform/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
