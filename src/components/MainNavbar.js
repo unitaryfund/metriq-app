@@ -2,11 +2,12 @@ import { Navbar } from 'react-bootstrap'
 import MainNavLeft from './MainNavLeft'
 import MainNavRight from './MainNavRight'
 import logo from './../images/metriq_logo_primary_blue_inverted.png'
+import { Link } from 'react-router-dom'
 
 const MainNavbar = (props) =>
   <div>
     <Navbar className='metriq-navbar' expand='lg'>
-      <Navbar.Brand href='/' className='metriq-navbar'>
+      <Navbar.Brand as={Link} to='/' className='metriq-navbar'>
         <img src={logo} alt='Metriq logo' className='logo-image' />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls='basic-navbar-nav' />
