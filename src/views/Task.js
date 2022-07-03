@@ -336,16 +336,18 @@ class Task extends React.Component {
                   isLog={this.state.isLog}
                 />
               </div>
-              <div className='sota-chart-message'>
-                <SotaChart
-                  isMobile
-                  data={this.state.chartData[this.state.chartKey]}
-                  xLabel='Time' yLabel={this.state.chartKey}
-                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
-                  key={Math.random()}
-                  isLog={this.state.isLog}
-                />
-              </div>
+              {/* See sota-chart-message CSS class in App.css, re: 820 */}
+              {(window.screen.width < 820) &&
+                <div className='sota-chart-message'>
+                  <SotaChart
+                    isMobile
+                    data={this.state.chartData[this.state.chartKey]}
+                    xLabel='Time' yLabel={this.state.chartKey}
+                    isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                    key={Math.random()}
+                    isLog={this.state.isLog}
+                  />
+                </div>}
             </div>}
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
