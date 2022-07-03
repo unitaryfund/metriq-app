@@ -170,7 +170,7 @@ class Method extends React.Component {
                       ? this.state.item.childMethods.map(row => ({
                           key: row.id,
                           name: row.name,
-                          props: this.props.history
+                          history: this.props.history
                         }))
                       : []}
                     onRow={(record) => ({
