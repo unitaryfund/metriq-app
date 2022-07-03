@@ -4,9 +4,8 @@ import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -14,11 +13,11 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SotaChart from '../components/SotaChart'
 import CategoryScroll from '../components/CategoryScroll'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
-import SotaChartMobile from '../components/SotaChartMobile'
+import TooltipTrigger from '../components/TooltipTrigger'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 library.add(faEdit)
 
@@ -26,7 +25,6 @@ class Task extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
       task: { description: '', parentTask: 0 },
@@ -56,7 +54,10 @@ class Task extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const task = { description: this.state.item.description, parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name } }
+    const task = {
+      description: this.state.item.description,
+      parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name }
+    }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
 
@@ -111,6 +112,8 @@ class Task extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const methodRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {
@@ -134,17 +137,17 @@ class Task extends React.Component {
           }
           return 0
         })
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: task })
+        this.setState({ requestFailedMessage: '', item: task })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
           .then(res => {
             const tasks = [...res.data.data]
             this.handleTrimTasks(task.id, tasks)
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: tasks })
+            this.setState({ requestFailedMessage: '', allTaskNames: tasks })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const results = task.results
@@ -193,7 +196,7 @@ class Task extends React.Component {
         this.sliceChartData(results)
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -308,42 +311,59 @@ class Task extends React.Component {
                     tooltip='A metric performance measure of any "method" on this "task"'
                   />
                   <div className='row' style={{ marginTop: '5px' }}>
-                    <span htmlFor='logcheckbox' className='col-md-3 form-field-label metric-chart-label' dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }} />
+                    <span
+                      htmlFor='logcheckbox'
+                      className='col-md-3 form-field-label metric-chart-label'
+                      dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
+                    />
                     <div className='col-md-6'>
-                      <input type='checkbox' id='logcheckbox' name='logcheckbox' className='form-control' checked={this.state.islog} onChange={this.handleToggleLog} />
+                      <input
+                        type='checkbox'
+                        id='logcheckbox'
+                        name='logcheckbox'
+                        className='form-control'
+                        checked={this.state.islog}
+                        onChange={this.handleToggleLog}
+                      />
                     </div>
                   </div>
 
                 </div>
-                <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} />
+                <SotaChart
+                  data={this.state.chartData[this.state.chartKey]}
+                  xLabel='Time' yLabel={this.state.chartKey}
+                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                  key={Math.random()}
+                  isLog={this.state.isLog}
+                />
               </div>
-              <div className='sota-chart-message'><SotaChartMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} /></div>
+              {/* See sota-chart-message CSS class in App.css, re: 820 */}
+              {(window.screen.width < 820) &&
+                <div className='sota-chart-message'>
+                  <SotaChart
+                    isMobile
+                    data={this.state.chartData[this.state.chartKey]}
+                    xLabel='Time' yLabel={this.state.chartKey}
+                    isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                    key={Math.random()}
+                    isLog={this.state.isLog}
+                  />
+                </div>}
             </div>}
-          <div className='row'>
-            <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-              <div className='submission-description'>
-                {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
-              </div>
+          <FormFieldWideRow>
+            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
+            <div className='submission-description'>
+              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit task</Tooltip>}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                  <FacebookIcon size={32} />
-                </FacebookShareButton>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id}>
-                  <TwitterIcon size={32} />
-                </TwitterShareButton>
-              </OverlayTrigger>
-            </div>
-          </div>
+          </FormFieldWideRow>
+          <FormFieldWideRow>
+            <TooltipTrigger message='Edit task'>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}>
+                <FontAwesomeIcon icon='edit' />
+              </button>
+            </TooltipTrigger>
+            <SocialShareIcons url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id} />
+          </FormFieldWideRow>
           <br />
           {this.state.item.parentTask &&
             <div className='row'>
@@ -363,106 +383,100 @@ class Task extends React.Component {
           {(this.state.results.length > 0) &&
             <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
           {(this.state.results.length > 0) &&
-            <div className='row'>
-              <div className='col-md-12'>
+            <FormFieldWideRow>
+              <Table
+                className='detail-table'
+                columns={[{
+                  title: 'Submission',
+                  dataIndex: 'name',
+                  key: 'name',
+                  width: 250
+                },
+                {
+                  title: 'Method',
+                  dataIndex: 'methodName',
+                  key: 'methodName',
+                  width: 250
+                },
+                {
+                  title: 'Platform',
+                  dataIndex: 'platformName',
+                  key: 'platformName',
+                  width: 250
+                },
+                {
+                  title: 'Date',
+                  dataIndex: 'tableDate',
+                  key: 'tableDate',
+                  width: 250
+                },
+                {
+                  title: 'Metric',
+                  dataIndex: 'metricName',
+                  key: 'metricName',
+                  width: 250
+                },
+                {
+                  title: 'Value',
+                  dataIndex: 'metricValue',
+                  key: 'metricValue',
+                  width: 250
+                }]}
+                data={this.state.resultsJson}
+                onRow={(record) => ({
+                  onClick () { record.props.history.push('/Submission/' + record.key) }
+                })}
+                tableLayout='auto'
+                rowClassName='link'
+              />
+            </FormFieldWideRow>}
+          {(this.state.item.submissions.length > 0) &&
+            <div>
+              <h2>Submissions</h2>
+              <FormFieldWideRow>
                 <Table
                   className='detail-table'
                   columns={[{
-                    title: 'Submission',
+                    title: 'Name',
                     dataIndex: 'name',
                     key: 'name',
-                    width: 250
+                    width: 700
                   },
                   {
-                    title: 'Method',
-                    dataIndex: 'methodName',
-                    key: 'methodName',
-                    width: 250
+                    title: 'Submitted',
+                    dataIndex: 'createdAt',
+                    key: 'createdAt',
+                    width: 200
                   },
                   {
-                    title: 'Platform',
-                    dataIndex: 'platformName',
-                    key: 'platformName',
-                    width: 250
-                  },
-                  {
-                    title: 'Date',
-                    dataIndex: 'tableDate',
-                    key: 'tableDate',
-                    width: 250
-                  },
-                  {
-                    title: 'Metric',
-                    dataIndex: 'metricName',
-                    key: 'metricName',
-                    width: 250
-                  },
-                  {
-                    title: 'Value',
-                    dataIndex: 'metricValue',
-                    key: 'metricValue',
-                    width: 250
+                    title: 'Up-votes',
+                    dataIndex: 'upvoteCount',
+                    key: 'upvoteCount',
+                    width: 200
                   }]}
-                  data={this.state.resultsJson}
+                  data={this.state.item.submissions
+                    ? this.state.item.submissions.map(row => ({
+                        key: row.id,
+                        name: row.name,
+                        createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                        upvoteCount: row.upvoteCount || 0,
+                        props: this.props
+                      }))
+                    : []}
                   onRow={(record) => ({
                     onClick () { record.props.history.push('/Submission/' + record.key) }
                   })}
                   tableLayout='auto'
                   rowClassName='link'
                 />
-              </div>
-            </div>}
-          {(this.state.item.submissions.length > 0) &&
-            <div>
-              <h2>Submissions</h2>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <Table
-                    className='detail-table'
-                    columns={[{
-                      title: 'Name',
-                      dataIndex: 'name',
-                      key: 'name',
-                      width: 700
-                    },
-                    {
-                      title: 'Submitted',
-                      dataIndex: 'createdAt',
-                      key: 'createdAt',
-                      width: 200
-                    },
-                    {
-                      title: 'Up-votes',
-                      dataIndex: 'upvoteCount',
-                      key: 'upvoteCount',
-                      width: 200
-                    }]}
-                    data={this.state.item.submissions
-                      ? this.state.item.submissions.map(row => ({
-                          key: row.id,
-                          name: row.name,
-                          createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                          upvoteCount: row.upvoteCount || 0,
-                          props: this.props
-                        }))
-                      : []}
-                    onRow={(record) => ({
-                      onClick () { record.props.history.push('/Submission/' + record.key) }
-                    })}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </div>
+              </FormFieldWideRow>
               <br />
             </div>}
           <div />
-          <div className='row'>
-            <div className='col-md-12'>
-              <hr />
-              <Commento id={'task-' + toString(this.state.item.id)} />
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <hr />
+            <Commento id={'task-' + toString(this.state.item.id)} />
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

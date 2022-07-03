@@ -6,14 +6,14 @@ import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import TooltipTrigger from '../components/TooltipTrigger'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 const defaultRegex = /.+/
 const nameRegex = /.{1,}/
@@ -29,7 +29,6 @@ class Platform extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showAddModal: false,
       showRemoveModal: false,
@@ -106,7 +105,8 @@ class Platform extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const reqBody = {
@@ -125,7 +125,8 @@ class Platform extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const property = {
@@ -260,22 +261,22 @@ class Platform extends React.Component {
   }
 
   handleOnPropertyRemove (propertyId) {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push('/Login')
+      return
+    }
     if (!window.confirm('Are you sure you want to remove this property from the submission?')) {
       return
     }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
-        .then(res => {
-          const platform = res.data.data
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
-          this.handleCombineParentProperties(platform)
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      window.location.href = '/Login'
-    }
+    axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
+      .then(res => {
+        const platform = res.data.data
+        this.setState({ requestFailedMessage: '', item: platform })
+        this.handleCombineParentProperties(platform)
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
   }
 
   handleOnClickEditProperty (propertyId) {
@@ -308,17 +309,19 @@ class Platform extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const platformRoute = config.api.getUriPrefix() + '/platform/' + this.props.match.params.id
     axios.get(platformRoute)
       .then(res => {
         const platform = res.data.data
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: platform })
+        this.setState({ requestFailedMessage: '', item: platform })
         this.handleCombineParentProperties(platform)
 
         const propertyRoute = config.api.getUriPrefix() + '/property/names'
         axios.get(propertyRoute)
           .then(res => {
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPropertyNames: res.data.data })
+            this.setState({ requestFailedMessage: '', allPropertyNames: res.data.data })
 
             const platformsRoute = config.api.getUriPrefix() + '/platform/names'
             axios.get(platformsRoute)
@@ -330,27 +333,27 @@ class Platform extends React.Component {
                     break
                   }
                 }
-                this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: platforms })
+                this.setState({ requestFailedMessage: '', allPlatformNames: platforms })
 
                 const dataTypeNamesRoute = config.api.getUriPrefix() + '/dataType/names'
                 axios.get(dataTypeNamesRoute)
                   .then(res => {
-                    this.setState({ isRequestFailed: false, requestFailedMessage: '', allDataTypeNames: res.data.data })
+                    this.setState({ requestFailedMessage: '', allDataTypeNames: res.data.data })
                   })
                   .catch(err => {
-                    this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
                   })
               })
               .catch(err => {
-                this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+                this.setState({ requestFailedMessage: ErrorHandler(err) })
               })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -358,31 +361,18 @@ class Platform extends React.Component {
     return (
       <div id='metriq-main-content'>
         <div className='container submission-detail-container'>
-          <div className='row'>
-            <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-              <div className='submission-description'>
-                {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
-              </div>
+          <FormFieldWideRow>
+            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
+            <div className='submission-description'>
+              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit description</Tooltip>}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
-                  <FacebookIcon size={32} />
-                </FacebookShareButton>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id}>
-                  <TwitterIcon size={32} />
-                </TwitterShareButton>
-              </OverlayTrigger>
-            </div>
-          </div>
+          </FormFieldWideRow>
+          <FormFieldWideRow>
+            <TooltipTrigger message='Edit description'>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            </TooltipTrigger>
+            <SocialShareIcons url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id} />
+          </FormFieldWideRow>
           <br />
           {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&
             <div>
@@ -400,11 +390,12 @@ class Platform extends React.Component {
                     data={this.state.item.childPlatforms
                       ? this.state.item.childPlatforms.map(row => ({
                           key: row.id,
-                          name: row.name
+                          name: row.name,
+                          history: this.props.history
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Platform/' + record.key }
+                      onClick () { record.history.push('/Platform/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -453,9 +444,18 @@ class Platform extends React.Component {
                       key: 'platform',
                       width: 300
                     }]}
-                    data={this.state.parentProperties}
+                    data={this.state.parentProperties.map((property) => {
+                      return {
+                        name: property.name,
+                        type: property.type,
+                        value: property.value,
+                        platform: property.platform,
+                        parentId: this.state.item.parentPlatform.id,
+                        history: this.props.history
+                      }
+                    })}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Platform/' + record.key }
+                      onClick () { record.history.push('/Platform/' + record.parentId) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -492,11 +492,12 @@ class Platform extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0
+                      upvoteCount: row.upvoteCount || 0,
+                      history: this.props.history
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Submission/' + record.key }
+                  onClick () { record.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -504,64 +505,62 @@ class Platform extends React.Component {
             </div>
           </div>
           <br />
-          <div className='row'>
-            <div className='col-md-12'>
-              <div>
-                <h2>Properties
-                  <EditButton
-                    className='float-right edit-button btn'
-                    onClickAdd={() => this.handleOnClickAddProperty()}
-                    onClickRemove={() => this.handleOnClickRemove('Property')}
-                  />
-                </h2>
-                <hr />
-              </div>
-              {(this.state.item.properties.length > 0) &&
-                <Table
-                  columns={[
-                    {
-                      title: 'Name',
-                      dataIndex: 'name',
-                      key: 'name',
-                      width: 386
-                    },
-                    {
-                      title: 'Type',
-                      dataIndex: 'type',
-                      key: 'type',
-                      width: 386
-                    },
-                    {
-                      title: 'Value',
-                      dataIndex: 'value',
-                      key: 'value',
-                      width: 386
-                    },
-                    {
-                      title: '',
-                      dataIndex: 'edit',
-                      key: 'edit',
-                      width: 42,
-                      render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.key)} /></div>
-                    }
-                  ]}
-                  data={this.state.item.properties.length
-                    ? this.state.item.properties.map(row =>
-                        ({
-                          key: row.id,
-                          name: row.name,
-                          type: row.typeFriendlyName,
-                          value: row.value
-                        }))
-                    : []}
-                  tableLayout='auto'
-                />}
-              {(this.state.item.properties.length === 0) &&
-                <div className='card bg-light'>
-                  <div className='card-body'>There are no associated properties, yet.</div>
-                </div>}
+          <FormFieldWideRow>
+            <div>
+              <h2>Properties
+                <EditButton
+                  className='float-right edit-button btn'
+                  onClickAdd={() => this.handleOnClickAddProperty()}
+                  onClickRemove={() => this.handleOnClickRemove('Property')}
+                />
+              </h2>
+              <hr />
             </div>
-          </div>
+            {(this.state.item.properties.length > 0) &&
+              <Table
+                columns={[
+                  {
+                    title: 'Name',
+                    dataIndex: 'name',
+                    key: 'name',
+                    width: 386
+                  },
+                  {
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                    width: 386
+                  },
+                  {
+                    title: 'Value',
+                    dataIndex: 'value',
+                    key: 'value',
+                    width: 386
+                  },
+                  {
+                    title: '',
+                    dataIndex: 'edit',
+                    key: 'edit',
+                    width: 42,
+                    render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.key)} /></div>
+                  }
+                ]}
+                data={this.state.item.properties.length
+                  ? this.state.item.properties.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name,
+                        type: row.typeFriendlyName,
+                        value: row.value
+                      }))
+                  : []}
+                tableLayout='auto'
+              />}
+            {(this.state.item.properties.length === 0) &&
+              <div className='card bg-light'>
+                <div className='card-body'>There are no associated properties, yet.</div>
+              </div>}
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

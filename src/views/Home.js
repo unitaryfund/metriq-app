@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import SubmissionScroll from '../components/SubmissionScroll'
+import ViewHeader from '../components/ViewHeader'
 
 const Home = (props) => {
   useEffect(() => {
@@ -8,7 +9,7 @@ const Home = (props) => {
   }, [])
   return (
     <div id='metriq-main-content' className='container'>
-      <header><h4>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</h4></header>
+      <ViewHeader>Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}</ViewHeader>
       <br />
       <Tabs defaultActiveKey='trending' id='top-submissions-tabs'>
         <Tab eventKey='trending' title='Trending' className='metriq-nav-tab'>

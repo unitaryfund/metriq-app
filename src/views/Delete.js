@@ -1,15 +1,17 @@
 import axios from 'axios'
 import React from 'react'
 import config from './../config'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Delete extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       data: {},
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -21,12 +23,11 @@ class Delete extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -38,17 +39,17 @@ class Delete extends React.Component {
           this.props.onLogout()
         })
         .catch(err => {
-          this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     } else {
-      this.setState({ isRequestFailed: true, requestFailedMessage: 'Entered incorrect username/email!' })
+      this.setState({ requestFailedMessage: 'Entered incorrect username/email!' })
     }
   }
 
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Delete Account</h4></header>
+        <ViewHeader>Delete Account</ViewHeader>
         <br />
         <div className='row'>
           <div className='col-md-2' />
@@ -58,27 +59,17 @@ class Delete extends React.Component {
           <div className='col-md-2' />
         </div>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <span>If you still want to delete your account, press the button below, and you will be prompted to confirm the action one more time.</span>
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlertRow>
+          If you still want to delete your account, press the button below, and you will be prompted to confirm the action one more time.
+        </FormFieldAlertRow>
         <br />
-        <div className='row'>
-          <div className='col-md-3' />
-          <div className='col-md-6'>
-            <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-          </div>
-          <div className='col-md-3' />
-        </div>
+        <FormFieldAlertRow>
+          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+        </FormFieldAlertRow>
         <br />
-        <div className='row'>
-          <div className='col-md-12 text-center'>
-            <button className='btn btn-danger' onClick={this.handleDeleteOnClick}>Delete Account</button>
-          </div>
-        </div>
+        <FormFieldWideRow className='text-center'>
+          <button className='btn btn-danger' onClick={this.handleDeleteOnClick}>Delete Account</button>
+        </FormFieldWideRow>
       </div>
     )
   }

@@ -7,16 +7,17 @@ import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
+import TooltipTrigger from '../components/TooltipTrigger'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import SocialShareIcons from '../components/SocialShareIcons'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -31,7 +32,6 @@ class Submission extends React.Component {
     super(props)
     this.state = {
       isValidated: false,
-      isRequestFailed: false,
       requestFailedMessage: '',
       isArxiv: false,
       vanityUrl: '',
@@ -147,7 +147,8 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const isModerationReport = (this.state.modalMode === 'Moderation')
@@ -378,7 +379,8 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     if (this.state.modalMode === 'Task') {
@@ -408,7 +410,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks, item: submission })
+            this.setState({ requestFailedMessage: '', taskNames: tasks, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -441,7 +443,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods, item: submission })
+            this.setState({ requestFailedMessage: '', methodNames: methods, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -474,7 +476,7 @@ class Submission extends React.Component {
                 break
               }
             }
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platforms, item: submission })
+            this.setState({ requestFailedMessage: '', platformNames: platforms, item: submission })
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -491,7 +493,7 @@ class Submission extends React.Component {
               break
             }
           }
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', tagNames: tags, item: submission })
+          this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -519,7 +521,7 @@ class Submission extends React.Component {
       const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
       axios.post(resultRoute, result)
         .then(res => {
-          this.setState({ isRequestFailed: false, requestFailedMessage: '', item: res.data.data })
+          this.setState({ requestFailedMessage: '', item: res.data.data })
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -634,6 +636,8 @@ class Submission extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
     axios.get(submissionRoute)
       .then(subRes => {
@@ -653,7 +657,7 @@ class Submission extends React.Component {
         }
 
         // Just get the view populated as quickly as possible, before we "trim."
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
+        this.setState({ requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
@@ -667,10 +671,10 @@ class Submission extends React.Component {
               defTask = tasks[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
+            this.setState({ requestFailedMessage: '', allTaskNames: res.data.data, taskNames: tasks, taskId: defTask })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
@@ -685,10 +689,10 @@ class Submission extends React.Component {
               defMethod = methods[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+            this.setState({ requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
@@ -703,10 +707,10 @@ class Submission extends React.Component {
               defPlatform = platforms[0].id
             }
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
+            this.setState({ requestFailedMessage: '', allPlatformNames: res.data.data, platformNames: platforms, platformId: defPlatform })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
 
         const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
@@ -715,14 +719,14 @@ class Submission extends React.Component {
             const tags = [...res.data.data]
             this.handleTrimTags(submission, tags)
 
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
+            this.setState({ requestFailedMessage: '', allTagNames: res.data.data, tagNames: tags })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const metricNameRoute = config.api.getUriPrefix() + '/result/metricNames'
@@ -732,67 +736,50 @@ class Submission extends React.Component {
         this.setState({ metricNames: metricNames })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
   render () {
     return (
       <div id='metriq-main-content' className='container submission-detail-container'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <div><h1>{this.state.item.name}</h1></div>
-          </div>
-        </div>
+        <FormFieldWideRow>
+          <div><h1>{this.state.item.name}</h1></div>
+        </FormFieldWideRow>
         <div className='text-center'>
           <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
         </div>
-        <div className='row'>
-          <div className='col-md-12'>
-            <div className='submission-description'>
-              <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
-            </div>
+        <FormFieldWideRow>
+          <div className='submission-description'>
+            <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
           </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-12'>
-            <div className='submission-description'>
-              {this.state.item.description ? this.state.item.description : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleEditSubmissionDetails}>Add one.</button></div></div>}
-            </div>
+        </FormFieldWideRow>
+        <FormFieldWideRow>
+          <div className='submission-description'>
+            {this.state.item.description ? this.state.item.description : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleEditSubmissionDetails}>Add one.</button></div></div>}
           </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-12'>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
-              <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
-            </OverlayTrigger>
-            {this.state.isArxiv &&
-              <span>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Mobile view preprint</Tooltip>}>
-                  <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
-                </OverlayTrigger>
-                <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>BibTex reference</Tooltip>}>
-                  <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
-                </OverlayTrigger>
-              </span>}
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit submission</Tooltip>}>
-              <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-              <FacebookShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
-                <FacebookIcon size={32} />
-              </FacebookShareButton>
-            </OverlayTrigger>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-              <TwitterShareButton url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id}>
-                <TwitterIcon size={32} />
-              </TwitterShareButton>
-            </OverlayTrigger>
-          </div>
-        </div>
+        </FormFieldWideRow>
+        <FormFieldWideRow>
+          <TooltipTrigger message='Upvote submission'>
+            <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
+          </TooltipTrigger>
+          <TooltipTrigger message='Submission link'>
+            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+          </TooltipTrigger>
+          {this.state.isArxiv &&
+            <span>
+              <TooltipTrigger message='Mobile view preprint'>
+                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
+              </TooltipTrigger>
+              <TooltipTrigger message='BibTex reference'>
+                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+              </TooltipTrigger>
+            </span>}
+          <TooltipTrigger message='Edit submission'>
+            <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
+          </TooltipTrigger>
+          <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
+        </FormFieldWideRow>
         <br />
         <div className='row'>
           <div className='col-md-6'>
@@ -819,10 +806,10 @@ class Submission extends React.Component {
                   ({
                     key: row.id,
                     name: row.name,
-                    props: this.props
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Task/' + record.key) }
+                  onClick () { record.history.push('/Task/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -857,10 +844,10 @@ class Submission extends React.Component {
                   ({
                     key: row.id,
                     name: row.name,
-                    props: this.props
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Method/' + record.key) }
+                  onClick () { record.history.push('/Method/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -897,10 +884,11 @@ class Submission extends React.Component {
                 data={this.state.item.platforms.map(row =>
                   ({
                     key: row.id,
-                    name: row.name
+                    name: row.name,
+                    history: this.props.history
                   }))}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Platform/' + record.key }
+                  onClick () { record.history.push('/Platform/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
@@ -932,102 +920,105 @@ class Submission extends React.Component {
           </div>
         </div>
         <br />
-        <div className='row'>
-          <div className='col-md-12'>
-            <div>
-              <h2>Results
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAddResult()}
-                  onClickRemove={() => this.handleOnClickRemove('Result')}
-                />
-              </h2>
-              <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
-              <hr />
-            </div>
-            {(this.state.item.results.length > 0) &&
-              <Table
-                columns={[
-                  {
-                    title: 'Task',
-                    dataIndex: 'taskName',
-                    key: 'taskName',
-                    width: 224
-                  },
-                  {
-                    title: 'Method',
-                    dataIndex: 'methodName',
-                    key: 'methodName',
-                    width: 224
-                  },
-                  {
-                    title: 'Platform',
-                    dataIndex: 'platformName',
-                    key: 'platformName',
-                    width: 224
-                  },
-                  {
-                    title: 'Metric',
-                    dataIndex: 'metricName',
-                    key: 'metricName',
-                    width: 224
-                  },
-                  {
-                    title: 'Value',
-                    dataIndex: 'metricValue',
-                    key: 'metricValue',
-                    width: 224
-                  },
-                  {
-                    title: 'Notes',
-                    dataIndex: 'notes',
-                    key: 'notes',
-                    width: 40,
-                    render: (value, row, index) => <div className='text-center'>{row.notes && <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}><span className='display-linebreak'>{row.notes}</span></Tooltip>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></OverlayTrigger>}</div>
-                  },
-                  {
-                    title: '',
-                    dataIndex: 'edit',
-                    key: 'edit',
-                    width: 40,
-                    render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} /></div>
-                  }
-                ]}
-                data={this.state.item.results.length
-                  ? this.state.item.results.map(row =>
-                      ({
-                        key: row.id,
-                        taskName: row.task.name,
-                        methodName: row.method.name,
-                        platformName: row.platform ? row.platform.name : '(None)',
-                        metricName: row.metricName,
-                        metricValue: row.metricValue,
-                        notes: row.notes
-                      }))
-                  : []}
-                tableLayout='auto'
-              />}
-            {(this.state.item.results.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated results, yet.</div>
-              </div>}
+        <FormFieldWideRow>
+          <div>
+            <h2>Results
+              <EditButton
+                className='float-right edit-button btn'
+                onClickAdd={() => this.handleOnClickAddResult()}
+                onClickRemove={() => this.handleOnClickRemove('Result')}
+              />
+            </h2>
+            <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
+            <hr />
           </div>
-        </div>
+          {(this.state.item.results.length > 0) &&
+            <Table
+              columns={[
+                {
+                  title: 'Task',
+                  dataIndex: 'taskName',
+                  key: 'taskName',
+                  width: 224
+                },
+                {
+                  title: 'Method',
+                  dataIndex: 'methodName',
+                  key: 'methodName',
+                  width: 224
+                },
+                {
+                  title: 'Platform',
+                  dataIndex: 'platformName',
+                  key: 'platformName',
+                  width: 224
+                },
+                {
+                  title: 'Metric',
+                  dataIndex: 'metricName',
+                  key: 'metricName',
+                  width: 224
+                },
+                {
+                  title: 'Value',
+                  dataIndex: 'metricValue',
+                  key: 'metricValue',
+                  width: 224
+                },
+                {
+                  title: 'Notes',
+                  dataIndex: 'notes',
+                  key: 'notes',
+                  width: 40,
+                  render: (value, row, index) =>
+                    <div className='text-center'>
+                      {row.notes &&
+                        <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
+                          <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
+                        </TooltipTrigger>}
+                    </div>
+                },
+                {
+                  title: '',
+                  dataIndex: 'edit',
+                  key: 'edit',
+                  width: 40,
+                  render: (value, row, index) =>
+                    <div className='text-center'>
+                      <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} />
+                    </div>
+                }
+              ]}
+              data={this.state.item.results.length
+                ? this.state.item.results.map(row =>
+                    ({
+                      key: row.id,
+                      taskName: row.task.name,
+                      methodName: row.method.name,
+                      platformName: row.platform ? row.platform.name : '(None)',
+                      metricName: row.metricName,
+                      metricValue: row.metricValue,
+                      notes: row.notes
+                    }))
+                : []}
+              tableLayout='auto'
+            />}
+          {(this.state.item.results.length === 0) &&
+            <div className='card bg-light'>
+              <div className='card-body'>There are no associated results, yet.</div>
+            </div>}
+        </FormFieldWideRow>
         <br />
-        <div className='row'>
-          <div className='col-md-12'>
-            <hr />
-            <div className='text-center'>
-              Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
-            </div>
+        <FormFieldWideRow>
+          <hr />
+          <div className='text-center'>
+            Notice something about this submission that needs moderation? <span className='link' onClick={this.handleModerationReport}>Let us know.</span>
           </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-12'>
-            <hr />
-            <Commento id={'submission-' + toString(this.state.item.id)} />
-          </div>
-        </div>
+        </FormFieldWideRow>
+        <FormFieldWideRow>
+          <hr />
+          <Commento id={'submission-' + toString(this.state.item.id)} />
+        </FormFieldWideRow>
         <Modal
           show={this.state.showAddModal} onHide={this.handleHideAddModal}
           size='lg'
@@ -1459,13 +1450,9 @@ class Submission extends React.Component {
                       value={this.state.submission.thumbnailUrl}
                       onChange={(field, value) => this.handleOnChange('submission', field, value)}
                     />
-                    <div className='row'>
-                      <div className='col-md-3' />
-                      <div className='col-md-6'>
-                        <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-                      </div>
-                      <div className='col-md-3' />
-                    </div>
+                    <FormFieldAlertRow>
+                      <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                    </FormFieldAlertRow>
                     <FormFieldRow
                       inputName='description' inputType='textarea' label='Description' rows='12'
                       value={this.state.submission.description}
