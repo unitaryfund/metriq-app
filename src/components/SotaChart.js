@@ -182,7 +182,9 @@ class SotaChart extends React.Component {
   }
 
   componentDidMount () {
-    const chartFunc = () => new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.state.key).getContext('2d'), { data: this.state.data, options: this.state.options })
+    const chartFunc = () => new LineWithErrorBarsChart(
+      document.getElementById('sota-chart-canvas-' + this.state.key).getContext('2d'),
+      { data: this.state.data, options: this.state.options })
     chartFunc()
   }
 

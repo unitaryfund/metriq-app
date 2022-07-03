@@ -42,10 +42,18 @@ const FormFieldSelectRow = (props) => {
     <div className='row'>
       {props.tooltip &&
         <TooltipTrigger message={props.tooltip}>
-          <span htmlFor={props.inputName} className={'col-md-3 form-field-label ' + props.labelClass} dangerouslySetInnerHTML={{ __html: props.label }} />
+          <span
+            htmlFor={props.inputName}
+            className={'col-md-3 form-field-label ' + props.labelClass}
+            dangerouslySetInnerHTML={{ __html: props.label }}
+          />
         </TooltipTrigger>}
       {!props.tooltip &&
-        <label htmlFor={props.inputName} className={'col-md-3 form-field-label ' + props.labelClass} dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label
+          htmlFor={props.inputName}
+          className={'col-md-3 form-field-label ' + props.labelClass}
+          dangerouslySetInnerHTML={{ __html: props.label }}
+        />}
       <div className='col-md-6'>
         <select
           id={props.inputName}

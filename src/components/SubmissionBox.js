@@ -13,7 +13,11 @@ import ErrorHandler from './ErrorHandler'
 library.add(faExternalLinkAlt)
 
 const SubmissionBox = (props) => {
-  const description = !props.item.description ? '' : ((props.item.description.length > 500) ? (props.item.description.substring(0, 497) + '...') : props.item.description)
+  const description = !props.item.description
+    ? ''
+    : ((props.item.description.length > 500)
+        ? (props.item.description.substring(0, 497) + '...')
+        : props.item.description)
   const tags = props.item.tags ? props.item.tags.map((obj, ind) => obj.name) : []
 
   const [upvotes, setUpvotes] = useState(props.item.upvotesCount || 0)

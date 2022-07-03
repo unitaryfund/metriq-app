@@ -43,7 +43,14 @@ class SubmissionScroll extends React.Component {
           filterOptions.push(items[i].name)
           filterOptions.push(items[i].contentUrl)
         }
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', nextPage: 1, items: items, filterOptions: filterOptions, filteredItems: items })
+        this.setState({
+          isRequestFailed: false,
+          requestFailedMessage: '',
+          nextPage: 1,
+          items: items,
+          filterOptions: filterOptions,
+          filteredItems: items
+        })
       })
       .catch(err => {
         this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })

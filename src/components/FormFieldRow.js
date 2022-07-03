@@ -75,7 +75,9 @@ const FormFieldRow = (props) => {
               onBlur={handleOnFieldBlur}
             />}
         </div>
-        {props.imageUrl ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button> : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+        {props.imageUrl
+          ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
+          : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
       </div>
       {imagePreviewUrl && isValid &&
         <FormFieldWideRow className='text-center'>
