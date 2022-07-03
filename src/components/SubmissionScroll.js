@@ -7,6 +7,7 @@ import SubmissionBox from '../components/SubmissionBox'
 import ErrorHandler from './ErrorHandler'
 import FormFieldAlertRow from './FormFieldAlertRow'
 import FormFieldWideRow from './FormFieldWideRow'
+import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
 
 class SubmissionScroll extends React.Component {
   constructor (props) {
@@ -111,6 +112,15 @@ class SubmissionScroll extends React.Component {
   render () {
     return (
       <div className='container'>
+        <FormFieldWideRow className='search-bar'>
+          <FormFieldTypeaheadRow
+            options={this.state.filterOptions}
+            inputName='nameOrUrl'
+            label='Search title or URL'
+            value=''
+            onChange={(field, value) => this.onFilter(value)}
+          />
+        </FormFieldWideRow>
         <FormFieldWideRow>
           {this.state.items.length && (
             <InfiniteScroll

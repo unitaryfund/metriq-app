@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React from 'react'
 import config from '../config'
+import { Redirect } from 'react-router-dom'
 import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
@@ -36,7 +37,7 @@ class Platforms extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      window.location.href = '/Platform/' + value.id
+      return (<Redirect to={'/Platform/' + value.id} />)
     }
   }
 

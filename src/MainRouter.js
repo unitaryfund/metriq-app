@@ -87,7 +87,7 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Login/:next'
-          render={p => isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <LogIn {...props} next={p.match.params.next} />}
+          render={p => isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <LogIn {...props} onLogin={handleLogin} next={p.match.params.next} />}
         />
         <Route
           exact
