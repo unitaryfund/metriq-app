@@ -307,6 +307,8 @@ class Platform extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const platformRoute = config.api.getUriPrefix() + '/platform/' + this.props.match.params.id
     axios.get(platformRoute)
       .then(res => {

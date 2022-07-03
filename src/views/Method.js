@@ -100,6 +100,8 @@ class Method extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const methodRoute = config.api.getUriPrefix() + '/method/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {

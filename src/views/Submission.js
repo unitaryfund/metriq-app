@@ -634,6 +634,8 @@ class Submission extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
     axios.get(submissionRoute)
       .then(subRes => {
