@@ -9,6 +9,7 @@ import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
+import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -43,25 +44,7 @@ class Methods extends React.Component {
     axios.get(config.api.getUriPrefix() + '/method/submissionCount')
       .then(res => {
         const common = [...res.data.data]
-        common.sort(function (a, b) {
-          const keyA = parseInt(a.submissionCount)
-          const keyB = parseInt(b.submissionCount)
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          const key2A = a.name
-          const key2B = b.name
-          if (key2A < key2B) {
-            return -1
-          }
-          if (key2B < key2A) {
-            return 1
-          }
-          return 0
-        })
+        common.sort(sortCommon)
         this.setState({
           isRequestFailed: false,
           requestFailedMessage: '',
@@ -69,39 +52,11 @@ class Methods extends React.Component {
         })
 
         const popular = [...res.data.data]
-        popular.sort(function (a, b) {
-          const keyA = parseInt(a.upvoteTotal)
-          const keyB = parseInt(b.upvoteTotal)
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          const key2A = a.name
-          const key2B = b.name
-          if (key2A < key2B) {
-            return -1
-          }
-          if (key2B < key2A) {
-            return 1
-          }
-          return 0
-        })
+        popular.sort(sortPopular)
         this.setState({ popular: popular })
 
         const alphabetical = res.data.data
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
+        alphabetical.sort(sortAlphabetical)
         this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {

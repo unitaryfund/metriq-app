@@ -7,6 +7,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import ViewHeader from '../components/ViewHeader'
+import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 
 class Tags extends React.Component {
   constructor (props) {
@@ -25,17 +26,7 @@ class Tags extends React.Component {
     axios.get(route)
       .then(res => {
         const common = [...res.data.data]
-        common.sort(function (a, b) {
-          const keyA = a.submissionCount
-          const keyB = b.submissionCount
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          return 0
-        })
+        common.sort(sortCommon)
         this.setState({
           isRequestFailed: false,
           requestFailedMessage: '',
@@ -43,31 +34,11 @@ class Tags extends React.Component {
         })
 
         const popular = [...res.data.data]
-        popular.sort(function (a, b) {
-          const keyA = a.upvoteTotal
-          const keyB = b.upvoteTotal
-          if (keyA < keyB) {
-            return 1
-          }
-          if (keyB < keyA) {
-            return -1
-          }
-          return 0
-        })
+        popular.sort(sortPopular)
         this.setState({ popular: popular })
 
         const alphabetical = res.data.data
-        alphabetical.sort(function (a, b) {
-          const keyA = a.name.toLowerCase()
-          const keyB = b.name.toLowerCase()
-          if (keyA < keyB) {
-            return -1
-          }
-          if (keyB < keyA) {
-            return 1
-          }
-          return 0
-        })
+        alphabetical.sort(sortAlphabetical)
         this.setState({ alphabetical: alphabetical })
       })
       .catch(err => {
