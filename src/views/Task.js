@@ -55,7 +55,10 @@ class Task extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const task = { description: this.state.item.description, parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name } }
+    const task = {
+      description: this.state.item.description,
+      parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name }
+    }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
 
@@ -307,16 +310,42 @@ class Task extends React.Component {
                     tooltip='A metric performance measure of any "method" on this "task"'
                   />
                   <div className='row' style={{ marginTop: '5px' }}>
-                    <span htmlFor='logcheckbox' className='col-md-3 form-field-label metric-chart-label' dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }} />
+                    <span
+                      htmlFor='logcheckbox'
+                      className='col-md-3 form-field-label metric-chart-label'
+                      dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
+                    />
                     <div className='col-md-6'>
-                      <input type='checkbox' id='logcheckbox' name='logcheckbox' className='form-control' checked={this.state.islog} onChange={this.handleToggleLog} />
+                      <input
+                        type='checkbox'
+                        id='logcheckbox'
+                        name='logcheckbox'
+                        className='form-control'
+                        checked={this.state.islog}
+                        onChange={this.handleToggleLog}
+                      />
                     </div>
                   </div>
 
                 </div>
-                <SotaChart data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} />
+                <SotaChart
+                  data={this.state.chartData[this.state.chartKey]}
+                  xLabel='Time' yLabel={this.state.chartKey}
+                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                  key={Math.random()}
+                  isLog={this.state.isLog}
+                />
               </div>
-              <div className='sota-chart-message'><SotaChart isMobile data={this.state.chartData[this.state.chartKey]} xLabel='Time' yLabel={this.state.chartKey} isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]} key={Math.random()} isLog={this.state.isLog} /></div>
+              <div className='sota-chart-message'>
+                <SotaChart
+                  isMobile
+                  data={this.state.chartData[this.state.chartKey]}
+                  xLabel='Time' yLabel={this.state.chartKey}
+                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                  key={Math.random()}
+                  isLog={this.state.isLog}
+                />
+              </div>
             </div>}
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
