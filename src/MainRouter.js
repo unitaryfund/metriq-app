@@ -195,7 +195,7 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Platform/:id'
-          render={(p) => <Platform {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} />}
+          render={(p) => <Platform {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
         />
         <Route component={NotFound} />
       </Switch>

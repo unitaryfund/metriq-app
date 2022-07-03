@@ -105,7 +105,8 @@ class Platform extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const reqBody = {
@@ -124,7 +125,8 @@ class Platform extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const property = {
@@ -259,22 +261,22 @@ class Platform extends React.Component {
   }
 
   handleOnPropertyRemove (propertyId) {
+    if (!this.props.isLoggedIn) {
+      this.props.history.push('/Login')
+      return
+    }
     if (!window.confirm('Are you sure you want to remove this property from the submission?')) {
       return
     }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
-        .then(res => {
-          const platform = res.data.data
-          this.setState({ requestFailedMessage: '', item: platform })
-          this.handleCombineParentProperties(platform)
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      window.location.href = '/Login'
-    }
+    axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
+      .then(res => {
+        const platform = res.data.data
+        this.setState({ requestFailedMessage: '', item: platform })
+        this.handleCombineParentProperties(platform)
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
   }
 
   handleOnClickEditProperty (propertyId) {
@@ -388,11 +390,12 @@ class Platform extends React.Component {
                     data={this.state.item.childPlatforms
                       ? this.state.item.childPlatforms.map(row => ({
                           key: row.id,
-                          name: row.name
+                          name: row.name,
+                          history: this.props.history
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Platform/' + record.key }
+                      onClick () { record.history.push('/Platform/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -441,9 +444,18 @@ class Platform extends React.Component {
                       key: 'platform',
                       width: 300
                     }]}
-                    data={this.state.parentProperties}
+                    data={this.state.parentProperties.map((property) => {
+                      return {
+                        name: property.name,
+                        type: property.type,
+                        value: property.value,
+                        platform: property.platform,
+                        parentId: this.state.item.parentPlatform.id,
+                        history: this.props.history
+                      }
+                    })}
                     onRow={(record) => ({
-                      onClick () { window.location.href = '/Platform/' + record.key }
+                      onClick () { record.history.push('/Platform/' + record.parentId) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -480,11 +492,12 @@ class Platform extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0
+                      upvoteCount: row.upvoteCount || 0,
+                      history: this.props.history
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { window.location.href = '/Submission/' + record.key }
+                  onClick () { record.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'

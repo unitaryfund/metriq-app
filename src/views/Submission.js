@@ -147,7 +147,8 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     const isModerationReport = (this.state.modalMode === 'Moderation')
@@ -378,7 +379,8 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      window.location.href = '/Login'
+      this.props.history.push('/Login')
+      return
     }
 
     if (this.state.modalMode === 'Task') {

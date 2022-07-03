@@ -86,9 +86,7 @@ class Password extends React.Component {
     }
 
     axios.post(config.api.getUriPrefix() + '/user/password', request)
-      .then(res => {
-        window.location.href = '/'
-      })
+      .then(() => this.props.history.push('/'))
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
