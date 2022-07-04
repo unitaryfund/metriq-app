@@ -1,41 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-class PasswordVisibleControlRow extends React.Component {
-  constructor (props) {
-    super(props)
+const PasswordVisibleControlRow = (props) => {
+  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
 
-    this.state = {
-      value: this.props.defaultValue ? this.props.defaultValue : ''
-    }
-
-    this.handleOnFieldChange = this.handleOnFieldChange.bind(this)
-  }
-
-  handleOnFieldChange (event) {
+  const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
     const fieldValue = event.target.checked
-    this.setState({ value: fieldValue })
-    this.props.onChange(fieldName, fieldValue)
+    if (fieldValue !== value) {
+      if (props.onChange) {
+        props.onChange(fieldName, fieldValue)
+      }
+      setValue(fieldValue)
+    }
   }
 
-  render () {
-    return (
-      <div className='row'>
-        <div className='col text-center'>
-          <input
-            id={this.props.inputName}
-            name={this.props.inputName}
-            className='password-visible-checkbox'
-            type='checkbox'
-            checked={this.props.defaultValue}
-            onChange={this.handleOnFieldChange}
-          />&nbsp;
-          <label htmlFor={this.props.inputName}>Show Password</label>
-        </div>
+  return (
+    <div className='row'>
+      <div className='col text-center'>
+        <input
+          id={props.inputName}
+          name={props.inputName}
+          checked={props.defaultValue}
+          className='password-visible-checkbox'
+          type='checkbox'
+          onChange={handleOnFieldChange}
+        />&nbsp;
+        <label htmlFor={props.inputName}>Show Password</label>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default PasswordVisibleControlRow

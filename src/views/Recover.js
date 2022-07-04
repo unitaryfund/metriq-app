@@ -4,6 +4,9 @@ import config from './../config'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
@@ -20,7 +23,6 @@ class Recover extends React.Component {
       password: '',
       passwordConfirm: '',
       isPasswordMatch: true,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -86,10 +88,10 @@ class Recover extends React.Component {
     axios.post(config.api.getUriPrefix() + '/password', request)
       .then(res => {
         this.props.onLogin()
-        window.location.href = '/'
+        this.props.history.push('/')
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -97,22 +99,14 @@ class Recover extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Account Recovery</h4></header>
+        <ViewHeader>Account Recovery</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>You can log in with either your username or email for your account, with your password.</b></span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>If you have forgotten your password,</b> enter either your username or account email below, and your new password. If your account recovery link is valid, your password will be changed, and you will be redirected to the homepage.</span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <b>You can log in with either your username or email for your account, with your password.</b><br />
+          </FormFieldAlertRow>
+          <FormFieldAlertRow>
+            <b>If you have forgotten your password,</b> enter either your username or account email below, and your new password. If your account recovery link is valid, your password will be changed, and you will be redirected to the homepage.<br />
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='username' inputType='text' label='Username'
             defaultValue={this.props.match.params.username}
@@ -132,19 +126,14 @@ class Recover extends React.Component {
             onChange={this.handleOnChangePasswordConfirm}
             validRegex={passwordValidRegex}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
-            </div>
-          </div>
+
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' />
+          </FormFieldWideRow>
         </form>
       </div>
     )

@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
+import axios from 'axios'
+import React, { useState } from 'react'
+import config from './config'
 import Home from './views/Home'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
@@ -25,68 +28,90 @@ import Task from './views/Task'
 import Platform from './views/Platform'
 import NotFound from './views/NotFound'
 import UserGuidelines from './views/UserGuidelines'
+import MainNavbar from './components/MainNavbar'
 
 const MainRouter = (props) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const handleLogin = () => {
+    setIsLoggedIn(true)
+  }
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+  }
+
+  axios.get(config.api.getUriPrefix() + '/user')
+    .then(res => {
+      handleLogin()
+    })
+    .catch(err => {
+      if (!err || !err.response || err.response.status === 401) {
+        handleLogout()
+      }
+    })
+
   return (
     <Router>
+      <MainNavbar isLoggedIn={isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>} />
       <Switch>
         <Route
           exact
           path='/'
         >
-          <Home isLoggedIn={props.isLoggedIn} />
+          <Home isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Methods'
         >
-          <Methods isLoggedIn={props.isLoggedIn} />
+          <Methods isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Tasks'
         >
-          <Tasks isLoggedIn={props.isLoggedIn} />
+          <Tasks isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Platforms'
         >
-          <Platforms isLoggedIn={props.isLoggedIn} />
+          <Platforms isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Tags'
         >
-          <Tags isLoggedIn={props.isLoggedIn} />
+          <Tags isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Login/:next'
-          render={p => props.isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <LogIn {...props} next={p.match.params.next} />}
+          render={p => isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <LogIn {...props} onLogin={handleLogin} next={p.match.params.next} />}
         />
         <Route
           exact
           path='/Login'
         >
-          {props.isLoggedIn ? <Redirect to='/' /> : <LogIn onLogin={props.onLogin} />}
+          {isLoggedIn ? <Redirect to='/' /> : <LogIn onLogin={handleLogin} />}
         </Route>
         <Route
           exact
           path='/Register/:next'
-          render={p => props.isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <Register {...props} />}
+          render={p => isLoggedIn ? <Redirect to={'/' + decodeURIComponent(p.match.params.next)} /> : <Register {...props} />}
         />
         <Route
           exact
           path='/Register'
         >
-          {props.isLoggedIn ? <Redirect to='/' /> : <Register onLogin={props.onLogin} />}
+          {isLoggedIn ? <Redirect to='/' /> : <Register onLogin={handleLogin} />}
         </Route>
         <Route
           exact
           path='/Delete'
         >
-          {props.isLoggedIn ? <Delete isLoggedIn onLogout={props.onLogout} /> : <Redirect to='/Login' />}
+          {isLoggedIn ? <Delete isLoggedIn onLogout={handleLogout} /> : <Redirect to='/Login' />}
         </Route>
         <Route
           exact
@@ -96,7 +121,7 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Recover/:username/:uuid'
-          render={(p) => <Recover {...p} onLogin={props.onLogin} />}
+          render={(p) => <Recover {...p} onLogin={handleLogin} />}
         />
         <Route
           exact
@@ -126,7 +151,7 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/AddSubmission'
-          render={(p) => <AddSubmission {...p} isLoggedIn={props.isLoggedIn} />}
+          render={(p) => <AddSubmission {...p} isLoggedIn={isLoggedIn} />}
         />
         <Route
           exact
@@ -151,32 +176,32 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Tag/:tag'
-          render={(p) => <Home {...p} onLogin={props.onLogin} />}
+          render={(p) => <Home {...p} onLogin={handleLogin} />}
         />
         <Route
           exact
           path='/Submission/:id'
-          render={(p) => <Submission {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+          render={(p) => <Submission {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} />}
         />
         <Route
           exact
           path='/User/:userId/Submissions'
-          render={(p) => <SubmissionsPublic {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+          render={(p) => <SubmissionsPublic {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} />}
         />
         <Route
           exact
           path='/Method/:id'
-          render={(p) => <Method {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} key={Math.random()} />}
+          render={(p) => <Method {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
         />
         <Route
           exact
           path='/Task/:id'
-          render={(p) => <Task {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} key={Math.random()} />}
+          render={(p) => <Task {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
         />
         <Route
           exact
           path='/Platform/:id'
-          render={(p) => <Platform {...p} isLoggedIn={props.isLoggedIn} onLogin={props.onLogin} />}
+          render={(p) => <Platform {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
         />
         <Route component={NotFound} />
       </Switch>

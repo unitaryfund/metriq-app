@@ -5,15 +5,16 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import Commento from '../components/Commento'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import TooltipTrigger from '../components/TooltipTrigger'
+import SocialShareIcons from '../components/SocialShareIcons'
+import { sortByCounts } from '../components/SortFunctions'
 
 library.add(faEdit)
 
@@ -21,7 +22,6 @@ class Method extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isRequestFailed: false,
       requestFailedMessage: '',
       showEditModal: false,
       method: { description: '', parentMethod: 0 },
@@ -101,30 +101,14 @@ class Method extends React.Component {
   }
 
   componentDidMount () {
+    window.scrollTo(0, 0)
+
     const methodRoute = config.api.getUriPrefix() + '/method/' + this.props.match.params.id
     axios.get(methodRoute)
       .then(res => {
         const method = res.data.data
-        method.childMethods.sort(function (a, b) {
-          const rca = parseInt(a.resultCount)
-          const rcb = parseInt(b.resultCount)
-          if (rca > rcb) {
-            return -1
-          }
-          if (rcb > rca) {
-            return 1
-          }
-          const tna = a.name.toLowerCase()
-          const tnb = b.name.toLowerCase()
-          if (tna < tnb) {
-            return -1
-          }
-          if (tnb < tna) {
-            return 1
-          }
-          return 0
-        })
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', item: method })
+        method.childMethods.sort(sortByCounts)
+        this.setState({ requestFailedMessage: '', item: method })
 
         const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
         axios.get(methodNamesRoute)
@@ -132,14 +116,14 @@ class Method extends React.Component {
             let methods = [...res.data.data]
             this.handleTrimMethods(method.id, methods)
             methods = [{ id: 0, name: '(None)' }, ...methods]
-            this.setState({ isRequestFailed: false, requestFailedMessage: '', allMethodNames: methods })
+            this.setState({ requestFailedMessage: '', allMethodNames: methods })
           })
           .catch(err => {
-            this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -147,31 +131,18 @@ class Method extends React.Component {
     return (
       <div id='metriq-main-content'>
         <div className='container submission-detail-container'>
-          <div className='row'>
-            <div className='col-md-12'>
-              <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-              <div className='submission-description'>
-                {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
-              </div>
+          <FormFieldWideRow>
+            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
+            <div className='submission-description'>
+              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Edit method</Tooltip>}>
-                <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Facebook</Tooltip>}>
-                <FacebookShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
-                  <FacebookIcon size={32} />
-                </FacebookShareButton>
-              </OverlayTrigger>
-              <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Share via Twitter</Tooltip>}>
-                <TwitterShareButton url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id}>
-                  <TwitterIcon size={32} />
-                </TwitterShareButton>
-              </OverlayTrigger>
-            </div>
-          </div>
+          </FormFieldWideRow>
+          <FormFieldWideRow>
+            <TooltipTrigger message='Edit method'>
+              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            </TooltipTrigger>
+            <SocialShareIcons url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id} />
+          </FormFieldWideRow>
           <br />
           {this.state.item.parentMethod &&
             <div className='row'>
@@ -199,11 +170,11 @@ class Method extends React.Component {
                       ? this.state.item.childMethods.map(row => ({
                           key: row.id,
                           name: row.name,
-                          props: this.props
+                          history: this.props.history
                         }))
                       : []}
                     onRow={(record) => ({
-                      onClick () { record.props.history.push('/Method/' + record.key) }
+                      onClick () { record.history.push('/Method/' + record.key) }
                     })}
                     tableLayout='auto'
                     rowClassName='link'
@@ -242,23 +213,21 @@ class Method extends React.Component {
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
                       upvoteCount: row.upvoteCount || 0,
-                      props: this.props
+                      history: this.props.history
                     }))
                   : []}
                 onRow={(record) => ({
-                  onClick () { record.props.history.push('/Submission/' + record.key) }
+                  onClick () { record.history.push('/Submission/' + record.key) }
                 })}
                 tableLayout='auto'
                 rowClassName='link'
               />
             </div>
           </div>
-          <div className='row'>
-            <div className='col-md-12'>
-              <hr />
-              <Commento id={'method-' + toString(this.state.item.id)} />
-            </div>
-          </div>
+          <FormFieldWideRow>
+            <hr />
+            <Commento id={'method-' + toString(this.state.item.id)} />
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

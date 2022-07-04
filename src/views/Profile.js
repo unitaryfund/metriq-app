@@ -7,14 +7,16 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import { Button, Modal } from 'react-bootstrap'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: { affiliation: '', name: ''},
+      data: { affiliation: '', name: '' },
       showEditModal: false,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -44,12 +46,11 @@ class Profile extends React.Component {
         this.setState({
           data: res.data.data,
           showEditModal: false,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ showEditModal: false, isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ showEditModal: false, requestFailedMessage: ErrorHandler(err) })
       })
   }
 
@@ -58,19 +59,18 @@ class Profile extends React.Component {
       .then(res => {
         this.setState({
           data: res.data.data,
-          isRequestFailed: false,
           requestFailedMessage: ''
         })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Profile</h4></header>
+        <ViewHeader>Profile</ViewHeader>
         <br />
         <div>
           <FieldRow fieldName='username' label='Username' value={this.state.data.username} />
@@ -80,13 +80,9 @@ class Profile extends React.Component {
           <FieldRow fieldName='name' label='Name' value={this.state.data.name} />
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientTokenCreated ? 'Active' : 'None'} />
           <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
           <br />
           <div className='row'>
             <div className='col-md-12 text-center'>
@@ -94,23 +90,17 @@ class Profile extends React.Component {
             </div>
           </div>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
+          </FormFieldWideRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
+          </FormFieldWideRow>
         </div>
         <Modal
           show={this.state.showEditModal}

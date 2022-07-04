@@ -5,6 +5,9 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
 import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+import ViewHeader from '../components/ViewHeader'
 
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
@@ -21,7 +24,6 @@ class Password extends React.Component {
       password: '',
       passwordConfirm: '',
       isPasswordMatch: true,
-      isRequestFailed: false,
       requestFailedMessage: ''
     }
 
@@ -84,11 +86,9 @@ class Password extends React.Component {
     }
 
     axios.post(config.api.getUriPrefix() + '/user/password', request)
-      .then(res => {
-        window.location.href = '/'
-      })
+      .then(() => this.props.history.push('/'))
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
     event.preventDefault()
   }
@@ -96,15 +96,11 @@ class Password extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <header><h4>Change Password</h4></header>
+        <ViewHeader>Change Password</ViewHeader>
         <form onSubmit={this.handleOnSubmit}>
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <span><b>Enter your current password below, then enter and confirm your new password.</b></span><br />
-            </div>
-            <div className='col-md-3' />
-          </div>
+          <FormFieldAlertRow>
+            <b>Enter your current password below, then enter and confirm your new password.</b><br />
+          </FormFieldAlertRow>
           <FormFieldRow
             inputName='oldPassword' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Current Password'
             validatorMessage={passwordRequiredError}
@@ -127,19 +123,13 @@ class Password extends React.Component {
             inputName='isPasswordVisible'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-3' />
-            <div className='col-md-6'>
-              <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
-              <FormFieldValidator invalid={this.state.isRequestFailed} message={this.state.requestFailedMessage} />
-            </div>
-            <div className='col-md-3' />
-          </div>
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
-            </div>
-          </div>
+          <FormFieldAlertRow>
+            <FormFieldValidator invalid={!this.state.isPasswordMatch} message={passwordMismatchError} /> <br />
+            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+          </FormFieldAlertRow>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' />
+          </FormFieldWideRow>
         </form>
       </div>
     )
