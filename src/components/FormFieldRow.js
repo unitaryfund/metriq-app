@@ -5,7 +5,7 @@ import FormFieldWideRow from './FormFieldWideRow'
 import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
-  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
+  const [value, setValue] = useState(props.value ? props.value : (props.defaultValue ? props.defaultValue : ''))
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
