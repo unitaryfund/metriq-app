@@ -13,7 +13,13 @@ const FormFieldSelectRow = (props) => {
     commonOptions = options
   }
 
-  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
+  const [value, setValue] = useState(props.value
+    ? props.value
+    : (props.defaultValue
+        ? props.defaultValue
+        : options.length && !props.isNullDefault
+          ? options[0].id
+          : ''))
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
