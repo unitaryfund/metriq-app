@@ -392,6 +392,11 @@ class Submission extends React.Component {
         if (!task.description) {
           task.description = ''
         }
+        if (!task.parentTask) {
+          const options = this.state.allTaskNames
+          options.sort((a, b) => (a.top < b.top) ? 1 : -1)
+          task.parentTask = options.filter(x => x.top === 1)[0].id
+        }
         axios.post(config.api.getUriPrefix() + '/task', task)
           .then(res => {
             window.location.reload()

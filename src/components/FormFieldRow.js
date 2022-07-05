@@ -77,10 +77,10 @@ const FormFieldRow = (props) => {
       {props.imageUrl
         ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
         : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
-    {imagePreviewUrl && isValid &&
-      <FormFieldWideRow className='text-center'>
-        <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
-      </FormFieldWideRow>}
+      {imagePreviewUrl && isValid &&
+        <FormFieldWideRow className='text-center'>
+          <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
+        </FormFieldWideRow>}
     </div>
   )
 }
