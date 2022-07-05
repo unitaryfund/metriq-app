@@ -62,6 +62,24 @@ const MainRouter = (props) => {
         </Route>
         <Route
           exact
+          path='/Trending'
+        >
+          <Home isLoggedIn={isLoggedIn} tabKey='Trending' />
+        </Route>
+        <Route
+          exact
+          path='/Popular'
+        >
+          <Home isLoggedIn={isLoggedIn} tabKey='Popular' />
+        </Route>
+        <Route
+          exact
+          path='/Latest'
+        >
+          <Home isLoggedIn={isLoggedIn} tabKey='Latest' />
+        </Route>
+        <Route
+          exact
           path='/Methods'
         >
           <Methods isLoggedIn={isLoggedIn} />
