@@ -1450,8 +1450,8 @@ class Submission extends React.Component {
                       value={this.state.submission.thumbnailUrl}
                       onChange={(field, value) => this.handleOnChange('submission', field, value)}
                     />
-                    <FormFieldAlertRow>
-                      <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                    <FormFieldAlertRow className='text-center'>
+                      <b>The image URL is loaded as a thumbnail, for the submission. (For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
                     </FormFieldAlertRow>
                     <FormFieldRow
                       inputName='description' inputType='textarea' label='Description' rows='12'
