@@ -39,9 +39,9 @@ class EditDetails extends React.Component {
     }
 
     const request = {
-      newEmail: this.state.newEmail,
-      newAffiliation: this.state.newAffiliation,
-      newName: this.state.newName
+      email: this.state.newEmail,
+      affiliation: this.state.newAffiliation,
+      name: this.state.newName
     }
 
     axios.post(config.api.getUriPrefix() + '/user/editDetails', request)
