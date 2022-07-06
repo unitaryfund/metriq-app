@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import SubmissionScroll from '../components/SubmissionScroll'
 import ViewHeader from '../components/ViewHeader'
 
@@ -8,6 +8,7 @@ import ViewHeader from '../components/ViewHeader'
 const DEFAULT_INITIAL_TAB = 'Trending'
 
 const Home = (props) => {
+  const { tag } = useParams()
   const history = useHistory()
   const [activeTab, setActiveTab] = useState(DEFAULT_INITIAL_TAB)
 
@@ -15,15 +16,15 @@ const Home = (props) => {
     window.scrollTo(0, 0)
 
     if (!props.tabKey) {
-      history.push(`/${DEFAULT_INITIAL_TAB}`, { replace: true })
+      history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/${DEFAULT_INITIAL_TAB}`)
     }
     setActiveTab(props.tabKey)
-  }, [props.tabKey, history])
+  }, [props, history, tag])
 
   // console.log('initial tab : ' + init);
   const toggle = (tab) => {
     if (props.tabKey !== tab) {
-      history.push(`/${tab}`, { replace: true })
+      history.replace(tag ? `/Tag/${tag}/${tab}` : `/${tab}`)
     }
     setActiveTab(tab)
   }
