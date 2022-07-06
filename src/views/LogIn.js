@@ -9,11 +9,10 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
+import { usernameValidRegex } from '../components/ValidationRegex'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
-
-const usernameValidRegex = /^(?!\s*$).+/
 
 class LogIn extends React.Component {
   constructor (props) {

@@ -7,13 +7,11 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
+import { passwordValidRegex, usernameValidRegex } from '../components/ValidationRegex'
 
 const usernameMissingError = 'Username cannot be blank.'
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
-
-const usernameValidRegex = /^(?!\s*$).+/
-const passwordValidRegex = /.{12,}/
 
 class Recover extends React.Component {
   constructor (props) {

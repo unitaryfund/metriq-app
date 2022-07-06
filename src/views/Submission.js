@@ -18,13 +18,10 @@ import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
+import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
-const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-const nameRegex = /.{1,}/
-const metricValueRegex = /(^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$)|([+-]?\d(\.\d+)?[Ee][+-]?\d+)/
-const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
 const sampleSizeRegex = /^[0-9]+$/
 
 class Submission extends React.Component {
@@ -602,7 +599,7 @@ class Submission extends React.Component {
 
     if (this.state.modalMode === 'Task') {
       if (this.state.showAccordion) {
-        if (!nameRegex.test(this.state.task.name)) {
+        if (!nonblankRegex.test(this.state.task.name)) {
           return false
         }
       } else if (!this.state.taskId) {
@@ -610,7 +607,7 @@ class Submission extends React.Component {
       }
     } else if (this.state.modalMode === 'Method') {
       if (this.state.showAccordion) {
-        if (!nameRegex.test(this.state.method.name)) {
+        if (!nonblankRegex.test(this.state.method.name)) {
           return false
         }
       } else if (!this.state.methodId) {
@@ -618,14 +615,14 @@ class Submission extends React.Component {
       }
     } else if (this.state.modalMode === 'Platform') {
       if (this.state.showAccordion) {
-        if (!nameRegex.test(this.state.platform.name)) {
+        if (!nonblankRegex.test(this.state.platform.name)) {
           return false
         }
       } else if (!this.state.platformId) {
         return false
       }
     } else if (this.state.modalMode === 'Result') {
-      if (!nameRegex.test(this.state.result.metricName)) {
+      if (!nonblankRegex.test(this.state.result.metricName)) {
         return false
       }
       if (!metricValueRegex.test(this.state.result.metricValue)) {
@@ -1068,7 +1065,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={nameRegex}
+                          validRegex={nonblankRegex}
                           tooltip='Short name of new method'
                         /><br />
                         <FormFieldRow
@@ -1123,7 +1120,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={nameRegex}
+                          validRegex={nonblankRegex}
                           tooltip='Short name of new task'
                         /><br />
                         <FormFieldRow
@@ -1178,7 +1175,7 @@ class Submission extends React.Component {
                           inputType='text'
                           label='Name'
                           onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nameRegex}
+                          validRegex={nonblankRegex}
                           tooltip='Short name of new platform'
                         /><br />
                         <FormFieldRow
@@ -1240,7 +1237,7 @@ class Submission extends React.Component {
                   inputName='metricName' label='Metric name'
                   value={this.state.result.metricName}
                   onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  validRegex={nameRegex}
+                  validRegex={nonblankRegex}
                   options={this.state.metricNames}
                   tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
                 /><br />
@@ -1290,7 +1287,7 @@ class Submission extends React.Component {
                 <FormFieldTypeaheadRow
                   inputName='tag' label='Tag'
                   onChange={(field, value) => this.handleOnChange('', field, value)}
-                  validRegex={nameRegex}
+                  validRegex={nonblankRegex}
                   options={this.state.tagNames.map(item => item.name)}
                   tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
                 /><br />
