@@ -8,12 +8,11 @@ import PasswordVisibleControlRow from '../components/PasswordVisibleControlRow'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
+import { passwordValidRegex } from '../components/ValidationRegex'
 
 const passwordInvalidError = 'Password is too short.'
 const passwordMismatchError = 'Confirm does not match.'
 const passwordRequiredError = 'Required'
-
-const passwordValidRegex = /.{12,}/
 
 class Password extends React.Component {
   constructor (props) {
