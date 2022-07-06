@@ -19,6 +19,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
+import SubmissionRefsModal from '../components/SubmissionRefsModal'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -630,10 +631,6 @@ class Submission extends React.Component {
       }
     }
 
-    if (this.state.isValidated) {
-      this.setState({ isValidated: true })
-    }
-
     return true
   }
 
@@ -1021,6 +1018,12 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
+        <SubmissionRefsModal
+          show={this.state.showAddModal}
+          onHide={this.handleHideAddModal}
+          modalMode={this.state.modalMode}
+          loginLinkId={this.props.match.params.id}
+        />
         <Modal
           show={this.state.showAddModal} onHide={this.handleHideAddModal}
           size='lg'
