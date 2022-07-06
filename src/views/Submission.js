@@ -392,6 +392,11 @@ class Submission extends React.Component {
         if (!task.description) {
           task.description = ''
         }
+        if (!task.parentTask) {
+          const options = this.state.allTaskNames
+          options.sort((a, b) => (a.top < b.top) ? 1 : -1)
+          task.parentTask = options.filter(x => x.top === 1)[0].id
+        }
         axios.post(config.api.getUriPrefix() + '/task', task)
           .then(res => {
             window.location.reload()
@@ -1450,8 +1455,8 @@ class Submission extends React.Component {
                       value={this.state.submission.thumbnailUrl}
                       onChange={(field, value) => this.handleOnChange('submission', field, value)}
                     />
-                    <FormFieldAlertRow>
-                      <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                    <FormFieldAlertRow className='text-center'>
+                      <b>The image URL is loaded as a thumbnail, for the submission. (For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
                     </FormFieldAlertRow>
                     <FormFieldRow
                       inputName='description' inputType='textarea' label='Description' rows='12'

@@ -5,7 +5,7 @@ import FormFieldWideRow from './FormFieldWideRow'
 import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
-  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
+  const [value, setValue] = useState(props.value ? props.value : (props.defaultValue ? props.defaultValue : ''))
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
@@ -77,10 +77,10 @@ const FormFieldRow = (props) => {
       {props.imageUrl
         ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
         : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
-    {imagePreviewUrl && isValid &&
-      <FormFieldWideRow className='text-center'>
-        <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
-      </FormFieldWideRow>}
+      {imagePreviewUrl && isValid &&
+        <FormFieldWideRow className='text-center'>
+          <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
+        </FormFieldWideRow>}
     </div>
   )
 }
