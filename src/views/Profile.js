@@ -84,11 +84,9 @@ class Profile extends React.Component {
             <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <br />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <Link to='/EditDetails'><button className='btn btn-primary'>Edit Details</button></Link>
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <Link to='/EditDetails'><Button variant='primary'>Edit Details</Button></Link>
+          </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
             <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>

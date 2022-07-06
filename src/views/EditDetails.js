@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import config from '../config'
 import FormFieldRow from '../components/FormFieldRow'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 import ErrorHandler from '../components/ErrorHandler'
 
 const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -71,11 +72,9 @@ class EditDetails extends React.Component {
             inputName='newAffiliation' inputType='text' label='Affiliation'
             onChange={this.handleOnChange}
           />
-          <div className='row'>
-            <div className='col-md-12 text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' />
-            </div>
-          </div>
+          <FormFieldWideRow className='text-center'>
+            <input className='btn btn-primary' type='submit' value='Submit' />
+          </FormFieldWideRow>
         </form>
       </div>
     )
