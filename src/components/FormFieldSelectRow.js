@@ -15,7 +15,13 @@ const FormFieldSelectRow = (props) => {
     commonOptions = options
   }
 
-  const [value, setValue] = useState(props.defaultValue ? props.defaultValue : options[0].id)
+  const [value, setValue] = useState(props.value
+    ? props.value
+    : (props.defaultValue
+        ? props.defaultValue
+        : options.length && !props.isNullDefault
+          ? options[0].id
+          : ''))
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
@@ -46,14 +52,14 @@ const FormFieldSelectRow = (props) => {
         <TooltipTrigger message={props.tooltip}>
           <span
             htmlFor={props.inputName}
-            className={props.labelClass ? 'col-md-3 form-field-label ' + props.labelClass : 'col-md-3 form-field-label'}
+            className={`col-md-3 form-field-label ${props.labelClass ? props.labelClass : ''}`}
             dangerouslySetInnerHTML={{ __html: props.label }}
           />
         </TooltipTrigger>}
       {!props.tooltip &&
         <label
           htmlFor={props.inputName}
-          className={props.labelClass ? 'col-md-3 form-field-label ' + props.labelClass : 'col-md-3 form-field-label'}
+          className={`col-md-3 form-field-label ${props.labelClass ? props.labelClass : ''}`}
           dangerouslySetInnerHTML={{ __html: props.label }}
         />}
       <div className='col-md-6'>

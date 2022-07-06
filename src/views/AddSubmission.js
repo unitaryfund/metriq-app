@@ -13,12 +13,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { Redirect } from 'react-router-dom'
+import { nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
 
 library.add(faPlus)
 
 const requiredFieldMissingError = 'Required field.'
-
-const nonblankRegex = /(.|\s)*\S(.|\s)*/
 
 class AddSubmission extends React.Component {
   constructor (props) {
@@ -58,16 +57,11 @@ class AddSubmission extends React.Component {
     this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
     this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
+    this.validURL = this.validURL.bind(this)
   }
 
   validURL (str) {
-    const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
-    return !!pattern.test(str)
+    return !!urlValidRegex.test(str)
   }
 
   handleOnChange (field, value) {

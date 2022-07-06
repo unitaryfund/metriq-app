@@ -7,9 +7,9 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
+import { usernameValidRegex } from '../components/ValidationRegex'
 
 const usernameMissingError = 'Username cannot be blank.'
-const usernameValidRegex = /^(?!\s*$).+/
 
 class Forgot extends React.Component {
   constructor (props) {

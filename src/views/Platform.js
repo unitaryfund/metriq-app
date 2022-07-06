@@ -14,11 +14,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
+import { intRegex, nonblankRegex, numberRegex } from '../components/ValidationRegex'
 
 const defaultRegex = /.+/
-const nameRegex = /.{1,}/
-const intRegex = /^([+-]?[1-9]\d*|0)$/
-const numberRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
 // bool is handled by checkbox FormFieldRow
 // datetime is handled by date/time picker FormFieldRow
 // date is handled by date-only picker FormFieldRow
@@ -656,7 +654,7 @@ class Platform extends React.Component {
                               inputType='text'
                               label='Name'
                               onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              validRegex={nameRegex}
+                              validRegex={nonblankRegex}
                               tooltip='Short name of new property'
                             /><br />
                             <FormFieldRow
