@@ -1046,22 +1046,22 @@ class Submission extends React.Component {
           isAllValid={this.isAllValid}
         />
         <Modal
-          show={this.state.showAddModal && (this.state.modalMode === 'Result' || this.state.modalMode === 'Tag')}
+          show={this.state.showAddModal && (this.state.modalMode === 'Result')}
           onHide={this.handleHideAddModal}
           size='lg'
           aria-labelledby='contained-modal-title-vcenter'
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title>{(this.state.modalMode === 'Result' && this.state.result.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>
+            <Modal.Title>{this.state.result.id ? 'Edit' : 'Add'} Result</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {(this.state.modalMode === 'Result') && ((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
+            {((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
               <span>
                 A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
               </span>}
-            {(this.state.modalMode === 'Result') && (this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
-              <span>a
+            {(this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
+              <span>
                 <FormFieldSelectRow
                   inputName='task' label='Task'
                   options={this.state.item.tasks}
@@ -1133,21 +1133,34 @@ class Submission extends React.Component {
                   tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
                 />
               </span>}
-            {(this.state.modalMode === 'Tag') &&
-              <span>
-                <FormFieldTypeaheadRow
-                  inputName='tag' label='Tag'
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  validRegex={nonblankRegex}
-                  options={this.state.tagNames.map(item => item.name)}
-                  tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
-                /><br />
-              </span>}
-            {(this.state.modalMode !== 'Login') && <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>}
+            <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
           </Modal.Body>
           <Modal.Footer>
-            {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideAddModal}>Cancel</Button>}
-            {(this.state.modalMode !== 'Login') && <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>}
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal
+          show={this.state.showAddModal && (this.state.modalMode === 'Tag')}
+          onHide={this.handleHideAddModal}
+          size='lg'
+          aria-labelledby='contained-modal-title-vcenter'
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Add Tag</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <FormFieldTypeaheadRow
+              inputName='tag' label='Tag'
+              onChange={(field, value) => this.handleOnChange('', field, value)}
+              validRegex={nonblankRegex}
+              options={this.state.tagNames.map(item => item.name)}
+              tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
+            /><br />
+            <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
           </Modal.Footer>
         </Modal>
         <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
