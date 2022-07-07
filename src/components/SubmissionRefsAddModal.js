@@ -8,7 +8,7 @@ import { nonblankRegex } from './ValidationRegex'
 
 const SubmissionRefsAddModal = (props) => {
   const [isValidated, setIsValidated] = useState(false)
-  const [showAccordion, setShowAccordion] = useState(false)
+  const [showAccordion, setShowAccordion] = useState(!!props.isNewOnly)
   const key = props.modalMode === 'Task'
     ? 'task'
     : props.modalMode === 'Method'
@@ -37,24 +37,28 @@ const SubmissionRefsAddModal = (props) => {
           </span>}
         {(props.modalMode !== 'Login') &&
           <span>
-            <FormFieldSelectRow
-              inputName={`${key}Id`}
-              label={props.modalMode}
-              options={props.filteredNames}
-              onChange={(field, value) => props.handleOnChange('', field, value)}
-              tooltip={(props.modalMode === 'Method')
-                ? 'A method used in or by this submission, (to perform a task)'
-                : 'A task performed in or by this submission, (using a method)'}
-              disabled={showAccordion}
-            /><br />
-            Not in the list?<br />
-            <Accordion defaultActiveKey='0'>
+            {!props.isNewOnly &&
+              <span>
+                <FormFieldSelectRow
+                  inputName={`${key}Id`}
+                  label={props.modalMode}
+                  options={props.filteredNames}
+                  onChange={(field, value) => props.handleOnChange('', field, value)}
+                  tooltip={(props.modalMode === 'Method')
+                    ? 'A method used in or by this submission, (to perform a task)'
+                    : 'A task performed in or by this submission, (using a method)'}
+                  disabled={showAccordion}
+                /><br />
+                Not in the list?<br />
+              </span>}
+            <Accordion defaultActiveKey={props.isNewOnly ? '1' : '0'}>
               <Card>
-                <Card.Header>
-                  <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={handleAccordionToggle}>
-                    <FontAwesomeIcon icon='plus' /> Create a new {key}.
-                  </Accordion.Toggle>
-                </Card.Header>
+                {!props.isNewOnly &&
+                  <Card.Header>
+                    <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={handleAccordionToggle}>
+                      <FontAwesomeIcon icon='plus' /> Create a new {key}.
+                    </Accordion.Toggle>
+                  </Card.Header>}
                 <Accordion.Collapse eventKey='1'>
                   <Card.Body>
                     <FormFieldRow
