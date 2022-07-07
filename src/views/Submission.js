@@ -8,7 +8,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import TooltipTrigger from '../components/TooltipTrigger'
-import { Accordion, Button, Card, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,7 +19,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
-import SubmissionRefsModal from '../components/SubmissionRefsModal'
+import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -36,6 +36,8 @@ class Submission extends React.Component {
       bibtexUrl: '',
       thumbnailUrl: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
+      allNames: [],
+      filteredNames: [],
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -318,10 +320,21 @@ class Submission extends React.Component {
   }
 
   handleOnClickAdd (mode) {
+    let allNames = []
+    let filteredNames = []
     if (!this.props.isLoggedIn) {
       mode = 'Login'
+    } else if (mode === 'Task') {
+      allNames = this.state.allTaskNames
+      filteredNames = this.state.taskNames
+    } else if (mode === 'Method') {
+      allNames = this.state.allMethodNames
+      filteredNames = this.state.methodNames
+    } else if (mode === 'Platform') {
+      allNames = this.state.allPlatformNames
+      filteredNames = this.state.platformNames
     }
-    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
+    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false, allNames: allNames, filteredNames: filteredNames })
   }
 
   handleOnClickRemove (mode) {
@@ -1018,202 +1031,37 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
-        <SubmissionRefsModal
-          show={this.state.showAddModal}
+        <SubmissionRefsAddModal
+          show={this.state.showAddModal && (this.state.modalMode === 'Login' ||
+            this.state.modalMode === 'Task' ||
+            this.state.modalMode === 'Method' ||
+            this.state.modalMode === 'Platform')}
           onHide={this.handleHideAddModal}
           modalMode={this.state.modalMode}
           loginLinkId={this.props.match.params.id}
+          allNames={this.state.allNames}
+          filteredNames={this.state.filteredNames}
+          onChange={this.handleOnChange}
+          onSubmit={this.handleAddModalSubmit}
+          isAllValid={this.isAllValid}
         />
         <Modal
-          show={this.state.showAddModal} onHide={this.handleHideAddModal}
+          show={this.state.showAddModal && (this.state.modalMode === 'Result' || this.state.modalMode === 'Tag')}
+          onHide={this.handleHideAddModal}
           size='lg'
           aria-labelledby='contained-modal-title-vcenter'
           centered
         >
-          {(this.state.modalMode === 'Login') &&
-            <Modal.Header closeButton>
-              <Modal.Title>Add</Modal.Title>
-            </Modal.Header>}
-          {(this.state.modalMode !== 'Login') &&
-            <Modal.Header closeButton>
-              <Modal.Title>{(this.state.modalMode === 'Result' && this.state.result.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>
-            </Modal.Header>}
+          <Modal.Header closeButton>
+            <Modal.Title>{(this.state.modalMode === 'Result' && this.state.result.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>
+          </Modal.Header>
           <Modal.Body>
-            {(this.state.modalMode === 'Login') &&
-              <span>
-                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
-              </span>}
-            {(this.state.modalMode === 'Method') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='methodId'
-                  label='Method'
-                  options={this.state.methodNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A method used in or by this submission, (to perform a task)'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new method.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new method'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Long name of new method'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentMethod'
-                          label='Parent method<br/>(if any)'
-                          isNullDefault
-                          options={this.state.allMethodNames}
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Optionally, the new method is a sub-method of a "parent" method.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Long description of new method'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
-            {(this.state.modalMode === 'Task') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='taskId'
-                  label='Task'
-                  options={this.state.taskNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A task performed in or by this submission, (using a method)'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new task.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new task'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='Long name of new task'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentTask'
-                          label='Parent task'
-                          specialOptGrouplabel='Top level categories'
-                          options={this.state.allTaskNames}
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='The new task is a sub-task of a "parent" task.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='Long description of new task'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
-            {(this.state.modalMode === 'Platform') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='platformId'
-                  label='Platform'
-                  options={this.state.platformNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A platform used by a method in this submission'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new platform.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new platform'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='Long name of new platform'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentPlatform'
-                          label='Parent platform<br/>(if any)'
-                          isNullDefault
-                          options={this.state.allPlatformNames}
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='The new platform inherits the properties of its "parent" platform.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='Long description of new platform'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
             {(this.state.modalMode === 'Result') && ((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
               <span>
                 A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
               </span>}
             {(this.state.modalMode === 'Result') && (this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
-              <span>
+              <span>a
                 <FormFieldSelectRow
                   inputName='task' label='Task'
                   options={this.state.item.tasks}
