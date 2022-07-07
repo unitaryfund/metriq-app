@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import config from './../config'
 import FormFieldRow from './FormFieldRow'
 import FormFieldSelectRow from './FormFieldSelectRow'
 import { nonblankRegex } from './ValidationRegex'
 import ErrorHandler from './ErrorHandler'
+
+library.add(faPlus)
 
 const SubmissionRefsAddModal = (props) => {
   const [isValid, setIsValid] = useState(false)
@@ -69,11 +73,6 @@ const SubmissionRefsAddModal = (props) => {
   }
 
   const handleSubmit = () => {
-    if (props.modalMode === 'Login') {
-      this.props.history.push('/Login')
-      return
-    }
-
     if (!showAccordion) {
       axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + item.id, {})
         .then(res => {

@@ -12,7 +12,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
@@ -20,8 +20,9 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
+import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 
-library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
+library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
 
 const sampleSizeRegex = /^[0-9]+$/
 
@@ -111,17 +112,17 @@ class Submission extends React.Component {
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
-    this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
-    this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
-    this.handleOnPlatformRemove = this.handleOnPlatformRemove.bind(this)
-    this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
-    this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleSortNames = this.handleSortNames.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
+    this.handleLoginRedirect = this.handleLoginRedirect.bind(this)
+  }
+
+  handleLoginRedirect () {
+    this.props.history.push('/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id))
   }
 
   handleEditSubmissionDetails () {
@@ -149,7 +150,7 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return
     }
 
@@ -199,113 +200,6 @@ class Submission extends React.Component {
     }
   }
 
-  handleOnTaskRemove (taskId) {
-    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
-        .then(res => {
-          const submission = res.data.data
-          const tasks = [...this.state.allTaskNames]
-          this.handleTrimTasks(submission, tasks)
-          this.setState({ item: submission, taskNames: tasks })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnMethodRemove (methodId) {
-    if (!window.confirm('Are you sure you want to remove this method from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + methodId)
-        .then(res => {
-          const submission = res.data.data
-          const methods = [...this.state.allMethodNames]
-          this.handleSortMethods(methods)
-          this.handleTrimMethods(submission, methods)
-          this.setState({ item: submission, methodNames: methods })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnPlatformRemove (platformId) {
-    if (!window.confirm('Are you sure you want to remove this platform from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + platformId)
-        .then(res => {
-          const submission = res.data.data
-          const platforms = [...this.state.allPlatformNames]
-          this.handleSortPlatforms(platforms)
-          this.handleTrimPlatforms(submission, platforms)
-          this.setState({ item: submission, platformNames: platforms })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnTagRemove (tagName) {
-    if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
-        .then(res => {
-          const submission = res.data.data
-          const tags = [...this.state.allTagNames]
-          this.handleTrimTags(submission, tags)
-          this.setState({ item: submission, tagNames: tags })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnResultRemove (resultId) {
-    if (!window.confirm('Are you sure you want to delete this result?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
-        .then(res => {
-          const rId = res.data.data.id
-          const item = { ...this.state.item }
-          for (let i = 0; i < item.results.length; i++) {
-            if (item.results[i].id === rId) {
-              item.results.splice(i, 1)
-              break
-            }
-          }
-          this.setState({ item: item })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
   handleUpVoteOnClick (event) {
     if (this.props.isLoggedIn) {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/upvote', {})
@@ -316,7 +210,7 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
     }
     event.preventDefault()
   }
@@ -396,7 +290,7 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return
     }
 
@@ -1028,122 +922,12 @@ class Submission extends React.Component {
             <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
           </Modal.Footer>
         </Modal>
-        <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Remove</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {(this.state.modalMode === 'Login') &&
-              <span>
-                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
-              </span>}
-            {(this.state.modalMode === 'Task') &&
-              <span>
-                <b>Attached tasks:</b><br />
-                {(this.state.item.tasks.length > 0) &&
-                  this.state.item.tasks.map(task =>
-                    <div key={task.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {task.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.tasks.length === 0) &&
-                  <span><i>There are no attached tasks.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Method') &&
-              <span>
-                <b>Attached methods:</b><br />
-                {(this.state.item.methods.length > 0) &&
-                  this.state.item.methods.map(method =>
-                    <div key={method.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {method.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnMethodRemove(method.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.methods.length === 0) &&
-                  <span><i>There are no attached methods.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Platform') &&
-              <span>
-                <b>Attached platforms:</b><br />
-                {(this.state.item.platforms.length > 0) &&
-                  this.state.item.platforms.map(platform =>
-                    <div key={platform.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {platform.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnPlatformRemove(platform.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.platforms.length === 0) &&
-                  <span><i>There are no attached platforms.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Result') &&
-              <span>
-                <b>Attached results:</b><br />
-                {(this.state.item.results.length > 0) &&
-                  this.state.item.results.map(result =>
-                    <div key={result.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {result.task.name}, {result.method.name}, {result.metricName}: {result.metricValue}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.results.length === 0) &&
-                  <span><i>There are no attached results.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Tag') &&
-              <span>
-                <b>Attached tags:</b><br />
-                {(this.state.item.tags.length > 0) &&
-                  this.state.item.tags.map(tag =>
-                    <div key={tag.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {tag.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTagRemove(tag.name)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.tags.length === 0) &&
-                  <span><i>There are no attached tags.</i></span>}
-              </span>}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='primary' onClick={this.handleRemoveModalDone}>
-              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <SubmissionRefsDeleteModal
+          show={this.state.showRemoveModal}
+          onHide={this.handleHideRemoveModal}
+          modalMode={this.state.modalMode}
+          submission={this.state.item}
+        />
         <Modal
           show={this.state.showEditModal}
           onHide={this.handleHideEditModal}
