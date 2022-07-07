@@ -46,6 +46,7 @@ class Submission extends React.Component {
       allTaskNames: [],
       allTagNames: [],
       allPlatformNames: [],
+      showAddRefsModal: false,
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
@@ -101,6 +102,7 @@ class Submission extends React.Component {
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
+    this.handleOnClickAddRef = this.handleOnClickAddRef.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
     this.handleOnClickAddResult = this.handleOnClickAddResult.bind(this)
     this.handleOnClickEditResult = this.handleOnClickEditResult.bind(this)
@@ -319,7 +321,7 @@ class Submission extends React.Component {
     event.preventDefault()
   }
 
-  handleOnClickAdd (mode) {
+  handleOnClickAddRef (mode) {
     let allNames = []
     let filteredNames = []
     if (!this.props.isLoggedIn) {
@@ -334,7 +336,11 @@ class Submission extends React.Component {
       allNames = this.state.allPlatformNames
       filteredNames = this.state.platformNames
     }
-    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false, allNames: allNames, filteredNames: filteredNames })
+    this.setState({ showAddRefsModal: true, modalMode: mode, allNames: allNames, filteredNames: filteredNames })
+  }
+
+  handleOnClickAdd (mode) {
+    this.setState({ showAddModal: true, modalMode: mode })
   }
 
   handleOnClickRemove (mode) {
@@ -381,7 +387,7 @@ class Submission extends React.Component {
   }
 
   handleHideAddModal () {
-    this.setState({ showAddModal: false, showAccordion: false })
+    this.setState({ showAddModal: false })
   }
 
   handleHideRemoveModal () {
@@ -394,111 +400,7 @@ class Submission extends React.Component {
       return
     }
 
-    if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordion) {
-        const task = this.state.task
-        if (!task.fullName) {
-          task.fullName = task.name
-        }
-        if (!task.description) {
-          task.description = ''
-        }
-        if (!task.parentTask) {
-          const options = this.state.allTaskNames
-          options.sort((a, b) => (a.top < b.top) ? 1 : -1)
-          task.parentTask = options.filter(x => x.top === 1)[0].id
-        }
-        axios.post(config.api.getUriPrefix() + '/task', task)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
-          .then(res => {
-            const submission = res.data.data
-            const tasks = [...this.state.taskNames]
-            for (let j = 0; j < tasks.length; j++) {
-              if (this.state.taskId === tasks[j].id) {
-                tasks.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', taskNames: tasks, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordion) {
-        const method = this.state.method
-        if (!method.fullName) {
-          method.fullName = method.name
-        }
-        if (!method.description) {
-          method.description = ''
-        }
-        axios.post(config.api.getUriPrefix() + '/method', method)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
-          .then(res => {
-            const submission = res.data.data
-            const methods = [...this.state.methodNames]
-            for (let j = 0; j < methods.length; j++) {
-              if (this.state.methodId === methods[j].id) {
-                methods.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', methodNames: methods, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Platform') {
-      if (this.state.showAccordion) {
-        const platform = this.state.platform
-        if (!platform.fullName) {
-          platform.fullName = platform.name
-        }
-        if (!platform.description) {
-          platform.description = ''
-        }
-        axios.post(config.api.getUriPrefix() + '/platform', platform)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + this.state.platformId, {})
-          .then(res => {
-            const submission = res.data.data
-            const platforms = [...this.state.platformNames]
-            for (let j = 0; j < platforms.length; j++) {
-              if (this.state.platformId === platforms[j].id) {
-                platforms.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', platformNames: platforms, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Tag') {
+    if (this.state.modalMode === 'Tag') {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
         .then(res => {
           const submission = res.data.data
@@ -604,38 +506,7 @@ class Submission extends React.Component {
   }
 
   isAllValid () {
-    if (this.state.modalMode === 'Login') {
-      if (this.state.isValidated) {
-        this.setState({ isValidated: true })
-      }
-      return true
-    }
-
-    if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.task.name)) {
-          return false
-        }
-      } else if (!this.state.taskId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.method.name)) {
-          return false
-        }
-      } else if (!this.state.methodId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Platform') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.platform.name)) {
-          return false
-        }
-      } else if (!this.state.platformId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Result') {
+    if (this.state.modalMode === 'Result') {
       if (!nonblankRegex.test(this.state.result.metricName)) {
         return false
       }
@@ -799,7 +670,7 @@ class Submission extends React.Component {
               <h2>Tasks
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Task')}
+                  onClickAdd={() => this.handleOnClickAddRef('Task')}
                   onClickRemove={() => this.handleOnClickRemove('Task')}
                 />
               </h2>
@@ -837,7 +708,7 @@ class Submission extends React.Component {
               <h2>Methods
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Method')}
+                  onClickAdd={() => this.handleOnClickAddRef('Method')}
                   onClickRemove={() => this.handleOnClickRemove('Method')}
                 />
               </h2>
@@ -878,7 +749,7 @@ class Submission extends React.Component {
               <h2>Platforms
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Platform')}
+                  onClickAdd={() => this.handleOnClickAddRef('Platform')}
                   onClickRemove={() => this.handleOnClickRemove('Platform')}
                 />
               </h2>
@@ -1032,18 +903,12 @@ class Submission extends React.Component {
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
         <SubmissionRefsAddModal
-          show={this.state.showAddModal && (this.state.modalMode === 'Login' ||
-            this.state.modalMode === 'Task' ||
-            this.state.modalMode === 'Method' ||
-            this.state.modalMode === 'Platform')}
-          onHide={this.handleHideAddModal}
+          show={this.state.showAddRefsModal}
+          onHide={() => this.setState({ showAddRefsModal: false })}
           modalMode={this.state.modalMode}
-          loginLinkId={this.props.match.params.id}
+          submissionId={this.props.match.params.id}
           allNames={this.state.allNames}
           filteredNames={this.state.filteredNames}
-          onChange={this.handleOnChange}
-          onSubmit={this.handleAddModalSubmit}
-          isAllValid={this.isAllValid}
         />
         <Modal
           show={this.state.showAddModal && (this.state.modalMode === 'Result')}
