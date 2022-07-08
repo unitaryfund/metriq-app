@@ -39,7 +39,6 @@ const SubmissionRefsAddModal = (props) => {
     if (showAccordion) {
       return
     }
-
     item.id = value
     setItem(item)
   }
@@ -74,7 +73,8 @@ const SubmissionRefsAddModal = (props) => {
 
   const handleSubmit = () => {
     if (!showAccordion) {
-      axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + item.id, {})
+      const refId = item.id ? item.id : props.filteredNames.length ? props.filteredNames[0].id : 0
+      axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + refId, {})
         .then(res => {
           props.onAddExisting(res.data.data)
         })
