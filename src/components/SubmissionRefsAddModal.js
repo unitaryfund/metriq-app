@@ -106,7 +106,7 @@ const SubmissionRefsAddModal = (props) => {
 
     axios.post(config.api.getUriPrefix() + '/' + key, i)
       .then(res => {
-        props.onAddNew(res.data.data)
+        props.onAddNew(res.data.data.body)
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')

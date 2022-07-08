@@ -235,12 +235,42 @@ class Submission extends React.Component {
     this.setState({ showAddRefsModal: true, modalMode: mode, allNames: allNames, filteredNames: filteredNames })
   }
 
-  handleModalRefSubmit (submission) {
-    this.setState({ item: submission })
+  handleModalRefAddNew (ref) {
+    const mode = this.state.modalMode
+    let allNames = []
+    const item = this.state.item
+
+    if (mode === 'Task') {
+      allNames = this.state.allTaskNames
+      allNames.push(ref)
+      item.tasks.push(ref)
+    } else if (mode === 'Method') {
+      allNames = this.state.allMethodNames
+      allNames.push(ref)
+      item.methods.push(ref)
+    } else if (mode === 'Platform') {
+      allNames = this.state.allPlatformNames
+      allNames.push(ref)
+      item.platforms.push(ref)
+    } else {
+      return
+    }
+
+    this.handleSortNames(allNames)
+    const filteredNames = [...allNames]
+    this.handleTrimTasks(this.state.item, filteredNames)
+
+    if (mode === 'Task') {
+      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
+    } else if (mode === 'Method') {
+      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
+    } else if (mode === 'Platform') {
+      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
+    }
   }
 
-  handleModalRefAddNew (ref) {
-
+  handleModalRefSubmit (submission) {
+    this.setState({ item: submission })
   }
 
   handleOnClickAdd (mode) {
