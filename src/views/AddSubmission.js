@@ -306,31 +306,31 @@ class AddSubmission extends React.Component {
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
             </FormFieldAlertRow>
             <FormFieldSelectRow
-              inputName='task' label='Tasks' buttonLabel='Add task'
+              inputName='task' label='Tasks'
               onChange={this.handleOnChange}
               options={this.state.taskNames}
-              onClickButton={this.handleOnClickAddTask}
+              onClickAdd={this.handleOnClickAddTask}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
             <FormFieldSelectRow
-              inputName='method' label='Methods' buttonLabel='Add method'
+              inputName='method' label='Methods'
               onChange={this.handleOnChange}
               options={this.state.methodNames}
-              onClickButton={this.handleOnClickAddMethod}
+              onClickAdd={this.handleOnClickAddMethod}
             />
             <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />
             <FormFieldSelectRow
-              inputName='platform' label='Platforms' buttonLabel='Add platform'
+              inputName='platform' label='Platforms'
               onChange={this.handleOnChange}
               options={this.state.platformNames}
-              onClickButton={this.handleOnClickAddPlatform}
+              onClickAdd={this.handleOnClickAddPlatform}
             />
             <FormFieldRowDeleter options={this.state.platforms} onClickRemove={this.handleOnClickRemovePlatform} emptyMessage='There are no associated platforms, yet.' />
             <FormFieldTypeaheadRow
-              inputName='tag' label='Tags' buttonLabel='Add tag'
+              inputName='tag' label='Tags'
               onChange={this.handleOnChange}
               options={this.state.tagNames.map(item => item.name)}
-              onClickButton={this.handleOnClickAddTag}
+              onClickAdd={this.handleOnClickAddTag}
             />
             <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} onClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
             <FormFieldAlertRow>
