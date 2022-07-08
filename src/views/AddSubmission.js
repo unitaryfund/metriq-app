@@ -13,7 +13,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { Redirect } from 'react-router-dom'
-import { nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
+import { blankOrurlValidRegex, nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 
 library.add(faPlus)
@@ -24,6 +24,7 @@ class AddSubmission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      submissionId: 0,
       name: '',
       contentUrl: '',
       thumbnailUrl: '',
@@ -63,11 +64,6 @@ class AddSubmission extends React.Component {
     this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
     this.handleOnClickNewPlatform = this.handleOnClickNewPlatform.bind(this)
     this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
-    this.validURL = this.validURL.bind(this)
-  }
-
-  validURL (str) {
-    return !!urlValidRegex.test(str)
   }
 
   handleModalRefAddNew (ref) {
@@ -111,34 +107,45 @@ class AddSubmission extends React.Component {
   }
 
   handleOnFieldBlur (field, value) {
-    if (field === 'thumbnailUrl' || field === 'contentUrl') {
-      if (value.trim().length <= 0) {
-        this.setState({ name: '', isValidated: false })
-        this.setState({ description: '', isValidated: false })
-      } else if (this.validURL(value.trim())) {
-        axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
-          .then(res => {
-            this.setState({ name: res.data.data.og.title, isValidated: false })
-            this.setState({ description: res.data.data.og.description, isValidated: false })
-          })
-          .catch(err => {
-            this.setState({ requestFailedMessage: ErrorHandler(err) })
-          })
-      }
+    if ((field === 'thumbnailUrl' || field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
+      axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
+        .then(res => {
+          console.log(res.data.data)
+          this.setState({ name: res.data.data.og.title, description: res.data.data.og.description, isValidated: false })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
     }
   }
 
   isAllValid () {
-    if (!this.state.isValidated) {
-      this.setState({ isValidated: true })
+    if (this.state.isValidated) {
+      return
+    }
+    this.setState({ isValidated: true })
+
+    let validatedPassed = true
+    if (!urlValidRegex.test((this.state.contentUrl.trim()))) {
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
+      validatedPassed = false
     }
 
-    return true
+    if (this.state.thumbnailUrl && !blankOrurlValidRegex.test(this.state.thumbnailUrl.trim())) {
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
+      validatedPassed = false
+    }
+
+    return validatedPassed
   }
 
-  handleOnSubmit (event) {
+  handleOnSubmit (event, isDraft) {
     if (!this.isAllValid()) {
-      event.preventDefault()
+      if (event) {
+        event.preventDefault()
+      } else {
+        window.alert('Please fill required fields with valid values, first.')
+      }
       return
     }
 
@@ -147,30 +154,28 @@ class AddSubmission extends React.Component {
       contentUrl: this.state.contentUrl,
       thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
-      tags: this.state.tags.join(',')
+      tags: this.state.tags.join(','),
+      isPublished: !isDraft
     }
 
-    let validatedPassed = true
-    if (!this.validURL(request.contentUrl)) {
-      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid content url' } } }) })
-      validatedPassed = false
-    }
-
-    if (request.thumbnailUrl && !this.validURL(request.thumbnailUrl)) {
-      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
-      validatedPassed = false
-    }
-
-    if (validatedPassed) {
+    if (!this.state.id) {
       axios.post(config.api.getUriPrefix() + '/submission', request)
         .then(res => {
-          this.props.history.push('/Submissions')
+          if (isDraft) {
+            this.setState({ submissionId: res.data.data.body.id })
+          } else {
+            this.props.history.push('/Submissions')
+          }
         })
         .catch(err => {
           this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     }
-    event.preventDefault()
+    // TODO: Otherwise, we're updating an existing draft.
+
+    if (event) {
+      event.preventDefault()
+    }
   }
 
   handleOnClickAddTask (taskId) {
@@ -183,6 +188,9 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickNewTask () {
+    if (!this.state.submissionId) {
+      this.handleOnSubmit()
+    }
     this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
   }
 
@@ -327,7 +335,7 @@ class AddSubmission extends React.Component {
               validatorMessage={requiredFieldMissingError}
               onChange={this.handleOnChange}
               onBlur={this.handleOnFieldBlur}
-              validRegex={nonblankRegex}
+              validRegex={urlValidRegex}
             />
             <FormFieldAlertRow>
               <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>

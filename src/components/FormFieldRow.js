@@ -9,6 +9,10 @@ const FormFieldRow = (props) => {
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
+  if (props.value && (value !== props.value)) {
+    setValue(props.value)
+  }
+
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
@@ -16,12 +20,10 @@ const FormFieldRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
-      if (props.onChange) {
-        props.onChange(fieldName, fieldValue)
-      }
-      setValue(fieldValue)
+    if (props.onChange) {
+      props.onChange(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   const handleOnFieldBlur = (event) => {
@@ -30,12 +32,11 @@ const FormFieldRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
-      if (props.onBlur) {
-        props.onBlur(fieldName, fieldValue)
-      }
-      setValue(fieldValue)
+    console.log('Hit!')
+    if (props.onBlur) {
+      props.onBlur(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   return (
