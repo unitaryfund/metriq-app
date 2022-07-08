@@ -110,7 +110,9 @@ class Submission extends React.Component {
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
+    this.handleModalRefSubmit = this.handleModalRefSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
+    this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleSortNames = this.handleSortNames.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
@@ -231,6 +233,14 @@ class Submission extends React.Component {
       filteredNames = this.state.platformNames
     }
     this.setState({ showAddRefsModal: true, modalMode: mode, allNames: allNames, filteredNames: filteredNames })
+  }
+
+  handleModalRefSubmit (submission) {
+    this.setState({ item: submission })
+  }
+
+  handleModalRefAddNew (ref) {
+
   }
 
   handleOnClickAdd (mode) {
@@ -803,6 +813,15 @@ class Submission extends React.Component {
           submissionId={this.props.match.params.id}
           allNames={this.state.allNames}
           filteredNames={this.state.filteredNames}
+          onAddExisting={this.handleModalRefSubmit}
+          onAddNew={this.handleModalRefAddNew}
+        />
+        <SubmissionRefsDeleteModal
+          show={this.state.showRemoveModal}
+          onHide={this.handleHideRemoveModal}
+          modalMode={this.state.modalMode}
+          submission={this.state.item}
+          onSubmit={this.handleModalRefSubmit}
         />
         <Modal
           show={this.state.showAddModal && (this.state.modalMode === 'Result')}
@@ -922,12 +941,6 @@ class Submission extends React.Component {
             <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
           </Modal.Footer>
         </Modal>
-        <SubmissionRefsDeleteModal
-          show={this.state.showRemoveModal}
-          onHide={this.handleHideRemoveModal}
-          modalMode={this.state.modalMode}
-          submission={this.state.item}
-        />
         <Modal
           show={this.state.showEditModal}
           onHide={this.handleHideEditModal}

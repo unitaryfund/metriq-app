@@ -29,7 +29,7 @@ const SubmissionRefsDeleteModal = (props) => {
 
     axios.delete(config.api.getUriPrefix() + '/submission/' + props.submission.id + '/' + props.modalMode + '/' + id)
       .then(res => {
-        window.location.reload()
+        props.onSubmit(res.data.data)
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')

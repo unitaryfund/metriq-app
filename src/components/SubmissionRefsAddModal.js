@@ -76,7 +76,7 @@ const SubmissionRefsAddModal = (props) => {
     if (!showAccordion) {
       axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + item.id, {})
         .then(res => {
-          window.location.reload()
+          props.onAddExisting(res.data.data)
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -106,7 +106,7 @@ const SubmissionRefsAddModal = (props) => {
 
     axios.post(config.api.getUriPrefix() + '/' + key, i)
       .then(res => {
-        window.location.reload()
+        props.onAddNew(res.data.data)
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
