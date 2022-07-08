@@ -258,13 +258,15 @@ class Submission extends React.Component {
 
     this.handleSortNames(allNames)
     const filteredNames = [...allNames]
-    this.handleTrimTasks(this.state.item, filteredNames)
 
     if (mode === 'Task') {
+      this.handleTrimTasks(this.state.item, filteredNames)
       this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
     } else if (mode === 'Method') {
+      this.handleTrimMethods(this.state.item, filteredNames)
       this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
     } else if (mode === 'Platform') {
+      this.handleTrimPlatforms(this.state.item, filteredNames)
       this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
     }
   }

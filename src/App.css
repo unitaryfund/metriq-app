@@ -166,6 +166,10 @@ form > span > .row > label {
   margin: 4px;
 }
 
+.submission-ref-button {
+  margin-right: 4px;
+}
+
 .submission-heading {
   font-weight: bold;
   padding: 0 8px 8px 8px

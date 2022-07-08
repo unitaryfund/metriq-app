@@ -14,6 +14,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { Redirect } from 'react-router-dom'
 import { nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
+import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 
 library.add(faPlus)
 
@@ -39,6 +40,8 @@ class AddSubmission extends React.Component {
       tags: [],
       tag: '',
       tagNames: [],
+      allNames: [],
+      showAddRefsModal: false,
       showRemoveModal: false,
       requestFailedMessage: '',
       isValidated: false
@@ -48,20 +51,58 @@ class AddSubmission extends React.Component {
     this.handleOnFieldBlur = this.handleOnFieldBlur.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
+    this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
     this.handleOnClickRemoveTask = this.handleOnClickRemoveTask.bind(this)
     this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
+    this.handleOnClickNewTask = this.handleOnClickNewTask.bind(this)
     this.handleOnClickRemoveMethod = this.handleOnClickRemoveMethod.bind(this)
     this.handleOnClickAddMethod = this.handleOnClickAddMethod.bind(this)
+    this.handleOnClickNewMethod = this.handleOnClickNewMethod.bind(this)
     this.handleOnClickRemovePlatform = this.handleOnClickRemovePlatform.bind(this)
     this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
-    this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
-    this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
+    this.handleOnClickNewPlatform = this.handleOnClickNewPlatform.bind(this)
+    this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
     this.validURL = this.validURL.bind(this)
   }
 
   validURL (str) {
     return !!urlValidRegex.test(str)
+  }
+
+  handleModalRefAddNew (ref) {
+    const mode = this.state.modalMode
+    let allNames = []
+    let names = []
+
+    if (mode === 'Task') {
+      allNames = this.state.taskNames
+      names = this.state.tasks
+      allNames.push(ref)
+      names.push(ref)
+    } else if (mode === 'Method') {
+      allNames = this.state.methodNames
+      names = this.state.methods
+      allNames.push(ref)
+      names.push(ref)
+    } else if (mode === 'Platform') {
+      allNames = this.state.platformNames
+      names = this.state.platforms
+      allNames.push(ref)
+      names.push(ref)
+    } else {
+      return
+    }
+
+    this.handleSortNames(allNames)
+
+    if (mode === 'Task') {
+      this.setState({ showAddRefsModal: false, taskNames: allNames, tasks: names })
+    } else if (mode === 'Method') {
+      this.setState({ showAddRefsModal: false, methodNames: allNames, methods: names })
+    } else if (mode === 'Platform') {
+      this.setState({ showAddRefsModal: false, platformNames: allNames, platforms: names })
+    }
   }
 
   handleOnChange (field, value) {
@@ -141,6 +182,10 @@ class AddSubmission extends React.Component {
     }
   }
 
+  handleOnClickNewTask () {
+    this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
+  }
+
   handleOnClickRemoveTask (taskId) {
     const tasks = this.state.tasks
     const task = tasks.find(x => x.id === taskId)
@@ -157,6 +202,10 @@ class AddSubmission extends React.Component {
     }
   }
 
+  handleOnClickNewMethod () {
+    this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames })
+  }
+
   handleOnClickRemoveMethod (methodId) {
     const methods = this.state.methods
     const method = methods.find(x => x.id === methodId)
@@ -171,6 +220,10 @@ class AddSubmission extends React.Component {
       platforms.push(platform)
       this.setState({ platforms: platforms, platform: {} })
     }
+  }
+
+  handleOnClickNewPlatform () {
+    this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames })
   }
 
   handleOnClickRemovePlatform (platformId) {
@@ -310,6 +363,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               options={this.state.taskNames}
               onClickAdd={this.handleOnClickAddTask}
+              onClickNew={this.handleOnClickNewTask}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
             <FormFieldSelectRow
@@ -317,6 +371,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               options={this.state.methodNames}
               onClickAdd={this.handleOnClickAddMethod}
+              onClickNew={this.handleOnClickNewMethod}
             />
             <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />
             <FormFieldSelectRow
@@ -324,6 +379,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               options={this.state.platformNames}
               onClickAdd={this.handleOnClickAddPlatform}
+              onClickNew={this.handleOnClickNewPlatform}
             />
             <FormFieldRowDeleter options={this.state.platforms} onClickRemove={this.handleOnClickRemovePlatform} emptyMessage='There are no associated platforms, yet.' />
             <FormFieldTypeaheadRow
@@ -343,6 +399,16 @@ class AddSubmission extends React.Component {
               <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>
+          <SubmissionRefsAddModal
+            show={this.state.showAddRefsModal}
+            onHide={() => this.setState({ showAddRefsModal: false })}
+            modalMode={this.state.modalMode}
+            submissionId={0}
+            allNames={this.state.allNames}
+            filteredNames={this.state.allNames}
+            onAddNew={this.handleModalRefAddNew}
+            isNewOnly
+          />
         </div>
       )
     )

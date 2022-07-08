@@ -72,7 +72,7 @@ const FormFieldTypeaheadRow = (props) => {
         onInputChange={handleOnFieldChange}
         onBlur={handleOnFieldBlur}
       />
-      {props.onClickButton
+      {props.onClickAdd
         ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
         : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
     </div>
