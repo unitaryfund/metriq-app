@@ -15,6 +15,7 @@ import ViewHeader from '../components/ViewHeader'
 import { Redirect } from 'react-router-dom'
 import { blankOrurlValidRegex, nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
+import { Button } from 'react-bootstrap'
 
 library.add(faPlus)
 
@@ -110,8 +111,7 @@ class AddSubmission extends React.Component {
     if ((field === 'thumbnailUrl' || field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
-          console.log(res.data.data)
-          this.setState({ name: res.data.data.og.title, description: res.data.data.og.description, isValidated: false })
+          this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isValidated: false })
         })
         .catch(err => {
           this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -120,9 +120,6 @@ class AddSubmission extends React.Component {
   }
 
   isAllValid () {
-    if (this.state.isValidated) {
-      return
-    }
     this.setState({ isValidated: true })
 
     let validatedPassed = true
@@ -131,7 +128,7 @@ class AddSubmission extends React.Component {
       validatedPassed = false
     }
 
-    if (this.state.thumbnailUrl && !blankOrurlValidRegex.test(this.state.thumbnailUrl.trim())) {
+    if (this.state.thumbnailUrl && !urlValidRegex.test(this.state.thumbnailUrl.trim())) {
       this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
       validatedPassed = false
     }
@@ -146,7 +143,7 @@ class AddSubmission extends React.Component {
       } else {
         window.alert('Please fill required fields with valid values, first.')
       }
-      return
+      return false
     }
 
     const request = {
@@ -158,24 +155,30 @@ class AddSubmission extends React.Component {
       isPublished: !isDraft
     }
 
-    if (!this.state.id) {
-      axios.post(config.api.getUriPrefix() + '/submission', request)
-        .then(res => {
-          if (isDraft) {
-            this.setState({ submissionId: res.data.data.body.id })
-          } else {
-            this.props.history.push('/Submissions')
-          }
-        })
-        .catch(err => {
-          this.setState({ requestFailedMessage: ErrorHandler(err) })
-        })
+    let url = ''
+    if (this.state.submissionId) {
+      url = config.api.getUriPrefix() + '/submission/' + this.state.submissionId
+    } else {
+      url = config.api.getUriPrefix() + '/submission'
     }
-    // TODO: Otherwise, we're updating an existing draft.
+
+    axios.post(url, request)
+      .then(res => {
+        if (isDraft) {
+          this.setState({ submissionId: res.data.data.body.id })
+        } else {
+          this.props.history.push('/Submissions')
+        }
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
 
     if (event) {
       event.preventDefault()
     }
+
+    return true
   }
 
   handleOnClickAddTask (taskId) {
@@ -189,7 +192,9 @@ class AddSubmission extends React.Component {
 
   handleOnClickNewTask () {
     if (!this.state.submissionId) {
-      this.handleOnSubmit()
+      if (!this.handleOnSubmit(null, true)) {
+        return
+      }
     }
     this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
   }
@@ -362,6 +367,7 @@ class AddSubmission extends React.Component {
             <FormFieldRow
               inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
               onChange={this.handleOnChange}
+              validRegex={blankOrurlValidRegex}
             />
             <FormFieldAlertRow>
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
@@ -404,7 +410,8 @@ class AddSubmission extends React.Component {
               <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
             </FormFieldAlertRow>
             <FormFieldWideRow className='text-center'>
-              <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+              <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
+              <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>
           <SubmissionRefsAddModal

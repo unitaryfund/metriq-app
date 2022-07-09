@@ -32,7 +32,6 @@ const FormFieldRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    console.log('Hit!')
     if (props.onBlur) {
       props.onBlur(fieldName, fieldValue)
     }
