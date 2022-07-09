@@ -26,6 +26,7 @@ class AddSubmission extends React.Component {
     super(props)
     this.state = {
       submissionId: 0,
+      draftedAt: (new Date()).toLocaleTimeString(),
       name: '',
       contentUrl: '',
       thumbnailUrl: '',
@@ -152,6 +153,9 @@ class AddSubmission extends React.Component {
       thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
       tags: this.state.tags.join(','),
+      tasks: this.state.tasks.map(x => x.id).join(','),
+      methods: this.state.methods.map(x => x.id).join(','),
+      platforms: this.state.platforms.map(x => x.id).join(','),
       isPublished: !isDraft
     }
 
@@ -165,7 +169,7 @@ class AddSubmission extends React.Component {
     axios.post(url, request)
       .then(res => {
         if (isDraft) {
-          this.setState({ submissionId: res.data.data.body.id })
+          this.setState({ requestFailedMessage: '', submissionId: res.data.data.id, draftedAt: (new Date()).toLocaleTimeString() })
         } else {
           this.props.history.push('/Submissions')
         }
@@ -274,10 +278,10 @@ class AddSubmission extends React.Component {
       .then(res => {
         const tasks = res.data.data
         this.handleSortNames(tasks)
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', taskNames: tasks })
+        this.setState({ requestFailedMessage: '', taskNames: tasks })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const methodNamesRoute = config.api.getUriPrefix() + '/method/names'
@@ -285,10 +289,10 @@ class AddSubmission extends React.Component {
       .then(res => {
         const methods = res.data.data
         this.handleSortNames(methods)
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', methodNames: methods })
+        this.setState({ requestFailedMessage: '', methodNames: methods })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const platformNamesRoute = config.api.getUriPrefix() + '/platform/names'
@@ -296,10 +300,10 @@ class AddSubmission extends React.Component {
       .then(res => {
         const platforms = res.data.data
         this.handleSortNames(platforms)
-        this.setState({ isRequestFailed: false, requestFailedMessage: '', platformNames: platforms })
+        this.setState({ requestFailedMessage: '', platformNames: platforms })
       })
       .catch(err => {
-        this.setState({ isRequestFailed: true, requestFailedMessage: ErrorHandler(err) })
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
     const tagNamesRoute = config.api.getUriPrefix() + '/tag/names'
@@ -409,6 +413,10 @@ class AddSubmission extends React.Component {
             <FormFieldAlertRow>
               <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
             </FormFieldAlertRow>
+            {!!this.state.submissionId &&
+              <FormFieldAlertRow className='text-center'>
+                <i>Draft saved at {this.state.draftedAt}</i>
+              </FormFieldAlertRow>}
             <FormFieldWideRow className='text-center'>
               <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
               <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
