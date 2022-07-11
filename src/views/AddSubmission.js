@@ -376,6 +376,7 @@ class AddSubmission extends React.Component {
             <FormFieldAlertRow>
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
             </FormFieldAlertRow>
+            <br />
             <FormFieldSelectRow
               inputName='task' label='Tasks'
               onChange={this.handleOnChange}
@@ -384,6 +385,10 @@ class AddSubmission extends React.Component {
               onClickNew={this.handleOnClickNewTask}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
+            <FormFieldAlertRow>
+              <b>"Tasks" are practical workloads of interest.</b>
+            </FormFieldAlertRow>
+            <br />
             <FormFieldSelectRow
               inputName='method' label='Methods'
               onChange={this.handleOnChange}
@@ -392,6 +397,10 @@ class AddSubmission extends React.Component {
               onClickNew={this.handleOnClickNewMethod}
             />
             <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />
+            <FormFieldAlertRow>
+              <b>"Methods" are algorithms, techniques, or hardware to perform "tasks."</b>
+            </FormFieldAlertRow>
+            <br />
             <FormFieldSelectRow
               inputName='platform' label='Platforms'
               onChange={this.handleOnChange}
@@ -400,6 +409,10 @@ class AddSubmission extends React.Component {
               onClickNew={this.handleOnClickNewPlatform}
             />
             <FormFieldRowDeleter options={this.state.platforms} onClickRemove={this.handleOnClickRemovePlatform} emptyMessage='There are no associated platforms, yet.' />
+            <FormFieldAlertRow>
+              <b>"Platforms" track all metadata in common between distinct "methods."</b>
+            </FormFieldAlertRow>
+            <br />
             <FormFieldTypeaheadRow
               inputName='tag' label='Tags'
               onChange={this.handleOnChange}
@@ -410,6 +423,7 @@ class AddSubmission extends React.Component {
             <FormFieldAlertRow>
               <b>"Tags" are a set of descriptive labels.<br />(Tags can contain spaces.)</b>
             </FormFieldAlertRow>
+            <br />
             <FormFieldAlertRow>
               <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
             </FormFieldAlertRow>

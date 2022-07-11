@@ -5,7 +5,6 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
-import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import { Button, Modal } from 'react-bootstrap'
@@ -18,13 +17,12 @@ import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
-import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
+import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
+import ResultsAddModal from '../components/ResultsAddModal'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
-
-const sampleSizeRegex = /^[0-9]+$/
 
 class Submission extends React.Component {
   constructor (props) {
@@ -113,6 +111,7 @@ class Submission extends React.Component {
     this.handleModalRefSubmit = this.handleModalRefSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
     this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
+    this.handleModalResultAddNew = this.handleModalResultAddNew.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleSortNames = this.handleSortNames.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
@@ -271,8 +270,12 @@ class Submission extends React.Component {
     }
   }
 
+  handleModalResultAddNew (submission) {
+    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
+  }
+
   handleModalRefSubmit (submission) {
-    this.setState({ item: submission })
+    this.setState({ item: submission, requestFailedMessage: '' })
   }
 
   handleOnClickAdd (mode) {
@@ -336,51 +339,21 @@ class Submission extends React.Component {
       return
     }
 
-    if (this.state.modalMode === 'Tag') {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
-        .then(res => {
-          const submission = res.data.data
-          const tags = [...this.state.tagNames]
-          for (let j = 0; j < tags.length; j++) {
-            if (this.state.tag === tags[j].name) {
-              tags.splice(j, 1)
-              break
-            }
+    axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
+      .then(res => {
+        const submission = res.data.data
+        const tags = [...this.state.tagNames]
+        for (let j = 0; j < tags.length; j++) {
+          if (this.state.tag === tags[j].name) {
+            tags.splice(j, 1)
+            break
           }
-          this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else if (this.state.modalMode === 'Result') {
-      const result = this.state.result
-      if (!result.metricName) {
-        window.alert('Error: Metric Name cannot be blank.')
-      }
-      if (!result.metricValue && result.metricValue !== 0) {
-        window.alert('Error: Metric Value cannot be blank.')
-      }
-      if (!result.task) {
-        result.task = this.state.item.tasks[0].id
-      }
-      if (!result.method) {
-        result.method = this.state.item.methods[0].id
-      }
-      if (!result.platform) {
-        result.platform = null
-      }
-      if (!result.evaluatedDate) {
-        result.evaluatedDate = new Date()
-      }
-      const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-      axios.post(resultRoute, result)
-        .then(res => {
-          this.setState({ requestFailedMessage: '', item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    }
+        }
+        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
 
     this.setState({ showAddModal: false })
   }
@@ -855,100 +828,14 @@ class Submission extends React.Component {
           submission={this.state.item}
           onSubmit={this.handleModalRefSubmit}
         />
-        <Modal
+        <ResultsAddModal
           show={this.state.showAddModal && (this.state.modalMode === 'Result')}
           onHide={this.handleHideAddModal}
-          size='lg'
-          aria-labelledby='contained-modal-title-vcenter'
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>{this.state.result.id ? 'Edit' : 'Add'} Result</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
-              <span>
-                A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
-              </span>}
-            {(this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='task' label='Task'
-                  options={this.state.item.tasks}
-                  value={this.state.result.task.id}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Task from submission, used in this result'
-                /><br />
-                <FormFieldSelectRow
-                  inputName='method' label='Method'
-                  options={this.state.item.methods}
-                  value={this.state.result.method.id}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Method from submission, used in this result'
-                /><br />
-                <FormFieldSelectRow
-                  inputName='platform' label='Platform'
-                  options={this.state.item.platforms}
-                  value={this.state.result.platform ? this.state.result.platform.id : ''}
-                  isNullDefault
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='The quantum computer platform used by the method for this result'
-                /><br />
-                <FormFieldTypeaheadRow
-                  inputName='metricName' label='Metric name'
-                  value={this.state.result.metricName}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  validRegex={nonblankRegex}
-                  options={this.state.metricNames}
-                  tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
-                /><br />
-                <FormFieldRow
-                  inputName='metricValue' inputType='number' label='Metric value'
-                  value={this.state.result.metricValue}
-                  validRegex={metricValueRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='The value of the measure of performance, for this combination of task and method, for this submission'
-                /><br />
-                <FormFieldRow
-                  inputName='evaluatedAt' inputType='date' label='Evaluated'
-                  value={this.state.result.evaluatedAt}
-                  validRegex={dateRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='(Optionally) What date was the metric value collected on?'
-                /><br />
-                <FormFieldRow
-                  inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
-                  checked={this.state.result.isHigherBetter}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
-                /><br />
-                <FormFieldRow
-                  inputName='standardError' inputType='number' label='Standard error (optional)'
-                  value={this.state.result.standardError}
-                  validRegex={standardErrorRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Confidence intervals will be calculated as (mean) result metric value ± standard error times z-score, if you report a standard error. This is self-consistent if your statistics are Gaussian or Poisson, for example, over a linear scale of the metric. (If Gaussian or Poisson statistics emerge over a different, non-linear scale of the metric, consider reporting your metric value with rescaled units.)'
-                /><br />
-                <FormFieldRow
-                  inputName='sampleSize' inputType='number' label='Sample size (optional)'
-                  value={this.state.result.sampleSize}
-                  validRegex={sampleSizeRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Report the sample size used to calculate the metric value.'
-                /><br />
-                <FormFieldRow
-                  inputName='notes' inputType='textarea' label='Notes'
-                  value={this.state.result.notes}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
-                />
-              </span>}
-            <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
-          </Modal.Footer>
-        </Modal>
+          submission={this.state.item}
+          result={this.state.result}
+          metricNames={this.state.metricNames}
+          onAddOrEdit={this.handleModalResultAddNew}
+        />
         <Modal
           show={this.state.showAddModal && (this.state.modalMode === 'Tag')}
           onHide={this.handleHideAddModal}
