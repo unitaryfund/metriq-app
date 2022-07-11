@@ -10,12 +10,23 @@ import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleS
 
 const ResultsAddModal = (props) => {
   const [isValidated, setIsValidated] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
   const [result, setResult] = useState(props.result)
+
+  if (!isUpdated && props.show) {
+    setIsUpdated(true)
+    setResult(props.result)
+  }
 
   const handleOnChange = (field, value) => {
     result[field] = value
     setResult(result)
     setIsValidated(false)
+  }
+
+  const onHide = () => {
+    setIsUpdated(false)
+    props.onHide()
   }
 
   const isAllValid = () => {
@@ -82,7 +93,7 @@ const ResultsAddModal = (props) => {
   return (
     <Modal
       show={props.show}
-      onHide={props.onHide}
+      onHide={onHide}
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
