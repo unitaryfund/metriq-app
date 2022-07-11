@@ -18,6 +18,7 @@ import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 import { Button } from 'react-bootstrap'
 import ResultsTable from '../components/ResultsTable'
 import ResultsAddModal from '../components/ResultsAddModal'
+import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 
 library.add(faPlus)
 
@@ -80,6 +81,8 @@ class AddSubmission extends React.Component {
     this.handleOnClickNewPlatform = this.handleOnClickNewPlatform.bind(this)
     this.handleOnClickRemoveResult = this.handleOnClickRemoveResult.bind(this)
     this.handleOnClickNewResult = this.handleOnClickNewResult.bind(this)
+    this.handleOnClickEditResult = this.handleOnClickEditResult.bind(this)
+    this.handleModalRefSubmit = this.handleModalRefSubmit.bind(this)
     this.handleModalResultAddNew = this.handleModalResultAddNew.bind(this)
     this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
   }
@@ -329,6 +332,11 @@ class AddSubmission extends React.Component {
     })
   }
 
+  handleModalRefSubmit (submission) {
+    console.log(submission)
+    this.setState({ submission: submission, requestFailedMessage: '' })
+  }
+
   handleSortNames (names) {
     names.sort(function (a, b) {
       if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
@@ -527,6 +535,13 @@ class AddSubmission extends React.Component {
             result={this.state.result}
             metricNames={this.state.metricNames}
             onAddOrEdit={this.handleModalResultAddNew}
+          />
+          <SubmissionRefsDeleteModal
+            show={this.state.showRemoveModal}
+            onHide={() => this.setState({ showRemoveModal: false })}
+            modalMode='Result'
+            submission={this.state.submission}
+            onSubmit={this.handleModalRefSubmit}
           />
         </div>
       )

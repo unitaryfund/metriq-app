@@ -27,9 +27,21 @@ const SubmissionRefsDeleteModal = (props) => {
       return
     }
 
-    axios.delete(config.api.getUriPrefix() + '/submission/' + props.submission.id + '/' + props.modalMode + '/' + id)
+    const url = config.api.getUriPrefix() + ((key === 'results') ? '' : ('/submission/' + props.submission.id)) + '/' + props.modalMode + '/' + id
+    axios.delete(url)
       .then(res => {
-        props.onSubmit(res.data.data)
+        if (key !== 'results') {
+          props.onSubmit(res.data.data)
+          return
+        }
+        const submissionRoute = config.api.getUriPrefix() + '/submission/' + props.submission.id
+        axios.get(submissionRoute)
+          .then(subRes => {
+            props.onSubmit(subRes.data.data)
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
