@@ -79,7 +79,6 @@ class AddSubmission extends React.Component {
     this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
     this.handleOnClickNewPlatform = this.handleOnClickNewPlatform.bind(this)
     this.handleOnClickRemoveResult = this.handleOnClickRemoveResult.bind(this)
-    this.handleOnClickAddResult = this.handleOnClickAddResult.bind(this)
     this.handleOnClickNewResult = this.handleOnClickNewResult.bind(this)
     this.handleModalResultAddNew = this.handleModalResultAddNew.bind(this)
     this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
@@ -154,7 +153,7 @@ class AddSubmission extends React.Component {
     return validatedPassed
   }
 
-  handleOnSubmit (event, isDraft) {
+  handleOnSubmit (event, isDraft, callback) {
     if (!this.isAllValid()) {
       if (event) {
         event.preventDefault()
@@ -186,8 +185,10 @@ class AddSubmission extends React.Component {
     axios.post(url, request)
       .then(res => {
         if (isDraft) {
-          console.log(res.data.data)
           this.setState({ requestFailedMessage: '', submission: res.data.data, draftedAt: (new Date()).toLocaleTimeString() })
+          if (callback) {
+            callback()
+          }
         } else {
           this.props.history.push('/Submissions')
         }
@@ -214,7 +215,7 @@ class AddSubmission extends React.Component {
 
   handleOnClickNewTask () {
     if (!this.state.submission.id) {
-      if (!this.handleOnSubmit(null, true)) {
+      if (!this.handleOnSubmit(null, true, null)) {
         return
       }
     }
@@ -282,15 +283,6 @@ class AddSubmission extends React.Component {
     this.setState({ tags: tags })
   }
 
-  handleOnClickAddResult () {
-    if (!this.state.submission.id) {
-      if (!this.handleOnSubmit(null, true)) {
-        return
-      }
-    }
-    this.setState({ showAddModal: true })
-  }
-
   handleOnClickRemoveResult () {
     this.setState({ showRemoveModal: true })
   }
@@ -318,7 +310,7 @@ class AddSubmission extends React.Component {
   }
 
   handleModalResultAddNew (submission) {
-    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
+    this.setState({ showAddModal: false, submission: submission, requestFailedMessage: '' })
   }
 
   handleOnClickNewResult () {
@@ -332,7 +324,9 @@ class AddSubmission extends React.Component {
       isHigherBetter: false,
       evaluatedDate: new Date()
     }
-    this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
+    this.handleOnSubmit(null, true, () => {
+      this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
+    })
   }
 
   handleSortNames (names) {
@@ -512,7 +506,7 @@ class AddSubmission extends React.Component {
                 <i>Draft saved at {this.state.draftedAt}</i>
               </FormFieldAlertRow>}
             <FormFieldWideRow className='text-center'>
-              <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
+              <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true, null)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
               <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>
