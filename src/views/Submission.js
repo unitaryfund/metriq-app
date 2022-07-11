@@ -21,6 +21,7 @@ import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 import ResultsAddModal from '../components/ResultsAddModal'
+import ResultsTable from '../components/ResultsTable'
 
 library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
 
@@ -300,11 +301,11 @@ class Submission extends React.Component {
       isHigherBetter: false,
       evaluatedDate: new Date()
     }
-    this.setState({ result: result })
-    this.handleOnClickAdd('Result')
+    this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
   }
 
   handleOnClickEditResult (resultId) {
+    let nResult = {}
     for (let i = 0; i < this.state.item.results.length; i++) {
       if (this.state.item.results[i].id === resultId) {
         const result = { ...this.state.item.results[i] }
@@ -318,11 +319,11 @@ class Submission extends React.Component {
         if ((result.platform !== null) && (result.platform.id !== undefined)) {
           result.platform = result.platform.id
         }
-        this.setState({ result: result })
+        nResult = result
         break
       }
     }
-    this.handleOnClickAdd('Result')
+    this.setState({ result: nResult, showAddModal: true, modalMode: 'Result' })
   }
 
   handleHideAddModal () {
@@ -712,94 +713,12 @@ class Submission extends React.Component {
           </div>
         </div>
         <br />
-        <FormFieldWideRow>
-          <div>
-            <h2>Results
-              <EditButton
-                className='float-right edit-button btn'
-                onClickAdd={() => this.handleOnClickAddResult()}
-                onClickRemove={() => this.handleOnClickRemove('Result')}
-              />
-            </h2>
-            <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
-            <hr />
-          </div>
-          {(this.state.item.results.length > 0) &&
-            <Table
-              columns={[
-                {
-                  title: 'Task',
-                  dataIndex: 'taskName',
-                  key: 'taskName',
-                  width: 224
-                },
-                {
-                  title: 'Method',
-                  dataIndex: 'methodName',
-                  key: 'methodName',
-                  width: 224
-                },
-                {
-                  title: 'Platform',
-                  dataIndex: 'platformName',
-                  key: 'platformName',
-                  width: 224
-                },
-                {
-                  title: 'Metric',
-                  dataIndex: 'metricName',
-                  key: 'metricName',
-                  width: 224
-                },
-                {
-                  title: 'Value',
-                  dataIndex: 'metricValue',
-                  key: 'metricValue',
-                  width: 224
-                },
-                {
-                  title: 'Notes',
-                  dataIndex: 'notes',
-                  key: 'notes',
-                  width: 40,
-                  render: (value, row, index) =>
-                    <div className='text-center'>
-                      {row.notes &&
-                        <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
-                          <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
-                        </TooltipTrigger>}
-                    </div>
-                },
-                {
-                  title: '',
-                  dataIndex: 'edit',
-                  key: 'edit',
-                  width: 40,
-                  render: (value, row, index) =>
-                    <div className='text-center'>
-                      <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} />
-                    </div>
-                }
-              ]}
-              data={this.state.item.results.length
-                ? this.state.item.results.map(row =>
-                    ({
-                      key: row.id,
-                      taskName: row.task.name,
-                      methodName: row.method.name,
-                      platformName: row.platform ? row.platform.name : '(None)',
-                      metricName: row.metricName,
-                      metricValue: row.metricValue,
-                      notes: row.notes
-                    }))
-                : []}
-              tableLayout='auto'
-            />}
-          {(this.state.item.results.length === 0) &&
-            <div className='card bg-light'>
-              <div className='card-body'>There are no associated results, yet.</div>
-            </div>}
-        </FormFieldWideRow>
+        <ResultsTable
+          results={this.state.item.results}
+          onClickAdd={this.handleOnClickAddResult}
+          onClickRemove={() => this.handleOnClickRemove('Result')}
+          onClickEdit={this.handleOnClickEditResult}
+        />
         <br />
         <FormFieldWideRow>
           <hr />

@@ -55,7 +55,8 @@ const SubmissionRefsDeleteModal = (props) => {
                     <hr />
                     <div className='row'>
                       <div className='col-md-10'>
-                        {ref.name}
+                        {key !== 'results' && ref.name}
+                        {key === 'results' && (ref.task.name + ', ' + ref.method.name + (ref.platform ? ', ' + ref.platform.name : '') + ', ' + ref.metricName + ', ' + ref.metricValue)}
                       </div>
                       <div className='col-md-2'>
                         <button className='btn btn-danger' onClick={() => handleOnRemove(ref.id)}><FontAwesomeIcon icon='trash' /> </button>
