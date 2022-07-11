@@ -6,6 +6,7 @@ import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
   const [value, setValue] = useState(props.value ? props.value : (props.defaultValue ? props.defaultValue : ''))
+  const [checked, setChecked] = useState(props.checked ? props.checked : false)
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
@@ -16,7 +17,13 @@ const FormFieldRow = (props) => {
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
-    const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    let fieldValue = false
+    if (props.inputType === 'checkbox') {
+      fieldValue = event.target.checked
+      setChecked(event.target.checked)
+    } else {
+      fieldValue = event.target.value
+    }
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
@@ -69,7 +76,7 @@ const FormFieldRow = (props) => {
             type={props.inputType}
             selected={props.defaultValue}
             value={value}
-            checked={props.checked}
+            checked={checked}
             onChange={handleOnFieldChange}
             onBlur={handleOnFieldBlur}
           />}
