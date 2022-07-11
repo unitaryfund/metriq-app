@@ -1,18 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import FormFieldValidator from './FormFieldValidator'
 import FormFieldWideRow from './FormFieldWideRow'
 import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
-  const [value, setValue] = useState(props.value ? props.value : (props.defaultValue ? props.defaultValue : ''))
+  const [value, setValue] = useState(props.value)
   const [checked, setChecked] = useState(props.checked ? props.checked : false)
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
+<<<<<<< HEAD
   if (props.value && (value !== props.value)) {
     setValue(props.value)
   }
+=======
+  useEffect(() => { setValue(props.value) }, [props.value])
+>>>>>>> main
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
