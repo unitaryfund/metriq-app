@@ -43,7 +43,7 @@ const FormFieldTypeaheadRow = (props) => {
     if (typeahead) {
       typeahead.current.clear()
     }
-    props.onClickButton(value)
+    props.onClickAdd(value)
     setValue('')
   }
 

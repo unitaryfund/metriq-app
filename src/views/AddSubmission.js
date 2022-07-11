@@ -16,6 +16,8 @@ import { Redirect } from 'react-router-dom'
 import { blankOrurlValidRegex, nonblankRegex, urlValidRegex } from '../components/ValidationRegex'
 import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
 import { Button } from 'react-bootstrap'
+import ResultsTable from '../components/ResultsTable'
+import ResultsAddModal from '../components/ResultsAddModal'
 
 library.add(faPlus)
 
@@ -25,7 +27,7 @@ class AddSubmission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      submissionId: 0,
+      submission: { id: 0, results: [], tasks: [], methods: [], platforms: [] },
       draftedAt: (new Date()).toLocaleTimeString(),
       name: '',
       contentUrl: '',
@@ -43,8 +45,19 @@ class AddSubmission extends React.Component {
       tags: [],
       tag: '',
       tagNames: [],
+      result: {
+        id: '',
+        task: '',
+        method: '',
+        platform: '',
+        metricName: '',
+        metricValue: 0,
+        isHigherBetter: false,
+        evaluatedDate: new Date()
+      },
       allNames: [],
       showAddRefsModal: false,
+      showAddModal: false,
       showRemoveModal: false,
       requestFailedMessage: '',
       isValidated: false
@@ -65,6 +78,10 @@ class AddSubmission extends React.Component {
     this.handleOnClickRemovePlatform = this.handleOnClickRemovePlatform.bind(this)
     this.handleOnClickAddPlatform = this.handleOnClickAddPlatform.bind(this)
     this.handleOnClickNewPlatform = this.handleOnClickNewPlatform.bind(this)
+    this.handleOnClickRemoveResult = this.handleOnClickRemoveResult.bind(this)
+    this.handleOnClickAddResult = this.handleOnClickAddResult.bind(this)
+    this.handleOnClickNewResult = this.handleOnClickNewResult.bind(this)
+    this.handleModalResultAddNew = this.handleModalResultAddNew.bind(this)
     this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
   }
 
@@ -160,8 +177,8 @@ class AddSubmission extends React.Component {
     }
 
     let url = ''
-    if (this.state.submissionId) {
-      url = config.api.getUriPrefix() + '/submission/' + this.state.submissionId
+    if (this.state.submission.id) {
+      url = config.api.getUriPrefix() + '/submission/' + this.state.submission.id
     } else {
       url = config.api.getUriPrefix() + '/submission'
     }
@@ -169,7 +186,8 @@ class AddSubmission extends React.Component {
     axios.post(url, request)
       .then(res => {
         if (isDraft) {
-          this.setState({ requestFailedMessage: '', submissionId: res.data.data.id, draftedAt: (new Date()).toLocaleTimeString() })
+          console.log(res.data.data)
+          this.setState({ requestFailedMessage: '', submission: res.data.data, draftedAt: (new Date()).toLocaleTimeString() })
         } else {
           this.props.history.push('/Submissions')
         }
@@ -195,7 +213,7 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickNewTask () {
-    if (!this.state.submissionId) {
+    if (!this.state.submission.id) {
       if (!this.handleOnSubmit(null, true)) {
         return
       }
@@ -262,6 +280,59 @@ class AddSubmission extends React.Component {
     const tags = this.state.tags
     tags.splice(tags.indexOf(tag), 1)
     this.setState({ tags: tags })
+  }
+
+  handleOnClickAddResult () {
+    if (!this.state.submission.id) {
+      if (!this.handleOnSubmit(null, true)) {
+        return
+      }
+    }
+    this.setState({ showAddModal: true })
+  }
+
+  handleOnClickRemoveResult () {
+    this.setState({ showRemoveModal: true })
+  }
+
+  handleOnClickEditResult (resultId) {
+    let nResult = {}
+    for (let i = 0; i < this.state.submission.results.length; i++) {
+      if (this.state.submission.results[i].id === resultId) {
+        const result = { ...this.state.submission.results[i] }
+        result.submissionId = this.state.submission.id
+        if (result.task.id !== undefined) {
+          result.task = result.task.id
+        }
+        if (result.method.id !== undefined) {
+          result.method = result.method.id
+        }
+        if ((result.platform !== null) && (result.platform.id !== undefined)) {
+          result.platform = result.platform.id
+        }
+        nResult = result
+        break
+      }
+    }
+    this.setState({ result: nResult, showAddModal: true, modalMode: 'Result' })
+  }
+
+  handleModalResultAddNew (submission) {
+    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
+  }
+
+  handleOnClickNewResult () {
+    const result = {
+      id: '',
+      task: '',
+      method: '',
+      platform: '',
+      metricName: '',
+      metricValue: 0,
+      isHigherBetter: false,
+      evaluatedDate: new Date()
+    }
+    this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
   }
 
   handleSortNames (names) {
@@ -425,9 +496,18 @@ class AddSubmission extends React.Component {
             </FormFieldAlertRow>
             <br />
             <FormFieldAlertRow>
+              <ResultsTable
+                results={this.state.submission.results}
+                onClickAdd={this.handleOnClickNewResult}
+                onClickRemove={this.handleOnClickRemoveResult}
+                onClickEdit={this.handleOnClickEditResult}
+              />
+            </FormFieldAlertRow>
+            <br />
+            <FormFieldAlertRow>
               <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
             </FormFieldAlertRow>
-            {!!this.state.submissionId &&
+            {!!this.state.submission.id &&
               <FormFieldAlertRow className='text-center'>
                 <i>Draft saved at {this.state.draftedAt}</i>
               </FormFieldAlertRow>}
@@ -445,6 +525,14 @@ class AddSubmission extends React.Component {
             filteredNames={this.state.allNames}
             onAddNew={this.handleModalRefAddNew}
             isNewOnly
+          />
+          <ResultsAddModal
+            show={this.state.showAddModal}
+            onHide={() => this.setState({ showAddModal: false })}
+            submission={this.state.submission}
+            result={this.state.result}
+            metricNames={this.state.metricNames}
+            onAddOrEdit={this.handleModalResultAddNew}
           />
         </div>
       )

@@ -280,6 +280,9 @@ class Submission extends React.Component {
   }
 
   handleOnClickAdd (mode) {
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
     this.setState({ showAddModal: true, modalMode: mode })
   }
 
