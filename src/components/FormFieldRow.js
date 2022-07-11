@@ -68,7 +68,7 @@ const FormFieldRow = (props) => {
             className='form-control'
             type={props.inputType}
             selected={props.defaultValue}
-            value={props.value}
+            value={value}
             checked={props.checked}
             onChange={handleOnFieldChange}
             onBlur={handleOnFieldBlur}
