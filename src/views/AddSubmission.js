@@ -88,6 +88,7 @@ class AddSubmission extends React.Component {
   }
 
   handleModalRefAddNew (ref) {
+    console.log(ref)
     const mode = this.state.modalMode
     let allNames = []
     let names = []
@@ -218,11 +219,10 @@ class AddSubmission extends React.Component {
 
   handleOnClickNewTask () {
     if (!this.state.submission.id) {
-      if (!this.handleOnSubmit(null, true, null)) {
-        return
-      }
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames }))
+    } else {
+      this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
     }
-    this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
   }
 
   handleOnClickRemoveTask (taskId) {
@@ -242,7 +242,11 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickNewMethod () {
-    this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames })
+    if (!this.state.submission.id) {
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames }))
+    } else {
+      this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames })
+    }
   }
 
   handleOnClickRemoveMethod (methodId) {
@@ -262,7 +266,11 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickNewPlatform () {
-    this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames })
+    if (!this.state.submission.id) {
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames }))
+    } else {
+      this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames })
+    }
   }
 
   handleOnClickRemovePlatform (platformId) {
@@ -522,7 +530,7 @@ class AddSubmission extends React.Component {
             show={this.state.showAddRefsModal}
             onHide={() => this.setState({ showAddRefsModal: false })}
             modalMode={this.state.modalMode}
-            submissionId={0}
+            submissionId={this.state.submission.id}
             allNames={this.state.allNames}
             filteredNames={this.state.allNames}
             onAddNew={this.handleModalRefAddNew}

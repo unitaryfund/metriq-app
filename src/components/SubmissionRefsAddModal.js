@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,6 +24,12 @@ const SubmissionRefsAddModal = (props) => {
     description: '',
     submissions: props.submissionId
   })
+
+  useEffect(() => {
+    item.submissions = props.submissionId.toString()
+    setItem(item)
+  }, [props.submissionId, item])
+
   const key = props.modalMode === 'Task'
     ? 'task'
     : props.modalMode === 'Method'
@@ -76,6 +82,7 @@ const SubmissionRefsAddModal = (props) => {
       const refId = item.id ? item.id : props.filteredNames.length ? props.filteredNames[0].id : 0
       axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + refId, {})
         .then(res => {
+          console.log(res)
           props.onAddExisting(res.data.data)
         })
         .catch(err => {
@@ -106,7 +113,7 @@ const SubmissionRefsAddModal = (props) => {
 
     axios.post(config.api.getUriPrefix() + '/' + key, i)
       .then(res => {
-        props.onAddNew(res.data.data.body)
+        props.onAddNew(res.data.data)
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
