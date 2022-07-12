@@ -10,13 +10,7 @@ const FormFieldRow = (props) => {
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-<<<<<<< HEAD
-  if (props.value && (value !== props.value)) {
-    setValue(props.value)
-  }
-=======
   useEffect(() => { setValue(props.value) }, [props.value])
->>>>>>> main
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
