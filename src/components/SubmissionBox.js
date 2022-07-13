@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom'
 import config from './../config'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
+import TooltipTrigger from './TooltipTrigger'
 
 library.add(faExternalLinkAlt)
 
@@ -38,6 +37,27 @@ const SubmissionBox = (props) => {
         })
     } else {
       window.alert('The submission was not deleted. (Please enter the correct submission name, to delete.)')
+    }
+    event.preventDefault()
+  }
+
+  const handlePublishOnClick = (event) => {
+    let confirmString = window.prompt('To publish your submission, type its name below, then hit "OK." (You can\'t "unpublish" your submission after that point, only delete it.)\n\n' + props.item.name, '')
+    if (confirmString) {
+      confirmString = confirmString.trim().toLowerCase()
+    }
+    if (confirmString && (confirmString === props.item.nameNormal)) {
+      const submission = { ...(props.item) }
+      submission.isPublished = true
+      axios.post(config.api.getUriPrefix() + '/submission/' + props.item.id, submission)
+        .then(res => {
+          window.location = '/Submissions'
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.alert('The submission was not published. (Please enter the correct submission name, to publish.)')
     }
     event.preventDefault()
   }
@@ -96,30 +116,34 @@ const SubmissionBox = (props) => {
       </Link>
       <hr />
       <div className='row submission-social-row'>
-        <div className='col-md-9 h-100'>
+        <div className={props.isDraft ? 'col-md-7 h-100' : 'col-md-9 h-100'}>
           <div className='submission-subheading'>
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>User submissions link</Tooltip>}>
+            <TooltipTrigger meassge='User submissions link'>
               <Link to={'/User/' + props.item.userId + '/Submissions'}><span className='link'>Submitted by {props.item.username}</span></Link>
-            </OverlayTrigger> •
-            <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Submission link</Tooltip>}>
+            </TooltipTrigger> •
+            <TooltipTrigger meassge='Submission link'>
               <span onClick={handleExternalLinkClick} className='link'>
                 {parseContentUrl()} • {props.item.createdAt ? new Date(props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
               </span>
-            </OverlayTrigger> •
+            </TooltipTrigger> •
           </div>
         </div>
-        <div className='col-md-1 text-center'>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Delete submission</Tooltip>}>
-            <span>{props.isEditView && <button className='delete-button btn btn-danger' onClick={handleDeleteOnClick}>Delete</button>}</span>
-          </OverlayTrigger>
+        <div className={props.isDraft ? 'col-md-3 text-right' : 'col-md-1 text-right'}>
+          {props.isDraft &&
+            <TooltipTrigger message='Publish submission'>
+              <span>{props.isEditView && <button className='delete-button btn btn-danger submission-ref-button' onClick={handlePublishOnClick}>Publish</button>}</span>
+            </TooltipTrigger>}
+          <TooltipTrigger message='Delete submission'>
+            <span>{props.isEditView && <button className='delete-button btn btn-danger submission-ref-button' onClick={handleDeleteOnClick}>Delete</button>}</span>
+          </TooltipTrigger>
         </div>
         <div className='col-md-2 text-center'>
-          <OverlayTrigger placement='top' overlay={props => <Tooltip {...props}>Upvote submission</Tooltip>}>
+          <TooltipTrigger message='Upvote submission'>
             <div>
               <div id={isUpvoted ? 'heart-full' : 'heart-empty'} onClick={handleUpVoteOnClick} />
               <span className='submission-like-count'>{upvotes}</span>
             </div>
-          </OverlayTrigger>
+          </TooltipTrigger>
         </div>
       </div>
     </div>
