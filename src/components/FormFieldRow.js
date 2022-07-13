@@ -1,27 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import FormFieldValidator from './FormFieldValidator'
 import FormFieldWideRow from './FormFieldWideRow'
 import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldRow = (props) => {
-  const [value, setValue] = useState(props.value ? props.value : (props.defaultValue ? props.defaultValue : ''))
+  const [value, setValue] = useState(props.value)
+  const [checked, setChecked] = useState(props.checked ? props.checked : false)
   const [isValid, setIsValid] = useState(true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
+
+  useEffect(() => { setValue(props.value) }, [props.value])
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
-    const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    let fieldValue = false
+    if (props.inputType === 'checkbox') {
+      fieldValue = event.target.checked
+      setChecked(event.target.checked)
+    } else {
+      fieldValue = event.target.value
+    }
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
-      if (props.onChange) {
-        props.onChange(fieldName, fieldValue)
-      }
-      setValue(fieldValue)
+    if (props.onChange) {
+      props.onChange(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   const handleOnFieldBlur = (event) => {
@@ -30,12 +37,10 @@ const FormFieldRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
-      if (props.onBlur) {
-        props.onBlur(fieldName, fieldValue)
-      }
-      setValue(fieldValue)
+    if (props.onBlur) {
+      props.onBlur(fieldName, fieldValue)
     }
+    setValue(fieldValue)
   }
 
   return (
@@ -68,8 +73,8 @@ const FormFieldRow = (props) => {
             className='form-control'
             type={props.inputType}
             selected={props.defaultValue}
-            value={props.value}
-            checked={props.checked}
+            value={value}
+            checked={checked}
             onChange={handleOnFieldChange}
             onBlur={handleOnFieldBlur}
           />}

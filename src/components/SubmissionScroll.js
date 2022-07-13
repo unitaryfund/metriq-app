@@ -137,6 +137,7 @@ class SubmissionScroll extends React.Component {
                   isLoggedIn={this.props.isLoggedIn}
                   isEditView={this.props.isEditView}
                   isUnderReview={!(item.approvedAt)}
+                  isDraft={!(item.publishedAt)}
                 />)}
             </InfiniteScroll>
           )}
