@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import FormFieldValidator from './FormFieldValidator'
 import TooltipTrigger from './TooltipTrigger'
 
 const FormFieldSelectRow = (props) => {
@@ -81,7 +83,12 @@ const FormFieldSelectRow = (props) => {
           )}
         </select>
       </div>
-      <div className='col-md-3' />
+      {props.onClickAdd &&
+        <span>
+          <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickAdd(value || (options.length ? options[0].id : 0))}>Add</Button>
+          <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew}>New</Button>
+        </span>}
+      {!props.onClickAdd && <FormFieldValidator className='col-md-3' message={props.validatorMessage} />}
     </div>
   )
 }

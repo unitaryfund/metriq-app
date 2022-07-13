@@ -5,24 +5,25 @@ import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import FormFieldRow from '../components/FormFieldRow'
-import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import TooltipTrigger from '../components/TooltipTrigger'
-import { Accordion, Button, Card, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
-import { dateRegex, metricValueRegex, nonblankRegex, standardErrorRegex } from '../components/ValidationRegex'
+import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
+import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
+import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
+import ResultsAddModal from '../components/ResultsAddModal'
+import ResultsTable from '../components/ResultsTable'
 
-library.add(faEdit, faExternalLinkAlt, faHeart, faPlus, faTrash, faMobileAlt, faStickyNote, faSuperscript)
-
-const sampleSizeRegex = /^[0-9]+$/
+library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
 
 class Submission extends React.Component {
   constructor (props) {
@@ -35,6 +36,8 @@ class Submission extends React.Component {
       bibtexUrl: '',
       thumbnailUrl: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
+      allNames: [],
+      filteredNames: [],
       metricNames: [],
       methodNames: [],
       taskNames: [],
@@ -43,6 +46,7 @@ class Submission extends React.Component {
       allTaskNames: [],
       allTagNames: [],
       allPlatformNames: [],
+      showAddRefsModal: false,
       showAddModal: false,
       showRemoveModal: false,
       showEditModal: false,
@@ -98,25 +102,29 @@ class Submission extends React.Component {
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleUpVoteOnClick = this.handleUpVoteOnClick.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
+    this.handleOnClickAddRef = this.handleOnClickAddRef.bind(this)
     this.handleOnClickRemove = this.handleOnClickRemove.bind(this)
     this.handleOnClickAddResult = this.handleOnClickAddResult.bind(this)
     this.handleOnClickEditResult = this.handleOnClickEditResult.bind(this)
     this.handleHideAddModal = this.handleHideAddModal.bind(this)
     this.handleHideRemoveModal = this.handleHideRemoveModal.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
+    this.handleModalRefSubmit = this.handleModalRefSubmit.bind(this)
     this.handleRemoveModalDone = this.handleRemoveModalDone.bind(this)
+    this.handleModalRefAddNew = this.handleModalRefAddNew.bind(this)
+    this.handleModalResultAddNew = this.handleModalResultAddNew.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
-    this.handleOnTaskRemove = this.handleOnTaskRemove.bind(this)
-    this.handleOnMethodRemove = this.handleOnMethodRemove.bind(this)
-    this.handleOnPlatformRemove = this.handleOnPlatformRemove.bind(this)
-    this.handleOnResultRemove = this.handleOnResultRemove.bind(this)
-    this.handleOnTagRemove = this.handleOnTagRemove.bind(this)
     this.handleSortNames = this.handleSortNames.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
+    this.handleLoginRedirect = this.handleLoginRedirect.bind(this)
+  }
+
+  handleLoginRedirect () {
+    this.props.history.push('/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id))
   }
 
   handleEditSubmissionDetails () {
@@ -144,7 +152,7 @@ class Submission extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return
     }
 
@@ -194,113 +202,6 @@ class Submission extends React.Component {
     }
   }
 
-  handleOnTaskRemove (taskId) {
-    if (!window.confirm('Are you sure you want to remove this task from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + taskId)
-        .then(res => {
-          const submission = res.data.data
-          const tasks = [...this.state.allTaskNames]
-          this.handleTrimTasks(submission, tasks)
-          this.setState({ item: submission, taskNames: tasks })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnMethodRemove (methodId) {
-    if (!window.confirm('Are you sure you want to remove this method from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + methodId)
-        .then(res => {
-          const submission = res.data.data
-          const methods = [...this.state.allMethodNames]
-          this.handleSortMethods(methods)
-          this.handleTrimMethods(submission, methods)
-          this.setState({ item: submission, methodNames: methods })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnPlatformRemove (platformId) {
-    if (!window.confirm('Are you sure you want to remove this platform from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + platformId)
-        .then(res => {
-          const submission = res.data.data
-          const platforms = [...this.state.allPlatformNames]
-          this.handleSortPlatforms(platforms)
-          this.handleTrimPlatforms(submission, platforms)
-          this.setState({ item: submission, platformNames: platforms })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnTagRemove (tagName) {
-    if (!window.confirm('Are you sure you want to remove this tag from the submission?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + tagName)
-        .then(res => {
-          const submission = res.data.data
-          const tags = [...this.state.allTagNames]
-          this.handleTrimTags(submission, tags)
-          this.setState({ item: submission, tagNames: tags })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
-  handleOnResultRemove (resultId) {
-    if (!window.confirm('Are you sure you want to delete this result?')) {
-      return
-    }
-    if (this.props.isLoggedIn) {
-      axios.delete(config.api.getUriPrefix() + '/result/' + resultId)
-        .then(res => {
-          const rId = res.data.data.id
-          const item = { ...this.state.item }
-          for (let i = 0; i < item.results.length; i++) {
-            if (item.results[i].id === rId) {
-              item.results.splice(i, 1)
-              break
-            }
-          }
-          this.setState({ item: item })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.props.history.push('/Login')
-    }
-  }
-
   handleUpVoteOnClick (event) {
     if (this.props.isLoggedIn) {
       axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/upvote', {})
@@ -311,16 +212,78 @@ class Submission extends React.Component {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
     }
     event.preventDefault()
+  }
+
+  handleOnClickAddRef (mode) {
+    let allNames = []
+    let filteredNames = []
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    } else if (mode === 'Task') {
+      allNames = this.state.allTaskNames
+      filteredNames = this.state.taskNames
+    } else if (mode === 'Method') {
+      allNames = this.state.allMethodNames
+      filteredNames = this.state.methodNames
+    } else if (mode === 'Platform') {
+      allNames = this.state.allPlatformNames
+      filteredNames = this.state.platformNames
+    }
+    this.setState({ showAddRefsModal: true, modalMode: mode, allNames: allNames, filteredNames: filteredNames })
+  }
+
+  handleModalRefAddNew (ref) {
+    const mode = this.state.modalMode
+    let allNames = []
+    const item = this.state.item
+
+    if (mode === 'Task') {
+      allNames = this.state.allTaskNames
+      allNames.push(ref)
+      item.tasks.push(ref)
+    } else if (mode === 'Method') {
+      allNames = this.state.allMethodNames
+      allNames.push(ref)
+      item.methods.push(ref)
+    } else if (mode === 'Platform') {
+      allNames = this.state.allPlatformNames
+      allNames.push(ref)
+      item.platforms.push(ref)
+    } else {
+      return
+    }
+
+    this.handleSortNames(allNames)
+    const filteredNames = [...allNames]
+
+    if (mode === 'Task') {
+      this.handleTrimTasks(this.state.item, filteredNames)
+      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
+    } else if (mode === 'Method') {
+      this.handleTrimMethods(this.state.item, filteredNames)
+      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
+    } else if (mode === 'Platform') {
+      this.handleTrimPlatforms(this.state.item, filteredNames)
+      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
+    }
+  }
+
+  handleModalResultAddNew (submission) {
+    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
+  }
+
+  handleModalRefSubmit (submission) {
+    this.setState({ item: submission, requestFailedMessage: '' })
   }
 
   handleOnClickAdd (mode) {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, isValidated: false })
+    this.setState({ showAddModal: true, modalMode: mode })
   }
 
   handleOnClickRemove (mode) {
@@ -341,11 +304,11 @@ class Submission extends React.Component {
       isHigherBetter: false,
       evaluatedDate: new Date()
     }
-    this.setState({ result: result })
-    this.handleOnClickAdd('Result')
+    this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
   }
 
   handleOnClickEditResult (resultId) {
+    let nResult = {}
     for (let i = 0; i < this.state.item.results.length; i++) {
       if (this.state.item.results[i].id === resultId) {
         const result = { ...this.state.item.results[i] }
@@ -359,15 +322,15 @@ class Submission extends React.Component {
         if ((result.platform !== null) && (result.platform.id !== undefined)) {
           result.platform = result.platform.id
         }
-        this.setState({ result: result })
+        nResult = result
         break
       }
     }
-    this.handleOnClickAdd('Result')
+    this.setState({ result: nResult, showAddModal: true, modalMode: 'Result' })
   }
 
   handleHideAddModal () {
-    this.setState({ showAddModal: false, showAccordion: false })
+    this.setState({ showAddModal: false })
   }
 
   handleHideRemoveModal () {
@@ -376,159 +339,25 @@ class Submission extends React.Component {
 
   handleAddModalSubmit () {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return
     }
 
-    if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordion) {
-        const task = this.state.task
-        if (!task.fullName) {
-          task.fullName = task.name
-        }
-        if (!task.description) {
-          task.description = ''
-        }
-        if (!task.parentTask) {
-          const options = this.state.allTaskNames
-          options.sort((a, b) => (a.top < b.top) ? 1 : -1)
-          task.parentTask = options.filter(x => x.top === 1)[0].id
-        }
-        axios.post(config.api.getUriPrefix() + '/task', task)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/task/' + this.state.taskId, {})
-          .then(res => {
-            const submission = res.data.data
-            const tasks = [...this.state.taskNames]
-            for (let j = 0; j < tasks.length; j++) {
-              if (this.state.taskId === tasks[j].id) {
-                tasks.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', taskNames: tasks, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordion) {
-        const method = this.state.method
-        if (!method.fullName) {
-          method.fullName = method.name
-        }
-        if (!method.description) {
-          method.description = ''
-        }
-        axios.post(config.api.getUriPrefix() + '/method', method)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/method/' + this.state.methodId, {})
-          .then(res => {
-            const submission = res.data.data
-            const methods = [...this.state.methodNames]
-            for (let j = 0; j < methods.length; j++) {
-              if (this.state.methodId === methods[j].id) {
-                methods.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', methodNames: methods, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Platform') {
-      if (this.state.showAccordion) {
-        const platform = this.state.platform
-        if (!platform.fullName) {
-          platform.fullName = platform.name
-        }
-        if (!platform.description) {
-          platform.description = ''
-        }
-        axios.post(config.api.getUriPrefix() + '/platform', platform)
-          .then(res => {
-            window.location.reload()
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      } else {
-        axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/platform/' + this.state.platformId, {})
-          .then(res => {
-            const submission = res.data.data
-            const platforms = [...this.state.platformNames]
-            for (let j = 0; j < platforms.length; j++) {
-              if (this.state.platformId === platforms[j].id) {
-                platforms.splice(j, 1)
-                break
-              }
-            }
-            this.setState({ requestFailedMessage: '', platformNames: platforms, item: submission })
-          })
-          .catch(err => {
-            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-          })
-      }
-    } else if (this.state.modalMode === 'Tag') {
-      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
-        .then(res => {
-          const submission = res.data.data
-          const tags = [...this.state.tagNames]
-          for (let j = 0; j < tags.length; j++) {
-            if (this.state.tag === tags[j].name) {
-              tags.splice(j, 1)
-              break
-            }
+    axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/tag/' + this.state.tag, {})
+      .then(res => {
+        const submission = res.data.data
+        const tags = [...this.state.tagNames]
+        for (let j = 0; j < tags.length; j++) {
+          if (this.state.tag === tags[j].name) {
+            tags.splice(j, 1)
+            break
           }
-          this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else if (this.state.modalMode === 'Result') {
-      const result = this.state.result
-      if (!result.metricName) {
-        window.alert('Error: Metric Name cannot be blank.')
-      }
-      if (!result.metricValue && result.metricValue !== 0) {
-        window.alert('Error: Metric Value cannot be blank.')
-      }
-      if (!result.task) {
-        result.task = this.state.item.tasks[0].id
-      }
-      if (!result.method) {
-        result.method = this.state.item.methods[0].id
-      }
-      if (!result.platform) {
-        result.platform = null
-      }
-      if (!result.evaluatedDate) {
-        result.evaluatedDate = new Date()
-      }
-      const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + this.props.match.params.id + '/result'))
-      axios.post(resultRoute, result)
-        .then(res => {
-          this.setState({ requestFailedMessage: '', item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    }
+        }
+        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
 
     this.setState({ showAddModal: false })
   }
@@ -590,48 +419,13 @@ class Submission extends React.Component {
   }
 
   isAllValid () {
-    if (this.state.modalMode === 'Login') {
-      if (this.state.isValidated) {
-        this.setState({ isValidated: true })
-      }
-      return true
-    }
-
-    if (this.state.modalMode === 'Task') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.task.name)) {
-          return false
-        }
-      } else if (!this.state.taskId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Method') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.method.name)) {
-          return false
-        }
-      } else if (!this.state.methodId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Platform') {
-      if (this.state.showAccordion) {
-        if (!nonblankRegex.test(this.state.platform.name)) {
-          return false
-        }
-      } else if (!this.state.platformId) {
-        return false
-      }
-    } else if (this.state.modalMode === 'Result') {
+    if (this.state.modalMode === 'Result') {
       if (!nonblankRegex.test(this.state.result.metricName)) {
         return false
       }
       if (!metricValueRegex.test(this.state.result.metricValue)) {
         return false
       }
-    }
-
-    if (this.state.isValidated) {
-      this.setState({ isValidated: true })
     }
 
     return true
@@ -789,7 +583,7 @@ class Submission extends React.Component {
               <h2>Tasks
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Task')}
+                  onClickAdd={() => this.handleOnClickAddRef('Task')}
                   onClickRemove={() => this.handleOnClickRemove('Task')}
                 />
               </h2>
@@ -827,7 +621,7 @@ class Submission extends React.Component {
               <h2>Methods
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Method')}
+                  onClickAdd={() => this.handleOnClickAddRef('Method')}
                   onClickRemove={() => this.handleOnClickRemove('Method')}
                 />
               </h2>
@@ -868,7 +662,7 @@ class Submission extends React.Component {
               <h2>Platforms
                 <EditButton
                   className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Platform')}
+                  onClickAdd={() => this.handleOnClickAddRef('Platform')}
                   onClickRemove={() => this.handleOnClickRemove('Platform')}
                 />
               </h2>
@@ -922,94 +716,12 @@ class Submission extends React.Component {
           </div>
         </div>
         <br />
-        <FormFieldWideRow>
-          <div>
-            <h2>Results
-              <EditButton
-                className='float-right edit-button btn'
-                onClickAdd={() => this.handleOnClickAddResult()}
-                onClickRemove={() => this.handleOnClickRemove('Result')}
-              />
-            </h2>
-            <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
-            <hr />
-          </div>
-          {(this.state.item.results.length > 0) &&
-            <Table
-              columns={[
-                {
-                  title: 'Task',
-                  dataIndex: 'taskName',
-                  key: 'taskName',
-                  width: 224
-                },
-                {
-                  title: 'Method',
-                  dataIndex: 'methodName',
-                  key: 'methodName',
-                  width: 224
-                },
-                {
-                  title: 'Platform',
-                  dataIndex: 'platformName',
-                  key: 'platformName',
-                  width: 224
-                },
-                {
-                  title: 'Metric',
-                  dataIndex: 'metricName',
-                  key: 'metricName',
-                  width: 224
-                },
-                {
-                  title: 'Value',
-                  dataIndex: 'metricValue',
-                  key: 'metricValue',
-                  width: 224
-                },
-                {
-                  title: 'Notes',
-                  dataIndex: 'notes',
-                  key: 'notes',
-                  width: 40,
-                  render: (value, row, index) =>
-                    <div className='text-center'>
-                      {row.notes &&
-                        <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
-                          <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
-                        </TooltipTrigger>}
-                    </div>
-                },
-                {
-                  title: '',
-                  dataIndex: 'edit',
-                  key: 'edit',
-                  width: 40,
-                  render: (value, row, index) =>
-                    <div className='text-center'>
-                      <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditResult(row.key)} />
-                    </div>
-                }
-              ]}
-              data={this.state.item.results.length
-                ? this.state.item.results.map(row =>
-                    ({
-                      key: row.id,
-                      taskName: row.task.name,
-                      methodName: row.method.name,
-                      platformName: row.platform ? row.platform.name : '(None)',
-                      metricName: row.metricName,
-                      metricValue: row.metricValue,
-                      notes: row.notes
-                    }))
-                : []}
-              tableLayout='auto'
-            />}
-          {(this.state.item.results.length === 0) &&
-            <div className='card bg-light'>
-              <div className='card-body'>There are no associated results, yet.</div>
-            </div>}
-        </FormFieldWideRow>
+        <ResultsTable
+          results={this.state.item.results}
+          onClickAdd={this.handleOnClickAddResult}
+          onClickRemove={() => this.handleOnClickRemove('Result')}
+          onClickEdit={this.handleOnClickEditResult}
+        />
         <br />
         <FormFieldWideRow>
           <hr />
@@ -1021,398 +733,53 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
+        <SubmissionRefsAddModal
+          show={this.state.showAddRefsModal}
+          onHide={() => this.setState({ showAddRefsModal: false })}
+          modalMode={this.state.modalMode}
+          submissionId={this.props.match.params.id}
+          allNames={this.state.allNames}
+          filteredNames={this.state.filteredNames}
+          onAddExisting={this.handleModalRefSubmit}
+          onAddNew={this.handleModalRefAddNew}
+        />
+        <SubmissionRefsDeleteModal
+          show={this.state.showRemoveModal}
+          onHide={this.handleHideRemoveModal}
+          modalMode={this.state.modalMode}
+          submission={this.state.item}
+          onSubmit={this.handleModalRefSubmit}
+        />
+        <ResultsAddModal
+          show={this.state.showAddModal && (this.state.modalMode === 'Result')}
+          onHide={this.handleHideAddModal}
+          submission={this.state.item}
+          result={this.state.result}
+          metricNames={this.state.metricNames}
+          onAddOrEdit={this.handleModalResultAddNew}
+        />
         <Modal
-          show={this.state.showAddModal} onHide={this.handleHideAddModal}
+          show={this.state.showAddModal && (this.state.modalMode === 'Tag')}
+          onHide={this.handleHideAddModal}
           size='lg'
           aria-labelledby='contained-modal-title-vcenter'
           centered
         >
-          {(this.state.modalMode === 'Login') &&
-            <Modal.Header closeButton>
-              <Modal.Title>Add</Modal.Title>
-            </Modal.Header>}
-          {(this.state.modalMode !== 'Login') &&
-            <Modal.Header closeButton>
-              <Modal.Title>{(this.state.modalMode === 'Result' && this.state.result.id) ? 'Edit' : 'Add'} {this.state.modalMode}</Modal.Title>
-            </Modal.Header>}
-          <Modal.Body>
-            {(this.state.modalMode === 'Login') &&
-              <span>
-                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
-              </span>}
-            {(this.state.modalMode === 'Method') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='methodId'
-                  label='Method'
-                  options={this.state.methodNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A method used in or by this submission, (to perform a task)'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new method.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new method'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Long name of new method'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentMethod'
-                          label='Parent method<br/>(if any)'
-                          isNullDefault
-                          options={this.state.allMethodNames}
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Optionally, the new method is a sub-method of a "parent" method.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('method', field, value)}
-                          tooltip='Long description of new method'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
-            {(this.state.modalMode === 'Task') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='taskId'
-                  label='Task'
-                  options={this.state.taskNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A task performed in or by this submission, (using a method)'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new task.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new task'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='Long name of new task'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentTask'
-                          label='Parent task'
-                          specialOptGrouplabel='Top level categories'
-                          options={this.state.allTaskNames}
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='The new task is a sub-task of a "parent" task.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('task', field, value)}
-                          tooltip='Long description of new task'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
-            {(this.state.modalMode === 'Platform') &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='platformId'
-                  label='Platform'
-                  options={this.state.platformNames}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A platform used by a method in this submission'
-                  disabled={this.state.showAccordion}
-                /><br />
-                Not in the list?<br />
-                <Accordion defaultActiveKey='0'>
-                  <Card>
-                    <Card.Header>
-                      <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                        <FontAwesomeIcon icon='plus' /> Create a new platform.
-                      </Accordion.Toggle>
-                    </Card.Header>
-                    <Accordion.Collapse eventKey='1'>
-                      <Card.Body>
-                        <FormFieldRow
-                          inputName='name'
-                          inputType='text'
-                          label='Name'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          validRegex={nonblankRegex}
-                          tooltip='Short name of new platform'
-                        /><br />
-                        <FormFieldRow
-                          inputName='fullName'
-                          inputType='text'
-                          label='Full name (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='Long name of new platform'
-                        /><br />
-                        <FormFieldSelectRow
-                          inputName='parentPlatform'
-                          label='Parent platform<br/>(if any)'
-                          isNullDefault
-                          options={this.state.allPlatformNames}
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='The new platform inherits the properties of its "parent" platform.'
-                        /><br />
-                        <FormFieldRow
-                          inputName='description'
-                          inputType='textarea'
-                          label='Description (optional)'
-                          onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                          tooltip='Long description of new platform'
-                        />
-                      </Card.Body>
-                    </Accordion.Collapse>
-                  </Card>
-                </Accordion>
-              </span>}
-            {(this.state.modalMode === 'Result') && ((this.state.item.tasks.length === 0) || (this.state.item.methods.length === 0)) &&
-              <span>
-                A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
-              </span>}
-            {(this.state.modalMode === 'Result') && (this.state.item.tasks.length > 0) && (this.state.item.methods.length > 0) &&
-              <span>
-                <FormFieldSelectRow
-                  inputName='task' label='Task'
-                  options={this.state.item.tasks}
-                  value={this.state.result.task.id}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Task from submission, used in this result'
-                /><br />
-                <FormFieldSelectRow
-                  inputName='method' label='Method'
-                  options={this.state.item.methods}
-                  value={this.state.result.method.id}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Method from submission, used in this result'
-                /><br />
-                <FormFieldSelectRow
-                  inputName='platform' label='Platform'
-                  options={this.state.item.platforms}
-                  value={this.state.result.platform ? this.state.result.platform.id : ''}
-                  isNullDefault
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='The quantum computer platform used by the method for this result'
-                /><br />
-                <FormFieldTypeaheadRow
-                  inputName='metricName' label='Metric name'
-                  value={this.state.result.metricName}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  validRegex={nonblankRegex}
-                  options={this.state.metricNames}
-                  tooltip='The name of the measure of performance, for this combination of task and method, for this submission'
-                /><br />
-                <FormFieldRow
-                  inputName='metricValue' inputType='number' label='Metric value'
-                  value={this.state.result.metricValue}
-                  validRegex={metricValueRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='The value of the measure of performance, for this combination of task and method, for this submission'
-                /><br />
-                <FormFieldRow
-                  inputName='evaluatedAt' inputType='date' label='Evaluated'
-                  value={this.state.result.evaluatedAt}
-                  validRegex={dateRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='(Optionally) What date was the metric value collected on?'
-                /><br />
-                <FormFieldRow
-                  inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
-                  checked={this.state.result.isHigherBetter}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Does a higher value of the metric indicate better performance? (If not checked, then a lower value of the metric indicates better performance.)'
-                /><br />
-                <FormFieldRow
-                  inputName='standardError' inputType='number' label='Standard error (optional)'
-                  value={this.state.result.standardError}
-                  validRegex={standardErrorRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Confidence intervals will be calculated as (mean) result metric value ± standard error times z-score, if you report a standard error. This is self-consistent if your statistics are Gaussian or Poisson, for example, over a linear scale of the metric. (If Gaussian or Poisson statistics emerge over a different, non-linear scale of the metric, consider reporting your metric value with rescaled units.)'
-                /><br />
-                <FormFieldRow
-                  inputName='sampleSize' inputType='number' label='Sample size (optional)'
-                  value={this.state.result.sampleSize}
-                  validRegex={sampleSizeRegex}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='Report the sample size used to calculate the metric value.'
-                /><br />
-                <FormFieldRow
-                  inputName='notes' inputType='textarea' label='Notes'
-                  value={this.state.result.notes}
-                  onChange={(field, value) => this.handleOnChange('result', field, value)}
-                  tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
-                />
-              </span>}
-            {(this.state.modalMode === 'Tag') &&
-              <span>
-                <FormFieldTypeaheadRow
-                  inputName='tag' label='Tag'
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  validRegex={nonblankRegex}
-                  options={this.state.tagNames.map(item => item.name)}
-                  tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
-                /><br />
-              </span>}
-            {(this.state.modalMode !== 'Login') && <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>}
-          </Modal.Body>
-          <Modal.Footer>
-            {(this.state.modalMode === 'Login') && <Button variant='primary' onClick={this.handleHideAddModal}>Cancel</Button>}
-            {(this.state.modalMode !== 'Login') && <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>}
-          </Modal.Footer>
-        </Modal>
-        <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Remove</Modal.Title>
+            <Modal.Title>Add Tag</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {(this.state.modalMode === 'Login') &&
-              <span>
-                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.match.params.id)}>login</Link> before editing.
-              </span>}
-            {(this.state.modalMode === 'Task') &&
-              <span>
-                <b>Attached tasks:</b><br />
-                {(this.state.item.tasks.length > 0) &&
-                  this.state.item.tasks.map(task =>
-                    <div key={task.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {task.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTaskRemove(task.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.tasks.length === 0) &&
-                  <span><i>There are no attached tasks.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Method') &&
-              <span>
-                <b>Attached methods:</b><br />
-                {(this.state.item.methods.length > 0) &&
-                  this.state.item.methods.map(method =>
-                    <div key={method.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {method.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnMethodRemove(method.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.methods.length === 0) &&
-                  <span><i>There are no attached methods.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Platform') &&
-              <span>
-                <b>Attached platforms:</b><br />
-                {(this.state.item.platforms.length > 0) &&
-                  this.state.item.platforms.map(platform =>
-                    <div key={platform.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {platform.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnPlatformRemove(platform.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.platforms.length === 0) &&
-                  <span><i>There are no attached platforms.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Result') &&
-              <span>
-                <b>Attached results:</b><br />
-                {(this.state.item.results.length > 0) &&
-                  this.state.item.results.map(result =>
-                    <div key={result.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {result.task.name}, {result.method.name}, {result.metricName}: {result.metricValue}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnResultRemove(result.id)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.results.length === 0) &&
-                  <span><i>There are no attached results.</i></span>}
-              </span>}
-            {(this.state.modalMode === 'Tag') &&
-              <span>
-                <b>Attached tags:</b><br />
-                {(this.state.item.tags.length > 0) &&
-                  this.state.item.tags.map(tag =>
-                    <div key={tag.id}>
-                      <hr />
-                      <div className='row'>
-                        <div className='col-md-10'>
-                          {tag.name}
-                        </div>
-                        <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnTagRemove(tag.name)}><FontAwesomeIcon icon='trash' /> </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                {(this.state.item.tags.length === 0) &&
-                  <span><i>There are no attached tags.</i></span>}
-              </span>}
+            <FormFieldTypeaheadRow
+              inputName='tag' label='Tag'
+              onChange={(field, value) => this.handleOnChange('', field, value)}
+              validRegex={nonblankRegex}
+              options={this.state.tagNames.map(item => item.name)}
+              tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
+            /><br />
+            <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleRemoveModalDone}>
-              {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
-            </Button>
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
           </Modal.Footer>
         </Modal>
         <Modal

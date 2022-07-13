@@ -59,6 +59,15 @@ textarea {
   background-color: white;
 }
 
+.metriq-submission-ref-row {
+  margin-bottom: 8px;
+}
+
+.metriq-submission-ref-row-label {
+  text-align: left;
+  margin-top: 8px;
+}
+
 .navbar-nav {
   border-radius: 16px;
   border: none;
@@ -107,6 +116,10 @@ form > .row > label {
   text-align: right;
 }
 
+form > span > .row > label {
+  text-align: right;
+}
+
 .container a {
   color: #007bff;
 }
@@ -151,6 +164,10 @@ form > .row > label {
   width: 80px;
   height: 38px;
   margin: 4px;
+}
+
+.submission-ref-button {
+  margin-right: 4px;
 }
 
 .submission-heading {
