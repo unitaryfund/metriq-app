@@ -44,7 +44,7 @@ class EditDetails extends React.Component {
       name: this.state.newName
     }
 
-    axios.post(config.api.getUriPrefix() + '/user/update', request)
+    axios.post(config.api.getUriPrefix() + '/user', request)
       .then(res => {
         this.props.history.push('/')
       })
