@@ -85,7 +85,7 @@ class Profile extends React.Component {
           </FormFieldAlertRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <Button variant='primary' onClick={this.handleShowModal}>Edit Details</Button>
+            <Link to='/EditDetails'><Button variant='primary'>Edit Details</Button></Link>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
