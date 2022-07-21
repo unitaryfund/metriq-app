@@ -24,10 +24,6 @@
   font-size: calc(10px + 2vmin);
 }
 
-.footer-shim {
-  height: 384px;
-}
-
 .centered-tabs > nav {
   display: flex;
   flex-direction: row;
