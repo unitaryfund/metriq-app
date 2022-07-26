@@ -11,7 +11,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
@@ -23,7 +23,7 @@ import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 import ResultsAddModal from '../components/ResultsAddModal'
 import ResultsTable from '../components/ResultsTable'
 
-library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
+library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript)
 
 class Submission extends React.Component {
   constructor (props) {
@@ -560,7 +560,7 @@ class Submission extends React.Component {
             <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
           </TooltipTrigger>
           <TooltipTrigger message='Submission link'>
-            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faLink} /></button>
           </TooltipTrigger>
           {this.state.isArxiv &&
             <span>
