@@ -1,12 +1,12 @@
 import axios from 'axios'
-import { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
-import FormFieldRow from './FormFieldRow'
-import FormFieldSelectRow from './FormFieldSelectRow'
-import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
 import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex } from './ValidationRegex'
+const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
+const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
+const FormFieldTypeaheadRow = React.lazy(() => import('./FormFieldTypeaheadRow'))
 
 const ResultsAddModal = (props) => {
   const [isValidated, setIsValidated] = useState(false)
@@ -107,7 +107,7 @@ const ResultsAddModal = (props) => {
             A <b>result</b> must cross-reference a <b>task</b> and a <b>method</b>.<br /><br />Make sure to add your task and method to the submission, first.
           </span>}
         {(props.submission.tasks.length > 0) && (props.submission.methods.length > 0) &&
-          <span>
+          <Suspense fallback={<div>Loading...</div>}>
             <FormFieldSelectRow
               inputName='task' label='Task'
               options={props.submission.tasks}
@@ -178,7 +178,7 @@ const ResultsAddModal = (props) => {
               onChange={handleOnChange}
               tooltip='You may include any additional notes on the result, in this field, and they will be visible to all readers.'
             />
-          </span>}
+          </Suspense>}
         <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
       </Modal.Body>
       <Modal.Footer>
