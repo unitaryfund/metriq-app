@@ -49,6 +49,14 @@ textarea {
    font-weight: bold;
 }
 
+.metriq-navbar h2 {
+  margin: 0 10px;
+}
+
+.metriq-navbar h3 {
+  margin: 0 50px;
+}
+
 .metriq-navbar-button {
   font-weight: bold;
   color: black;
@@ -72,6 +80,12 @@ textarea {
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
   border-radius: 16px;
   border: none;
+}
+
+.nav-tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .navbar-nav .metriq-navbar-text.nav-link {
