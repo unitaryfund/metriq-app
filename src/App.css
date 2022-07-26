@@ -338,6 +338,15 @@ form > span > .row > label {
   max-width: 100%;
 }
 
+/* From https://stackoverflow.com/questions/11599859/forcing-a-long-line-of-text-without-spaces-to-line-break-according-to-parent-c#answer-11599916 */
+.wrap {
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
+}
+
 /** Pure CSS heart icon */
 
 #heart {

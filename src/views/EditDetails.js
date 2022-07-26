@@ -15,7 +15,7 @@ class EditDetails extends React.Component {
       requestFailedMessage: '',
       newAffiliation: '',
       newEmail: '',
-      newName: '',
+      newName: ''
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
