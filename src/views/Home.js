@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { useHistory, useParams } from 'react-router-dom'
-import SubmissionScroll from '../components/SubmissionScroll'
 import ViewHeader from '../components/ViewHeader'
+import SubmissionScroll from '../components/SubmissionScroll'
 
 // See https://stackoverflow.com/questions/71663319/react-navigate-to-react-bootstrap-tab-with-history#answer-71668423
 const DEFAULT_INITIAL_TAB = 'Trending'

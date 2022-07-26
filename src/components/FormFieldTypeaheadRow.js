@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, Suspense } from 'react'
 import { Button } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import FormFieldValidator from './FormFieldValidator'
-import TooltipTrigger from './TooltipTrigger'
+const FormFieldValidator = React.lazy(() => import('./FormFieldValidator'))
+const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 
 const FormFieldTypeaheadRow = (props) => {
   const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
@@ -50,9 +50,11 @@ const FormFieldTypeaheadRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <TooltipTrigger message={props.tooltip}>
-          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-        </TooltipTrigger>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <TooltipTrigger message={props.tooltip}>
+            <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+          </TooltipTrigger>
+        </Suspense>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
@@ -74,7 +76,7 @@ const FormFieldTypeaheadRow = (props) => {
       />
       {props.onClickAdd
         ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
-        : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+        : <Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} /></Suspense>}
     </div>
   )
 }
