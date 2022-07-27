@@ -91,7 +91,6 @@ app.get('*', (req, res, next) => {
       .replace(defaultTitle, title)
       .replace(defaultDescription, description)
       .replace(defaultDescription, description)
-      .replace("'Pixel art \"m\" logo for Metriq app'", "'Metriq submission logo or published article figure'")
       .replace("content='https://metriq.info'", "content='https://metriq.info" + req.url + "'")
     return res.send(htmlData)
   })
