@@ -83,15 +83,16 @@ app.get('*', (req, res, next) => {
       title = title.substring(0, 47) + '...'
     }
 
+    description = description.split('"').join("'");
+
     // inject meta tags
     htmlData = htmlData
       .replace(defaultTitle, title)
       .replace(defaultTitle, title)
-      .replace(defaultTitle, title)
       .replace(defaultDescription, description)
       .replace(defaultDescription, description)
-      .replace(defaultDescription, description)
-      .replace('<meta property=\'og:url\' content=\'https://metriq.info\' />', '<meta property=\'og:url\' content=\'https://metriq.info' + req.url + '\' />')
+      .replace("'Pixel art \"m\" logo for Metriq app'", "'Metriq submission logo or published article figure'")
+      .replace("content='https://metriq.info'", "content='https://metriq.info" + req.url + "'")
     return res.send(htmlData)
   })
 })
