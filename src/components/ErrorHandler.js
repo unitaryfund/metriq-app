@@ -3,7 +3,6 @@ function ErrorHandler (error) {
     return 'Something went wrong.'
   }
   if (error.response.status === 400) {
-    console.log(error)
     if (error.response.data.message) {
       return 'Bad request: ' + error.response.data.message
     }

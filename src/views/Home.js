@@ -21,7 +21,6 @@ const Home = (props) => {
     setActiveTab(props.tabKey)
   }, [props, history, tag])
 
-  // console.log('initial tab : ' + init);
   const toggle = (tab) => {
     if (props.tabKey !== tab) {
       history.replace(tag ? `/Tag/${tag}/${tab}` : `/${tab}`)

@@ -82,7 +82,6 @@ const SubmissionRefsAddModal = (props) => {
       const refId = item.id ? item.id : props.filteredNames.length ? props.filteredNames[0].id : 0
       axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + refId, {})
         .then(res => {
-          console.log(res)
           props.onAddExisting(res.data.data)
         })
         .catch(err => {

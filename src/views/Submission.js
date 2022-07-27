@@ -733,7 +733,7 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<span/>}>
           <SubmissionRefsAddModal
             show={this.state.showAddRefsModal}
             onHide={() => this.setState({ showAddRefsModal: false })}

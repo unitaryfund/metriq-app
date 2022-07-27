@@ -44,7 +44,6 @@ app.get('*', (req, res, next) => {
     if (req.url.startsWith('/Submission/')) {
       const id = truncateBefore(req.url, '/Submission/')
       const route = config.api.getUriPrefix() + '/submission/' + id
-      console.log(route)
       await (axios.get(route)
         .then(subRes => {
           const response = subRes.data.data
