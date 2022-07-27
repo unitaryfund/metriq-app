@@ -69,6 +69,15 @@ app.get('*', (req, res, next) => {
           title = response.name
           description = response.description
         }))
+    } else if (req.url.startsWith('/Platform/')) {
+      const id = truncateBefore(req.url, '/Platform/')
+      const route = config.api.getUriPrefix() + '/Platform/' + id
+      await (axios.get(route)
+        .then(subRes => {
+          const response = subRes.data.data
+          title = response.name
+          description = response.description
+        }))
     }
     if (title.length > 50) {
       title = title.substring(0, 47) + '...'
@@ -78,6 +87,8 @@ app.get('*', (req, res, next) => {
     htmlData = htmlData
       .replace(defaultTitle, title)
       .replace(defaultTitle, title)
+      .replace(defaultTitle, title)
+      .replace(defaultDescription, description)
       .replace(defaultDescription, description)
       .replace(defaultDescription, description)
       .replace('<meta property=\'og:url\' content=\'https://metriq.info\' />', '<meta property=\'og:url\' content=\'https://metriq.info' + req.url + '\' />')
