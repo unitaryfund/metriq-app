@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { Button } from 'react-bootstrap'
 import FormFieldValidator from './FormFieldValidator'
-import TooltipTrigger from './TooltipTrigger'
+const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 
 const FormFieldSelectRow = (props) => {
   const options = props.options
@@ -49,13 +49,15 @@ const FormFieldSelectRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <TooltipTrigger message={props.tooltip}>
-          <span
-            htmlFor={props.inputName}
-            className={`col-md-3 form-field-label ${props.labelClass ? props.labelClass : ''}`}
-            dangerouslySetInnerHTML={{ __html: props.label }}
-          />
-        </TooltipTrigger>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <TooltipTrigger message={props.tooltip}>
+            <span
+              htmlFor={props.inputName}
+              className={`col-md-3 form-field-label ${props.labelClass ? props.labelClass : ''}`}
+              dangerouslySetInnerHTML={{ __html: props.label }}
+            />
+          </TooltipTrigger>
+        </Suspense>}
       {!props.tooltip &&
         <label
           htmlFor={props.inputName}

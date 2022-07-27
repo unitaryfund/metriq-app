@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import SotaChart from '../components/SotaChart'
 import CategoryScroll from '../components/CategoryScroll'
 import moment from 'moment'
 import { parse } from 'json2csv'
@@ -19,6 +18,7 @@ import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { sortByCounts } from '../components/SortFunctions'
+const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
 
@@ -312,25 +312,29 @@ class Task extends React.Component {
                   </div>
 
                 </div>
-                <SotaChart
-                  data={this.state.chartData[this.state.chartKey]}
-                  xLabel='Time' yLabel={this.state.chartKey}
-                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
-                  key={Math.random()}
-                  isLog={this.state.isLog}
-                />
-              </div>
-              {/* See sota-chart-message CSS class in App.css, re: 820 */}
-              {(window.screen.width < 820) &&
-                <div className='sota-chart-message'>
+                <Suspense fallback={<div>Loading...</div>}>
                   <SotaChart
-                    isMobile
                     data={this.state.chartData[this.state.chartKey]}
                     xLabel='Time' yLabel={this.state.chartKey}
                     isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
                     key={Math.random()}
                     isLog={this.state.isLog}
                   />
+                </Suspense>
+              </div>
+              {/* See sota-chart-message CSS class in App.css, re: 820 */}
+              {(window.screen.width < 820) &&
+                <div className='sota-chart-message'>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <SotaChart
+                      isMobile
+                      data={this.state.chartData[this.state.chartKey]}
+                      xLabel='Time' yLabel={this.state.chartKey}
+                      isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                      key={Math.random()}
+                      isLog={this.state.isLog}
+                    />
+                  </Suspense>
                 </div>}
             </div>}
           <FormFieldWideRow>

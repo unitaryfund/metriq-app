@@ -46,9 +46,11 @@ const FormFieldRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <TooltipTrigger message={props.tooltip}>
-          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-        </TooltipTrigger>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <TooltipTrigger message={props.tooltip}>
+            <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+          </TooltipTrigger>
+        </Suspense>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <div className='col-md-6 '>

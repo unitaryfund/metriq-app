@@ -1,11 +1,9 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from '../config'
 import Table from 'rc-table'
 import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
-import FormFieldRow from '../components/FormFieldRow'
-import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -15,6 +13,8 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { intRegex, nonblankRegex, numberRegex } from '../components/ValidationRegex'
+const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
+const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
 const defaultRegex = /.+/
 // bool is handled by checkbox FormFieldRow
@@ -577,19 +577,21 @@ class Platform extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
-                <FormFieldSelectRow
-                  inputName='parentPlatform'
-                  label='Parent platform<br/>(if any)'
-                  options={this.state.allPlatformNames}
-                  value={this.state.platform.parentPlatform}
-                  onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                  tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
-                /><br />
-                <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.platform.description}
-                  onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <FormFieldSelectRow
+                    inputName='parentPlatform'
+                    label='Parent platform<br/>(if any)'
+                    options={this.state.allPlatformNames}
+                    value={this.state.platform.parentPlatform}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
+                  /><br />
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.platform.description}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                  />
+                </Suspense>
               </span>}
           </Modal.Body>
           <Modal.Footer>
@@ -618,87 +620,89 @@ class Platform extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
-                <FormFieldSelectRow
-                  inputName='id'
-                  label='Property'
-                  options={this.state.allPropertyNames}
-                  value={this.state.property.id}
-                  onChange={(field, value) => this.handleOnChangePropertyId(value)}
-                  tooltip='An explicitly-typed key/value property of this platform'
-                  disabled={this.state.showAccordion}
-                /><br />
-                <FormFieldRow
-                  inputName='value'
-                  inputType={this.state.property.inputType}
-                  label='Value'
-                  validRegex={this.state.property.inputRegex}
-                  value={this.state.property.value}
-                  checked={this.state.property.inputType === 'checkbox' ? this.state.property.value === 'true' : undefined}
-                  onChange={(field, value) => this.handleOnChange('property', field, (this.state.property.inputType === 'checkbox') ? value.toString() : value)}
-                  tooltip='Platform value of selected property'
-                />
-                {(this.state.modalEditMode === 'Add') &&
-                  <span>
-                    <br />Not in the list?<br />
-                    <Accordion defaultActiveKey='0'>
-                      <Card>
-                        <Card.Header>
-                          <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
-                            <FontAwesomeIcon icon='plus' /> Create a new property.
-                          </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey='1'>
-                          <Card.Body>
-                            <FormFieldRow
-                              inputName='name'
-                              inputType='text'
-                              label='Name'
-                              onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              validRegex={nonblankRegex}
-                              tooltip='Short name of new property'
-                            /><br />
-                            <FormFieldRow
-                              inputName='fullName'
-                              inputType='text'
-                              label='Full name (optional)'
-                              onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              tooltip='Long name of new property'
-                            /><br />
-                            <FormFieldSelectRow
-                              inputName='dataTypeId'
-                              label='Type'
-                              options={this.state.allDataTypeNames}
-                              value={this.state.property.dataTypeId}
-                              onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
-                              tooltip='Explicit data type of new property'
-                            /><br />
-                            <FormFieldRow
-                              inputName='value'
-                              inputType={this.state.property.inputType}
-                              label='Value'
-                              onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              validRegex={this.state.property.inputRegex}
-                              tooltip='Value of new property'
-                            /><br />
-                            <FormFieldRow
-                              inputName='typeDescription'
-                              inputType='textarea'
-                              label='Type Description<br/>(optional)'
-                              onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              tooltip='Long description of new property type'
-                            /><br />
-                            <FormFieldRow
-                              inputName='valueDescription'
-                              inputType='textarea'
-                              label='Value Description<br/>(optional)'
-                              onChange={(field, value) => this.handleOnChange('property', field, value)}
-                              tooltip='Long description of new property value'
-                            />
-                          </Card.Body>
-                        </Accordion.Collapse>
-                      </Card>
-                    </Accordion>
-                  </span>}
+                <Suspense fallback={<div>Loading...</div>}>
+                  <FormFieldSelectRow
+                    inputName='id'
+                    label='Property'
+                    options={this.state.allPropertyNames}
+                    value={this.state.property.id}
+                    onChange={(field, value) => this.handleOnChangePropertyId(value)}
+                    tooltip='An explicitly-typed key/value property of this platform'
+                    disabled={this.state.showAccordion}
+                  /><br />
+                  <FormFieldRow
+                    inputName='value'
+                    inputType={this.state.property.inputType}
+                    label='Value'
+                    validRegex={this.state.property.inputRegex}
+                    value={this.state.property.value}
+                    checked={this.state.property.inputType === 'checkbox' ? this.state.property.value === 'true' : undefined}
+                    onChange={(field, value) => this.handleOnChange('property', field, (this.state.property.inputType === 'checkbox') ? value.toString() : value)}
+                    tooltip='Platform value of selected property'
+                  />
+                  {(this.state.modalEditMode === 'Add') &&
+                    <span>
+                      <br />Not in the list?<br />
+                      <Accordion defaultActiveKey='0'>
+                        <Card>
+                          <Card.Header>
+                            <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={this.handleAccordionToggle}>
+                              <FontAwesomeIcon icon='plus' /> Create a new property.
+                            </Accordion.Toggle>
+                          </Card.Header>
+                          <Accordion.Collapse eventKey='1'>
+                            <Card.Body>
+                              <FormFieldRow
+                                inputName='name'
+                                inputType='text'
+                                label='Name'
+                                onChange={(field, value) => this.handleOnChange('property', field, value)}
+                                validRegex={nonblankRegex}
+                                tooltip='Short name of new property'
+                              /><br />
+                              <FormFieldRow
+                                inputName='fullName'
+                                inputType='text'
+                                label='Full name (optional)'
+                                onChange={(field, value) => this.handleOnChange('property', field, value)}
+                                tooltip='Long name of new property'
+                              /><br />
+                              <FormFieldSelectRow
+                                inputName='dataTypeId'
+                                label='Type'
+                                options={this.state.allDataTypeNames}
+                                value={this.state.property.dataTypeId}
+                                onChange={(field, value) => this.handleOnTypeChange(parseInt(value))}
+                                tooltip='Explicit data type of new property'
+                              /><br />
+                              <FormFieldRow
+                                inputName='value'
+                                inputType={this.state.property.inputType}
+                                label='Value'
+                                onChange={(field, value) => this.handleOnChange('property', field, value)}
+                                validRegex={this.state.property.inputRegex}
+                                tooltip='Value of new property'
+                              /><br />
+                              <FormFieldRow
+                                inputName='typeDescription'
+                                inputType='textarea'
+                                label='Type Description<br/>(optional)'
+                                onChange={(field, value) => this.handleOnChange('property', field, value)}
+                                tooltip='Long description of new property type'
+                              /><br />
+                              <FormFieldRow
+                                inputName='valueDescription'
+                                inputType='textarea'
+                                label='Value Description<br/>(optional)'
+                                onChange={(field, value) => this.handleOnChange('property', field, value)}
+                                tooltip='Long description of new property value'
+                              />
+                            </Card.Body>
+                          </Accordion.Collapse>
+                        </Card>
+                      </Accordion>
+                    </span>}
+                </Suspense>
               </span>}
           </Modal.Body>
           <Modal.Footer>

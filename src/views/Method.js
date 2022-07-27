@@ -1,20 +1,20 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
-import FormFieldRow from '../components/FormFieldRow'
-import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import Commento from '../components/Commento'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { sortByCounts } from '../components/SortFunctions'
+import FormFieldWideRow from '../components/FormFieldWideRow'
+const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
+const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
 library.add(faEdit)
 
@@ -246,19 +246,21 @@ class Method extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
-                <FormFieldSelectRow
-                  inputName='parentMethod'
-                  label='Parent method<br/>(if any)'
-                  options={this.state.allMethodNames}
-                  value={this.state.method.parentMethod.id}
-                  onChange={(field, value) => this.handleOnChange('method', field, value)}
-                  tooltip='Optionally, the new method is a sub-method of a "parent" method.'
-                /><br />
-                <FormFieldRow
-                  inputName='description' inputType='textarea' label='Description' rows='12'
-                  value={this.state.method.description}
-                  onChange={(field, value) => this.handleOnChange('method', field, value)}
-                />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <FormFieldSelectRow
+                    inputName='parentMethod'
+                    label='Parent method<br/>(if any)'
+                    options={this.state.allMethodNames}
+                    value={this.state.method.parentMethod.id}
+                    onChange={(field, value) => this.handleOnChange('method', field, value)}
+                    tooltip='Optionally, the new method is a sub-method of a "parent" method.'
+                  /><br />
+                  <FormFieldRow
+                    inputName='description' inputType='textarea' label='Description' rows='12'
+                    value={this.state.method.description}
+                    onChange={(field, value) => this.handleOnChange('method', field, value)}
+                  />
+                </Suspense>
               </span>}
           </Modal.Body>
           <Modal.Footer>
