@@ -116,6 +116,7 @@ class SubmissionScroll extends React.Component {
           <FormFieldTypeaheadRow
             options={this.state.filterOptions}
             inputName='nameOrUrl'
+            inputId={'nameOrUrl-' + this.props.sortType}
             label='Search title or URL'
             value=''
             onChange={(field, value) => this.onFilter(value)}
