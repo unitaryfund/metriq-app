@@ -139,7 +139,7 @@ class Method extends React.Component {
           </FormFieldWideRow>
           <FormFieldWideRow>
             <TooltipTrigger message='Edit method'>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+              <Button className='submission-button' variant='secondary' aria-label='Edit method' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
             <SocialShareIcons url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id} />
           </FormFieldWideRow>

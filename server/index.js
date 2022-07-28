@@ -82,7 +82,7 @@ app.get('*', (req, res, next) => {
       title = title.substring(0, 47) + '...'
     }
 
-    description = description.split('"').join("'");
+    description = description.split('"').join("'")
 
     // inject meta tags
     htmlData = htmlData

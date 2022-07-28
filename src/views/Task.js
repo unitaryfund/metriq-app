@@ -345,9 +345,9 @@ class Task extends React.Component {
           </FormFieldWideRow>
           <FormFieldWideRow>
             <TooltipTrigger message='Edit task'>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}>
+              <Button aria-label='Edit task' className='submission-button' variant='secondary' onClick={this.handleShowEditModal}>
                 <FontAwesomeIcon icon='edit' />
-              </button>
+              </Button>
             </TooltipTrigger>
             <SocialShareIcons url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id} />
           </FormFieldWideRow>
@@ -368,7 +368,7 @@ class Task extends React.Component {
               <br />
             </div>}
           {(this.state.results.length > 0) &&
-            <h2>Results <button className='btn btn-primary' onClick={this.handleCsvExport}>Export to CSV</button></h2>}
+            <h2>Results <Button variant='primary' onClick={this.handleCsvExport}>Export to CSV</Button></h2>}
           {(this.state.results.length > 0) &&
             <FormFieldWideRow>
               <Table

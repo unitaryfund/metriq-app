@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React from 'react'
+import { Button } from 'react-bootstrap'
 import config from './../config'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
@@ -100,11 +101,11 @@ class Token extends React.Component {
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <button className='btn btn-primary' onClick={this.handleGenerateOnClick}>Generate new API Token</button>
+            <Button variant='primary' onClick={this.handleGenerateOnClick}>Generate new API Token</Button>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <button className='btn btn-primary' onClick={this.handleDeleteOnClick}>Disable API access</button>
+            <Button variant='primary' onClick={this.handleDeleteOnClick}>Disable API access</Button>
           </FormFieldWideRow>
           <br />
           <FormFieldAlertRow>

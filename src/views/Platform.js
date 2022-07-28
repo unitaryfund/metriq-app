@@ -366,8 +366,8 @@ class Platform extends React.Component {
             </div>
           </FormFieldWideRow>
           <FormFieldWideRow>
-            <TooltipTrigger message='Edit description'>
-              <button className='submission-button btn btn-secondary' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></button>
+            <TooltipTrigger message='Edit platform'>
+              <Button className='submission-button' variant='secondary' aria-label='Edit platform' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
             <SocialShareIcons url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id} />
           </FormFieldWideRow>
@@ -732,7 +732,7 @@ class Platform extends React.Component {
                           {property.name}
                         </div>
                         <div className='col-md-2'>
-                          <button className='btn btn-danger' onClick={() => this.handleOnPropertyRemove(property.id)}><FontAwesomeIcon icon='trash' /> </button>
+                          <Button variant='danger' aria-label='Delete' onClick={() => this.handleOnPropertyRemove(property.id)}><FontAwesomeIcon icon='trash' /> </Button>
                         </div>
                       </div>
                     </div>

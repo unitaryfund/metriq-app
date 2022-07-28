@@ -89,15 +89,15 @@ class Profile extends React.Component {
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <Link to='/Token'><button className='btn btn-primary'>Manage API Token</button></Link>
+            <Link to='/Token'><Button variant='primary'>Manage API Token</Button></Link>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <Link to='/Password'><button className='btn btn-primary'>Change password</button></Link>
+            <Link to='/Password'><Button variant='primary'>Change password</Button></Link>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <Link to='/Delete'><button className='btn btn-danger'>Delete Account</button></Link>
+            <Link to='/Delete'><Button variant='danger'>Delete Account</Button></Link>
           </FormFieldWideRow>
         </div>
         <Modal

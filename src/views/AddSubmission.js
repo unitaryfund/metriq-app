@@ -524,7 +524,7 @@ class AddSubmission extends React.Component {
               <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>
-          <Suspense fallback={<span/>}>
+          <Suspense fallback={<span />}>
             <SubmissionRefsAddModal
               show={this.state.showAddRefsModal}
               onHide={() => this.setState({ showAddRefsModal: false })}

@@ -557,22 +557,22 @@ class Submission extends React.Component {
         </FormFieldWideRow>
         <FormFieldWideRow>
           <TooltipTrigger message='Upvote submission'>
-            <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
+            <Button className='submission-button' variant={this.state.item.isUpvoted ? 'primary' : 'secondary'} aria-label={(this.state.item.isUpvoted ? 'Cancel like' : 'Like')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</Button>
           </TooltipTrigger>
           <TooltipTrigger message='Submission link'>
-            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faLink} /></button>
+            <Button className='submission-button' variant='secondary' aria-label='Visit submission link' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faLink} /></Button>
           </TooltipTrigger>
           {this.state.isArxiv &&
             <span>
               <TooltipTrigger message='Mobile view preprint'>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
+                <Button className='submission-button' variant='secondary' aria-label='Visit submission mobile view link' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></Button>
               </TooltipTrigger>
               <TooltipTrigger message='BibTex reference'>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+                <Button className='submission-button' variant='secondary' aria-label='Get arXiv BibTex reference' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></Button>
               </TooltipTrigger>
             </span>}
           <TooltipTrigger message='Edit submission'>
-            <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
+            <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
           <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
@@ -733,7 +733,7 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
-        <Suspense fallback={<span/>}>
+        <Suspense fallback={<span />}>
           <SubmissionRefsAddModal
             show={this.state.showAddRefsModal}
             onHide={() => this.setState({ showAddRefsModal: false })}
