@@ -59,8 +59,10 @@ const FormFieldTypeaheadRow = (props) => {
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
-        id={props.inputName}
-        name={props.inputName}
+        inputProps= {{
+          id: props.inputName,
+          name: props.inputName
+        }}
         labelKey={props.labelKey ? props.labelKey : undefined}
         className='col-md-6'
         options={props.options}
