@@ -53,7 +53,7 @@ const MainRouter = (props) => {
 
   return (
     <Router>
-      <MainNavbar isLoggedIn={isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>} />
+      <MainNavbar isLoggedIn={isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> on <a href='/Platforms/'>platforms</a> against <a href='/Tasks/'>tasks</a></span>} />
       <Switch>
         <Route
           exact
