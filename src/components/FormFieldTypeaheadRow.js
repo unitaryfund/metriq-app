@@ -8,6 +8,7 @@ const FormFieldTypeaheadRow = (props) => {
   const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
   const [isValid, setIsValid] = useState(true)
   const typeahead = useRef(null)
+  const coalescedId = props.inputId ? props.inputId : props.inputName
 
   const handleOnFieldChange = (input) => {
     // For a regular input field, read field name and value from the event.
@@ -52,17 +53,17 @@ const FormFieldTypeaheadRow = (props) => {
       {props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={props.inputId ? props.inputId : props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+            <span htmlFor={coalescedId} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
       {!props.tooltip &&
-        <label htmlFor={props.inputId ? props.inputId : props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
-        id={props.inputId ? props.inputId : props.inputName}
+        id={coalescedId}
         inputProps={{
-          id: props.inputId ? props.inputId : props.inputName,
-          name: props.inputId ? props.inputId : props.inputName
+          id: coalescedId,
+          name: coalescedId
         }}
         labelKey={props.labelKey ? props.labelKey : undefined}
         className='col-md-6'
