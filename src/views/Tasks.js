@@ -6,6 +6,7 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
+import CategoryItemBox from '../components/CategoryItemBox'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
@@ -20,6 +21,7 @@ class Tasks extends React.Component {
       popular: [],
       common: [],
       allNames: [],
+      featured: [],
       filterId: null,
       requestFailedMessage: ''
     }
@@ -72,6 +74,31 @@ class Tasks extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+
+    const featured = []
+    axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
+      .then(res => {
+        featured.push(res.data.data)
+        console.log(res.data.data)
+        axios.get(config.api.getUriPrefix() + '/task/submissionCount/69')
+          .then(res => {
+            featured.push(res.data.data)
+            axios.get(config.api.getUriPrefix() + '/task/submissionCount/1')
+              .then(res => {
+                featured.push(res.data.data)
+                this.setState({ featured: featured })
+              })
+              .catch(err => {
+                this.setState({ requestFailedMessage: ErrorHandler(err) })
+              })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   render () {
@@ -91,7 +118,7 @@ class Tasks extends React.Component {
           />
         </FormFieldWideRow>
         <br />
-        <div className='centered-tabs'>
+        <FormFieldWideRow className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>
             <Tab eventKey='common' title='Common'>
               <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
@@ -103,7 +130,21 @@ class Tasks extends React.Component {
               <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
             </Tab>
           </Tabs>
-        </div>
+        </FormFieldWideRow>
+        <FormFieldWideRow>
+          <h5>Featured</h5>
+          <div className='task'>
+            <div className='row h-100'>
+              <div className='col-md col h-100'>
+                <table className='task-method-item'>
+                  <tbody>
+                    {this.state.featured.map((item, index) => <CategoryItemBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} type='task' />)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
