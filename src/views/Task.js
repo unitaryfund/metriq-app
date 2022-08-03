@@ -278,64 +278,48 @@ class Task extends React.Component {
         <div className='container submission-detail-container'>
           {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
             <div>
-              <div className='sota-chart'>
-                <div className='container'>
-                  <FormFieldSelectRow
-                    inputName='chartKey'
-                    value={this.state.chartKey}
-                    label='Chart Metric:'
-                    labelClass='metric-chart-label'
-                    options={this.state.metricNames.map(name =>
-                      ({
-                        id: name,
-                        name: name
-                      }))}
-                    onChange={(field, value) => this.handleOnChange('', field, value)}
-                    tooltip='A metric performance measure of any "method" on this "task"'
+              <div className='container'>
+                <FormFieldSelectRow
+                  inputName='chartKey'
+                  value={this.state.chartKey}
+                  label='Chart Metric:'
+                  labelClass='metric-chart-label'
+                  options={this.state.metricNames.map(name =>
+                    ({
+                      id: name,
+                      name: name
+                    }))}
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  tooltip='A metric performance measure of any "method" on this "task"'
+                />
+                <div className='row' style={{ marginTop: '5px' }}>
+                  <span
+                    htmlFor='logcheckbox'
+                    className='col-md-3 form-field-label metric-chart-label'
+                    dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
                   />
-                  <div className='row' style={{ marginTop: '5px' }}>
-                    <span
-                      htmlFor='logcheckbox'
-                      className='col-md-3 form-field-label metric-chart-label'
-                      dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
+                  <div className='col-md-6'>
+                    <input
+                      type='checkbox'
+                      id='logcheckbox'
+                      name='logcheckbox'
+                      className='form-control'
+                      checked={this.state.islog}
+                      onChange={this.handleToggleLog}
                     />
-                    <div className='col-md-6'>
-                      <input
-                        type='checkbox'
-                        id='logcheckbox'
-                        name='logcheckbox'
-                        className='form-control'
-                        checked={this.state.islog}
-                        onChange={this.handleToggleLog}
-                      />
-                    </div>
                   </div>
-
                 </div>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <SotaChart
-                    data={this.state.chartData[this.state.chartKey]}
-                    xLabel='Time' yLabel={this.state.chartKey}
-                    isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
-                    key={Math.random()}
-                    isLog={this.state.isLog}
-                  />
-                </Suspense>
+
               </div>
-              {/* See sota-chart-message CSS class in App.css, re: 820 */}
-              {(window.screen.width < 820) &&
-                <div className='sota-chart-message'>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SotaChart
-                      isMobile
-                      data={this.state.chartData[this.state.chartKey]}
-                      xLabel='Time' yLabel={this.state.chartKey}
-                      isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
-                      key={Math.random()}
-                      isLog={this.state.isLog}
-                    />
-                  </Suspense>
-                </div>}
+              <Suspense fallback={<div>Loading...</div>}>
+                <SotaChart
+                  data={this.state.chartData[this.state.chartKey]}
+                  xLabel='Time' yLabel={this.state.chartKey}
+                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
+                  key='task-detail'
+                  isLog={this.state.isLog}
+                />
+              </Suspense>
             </div>}
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>

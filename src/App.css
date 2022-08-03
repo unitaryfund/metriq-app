@@ -275,24 +275,10 @@ form > span > .row > label {
   padding-top: 8px;
 }
 
-@media(min-width:820px) {
-  .sota-chart-message {
-    display: none;
-  }
-}
-
-@media(max-width:819px) {
-  .sota-chart {
-    display: none;
-  }
-
-  .sota-chart-message {
-    text-align: center;
-  }
-}
-
-#sota-chart-mobile-canvas {
+.sota-chart {
   min-height: 300px;
+  max-height: 500px;
+  width: 100%;
 }
 
 /** Simple generic styling */

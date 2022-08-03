@@ -2,7 +2,7 @@
 // from https://www.d3-graph-gallery.com/graph/scatter_basic.html
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
@@ -25,175 +25,192 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-class SotaChart extends React.Component {
-  constructor (props) {
-    super(props)
+const SotaChart = (props) => {
+  // Initialize state with undefined width/height so server and client renders match
+  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+  const [windowWidth, setWindowWidth] = useState(0)
 
-    const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
-    if (!props.isMobile) {
-      chartComponents.push(ChartDataLabels)
-    }
+  const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
+  if (windowWidth < 820) {
+    chartComponents.push(ChartDataLabels)
+  }
 
-    Chart.register(chartComponents)
-    Chart.defaults.font.size = 12
+  Chart.register(chartComponents)
+  Chart.defaults.font.size = 12
 
-    const d = props.data
-    const sotaData = d.length ? [d[0]] : []
+  const d = props.data
+  const sotaData = useMemo(() => {
+    const sd = d.length ? [d[0]] : []
     for (let i = 1; i < d.length; i++) {
       if (props.isLowerBetter) {
-        if (d[i].value < sotaData[sotaData.length - 1].value) {
-          sotaData.push(d[i])
+        if (d[i].value < sd[sd.length - 1].value) {
+          sd.push(d[i])
         }
       } else {
-        if (d[i].value > sotaData[sotaData.length - 1].value) {
-          sotaData.push(d[i])
+        if (d[i].value > sd[sd.length - 1].value) {
+          sd.push(d[i])
         }
       }
     }
 
-    this.state = {
-      z95: percentileZ(0.95),
-      key: Math.random(),
-      data: {
-        datasets: [{
-          type: 'scatter',
-          label: 'All (±95% CI, when provided)',
-          labels: props.data.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
-          backgroundColor: 'rgb(0, 0, 0)',
-          borderColor: 'rgb(0, 0, 0)',
-          data: props.data.map(obj => {
-            return {
-              label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
-              isShowLabel: false,
-              x: obj.label,
-              y: obj.value,
-              yMin: obj.standardError ? (obj.value - obj.standardError * this.state.z95) : undefined,
-              yMax: obj.standardError ? (obj.value + obj.standardError * this.state.z95) : undefined
-            }
-          })
-        },
-        {
-          type: 'scatterWithErrorBars',
-          label: '[HIDE LABEL] 1',
-          backgroundColor: 'rgb(128, 128, 128)',
-          borderColor: 'rgb(128, 128, 128)',
-          data: props.data.map((obj, index) => {
-            return {
-              x: obj.label,
-              y: obj.value,
-              yMin: obj.standardError ? (obj.value - obj.standardError * this.state.z95) : undefined,
-              yMax: obj.standardError ? (obj.value + obj.standardError * this.state.z95) : undefined
-            }
-          })
-        },
-        {
-          type: 'line',
-          label: 'State-of-the-art',
-          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-          backgroundColor: 'rgb(60, 210, 249)',
-          borderColor: 'rgb(60, 210, 249)',
-          data: sotaData.map((obj, index) => {
-            return {
-              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
-              isShowLabel: true,
-              x: obj.label,
-              y: obj.value
-            }
-          })
-        }]
+    return sd
+  }, [d, props.isLowerBetter])
+
+  const z95 = percentileZ(0.95)
+  const data = useMemo(() => {
+    return {
+      datasets: [{
+        type: 'scatter',
+        label: 'All (±95% CI, when provided)',
+        labels: props.data.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+        backgroundColor: 'rgb(0, 0, 0)',
+        borderColor: 'rgb(0, 0, 0)',
+        data: props.data.map(obj => {
+          return {
+            label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
+            isShowLabel: false,
+            x: obj.label,
+            y: obj.value,
+            yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
+            yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+          }
+        })
       },
-      options: {
-        responsive: props.isMobile,
-        maintainAspectRatio: !props.isMobile,
-        layout: {
-          padding: {
-            right: 160
+      {
+        type: 'scatterWithErrorBars',
+        label: '[HIDE LABEL] 1',
+        backgroundColor: 'rgb(128, 128, 128)',
+        borderColor: 'rgb(128, 128, 128)',
+        data: props.data.map((obj, index) => {
+          return {
+            x: obj.label,
+            y: obj.value,
+            yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
+            yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+          }
+        })
+      },
+      {
+        type: 'line',
+        label: 'State-of-the-art',
+        labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+        backgroundColor: 'rgb(60, 210, 249)',
+        borderColor: 'rgb(60, 210, 249)',
+        data: sotaData.map((obj, index) => {
+          return {
+            label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+            isShowLabel: true,
+            x: obj.label,
+            y: obj.value
+          }
+        })
+      }]
+    }
+  }, [props.data, sotaData, z95])
+  const options = useMemo(() => {
+    return {
+      responsive: windowWidth < 820,
+      maintainAspectRatio: windowWidth >= 820,
+      layout: {
+        padding: {
+          right: 160
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          title: {
+            display: true,
+            text: props.xLabel ? props.xLabel : 'Time'
+          },
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10
+          },
+          time: {
+            displayFormats: {
+              millisecond: 'YYYY-MM-DD',
+              second: 'YYYY-MM-DD',
+              minute: 'YYYY-MM-DD',
+              hour: 'YYYY-MM-DD',
+              day: 'YYYY-MM-DD',
+              week: 'YYYY-MM-DD',
+              month: 'YYYY-MM',
+              quarter: 'YYYY-MM',
+              year: 'YYYY'
+            }
           }
         },
-        scales: {
-          x: {
-            type: 'time',
-            title: {
-              display: true,
-              text: props.xLabel ? props.xLabel : 'Time'
+        y: {
+          title: {
+            display: true,
+            text: props.yLabel ? props.yLabel : 'Metric value'
+          },
+          type: props.isLog ? 'logarithmic' : 'linear'
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: function (ctx) {
+              return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
             },
-            ticks: {
-              autoSkip: true,
-              maxTicksLimit: 10
-            },
-            time: {
-              displayFormats: {
-                millisecond: 'YYYY-MM-DD',
-                second: 'YYYY-MM-DD',
-                minute: 'YYYY-MM-DD',
-                hour: 'YYYY-MM-DD',
-                day: 'YYYY-MM-DD',
-                week: 'YYYY-MM-DD',
-                month: 'YYYY-MM',
-                quarter: 'YYYY-MM',
-                year: 'YYYY'
-              }
+            label: function (ctx) {
+              let label = ctx.dataset.labels[ctx.dataIndex]
+              label += ' (' + ctx.parsed.y + ')'
+              return label
             }
           },
-          y: {
-            title: {
-              display: true,
-              text: props.yLabel ? props.yLabel : 'Metric value'
-            },
-            type: props.isLog ? 'logarithmic' : 'linear'
+          filter: function (tooltipItem) {
+            const type = tooltipItem.dataset.type
+            return (type === 'scatter')
           }
         },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              title: function (ctx) {
-                return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
-              },
-              label: function (ctx) {
-                let label = ctx.dataset.labels[ctx.dataIndex]
-                label += ' (' + ctx.parsed.y + ')'
-                return label
+        datalabels: windowWidth < 820
+          ? { display: false }
+          : {
+              align: 'center',
+              formatter: function (value, context) {
+                return value.isShowLabel ? value.label : ''
               }
             },
-            filter: function (tooltipItem) {
-              const type = tooltipItem.dataset.type
-              return (type === 'scatter')
-            }
-          },
-          datalabels: props.isMobile
-            ? { display: false }
-            : {
-                align: 'center',
-                formatter: function (value, context) {
-                  return value.isShowLabel ? value.label : ''
-                }
-              },
-          legend: {
-            labels: {
-              filter: function (item, chart) {
-                // Logic to remove a particular legend item goes here
-                return !item.text.includes('[HIDE LABEL]')
-              }
+        legend: {
+          labels: {
+            filter: function (item, chart) {
+            // Logic to remove a particular legend item goes here
+              return !item.text.includes('[HIDE LABEL]')
             }
           }
         }
       }
     }
-  }
+  }, [props.xLabel, props.yLabel, props.isLog, windowWidth])
 
-  componentDidMount () {
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize () {
+      // Set window width/height to state
+      setWindowWidth(window.innerWidth)
+    }
+
+    // Add event listener
+    window.addEventListener('resize', handleResize)
+
+    // Call handler right away so state gets updated with initial window size
+    handleResize()
+
     const chartFunc = () => new LineWithErrorBarsChart(
-      document.getElementById('sota-chart-canvas-' + this.state.key).getContext('2d'),
-      { data: this.state.data, options: this.state.options })
+      document.getElementById('sota-chart-canvas-' + props.key).getContext('2d'),
+      { data: data, options: options })
     chartFunc()
-  }
+
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('resize', handleResize)
+  }, [data, props.key, options]) // Empty array ensures that effect is only run on mount
 
   // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
   // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
-
-  render () {
-    return <canvas id={'sota-chart-canvas-' + this.state.key} key={Math.random()} />
-  }
+  return <canvas id={'sota-chart-canvas-' + props.key} key={Math.random()} className='sota-chart' />
 }
 
 export default SotaChart
