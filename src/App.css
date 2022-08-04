@@ -267,6 +267,7 @@ form > span > .row > label {
 
 .form-field-label {
   white-space: nowrap;
+  padding-top: 8px;
 }
 
 .metric-chart-label {

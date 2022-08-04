@@ -53,11 +53,11 @@ const FormFieldTypeaheadRow = (props) => {
       {props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={coalescedId} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+            <span htmlFor={coalescedId} className='col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
       {!props.tooltip &&
-        <label htmlFor={coalescedId} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className='col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
         id={coalescedId}
