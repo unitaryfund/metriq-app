@@ -122,7 +122,7 @@ class SotaChart extends React.Component {
       maintainAspectRatio: false,
       layout: {
         padding: {
-          right: 100
+          right: this.state.windowWidth >= 820 ? 100 : undefined
         }
       },
       scales: {
