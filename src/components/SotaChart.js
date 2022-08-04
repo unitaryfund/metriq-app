@@ -155,7 +155,7 @@ class SotaChart extends React.Component {
             display: true,
             text: state.chartKey ? state.chartKey : 'Metric value'
           },
-          type: this.state.isLog ? 'logarithmic' : 'linear'
+          type: state.isLog ? 'logarithmic' : 'linear'
         }
       },
       plugins: {
@@ -269,7 +269,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
+    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog })
   }
 
   componentDidMount () {
@@ -365,7 +365,8 @@ class SotaChart extends React.Component {
                 metricNames: this.state.metricNames,
                 chartKey: value,
                 chartData: this.state.chartData,
-                isLowerBetterDict: this.state.isLowerBetterDict
+                isLowerBetterDict: this.state.isLowerBetterDict,
+                isLog: this.state.isLog
               })
             }}
             tooltip='A metric performance measure of any "method" on this "task"'
@@ -384,12 +385,14 @@ class SotaChart extends React.Component {
                 className='form-control'
                 checked={this.state.isLog}
                 onChange={() => {
-                  this.setState({ isLog: !this.state.isLog })
+                  const val = !this.state.isLog
+                  this.setState({ isLog: val })
                   this.loadChartFromState({
                     metricNames: this.state.metricNames,
                     chartKey: this.state.chartKey,
                     chartData: this.state.chartData,
-                    isLowerBetterDict: this.state.isLowerBetterDict
+                    isLowerBetterDict: this.state.isLowerBetterDict,
+                    isLog: val
                   })
                 }}
               />
