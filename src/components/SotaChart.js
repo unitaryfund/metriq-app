@@ -2,12 +2,17 @@
 // from https://www.d3-graph-gallery.com/graph/scatter_basic.html
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React from 'react'
 import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
 import 'chartjs-adapter-moment'
+import FormFieldSelectRow from './FormFieldSelectRow'
+import axios from 'axios'
+import config from '../config'
+import { sortByCounts } from './SortFunctions'
+import ErrorHandler from './ErrorHandler'
 
 // See https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score#answer-36577594
 const percentileZ = (p) => {
@@ -25,47 +30,54 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-const SotaChart = (props) => {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowWidth, setWindowWidth] = useState(0)
+const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
+const _chartComponents = [...chartComponents]
+if (window.innerWidth >= 820) {
+  _chartComponents.push(ChartDataLabels)
+}
+Chart.register(_chartComponents)
+Chart.defaults.font.size = 12
 
-  const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
-  if (windowWidth < 820) {
-    chartComponents.push(ChartDataLabels)
+class SotaChart extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      windowWidth: 0,
+      task: {},
+      isLog: false,
+      chartKey: '',
+      metricNames: [],
+      key: Math.random()
+    }
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    this.loadChartFromState = this.loadChartFromState.bind(this)
+    this.sliceChartData = this.sliceChartData.bind(this)
   }
 
-  Chart.register(chartComponents)
-  Chart.defaults.font.size = 12
-
-  const d = props.data
-  const sotaData = useMemo(() => {
-    const sd = d.length ? [d[0]] : []
+  loadChartFromState (state) {
+    const z95 = percentileZ(0.95)
+    const isLowerBetter = state.isLowerBetterDict[state.chartKey]
+    const d = state.chartData[state.chartKey]
+    const sotaData = d.length ? [d[0]] : []
     for (let i = 1; i < d.length; i++) {
-      if (props.isLowerBetter) {
-        if (d[i].value < sd[sd.length - 1].value) {
-          sd.push(d[i])
+      if (isLowerBetter) {
+        if (d[i].value < sotaData[sotaData.length - 1].value) {
+          sotaData.push(d[i])
         }
       } else {
-        if (d[i].value > sd[sd.length - 1].value) {
-          sd.push(d[i])
+        if (d[i].value > sotaData[sotaData.length - 1].value) {
+          sotaData.push(d[i])
         }
       }
     }
-
-    return sd
-  }, [d, props.isLowerBetter])
-
-  const z95 = percentileZ(0.95)
-  const data = useMemo(() => {
-    return {
+    const data = {
       datasets: [{
         type: 'scatter',
         label: 'All (±95% CI, when provided)',
-        labels: props.data.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+        labels: d.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
         backgroundColor: 'rgb(0, 0, 0)',
         borderColor: 'rgb(0, 0, 0)',
-        data: props.data.map(obj => {
+        data: d.map(obj => {
           return {
             label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
             isShowLabel: false,
@@ -81,7 +93,7 @@ const SotaChart = (props) => {
         label: '[HIDE LABEL] 1',
         backgroundColor: 'rgb(128, 128, 128)',
         borderColor: 'rgb(128, 128, 128)',
-        data: props.data.map((obj, index) => {
+        data: d.map((obj, index) => {
           return {
             x: obj.label,
             y: obj.value,
@@ -106,11 +118,9 @@ const SotaChart = (props) => {
         })
       }]
     }
-  }, [props.data, sotaData, z95])
-  const options = useMemo(() => {
-    return {
-      responsive: windowWidth < 820,
-      maintainAspectRatio: windowWidth >= 820,
+    const options = {
+      responsive: this.state.windowWidth < 820,
+      maintainAspectRatio: this.state.windowWidth >= 820,
       layout: {
         padding: {
           right: 160
@@ -121,7 +131,7 @@ const SotaChart = (props) => {
           type: 'time',
           title: {
             display: true,
-            text: props.xLabel ? props.xLabel : 'Time'
+            text: this.props.xLabel ? this.props.xLabel : 'Time'
           },
           ticks: {
             autoSkip: true,
@@ -144,9 +154,9 @@ const SotaChart = (props) => {
         y: {
           title: {
             display: true,
-            text: props.yLabel ? props.yLabel : 'Metric value'
+            text: state.chartKey ? state.chartKey : 'Metric value'
           },
-          type: props.isLog ? 'logarithmic' : 'linear'
+          type: this.state.isLog ? 'logarithmic' : 'linear'
         }
       },
       plugins: {
@@ -166,7 +176,7 @@ const SotaChart = (props) => {
             return (type === 'scatter')
           }
         },
-        datalabels: windowWidth < 820
+        datalabels: this.state.windowWidth < 820
           ? { display: false }
           : {
               align: 'center',
@@ -184,33 +194,199 @@ const SotaChart = (props) => {
         }
       }
     }
-  }, [props.xLabel, props.yLabel, props.isLog, windowWidth])
-
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize () {
-      // Set window width/height to state
-      setWindowWidth(window.innerWidth)
-    }
-
-    // Add event listener
-    window.addEventListener('resize', handleResize)
-
-    // Call handler right away so state gets updated with initial window size
-    handleResize()
 
     const chartFunc = () => new LineWithErrorBarsChart(
-      document.getElementById('sota-chart-canvas-' + props.key).getContext('2d'),
+      document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'),
       { data: data, options: options })
     chartFunc()
+  }
 
-    // Remove event listener on cleanup
-    return () => window.removeEventListener('resize', handleResize)
-  }, [data, props.key, options]) // Empty array ensures that effect is only run on mount
+  sliceChartData (task) {
+    const results = task.results
+    results.sort(function (a, b) {
+      const mna = a.metricName.toLowerCase()
+      const mnb = b.metricName.toLowerCase()
+      if (mna < mnb) {
+        return -1
+      }
+      if (mnb < mna) {
+        return 1
+      }
+
+      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt)
+      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt)
+      if (mda < mdb) {
+        return -1
+      }
+      if (mdb < mda) {
+        return 1
+      }
+
+      return 0
+    })
+    const allData = results.map(row =>
+      ({
+        method: row.methodName,
+        platform: row.platformName,
+        metric: row.metricName,
+        label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
+        value: row.metricValue,
+        isHigherBetter: row.isHigherBetter
+      }))
+    const chartData = {}
+    const isHigherBetterCounts = {}
+    for (let i = 0; i < allData.length; i++) {
+      if (!chartData[allData[i].metric]) {
+        chartData[allData[i].metric] = []
+        isHigherBetterCounts[allData[i].metric] = 0
+      }
+      chartData[allData[i].metric].push(allData[i])
+      if (allData[i].isHigherBetter) {
+        isHigherBetterCounts[allData[i].metric]++
+      }
+    }
+    const metricNames = Object.keys(chartData)
+    let chartKey = ''
+    let m = 0
+    const isLowerBetterDict = {}
+    for (let i = 0; i < metricNames.length; i++) {
+      const length = chartData[metricNames[i]].length
+      if (length > m) {
+        chartKey = metricNames[i]
+        m = length
+      }
+      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
+    }
+    let i = 0
+    while (i < metricNames.length) {
+      const length = chartData[metricNames[i]].length
+      if (length < 3) {
+        metricNames.splice(i, 1)
+      } else {
+        i++
+      }
+    }
+    this.setState({ metricNames: metricNames, chartKey: chartKey, key: Math.random() })
+    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
+  }
+
+  componentDidMount () {
+    this.updateWindowDimensions()
+    window.addEventListener('resize', this.updateWindowDimensions)
+
+    const taskRoute = config.api.getUriPrefix() + '/task/' + this.props.taskId
+    axios.get(taskRoute)
+      .then(res => {
+        const task = res.data.data
+        task.childTasks.sort(sortByCounts)
+        this.setState({ requestFailedMessage: '', item: task })
+
+        const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+        axios.get(taskNamesRoute)
+          .then(res => {
+            const tasks = [...res.data.data]
+            this.handleTrimTasks(task.id, tasks)
+            this.setState({ requestFailedMessage: '', allTaskNames: tasks })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
+
+        const results = task.results
+        results.sort(function (a, b) {
+          const mna = a.metricName.toLowerCase()
+          const mnb = b.metricName.toLowerCase()
+          if (mna < mnb) {
+            return -1
+          }
+          if (mnb < mna) {
+            return 1
+          }
+          const mva = parseFloat(a.metricValue)
+          const mvb = parseFloat(b.metricValue)
+          if (!a.isHigherBetter) {
+            if (mva < mvb) {
+              return -1
+            }
+            if (mvb < mva) {
+              return 1
+            }
+            return 0
+          } else {
+            if (mva > mvb) {
+              return -1
+            }
+            if (mvb > mva) {
+              return 1
+            }
+            return 0
+          }
+        })
+        this.setState({ task: task })
+        this.sliceChartData(task)
+        if (this.props.onLoadData) {
+          this.props.onLoadData(task)
+        }
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.updateWindowDimensions)
+  }
+
+  updateWindowDimensions () {
+    this.setState({ windowWidth: window.innerWidth })
+    const _chartComponents = [...chartComponents]
+    if (window.innerWidth >= 820) {
+      _chartComponents.push(ChartDataLabels)
+    }
+    Chart.register(_chartComponents)
+  }
 
   // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
   // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
-  return <canvas id={'sota-chart-canvas-' + props.key} key={Math.random()} className='sota-chart' />
+  render () {
+    return (
+      <span>
+        <div className='container'>
+          <FormFieldSelectRow
+            inputName='chartKey'
+            value={this.state.chartKey}
+            label='Chart Metric:'
+            labelClass='metric-chart-label'
+            options={this.state.metricNames.map(name =>
+              ({
+                id: name,
+                name: name
+              }))}
+            onChange={(field, value) => this.setState({ chartKey: value })}
+            tooltip='A metric performance measure of any "method" on this "task"'
+          />
+          <div className='row' style={{ marginTop: '5px' }}>
+            <span
+              htmlFor='logcheckbox'
+              className='col-md-3 form-field-label metric-chart-label'
+              dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
+            />
+            <div className='col-md-6'>
+              <input
+                type='checkbox'
+                id='logcheckbox'
+                name='logcheckbox'
+                className='form-control'
+                checked={this.state.isLog}
+                onChange={() => this.setState({ isLog: !this.state.isLog })}
+              />
+            </div>
+          </div>
+        </div>
+        <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} className='sota-chart' />
+      </span>
+    )
+  }
 }
 
 export default SotaChart

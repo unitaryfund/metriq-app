@@ -79,7 +79,6 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
         featured.push(res.data.data)
-        console.log(res.data.data)
         axios.get(config.api.getUriPrefix() + '/task/submissionCount/69')
           .then(res => {
             featured.push(res.data.data)

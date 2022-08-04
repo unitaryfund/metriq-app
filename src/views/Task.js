@@ -12,12 +12,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CategoryScroll from '../components/CategoryScroll'
-import moment from 'moment'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
-import { sortByCounts } from '../components/SortFunctions'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -33,9 +31,6 @@ class Task extends React.Component {
       allTaskNames: [],
       results: [],
       resultsJson: [],
-      chartData: {},
-      chartKey: '',
-      metricNames: [],
       isLowerBetterDict: {},
       isLog: false
     }
@@ -45,9 +40,8 @@ class Task extends React.Component {
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
-    this.sliceChartData = this.sliceChartData.bind(this)
     this.handleCsvExport = this.handleCsvExport.bind(this)
-    this.handleToggleLog = this.handleToggleLog.bind(this)
+    this.handleOnLoadData = this.handleOnLoadData.bind(this)
   }
 
   handleShowEditModal () {
@@ -115,144 +109,32 @@ class Task extends React.Component {
   componentDidMount () {
     window.scrollTo(0, 0)
 
-    const taskRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
-    axios.get(taskRoute)
+    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+    axios.get(taskNamesRoute)
       .then(res => {
-        const task = res.data.data
-        task.childTasks.sort(sortByCounts)
-        this.setState({ requestFailedMessage: '', item: task })
-
-        const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
-        axios.get(taskNamesRoute)
-          .then(res => {
-            const tasks = [...res.data.data]
-            this.handleTrimTasks(task.id, tasks)
-            this.setState({ requestFailedMessage: '', allTaskNames: tasks })
-          })
-          .catch(err => {
-            this.setState({ requestFailedMessage: ErrorHandler(err) })
-          })
-
-        const results = task.results
-        results.sort(function (a, b) {
-          const mna = a.metricName.toLowerCase()
-          const mnb = b.metricName.toLowerCase()
-          if (mna < mnb) {
-            return -1
-          }
-          if (mnb < mna) {
-            return 1
-          }
-          const mva = parseFloat(a.metricValue)
-          const mvb = parseFloat(b.metricValue)
-          if (!a.isHigherBetter) {
-            if (mva < mvb) {
-              return -1
-            }
-            if (mvb < mva) {
-              return 1
-            }
-            return 0
-          } else {
-            if (mva > mvb) {
-              return -1
-            }
-            if (mvb > mva) {
-              return 1
-            }
-            return 0
-          }
-        })
-        const resultsJson = results.map(row =>
-          ({
-            key: row.id,
-            submissionId: this.state.item.submissions.find(e => e.name === row.submissionName).id,
-            name: row.submissionName,
-            platformName: row.platformName,
-            methodName: row.methodName,
-            metricName: row.metricName,
-            metricValue: row.metricValue,
-            tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString(),
-            history: this.props.history
-          }))
-        this.setState({ results: results, resultsJson: resultsJson })
-        this.sliceChartData(results)
+        const tasks = [...res.data.data]
+        this.handleTrimTasks(this.props.match.params.id, tasks)
+        this.setState({ requestFailedMessage: '', allTaskNames: tasks })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
   }
 
-  sliceChartData (results) {
-    const sortedResults = [...results]
-    sortedResults.sort(function (a, b) {
-      const mna = a.metricName.toLowerCase()
-      const mnb = b.metricName.toLowerCase()
-      if (mna < mnb) {
-        return -1
-      }
-      if (mnb < mna) {
-        return 1
-      }
-
-      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt)
-      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt)
-      if (mda < mdb) {
-        return -1
-      }
-      if (mdb < mda) {
-        return 1
-      }
-
-      return 0
-    })
-    const allData = sortedResults.map(row =>
+  handleOnLoadData (task) {
+    const results = task.results
+    const resultsJson = results.map(row =>
       ({
-        method: row.methodName,
-        platform: row.platformName,
-        metric: row.metricName,
-        label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
-        value: row.metricValue,
-        isHigherBetter: row.isHigherBetter
+        key: row.id,
+        submissionId: task.submissions.find(e => e.name === row.submissionName).id,
+        platformName: row.platformName,
+        methodName: row.methodName,
+        metricName: row.metricName,
+        metricValue: row.metricValue,
+        tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString(),
+        history: this.props.history
       }))
-    const chartData = {}
-    const isHigherBetterCounts = {}
-    for (let i = 0; i < allData.length; i++) {
-      if (!chartData[allData[i].metric]) {
-        chartData[allData[i].metric] = []
-        isHigherBetterCounts[allData[i].metric] = 0
-      }
-      chartData[allData[i].metric].push(allData[i])
-      if (allData[i].isHigherBetter) {
-        isHigherBetterCounts[allData[i].metric]++
-      }
-    }
-    const metricNames = Object.keys(chartData)
-    let chartKey = ''
-    let m = 0
-    const isLowerBetterDict = {}
-    for (let i = 0; i < metricNames.length; i++) {
-      const length = chartData[metricNames[i]].length
-      if (length > m) {
-        chartKey = metricNames[i]
-        m = length
-      }
-      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
-    }
-    let i = 0
-    while (i < metricNames.length) {
-      const length = chartData[metricNames[i]].length
-      if (length < 3) {
-        metricNames.splice(i, 1)
-      } else {
-        i++
-      }
-    }
-    this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
-  }
-
-  handleToggleLog () {
-    this.setState({ isLog: !this.state.isLog })
+    this.setState({ requestFailedMessage: '', item: task, results: results, resultsJson: resultsJson })
   }
 
   handleCsvExport () {
@@ -276,51 +158,15 @@ class Task extends React.Component {
     return (
       <div id='metriq-main-content'>
         <div className='container submission-detail-container'>
-          {!this.state.item.isHideChart && (this.state.metricNames.length > 0) &&
-            <div>
-              <div className='container'>
-                <FormFieldSelectRow
-                  inputName='chartKey'
-                  value={this.state.chartKey}
-                  label='Chart Metric:'
-                  labelClass='metric-chart-label'
-                  options={this.state.metricNames.map(name =>
-                    ({
-                      id: name,
-                      name: name
-                    }))}
-                  onChange={(field, value) => this.handleOnChange('', field, value)}
-                  tooltip='A metric performance measure of any "method" on this "task"'
-                />
-                <div className='row' style={{ marginTop: '5px' }}>
-                  <span
-                    htmlFor='logcheckbox'
-                    className='col-md-3 form-field-label metric-chart-label'
-                    dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
-                  />
-                  <div className='col-md-6'>
-                    <input
-                      type='checkbox'
-                      id='logcheckbox'
-                      name='logcheckbox'
-                      className='form-control'
-                      checked={this.state.islog}
-                      onChange={this.handleToggleLog}
-                    />
-                  </div>
-                </div>
-
-              </div>
-              <Suspense fallback={<div>Loading...</div>}>
-                <SotaChart
-                  data={this.state.chartData[this.state.chartKey]}
-                  xLabel='Time' yLabel={this.state.chartKey}
-                  isLowerBetter={this.state.isLowerBetterDict[this.state.chartKey]}
-                  key='task-detail'
-                  isLog={this.state.isLog}
-                />
-              </Suspense>
-            </div>}
+          {!this.state.item.isHideChart &&
+            <Suspense fallback={<div>Loading...</div>}>
+              <SotaChart
+                chartId='task-detail'
+                xLabel='Time'
+                taskId={this.props.match.params.id}
+                onLoadData={this.handleOnLoadData}
+              />
+            </Suspense>}
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
             <div className='submission-description'>
