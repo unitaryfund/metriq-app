@@ -383,7 +383,15 @@ class SotaChart extends React.Component {
                 name='logcheckbox'
                 className='form-control'
                 checked={this.state.isLog}
-                onChange={() => this.setState({ isLog: !this.state.isLog })}
+                onChange={() => {
+                  this.setState({ isLog: !this.state.isLog })
+                  this.loadChartFromState({
+                    metricNames: this.state.metricNames,
+                    chartKey: this.state.chartKey,
+                    chartData: this.state.chartData,
+                    isLowerBetterDict: this.state.isLowerBetterDict
+                  })
+                }}
               />
             </div>
           </div>
