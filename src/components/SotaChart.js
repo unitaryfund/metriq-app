@@ -30,12 +30,8 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend]
-const _chartComponents = [...chartComponents]
-if (window.innerWidth >= 820) {
-  _chartComponents.push(ChartDataLabels)
-}
-Chart.register(_chartComponents)
+const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels]
+Chart.register(chartComponents)
 Chart.defaults.font.size = 12
 
 class SotaChart extends React.Component {
@@ -43,6 +39,7 @@ class SotaChart extends React.Component {
     super(props)
     this.state = {
       windowWidth: 0,
+      chart: null,
       task: {},
       isLog: false,
       chartKey: '',
@@ -119,11 +116,11 @@ class SotaChart extends React.Component {
       }]
     }
     const options = {
-      responsive: this.state.windowWidth < 820,
-      maintainAspectRatio: this.state.windowWidth >= 820,
+      responsive: true,
+      maintainAspectRatio: false,
       layout: {
         padding: {
-          right: 160
+          right: 100
         }
       },
       scales: {
@@ -195,9 +192,12 @@ class SotaChart extends React.Component {
       }
     }
 
-    const chartFunc = () => new LineWithErrorBarsChart(
-      document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'),
-      { data: data, options: options })
+    const chartFunc = () => {
+      if (this.state.chart) {
+        this.state.chart.destroy()
+      }
+      this.setState({ chart: new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data: data, options: options }) })
+    }
     chartFunc()
   }
 
@@ -339,11 +339,6 @@ class SotaChart extends React.Component {
 
   updateWindowDimensions () {
     this.setState({ windowWidth: window.innerWidth })
-    const _chartComponents = [...chartComponents]
-    if (window.innerWidth >= 820) {
-      _chartComponents.push(ChartDataLabels)
-    }
-    Chart.register(_chartComponents)
   }
 
   // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
@@ -383,7 +378,9 @@ class SotaChart extends React.Component {
             </div>
           </div>
         </div>
-        <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} className='sota-chart' />
+        <div className='chart-container sota-chart'>
+          <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+        </div>
       </span>
     )
   }
