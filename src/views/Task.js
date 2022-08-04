@@ -126,6 +126,7 @@ class Task extends React.Component {
     const resultsJson = results.map(row =>
       ({
         key: row.id,
+        name: row.submissionName,
         submissionId: task.submissions.find(e => e.name === row.submissionName).id,
         platformName: row.platformName,
         methodName: row.methodName,

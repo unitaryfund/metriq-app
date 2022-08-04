@@ -106,31 +106,6 @@ class Tasks extends React.Component {
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
         <br />
-        <FormFieldWideRow className='search-bar'>
-          <FormFieldTypeaheadRow
-            options={this.state.allNames}
-            labelKey='name'
-            inputName='name'
-            label='Search name'
-            value=''
-            onChange={(field, value) => this.handleOnFilter(value)}
-            onSelect={this.handleOnSelect}
-          />
-        </FormFieldWideRow>
-        <br />
-        <FormFieldWideRow className='centered-tabs'>
-          <Tabs defaultActiveKey='common' id='categories-tabs'>
-            <Tab eventKey='common' title='Common'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
-            </Tab>
-            <Tab eventKey='popular' title='Popular'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
-            </Tab>
-            <Tab eventKey='alphabetical' title='Alphabetical'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
-            </Tab>
-          </Tabs>
-        </FormFieldWideRow>
         <FormFieldWideRow>
           <h5>Featured</h5>
           <div className='task'>
@@ -156,6 +131,36 @@ class Tasks extends React.Component {
               </div>
             </div>
           </div>
+        </FormFieldWideRow>
+        <br />
+        <br />
+        <FormFieldWideRow className='centered-tabs'>
+          <h5>Categories</h5>
+        </FormFieldWideRow>
+        <FormFieldWideRow className='search-bar'>
+          <FormFieldTypeaheadRow
+            options={this.state.allNames}
+            labelKey='name'
+            inputName='name'
+            label='Search name'
+            value=''
+            onChange={(field, value) => this.handleOnFilter(value)}
+            onSelect={this.handleOnSelect}
+          />
+        </FormFieldWideRow>
+        <br />
+        <FormFieldWideRow className='centered-tabs'>
+          <Tabs defaultActiveKey='common' id='categories-tabs'>
+            <Tab eventKey='common' title='Common'>
+              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+            </Tab>
+            <Tab eventKey='popular' title='Popular'>
+              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+            </Tab>
+            <Tab eventKey='alphabetical' title='Alphabetical'>
+              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+            </Tab>
+          </Tabs>
         </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />

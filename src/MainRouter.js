@@ -59,23 +59,29 @@ const MainRouter = (props) => {
           exact
           path='/'
         >
+          <Tasks isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Discover/'
+        >
           <Home isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
-          path='/Trending'
+          path='/Discover/Trending'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Trending' />
         </Route>
         <Route
           exact
-          path='/Popular'
+          path='/Discover/Popular'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Popular' />
         </Route>
         <Route
           exact
-          path='/Latest'
+          path='/Discover/Latest'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Latest' />
         </Route>
