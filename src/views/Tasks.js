@@ -81,21 +81,7 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
         featured.push(res.data.data)
-        axios.get(config.api.getUriPrefix() + '/task/submissionCount/69')
-          .then(res => {
-            featured.push(res.data.data)
-            axios.get(config.api.getUriPrefix() + '/task/submissionCount/1')
-              .then(res => {
-                featured.push(res.data.data)
-                this.setState({ featured: featured })
-              })
-              .catch(err => {
-                this.setState({ requestFailedMessage: ErrorHandler(err) })
-              })
-          })
-          .catch(err => {
-            this.setState({ requestFailedMessage: ErrorHandler(err) })
-          })
+        this.setState({ featured: featured })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
