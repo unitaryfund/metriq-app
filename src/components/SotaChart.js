@@ -76,6 +76,7 @@ class SotaChart extends React.Component {
         labels: d.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
         backgroundColor: 'rgb(0, 0, 0)',
         borderColor: 'rgb(0, 0, 0)',
+        pointHitRadius: 16,
         data: d.map(obj => {
           return {
             label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
