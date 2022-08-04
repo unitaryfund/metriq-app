@@ -288,14 +288,14 @@ class AddSubmission extends React.Component {
     }
   }
 
-  handleKeyDown = e => {
+  handleKeyDown (e) {
     const tags = this.state.tags
-  if (e.keyCode === 13){
-    tags.push(this.state.tag)
+    if (e.keyCode === 13) {
+      e.preventDefault()
+      tags.push(this.state.tag)
       this.setState({ tags: tags, tag: '' })
     }
-    console.log("button pressed")
-};
+  }
 
   handleOnClickRemoveTag (tag) {
     const tags = this.state.tags
@@ -303,7 +303,7 @@ class AddSubmission extends React.Component {
     this.setState({ tags: tags })
   }
 
-  handleOnClickRemoveResult () { 
+  handleOnClickRemoveResult () {
     this.setState({ showRemoveModal: true })
   }
 

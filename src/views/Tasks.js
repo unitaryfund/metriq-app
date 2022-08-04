@@ -11,6 +11,8 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
+import SotaChart from '../components/SotaChart'
+import { withRouter } from 'react-router-dom'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -38,7 +40,7 @@ class Tasks extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      this.props.history('/Task/' + value.id)
+      this.props.history.push('/Task/' + value.id)
     }
   }
 
@@ -79,7 +81,6 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
         featured.push(res.data.data)
-        console.log(res.data.data)
         axios.get(config.api.getUriPrefix() + '/task/submissionCount/69')
           .then(res => {
             featured.push(res.data.data)
@@ -106,6 +107,37 @@ class Tasks extends React.Component {
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
         <br />
+        <FormFieldWideRow>
+          <h5>Featured</h5>
+          <div className='task'>
+            <div className='row h-100'>
+              <div className='col-md col h-100'>
+                <table className='task-method-item'>
+                  <tbody>
+                    {this.state.featured.map((item, index) => {
+                      return (
+                        <div key={index}>
+                          <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' />
+                          <SotaChart
+                            chartId={index}
+                            xLabel='Time'
+                            taskId={item.id}
+                            key={index}
+                          />
+                        </div>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </FormFieldWideRow>
+        <br />
+        <br />
+        <FormFieldWideRow className='centered-tabs'>
+          <h5>Categories</h5>
+        </FormFieldWideRow>
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow
             options={this.state.allNames}
@@ -131,20 +163,6 @@ class Tasks extends React.Component {
             </Tab>
           </Tabs>
         </FormFieldWideRow>
-        <FormFieldWideRow>
-          <h5>Featured</h5>
-          <div className='task'>
-            <div className='row h-100'>
-              <div className='col-md col h-100'>
-                <table className='task-method-item'>
-                  <tbody>
-                    {this.state.featured.map((item, index) => <CategoryItemBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} type='task' />)}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
@@ -153,4 +171,4 @@ class Tasks extends React.Component {
   }
 }
 
-export default Tasks
+export default withRouter(Tasks)

@@ -10,6 +10,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
+import { withRouter } from 'react-router-dom'
 
 class Platforms extends React.Component {
   constructor (props) {
@@ -112,4 +113,4 @@ class Platforms extends React.Component {
   }
 }
 
-export default Platforms
+export default withRouter(Platforms)

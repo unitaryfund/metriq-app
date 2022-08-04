@@ -267,6 +267,7 @@ form > span > .row > label {
 
 .form-field-label {
   white-space: nowrap;
+  padding-top: 8px;
 }
 
 .metric-chart-label {
@@ -275,24 +276,10 @@ form > span > .row > label {
   padding-top: 8px;
 }
 
-@media(min-width:820px) {
-  .sota-chart-message {
-    display: none;
-  }
-}
-
-@media(max-width:819px) {
-  .sota-chart {
-    display: none;
-  }
-
-  .sota-chart-message {
-    text-align: center;
-  }
-}
-
-#sota-chart-mobile-canvas {
-  min-height: 300px;
+.sota-chart {
+  min-height: 500px;
+  max-height: 600px;
+  width: 100%;
 }
 
 /** Simple generic styling */

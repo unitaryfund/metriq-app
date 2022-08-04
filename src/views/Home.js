@@ -16,14 +16,14 @@ const Home = (props) => {
     window.scrollTo(0, 0)
 
     if (!props.tabKey) {
-      history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/${DEFAULT_INITIAL_TAB}`)
+      history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/Submissions/${DEFAULT_INITIAL_TAB}`)
     }
     setActiveTab(props.tabKey)
   }, [props, history, tag])
 
   const toggle = (tab) => {
     if (props.tabKey !== tab) {
-      history.replace(tag ? `/Tag/${tag}/${tab}` : `/${tab}`)
+      history.replace(tag ? `/Tag/${tag}/${tab}` : `/Submissions/${tab}`)
     }
     setActiveTab(tab)
   }
