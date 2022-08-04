@@ -53,11 +53,11 @@ const FormFieldTypeaheadRow = (props) => {
       {props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={coalescedId} className='col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />
+            <span htmlFor={coalescedId} className='col col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
       {!props.tooltip &&
-        <label htmlFor={coalescedId} className='col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className='col col-md-3 form-field-label text-right' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
         id={coalescedId}
@@ -66,7 +66,7 @@ const FormFieldTypeaheadRow = (props) => {
           name: coalescedId
         }}
         labelKey={props.labelKey ? props.labelKey : undefined}
-        className='col-md-6'
+        className='col col-md-6'
         options={props.options}
         defaultSelected={[props.value ? props.value : '']}
         onChange={selected => {
@@ -78,9 +78,11 @@ const FormFieldTypeaheadRow = (props) => {
         onInputChange={handleOnFieldChange}
         onBlur={handleOnFieldBlur}
       />
-      {props.onClickAdd
-        ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
-        : <Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} /></Suspense>}
+      <div className='col col-md-3'>
+        {props.onClickAdd
+          ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
+          : <Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></Suspense>}
+      </div>
     </div>
   )
 }
