@@ -374,10 +374,10 @@ class SotaChart extends React.Component {
           <div className='row' style={{ marginTop: '5px' }}>
             <span
               htmlFor='logcheckbox'
-              className='col-md-3 form-field-label metric-chart-label'
+              className='col col-md-3 form-field-label metric-chart-label'
               dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
             />
-            <div className='col-md-6'>
+            <div className='col col-md-6'>
               <input
                 type='checkbox'
                 id='logcheckbox'
@@ -397,6 +397,7 @@ class SotaChart extends React.Component {
                 }}
               />
             </div>
+            <div className='col col-md-3' />
           </div>
         </div>
         <div className='chart-container sota-chart'>
