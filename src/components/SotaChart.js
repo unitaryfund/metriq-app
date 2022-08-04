@@ -43,7 +43,9 @@ class SotaChart extends React.Component {
       task: {},
       isLog: false,
       chartKey: '',
+      chartData: [],
       metricNames: [],
+      isLowerBetterDict: {},
       key: Math.random()
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -266,7 +268,7 @@ class SotaChart extends React.Component {
         i++
       }
     }
-    this.setState({ metricNames: metricNames, chartKey: chartKey, key: Math.random() })
+    this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
     this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict })
   }
 
@@ -357,7 +359,15 @@ class SotaChart extends React.Component {
                 id: name,
                 name: name
               }))}
-            onChange={(field, value) => this.setState({ chartKey: value })}
+            onChange={(field, value) => {
+              this.setState({ chartKey: value })
+              this.loadChartFromState({
+                metricNames: this.state.metricNames,
+                chartKey: value,
+                chartData: this.state.chartData,
+                isLowerBetterDict: this.state.isLowerBetterDict
+              })
+            }}
             tooltip='A metric performance measure of any "method" on this "task"'
           />
           <div className='row' style={{ marginTop: '5px' }}>

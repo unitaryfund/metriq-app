@@ -11,6 +11,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
+import SotaChart from '../components/SotaChart'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -137,7 +138,19 @@ class Tasks extends React.Component {
               <div className='col-md col h-100'>
                 <table className='task-method-item'>
                   <tbody>
-                    {this.state.featured.map((item, index) => <CategoryItemBox item={item} key={index} isLoggedIn={this.props.isLoggedIn} type='task' />)}
+                    {this.state.featured.map((item, index) => {
+                      return (
+                        <div key={index}>
+                          <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' />
+                          <SotaChart
+                            chartId={index}
+                            xLabel='Time'
+                            taskId={item.id}
+                            key={index}
+                          />
+                        </div>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
