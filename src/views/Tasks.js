@@ -12,6 +12,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
+import { withRouter } from 'react-router-dom'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -39,7 +40,7 @@ class Tasks extends React.Component {
 
   handleOnSelect (value) {
     if (value) {
-      this.props.history('/Task/' + value.id)
+      this.props.history.push('/Task/' + value.id)
     }
   }
 
@@ -170,4 +171,4 @@ class Tasks extends React.Component {
   }
 }
 
-export default Tasks
+export default withRouter(Tasks)
