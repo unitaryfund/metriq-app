@@ -21,7 +21,7 @@ const AuthNavRight = () =>
     <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
       <NavDropdown.Item as={Link} to='/Profile'><p class='font-weight-bold'>Settings</p></NavDropdown.Item>
       <NavDropdown.Item as={Link} to='/AddSubmission'><p class='font-weight-bold'>Add Submission</p></NavDropdown.Item>
-      <NavDropdown.Item as={Link} to='/Submissions'><p class='font-weight-bold'>My Submissions</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/MySubmissions'><p class='font-weight-bold'>My Submissions</p></NavDropdown.Item>
       <NavDropdown.Item as={Link} to='/Token'><p class='font-weight-bold'>API Token</p></NavDropdown.Item>
       <NavDropdown.Item as={Link} to='/Password'><p class='font-weight-bold'>Change password</p></NavDropdown.Item>
       <NavDropdown.Divider />
