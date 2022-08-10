@@ -179,7 +179,7 @@ const MainRouter = (props) => {
         />
         <Route
           exact
-          path='/Submissions'
+          path='/MySubmissions'
           component={MySubmissions}
         />
         <Route
