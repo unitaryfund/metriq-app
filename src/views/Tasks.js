@@ -93,34 +93,6 @@ class Tasks extends React.Component {
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
         <br />
-        <FormFieldWideRow>
-          <h5>Featured</h5>
-          <div className='task'>
-            <div className='row h-100'>
-              <div className='col-md col h-100'>
-                <table className='task-method-item'>
-                  <tbody>
-                    {this.state.featured.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' />
-                          <SotaChart
-                            chartId={index}
-                            xLabel='Time'
-                            taskId={item.id}
-                            key={index}
-                          />
-                        </div>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </FormFieldWideRow>
-        <br />
-        <br />
         <FormFieldWideRow className='centered-tabs'>
           <h5>Categories</h5>
         </FormFieldWideRow>
@@ -148,6 +120,34 @@ class Tasks extends React.Component {
               <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
             </Tab>
           </Tabs>
+        </FormFieldWideRow>
+        <br />
+        <br />
+        <FormFieldWideRow>
+          <h5>Featured</h5>
+          <div className='task card'>
+            <div className='row h-100'>
+              <div className='col-md col h-100'>
+                <table className='task-method-item'>
+                  <tbody>
+                    {this.state.featured.map((item, index) => {
+                      return (
+                        <div key={index}>
+                          <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' />
+                          <SotaChart
+                            chartId={index}
+                            xLabel='Time'
+                            taskId={item.id}
+                            key={index}
+                          />
+                        </div>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
