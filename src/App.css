@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #E5E5E5;
 }
 
@@ -23,7 +24,7 @@ textarea {
 
 .metriq-navbar {
   background-color: #3cd2f9;
-  font-family: 'Arial', monospace;
+  font-family: 'Arial', sans-serif;
    color:white;
    font-weight: bold;
 }
