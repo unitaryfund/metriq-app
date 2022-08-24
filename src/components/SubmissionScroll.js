@@ -120,6 +120,7 @@ class SubmissionScroll extends React.Component {
             label='Search title or URL'
             value=''
             onChange={(field, value) => this.onFilter(value)}
+            alignLabelRight
           />
         </FormFieldWideRow>
         <FormFieldWideRow>

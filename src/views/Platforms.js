@@ -89,6 +89,7 @@ class Platforms extends React.Component {
             value=''
             onChange={(field, value) => this.handleOnFilter(value)}
             onSelect={this.handleOnSelect}
+            alignLabelRight
           />
         </FormFieldWideRow>
         <br />
