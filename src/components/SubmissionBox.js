@@ -118,10 +118,10 @@ const SubmissionBox = (props) => {
       <div className='row submission-social-row'>
         <div className={props.isDraft ? 'col-md-7 h-100' : 'col-md-9 h-100'}>
           <div className='submission-subheading'>
-            <TooltipTrigger meassge='User submissions link'>
+            <TooltipTrigger message='User submissions link'>
               <Link to={'/User/' + props.item.userId + '/Submissions'}><span className='link'>Submitted by {props.item.username}</span></Link>
             </TooltipTrigger> •
-            <TooltipTrigger meassge='Submission link'>
+            <TooltipTrigger message='Submission link'>
               <span onClick={handleExternalLinkClick} className='link wrap'>
                 {parseContentUrl()} • {props.item.createdAt ? new Date(props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
               </span>
