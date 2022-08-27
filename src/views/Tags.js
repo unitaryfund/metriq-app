@@ -49,6 +49,7 @@ class Tags extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tags</ViewHeader>
+          <h5>Tags are keywords assigned to a submission that enable retrieval by search.</h5>
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>

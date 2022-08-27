@@ -79,6 +79,7 @@ class Platforms extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Platforms</ViewHeader>
+          <h5>Platforms are the hardware devices used for a submission.</h5>
         <br />
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow
