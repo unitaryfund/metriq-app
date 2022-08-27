@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,10 +6,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import config from './../config'
-import FormFieldRow from './FormFieldRow'
-import FormFieldSelectRow from './FormFieldSelectRow'
 import { nonblankRegex } from './ValidationRegex'
 import ErrorHandler from './ErrorHandler'
+const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
+const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 
 library.add(faPlus)
 
@@ -82,7 +82,6 @@ const SubmissionRefsAddModal = (props) => {
       const refId = item.id ? item.id : props.filteredNames.length ? props.filteredNames[0].id : 0
       axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + refId, {})
         .then(res => {
-          console.log(res)
           props.onAddExisting(res.data.data)
         })
         .catch(err => {
@@ -136,7 +135,7 @@ const SubmissionRefsAddModal = (props) => {
             Please <Link to={'/Login/' + encodeURIComponent('Submission/' + props.submissionId)}>login</Link> before editing.
           </span>}
         {(props.modalMode !== 'Login') &&
-          <span>
+          <Suspense fallback={<div>Loading...</div>}>
             {!props.isNewOnly &&
               <span>
                 <FormFieldSelectRow
@@ -198,7 +197,7 @@ const SubmissionRefsAddModal = (props) => {
               </Card>
             </Accordion>
             <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
-          </span>}
+          </Suspense>}
       </Modal.Body>
       <Modal.Footer>
         {(props.modalMode === 'Login') && <Button variant='primary' onClick={props.onHide}>Cancel</Button>}

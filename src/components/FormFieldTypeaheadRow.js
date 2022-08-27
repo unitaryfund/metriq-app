@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, Suspense } from 'react'
 import { Button } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import FormFieldValidator from './FormFieldValidator'
-import TooltipTrigger from './TooltipTrigger'
+const FormFieldValidator = React.lazy(() => import('./FormFieldValidator'))
+const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 
 const FormFieldTypeaheadRow = (props) => {
   const [value, setValue] = useState(props.defaultValue ? props.defaultValue : '')
   const [isValid, setIsValid] = useState(true)
   const typeahead = useRef(null)
+  const coalescedId = props.inputId ? props.inputId : props.inputName
 
   const handleOnFieldChange = (input) => {
     // For a regular input field, read field name and value from the event.
@@ -50,17 +51,22 @@ const FormFieldTypeaheadRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <TooltipTrigger message={props.tooltip}>
-          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-        </TooltipTrigger>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <TooltipTrigger message={props.tooltip}>
+            <span htmlFor={coalescedId} className={'col col-md-3 form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
+          </TooltipTrigger>
+        </Suspense>}
       {!props.tooltip &&
-        <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className={'col col-md-3 form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
-        id={props.inputName}
-        name={props.inputName}
+        id={coalescedId}
+        inputProps={{
+          id: coalescedId,
+          name: coalescedId
+        }}
         labelKey={props.labelKey ? props.labelKey : undefined}
-        className='col-md-6'
+        className='col col-md-6'
         options={props.options}
         defaultSelected={[props.value ? props.value : '']}
         onChange={selected => {
@@ -72,9 +78,11 @@ const FormFieldTypeaheadRow = (props) => {
         onInputChange={handleOnFieldChange}
         onBlur={handleOnFieldBlur}
       />
-      {props.onClickAdd
-        ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
-        : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+      <div className='col col-md-3'>
+        {props.onClickAdd
+          ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
+          : <Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></Suspense>}
+      </div>
     </div>
   )
 }

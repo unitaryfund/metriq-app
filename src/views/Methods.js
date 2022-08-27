@@ -10,6 +10,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
+import { withRouter } from 'react-router-dom'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -88,6 +89,7 @@ class Methods extends React.Component {
             value=''
             onChange={(field, value) => this.handleOnFilter(value)}
             onSelect={this.handleOnSelect}
+            alignLabelRight
           />
         </FormFieldWideRow>
         <br />
@@ -112,4 +114,4 @@ class Methods extends React.Component {
   }
 }
 
-export default Methods
+export default withRouter(Methods)

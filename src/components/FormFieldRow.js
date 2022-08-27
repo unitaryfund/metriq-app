@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { Button } from 'react-bootstrap'
-import FormFieldValidator from './FormFieldValidator'
-import FormFieldWideRow from './FormFieldWideRow'
-import TooltipTrigger from './TooltipTrigger'
+const FormFieldValidator = React.lazy(() => import('./FormFieldValidator'))
+const FormFieldWideRow = React.lazy(() => import('./FormFieldWideRow'))
+const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 
 const FormFieldRow = (props) => {
   const [value, setValue] = useState(props.value)
@@ -46,9 +46,11 @@ const FormFieldRow = (props) => {
   return (
     <div className='row'>
       {props.tooltip &&
-        <TooltipTrigger message={props.tooltip}>
-          <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
-        </TooltipTrigger>}
+        <Suspense fallback={<div>Loading...</div>}>
+          <TooltipTrigger message={props.tooltip}>
+            <span htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />
+          </TooltipTrigger>
+        </Suspense>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <div className='col-md-6 '>
@@ -79,13 +81,15 @@ const FormFieldRow = (props) => {
             onBlur={handleOnFieldBlur}
           />}
       </div>
-      {props.imageUrl
-        ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
-        : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
-      {imagePreviewUrl && isValid &&
-        <FormFieldWideRow className='text-center'>
-          <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
-        </FormFieldWideRow>}
+      <Suspense fallback={<div>Loading...</div>}>
+        {props.imageUrl
+          ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
+          : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+        {imagePreviewUrl && isValid &&
+          <FormFieldWideRow className='text-center'>
+            <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />
+          </FormFieldWideRow>}
+      </Suspense>
     </div>
   )
 }

@@ -1,31 +1,7 @@
 .App {
   text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #E5E5E5;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #3cd2f9;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-}
-
-.footer-shim {
-  height: 384px;
 }
 
 .centered-tabs > nav {
@@ -48,9 +24,17 @@ textarea {
 
 .metriq-navbar {
   background-color: #3cd2f9;
-  font-family: 'Arial', monospace;
+  font-family: 'Arial', sans-serif;
    color:white;
    font-weight: bold;
+}
+
+.metriq-navbar h2 {
+  margin: 0 10px;
+}
+
+.metriq-navbar h3 {
+  margin: 0 50px;
 }
 
 .metriq-navbar-button {
@@ -76,6 +60,12 @@ textarea {
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
   border-radius: 16px;
   border: none;
+}
+
+.nav-tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .navbar-nav .metriq-navbar-text.nav-link {
@@ -278,6 +268,7 @@ form > span > .row > label {
 
 .form-field-label {
   white-space: nowrap;
+  padding-top: 8px;
 }
 
 .metric-chart-label {
@@ -286,24 +277,10 @@ form > span > .row > label {
   padding-top: 8px;
 }
 
-@media(min-width:820px) {
-  .sota-chart-message {
-    display: none;
-  }
-}
-
-@media(max-width:819px) {
-  .sota-chart {
-    display: none;
-  }
-
-  .sota-chart-message {
-    text-align: center;
-  }
-}
-
-#sota-chart-mobile-canvas {
-  min-height: 300px;
+.sota-chart {
+  min-height: 500px;
+  max-height: 600px;
+  width: 100%;
 }
 
 /** Simple generic styling */
@@ -324,8 +301,13 @@ form > span > .row > label {
   word-wrap: break-word;
 }
 
-.max-width {
-  max-width: 100%;
+/* From https://stackoverflow.com/questions/11599859/forcing-a-long-line-of-text-without-spaces-to-line-break-according-to-parent-c#answer-11599916 */
+.wrap {
+  white-space: pre-wrap;      /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap;     /* Opera <7 */
+  white-space: -o-pre-wrap;   /* Opera 7 */
+  word-wrap: break-word;      /* IE */
 }
 
 /** Pure CSS heart icon */

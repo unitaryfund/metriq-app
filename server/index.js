@@ -44,7 +44,6 @@ app.get('*', (req, res, next) => {
     if (req.url.startsWith('/Submission/')) {
       const id = truncateBefore(req.url, '/Submission/')
       const route = config.api.getUriPrefix() + '/submission/' + id
-      console.log(route)
       await (axios.get(route)
         .then(subRes => {
           const response = subRes.data.data
@@ -69,10 +68,21 @@ app.get('*', (req, res, next) => {
           title = response.name
           description = response.description
         }))
+    } else if (req.url.startsWith('/Platform/')) {
+      const id = truncateBefore(req.url, '/Platform/')
+      const route = config.api.getUriPrefix() + '/Platform/' + id
+      await (axios.get(route)
+        .then(subRes => {
+          const response = subRes.data.data
+          title = response.name
+          description = response.description
+        }))
     }
     if (title.length > 50) {
       title = title.substring(0, 47) + '...'
     }
+
+    description = description.split('"').join("'")
 
     // inject meta tags
     htmlData = htmlData
@@ -80,7 +90,7 @@ app.get('*', (req, res, next) => {
       .replace(defaultTitle, title)
       .replace(defaultDescription, description)
       .replace(defaultDescription, description)
-      .replace('<meta property=\'og:url\' content=\'https://metriq.info\' />', '<meta property=\'og:url\' content=\'https://metriq.info' + req.url + '\' />')
+      .replace("content='https://metriq.info'", "content='https://metriq.info" + req.url + "'")
     return res.send(htmlData)
   })
 })

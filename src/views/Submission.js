@@ -1,29 +1,29 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from './../config'
 import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
-import FormFieldRow from '../components/FormFieldRow'
-import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
-import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
-import SubmissionRefsAddModal from '../components/SubmissionRefsAddModal'
-import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
-import ResultsAddModal from '../components/ResultsAddModal'
 import ResultsTable from '../components/ResultsTable'
+import FormFieldAlertRow from '../components/FormFieldAlertRow'
+const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
+const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
+const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
+const SubmissionRefsDeleteModal = React.lazy(() => import('../components/SubmissionRefsDeleteModal'))
+const ResultsAddModal = React.lazy(() => import('../components/ResultsAddModal'))
 
-library.add(faEdit, faExternalLinkAlt, faHeart, faMobileAlt, faStickyNote, faSuperscript)
+library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript)
 
 class Submission extends React.Component {
   constructor (props) {
@@ -557,22 +557,22 @@ class Submission extends React.Component {
         </FormFieldWideRow>
         <FormFieldWideRow>
           <TooltipTrigger message='Upvote submission'>
-            <button className={'submission-button btn ' + (this.state.item.isUpvoted ? 'btn-primary' : 'btn-secondary')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</button>
+            <Button className='submission-button' variant={this.state.item.isUpvoted ? 'primary' : 'secondary'} aria-label={(this.state.item.isUpvoted ? 'Cancel like' : 'Like')} onClick={this.handleUpVoteOnClick}><FontAwesomeIcon icon='heart' /> {this.state.item.upvotesCount}</Button>
           </TooltipTrigger>
           <TooltipTrigger message='Submission link'>
-            <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faExternalLinkAlt} /></button>
+            <Button className='submission-button' variant='secondary' aria-label='Visit submission link' onClick={() => { window.open(this.state.item.contentUrl, '_blank') }}><FontAwesomeIcon icon={faLink} /></Button>
           </TooltipTrigger>
           {this.state.isArxiv &&
             <span>
               <TooltipTrigger message='Mobile view preprint'>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></button>
+                <Button className='submission-button' variant='secondary' aria-label='Visit submission mobile view link' onClick={() => { window.open(this.state.vanityUrl, '_blank') }}><FontAwesomeIcon icon={faMobileAlt} /></Button>
               </TooltipTrigger>
               <TooltipTrigger message='BibTex reference'>
-                <button className='submission-button btn btn-secondary' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></button>
+                <Button className='submission-button' variant='secondary' aria-label='Get arXiv BibTex reference' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></Button>
               </TooltipTrigger>
             </span>}
           <TooltipTrigger message='Edit submission'>
-            <button className='submission-button btn btn-secondary' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></button>
+            <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
           <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
@@ -733,31 +733,33 @@ class Submission extends React.Component {
           <hr />
           <Commento id={'submission-' + toString(this.state.item.id)} />
         </FormFieldWideRow>
-        <SubmissionRefsAddModal
-          show={this.state.showAddRefsModal}
-          onHide={() => this.setState({ showAddRefsModal: false })}
-          modalMode={this.state.modalMode}
-          submissionId={this.props.match.params.id}
-          allNames={this.state.allNames}
-          filteredNames={this.state.filteredNames}
-          onAddExisting={this.handleModalRefSubmit}
-          onAddNew={this.handleModalRefAddNew}
-        />
-        <SubmissionRefsDeleteModal
-          show={this.state.showRemoveModal}
-          onHide={this.handleHideRemoveModal}
-          modalMode={this.state.modalMode}
-          submission={this.state.item}
-          onSubmit={this.handleModalRefSubmit}
-        />
-        <ResultsAddModal
-          show={this.state.showAddModal && (this.state.modalMode === 'Result')}
-          onHide={this.handleHideAddModal}
-          submission={this.state.item}
-          result={this.state.result}
-          metricNames={this.state.metricNames}
-          onAddOrEdit={this.handleModalResultAddNew}
-        />
+        <Suspense fallback={<span />}>
+          <SubmissionRefsAddModal
+            show={this.state.showAddRefsModal}
+            onHide={() => this.setState({ showAddRefsModal: false })}
+            modalMode={this.state.modalMode}
+            submissionId={this.props.match.params.id}
+            allNames={this.state.allNames}
+            filteredNames={this.state.filteredNames}
+            onAddExisting={this.handleModalRefSubmit}
+            onAddNew={this.handleModalRefAddNew}
+          />
+          <SubmissionRefsDeleteModal
+            show={this.state.showRemoveModal}
+            onHide={this.handleHideRemoveModal}
+            modalMode={this.state.modalMode}
+            submission={this.state.item}
+            onSubmit={this.handleModalRefSubmit}
+          />
+          <ResultsAddModal
+            show={this.state.showAddModal && (this.state.modalMode === 'Result')}
+            onHide={this.handleHideAddModal}
+            submission={this.state.item}
+            result={this.state.result}
+            metricNames={this.state.metricNames}
+            onAddOrEdit={this.handleModalResultAddNew}
+          />
+        </Suspense>
         <Modal
           show={this.state.showAddModal && (this.state.modalMode === 'Tag')}
           onHide={this.handleHideAddModal}
@@ -806,28 +808,30 @@ class Submission extends React.Component {
                     </div>
                     <br />
                   </div>}
-                {(this.state.modalMode === 'Moderation') &&
-                  <FormFieldRow
-                    inputName='description' inputType='textarea' label='Description' rows='12'
-                    value={this.state.moderationReport.description}
-                    onChange={(field, value) => this.handleOnChange('moderationReport', field, value)}
-                  />}
-                {(this.state.modalMode !== 'Moderation') &&
-                  <div>
-                    <FormFieldRow
-                      inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
-                      value={this.state.submission.thumbnailUrl}
-                      onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                    />
-                    <FormFieldAlertRow className='text-center'>
-                      <b>The image URL is loaded as a thumbnail, for the submission. (For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
-                    </FormFieldAlertRow>
+                <Suspense fallback={<div>Loading...</div>}>
+                  {(this.state.modalMode === 'Moderation') &&
                     <FormFieldRow
                       inputName='description' inputType='textarea' label='Description' rows='12'
-                      value={this.state.submission.description}
-                      onChange={(field, value) => this.handleOnChange('submission', field, value)}
-                    />
-                  </div>}
+                      value={this.state.moderationReport.description}
+                      onChange={(field, value) => this.handleOnChange('moderationReport', field, value)}
+                    />}
+                  {(this.state.modalMode !== 'Moderation') &&
+                    <div>
+                      <FormFieldRow
+                        inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
+                        value={this.state.submission.thumbnailUrl}
+                        onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                      />
+                      <FormFieldAlertRow className='text-center'>
+                        <b>The image URL is loaded as a thumbnail, for the submission. (For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                      </FormFieldAlertRow>
+                      <FormFieldRow
+                        inputName='description' inputType='textarea' label='Description' rows='12'
+                        value={this.state.submission.description}
+                        onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                      />
+                    </div>}
+                </Suspense>
               </span>}
           </Modal.Body>
           <Modal.Footer>

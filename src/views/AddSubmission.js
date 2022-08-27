@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from './../config'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldRow from '../components/FormFieldRow'
@@ -73,6 +73,7 @@ class AddSubmission extends React.Component {
     this.handleOnSubmit = this.handleOnSubmit.bind(this)
     this.handleOnClickRemoveTag = this.handleOnClickRemoveTag.bind(this)
     this.handleOnClickAddTag = this.handleOnClickAddTag.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleOnClickRemoveTask = this.handleOnClickRemoveTask.bind(this)
     this.handleOnClickAddTask = this.handleOnClickAddTask.bind(this)
     this.handleOnClickNewTask = this.handleOnClickNewTask.bind(this)
@@ -91,7 +92,6 @@ class AddSubmission extends React.Component {
   }
 
   handleModalRefAddNew (ref) {
-    console.log(ref)
     const mode = this.state.modalMode
     let allNames = []
     let names = []
@@ -291,6 +291,15 @@ class AddSubmission extends React.Component {
     }
   }
 
+  handleKeyDown (e) {
+    const tags = this.state.tags
+    if (e.keyCode === 13) {
+      e.preventDefault()
+      tags.push(this.state.tag)
+      this.setState({ tags: tags, tag: '' })
+    }
+  }
+
   handleOnClickRemoveTag (tag) {
     const tags = this.state.tags
     tags.splice(tags.indexOf(tag), 1)
@@ -344,7 +353,6 @@ class AddSubmission extends React.Component {
   }
 
   handleModalRefSubmit (submission) {
-    console.log(submission)
     this.setState({ submission: submission, requestFailedMessage: '' })
   }
 
@@ -502,6 +510,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               options={this.state.tagNames.map(item => item.name)}
               onClickAdd={this.handleOnClickAddTag}
+              onKeyDown={this.handleKeyDown}
             />
             <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} onClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
             <FormFieldAlertRow>
@@ -531,31 +540,33 @@ class AddSubmission extends React.Component {
               <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>
-          <SubmissionRefsAddModal
-            show={this.state.showAddRefsModal}
-            onHide={() => this.setState({ showAddRefsModal: false })}
-            modalMode={this.state.modalMode}
-            submissionId={this.state.submission.id}
-            allNames={this.state.allNames}
-            filteredNames={this.state.allNames}
-            onAddNew={this.handleModalRefAddNew}
-            isNewOnly
-          />
-          <ResultsAddModal
-            show={this.state.showAddModal}
-            onHide={() => this.setState({ showAddModal: false })}
-            submission={this.state.submission}
-            result={this.state.result}
-            metricNames={this.state.metricNames}
-            onAddOrEdit={this.handleModalResultAddNew}
-          />
-          <SubmissionRefsDeleteModal
-            show={this.state.showRemoveModal}
-            onHide={() => this.setState({ showRemoveModal: false })}
-            modalMode='Result'
-            submission={this.state.submission}
-            onSubmit={this.handleModalRefSubmit}
-          />
+          <Suspense fallback={<span />}>
+            <SubmissionRefsAddModal
+              show={this.state.showAddRefsModal}
+              onHide={() => this.setState({ showAddRefsModal: false })}
+              modalMode={this.state.modalMode}
+              submissionId={this.state.submission.id}
+              allNames={this.state.allNames}
+              filteredNames={this.state.allNames}
+              onAddNew={this.handleModalRefAddNew}
+              isNewOnly
+            />
+            <ResultsAddModal
+              show={this.state.showAddModal}
+              onHide={() => this.setState({ showAddModal: false })}
+              submission={this.state.submission}
+              result={this.state.result}
+              metricNames={this.state.metricNames}
+              onAddOrEdit={this.handleModalResultAddNew}
+            />
+            <SubmissionRefsDeleteModal
+              show={this.state.showRemoveModal}
+              onHide={() => this.setState({ showRemoveModal: false })}
+              modalMode='Result'
+              submission={this.state.submission}
+              onSubmit={this.handleModalRefSubmit}
+            />
+          </Suspense>
         </div>
       )
     )

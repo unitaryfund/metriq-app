@@ -6,6 +6,7 @@ import Home from './views/Home'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
 import Delete from './views/Delete'
+import EditDetails from './views/EditDetails'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
@@ -13,7 +14,7 @@ import Partners from './views/Partners'
 import FAQ from './views/FAQ'
 import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
-import Submissions from './views/Submissions'
+import MySubmissions from './views/MySubmissions'
 import SubmissionsPublic from './views/SubmissionsPublic'
 import Token from './views/Token'
 import Password from './views/Password'
@@ -52,29 +53,35 @@ const MainRouter = (props) => {
 
   return (
     <Router>
-      <MainNavbar isLoggedIn={isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> against <a href='/Tasks/'>tasks</a></span>} />
+      <MainNavbar isLoggedIn={isLoggedIn} title='Community-driven Quantum Benchmarks' subtitle={<span><a href='/'>Submissions</a> show performance of <a href='/Methods/'>methods</a> on <a href='/Platforms/'>platforms</a> against <a href='/Tasks/'>tasks</a></span>} />
       <Switch>
         <Route
           exact
           path='/'
         >
+          <Tasks isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Submissions/'
+        >
           <Home isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
-          path='/Trending'
+          path='/Submissions/Trending'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Trending' />
         </Route>
         <Route
           exact
-          path='/Popular'
+          path='/Submissions/Popular'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Popular' />
         </Route>
         <Route
           exact
-          path='/Latest'
+          path='/Submissions/Latest'
         >
           <Home isLoggedIn={isLoggedIn} tabKey='Latest' />
         </Route>
@@ -172,8 +179,8 @@ const MainRouter = (props) => {
         />
         <Route
           exact
-          path='/Submissions'
-          component={Submissions}
+          path='/MySubmissions'
+          component={MySubmissions}
         />
         <Route
           exact
@@ -184,6 +191,11 @@ const MainRouter = (props) => {
           exact
           path='/Password'
           component={Password}
+        />
+        <Route
+          exact
+          path='/EditDetails'
+          component={EditDetails}
         />
         <Route
           exact

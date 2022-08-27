@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { useHistory, useParams } from 'react-router-dom'
-import SubmissionScroll from '../components/SubmissionScroll'
 import ViewHeader from '../components/ViewHeader'
+import SubmissionScroll from '../components/SubmissionScroll'
 
 // See https://stackoverflow.com/questions/71663319/react-navigate-to-react-bootstrap-tab-with-history#answer-71668423
 const DEFAULT_INITIAL_TAB = 'Trending'
@@ -16,15 +16,14 @@ const Home = (props) => {
     window.scrollTo(0, 0)
 
     if (!props.tabKey) {
-      history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/${DEFAULT_INITIAL_TAB}`)
+      history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/Submissions/${DEFAULT_INITIAL_TAB}`)
     }
     setActiveTab(props.tabKey)
   }, [props, history, tag])
 
-  // console.log('initial tab : ' + init);
   const toggle = (tab) => {
     if (props.tabKey !== tab) {
-      history.replace(tag ? `/Tag/${tag}/${tab}` : `/${tab}`)
+      history.replace(tag ? `/Tag/${tag}/${tab}` : `/Submissions/${tab}`)
     }
     setActiveTab(tab)
   }
