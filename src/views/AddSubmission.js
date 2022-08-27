@@ -20,7 +20,6 @@ import ResultsTable from '../components/ResultsTable'
 import ResultsAddModal from '../components/ResultsAddModal'
 import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 import TooltipTrigger from '../components/TooltipTrigger'
-//import Tooltip from "@material-ui/core/Tooltip"
 
 
 library.add(faPlus)
