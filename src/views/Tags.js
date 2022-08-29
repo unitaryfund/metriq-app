@@ -8,6 +8,7 @@ import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
+import ViewSubHeader from '../components/ViewSubHeader'
 
 class Tags extends React.Component {
   constructor (props) {
@@ -49,7 +50,7 @@ class Tags extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tags</ViewHeader>
-          <h5>Tags are keywords assigned to a submission that enable retrieval by search.</h5>
+          <ViewSubHeader>Tags are keywords assigned to a submission that enable retrieval by search.</ViewSubHeader>
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>

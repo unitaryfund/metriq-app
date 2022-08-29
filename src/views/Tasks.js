@@ -13,6 +13,7 @@ import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
 import { withRouter } from 'react-router-dom'
+import ViewSubHeader from '../components/ViewSubHeader'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -95,7 +96,7 @@ class Tasks extends React.Component {
           <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
         <br />
         <FormFieldWideRow className='centered-tabs'>
-          <h5>Categories</h5>
+          <ViewSubHeader>Categories</ViewSubHeader>
         </FormFieldWideRow>
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow

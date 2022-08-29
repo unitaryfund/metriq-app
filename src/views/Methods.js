@@ -79,7 +79,7 @@ class Methods extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Methods</ViewHeader>
-          <h5>Methods are the algorithms used in a submission.</h5>
+          <ViewHeader>Methods are the algorithms used in a submission.</ViewHeader>
         <br />
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow
