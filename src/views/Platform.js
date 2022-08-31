@@ -13,6 +13,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { intRegex, nonblankRegex, numberRegex } from '../components/ValidationRegex'
+import SubscribeButton from '../components/SubscriptionButton'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -62,6 +63,7 @@ class Platform extends React.Component {
       }
     }
 
+    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
@@ -78,6 +80,20 @@ class Platform extends React.Component {
     this.handleOnClickEditProperty = this.handleOnClickEditProperty.bind(this)
     this.handleCombineParentProperties = this.handleCombineParentProperties.bind(this)
     this.handleOnPropertyRemove = this.handleOnPropertyRemove.bind(this)
+  }
+
+  handleSubscribe () {
+    if (this.props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id + '/subscribe', {})
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      this.handleLoginRedirect()
+    }
   }
 
   handleAccordionToggle () {
@@ -369,6 +385,7 @@ class Platform extends React.Component {
             <TooltipTrigger message='Edit platform'>
               <Button className='submission-button' variant='secondary' aria-label='Edit platform' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
+            <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
             <SocialShareIcons url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />

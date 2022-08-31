@@ -16,6 +16,7 @@ import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
+import SubscribeButton from '../components/SubscriptionButton'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -35,6 +36,7 @@ class Task extends React.Component {
       isLog: false
     }
 
+    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
@@ -42,6 +44,20 @@ class Task extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleCsvExport = this.handleCsvExport.bind(this)
     this.handleOnLoadData = this.handleOnLoadData.bind(this)
+  }
+
+  handleSubscribe () {
+    if (this.props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/task/' + this.props.match.params.id + '/subscribe', {})
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      this.handleLoginRedirect()
+    }
   }
 
   handleShowEditModal () {
@@ -180,6 +196,7 @@ class Task extends React.Component {
                 <FontAwesomeIcon icon='edit' />
               </Button>
             </TooltipTrigger>
+            <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='task' onSubscribe={this.handleSubscribe} />
             <SocialShareIcons url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
