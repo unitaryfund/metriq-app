@@ -44,6 +44,11 @@ class Task extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleCsvExport = this.handleCsvExport.bind(this)
     this.handleOnLoadData = this.handleOnLoadData.bind(this)
+    this.handleLoginRedirect = this.handleLoginRedirect.bind(this)
+  }
+
+  handleLoginRedirect () {
+    this.props.history.push('/Login/' + encodeURIComponent('Task/' + this.props.match.params.id))
   }
 
   handleSubscribe () {
