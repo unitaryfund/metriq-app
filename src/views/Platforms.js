@@ -11,6 +11,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter } from 'react-router-dom'
+import ViewSubHeader from '../components/ViewSubHeader'
 
 class Platforms extends React.Component {
   constructor (props) {
@@ -79,7 +80,7 @@ class Platforms extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Platforms</ViewHeader>
-          <ViewHeader>Platforms are the hardware devices used for a submission.</ViewHeader>
+          <ViewSubHeader>Platforms are the hardware devices used for a submission.</ViewSubHeader>
         <br />
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow

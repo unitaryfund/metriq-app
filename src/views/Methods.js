@@ -11,6 +11,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter } from 'react-router-dom'
+import ViewSubHeader from '../components/ViewSubHeader'
 
 class Methods extends React.Component {
   constructor (props) {
@@ -79,7 +80,7 @@ class Methods extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Methods</ViewHeader>
-          <ViewHeader>Methods are the algorithms used in a submission.</ViewHeader>
+        <ViewSubHeader>Methods are the algorithms used in a submission.</ViewSubHeader>
         <br />
         <FormFieldWideRow className='search-bar'>
           <FormFieldTypeaheadRow
