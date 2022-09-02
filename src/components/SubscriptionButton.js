@@ -14,7 +14,7 @@ const SubscribeButton = (props) =>
       </TooltipTrigger>}
     {props.isSubscribed &&
       <TooltipTrigger message={'Unsubscribe from ' + props.typeLabel}>
-        <Button className='submission-button' variant='secondary' aria-label={'Unsubscribe from ' + props.typeLabel} onClick={props.onSubscribe}><FontAwesomeIcon icon='bell-slash' /></Button>
+        <Button className='submission-button' variant='primary' aria-label={'Unsubscribe from ' + props.typeLabel} onClick={props.onSubscribe}><FontAwesomeIcon icon='bell-slash' /></Button>
       </TooltipTrigger>}
   </span>
 
