@@ -4,7 +4,44 @@ import './SimpleReactFooter.sass'
 import MailchimpSubscribe from 'react-mailchimp-subscribe'
 import { FaDiscord, FaGithub, FaPinterestSquare, FaTwitterSquare } from 'react-icons/fa'
 import { ImFacebook2, ImInstagram, ImLinkedin, ImTwitch, ImYoutube } from 'react-icons/im'
+import { Button } from 'react-bootstrap'
 import logo from './../../images/unitary_fund_logo.png'
+
+
+const CustomMailchimpForm = ({ status, message, onValidated }) => {
+  let email;
+  const submit = () =>
+    email &&
+    email.value.indexOf("@") > -1 &&
+    onValidated({
+      EMAIL: email.value,
+    });
+
+  return (
+    <div>
+      {status === "sending" && <div style={{ color: "blue" }}>sending...</div>}
+      {status === "error" && (
+        <div
+          style={{ color: "red" }}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
+      )}
+      {status === "success" && (
+        <div
+          style={{ color: "green" }}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
+      )}
+      <input
+        ref={node => (email = node)}
+        type="email"
+        placeholder="Your email"
+      />
+      <Button variant='primary' className='metriq-navbar-button' onClick={submit}>Submit</Button>
+    </div>
+  );
+};
+
 
 class SimpleReactFooter extends React.Component {
   render () {
@@ -50,7 +87,15 @@ class SimpleReactFooter extends React.Component {
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Questions? Email: <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a></div>
             <div>
               <label>Stay up to date on metriq.info!</label>
-              <MailchimpSubscribe url='https://fund.us18.list-manage.com/subscribe/post?u=104796c75ced8350ebd01eebd&amp;id=a2c9e5ac2a' />
+              <MailchimpSubscribe
+                url='https://fund.us18.list-manage.com/subscribe/post?u=104796c75ced8350ebd01eebd&amp;id=a2c9e5ac2a'
+                render={({ subscribe, status, message }) => (
+                  <CustomMailchimpForm
+                    status={status}
+                    message={message}
+                    onValidated={formData => subscribe(formData)}
+                  />
+                )}/>
             </div>
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>All content on this website is openly licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA</a>. Members agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a>.</div>
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Copyright &copy; {this.props.copyright}</div>
