@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaDiscord, FaGithub } from 'react-icons/fa'
+import { FaDiscord, FaGithub, FaTwitter } from 'react-icons/fa'
 import { Button, Nav, NavDropdown } from 'react-bootstrap'
 import axios from 'axios'
 import config from './../config'
@@ -16,6 +16,7 @@ const handleOnClick = () => {
 
 const AuthNavRight = () =>
   <Nav className='ml-auto metriq-navbar'>
+    <Nav.Link href='https://twitter.com/MetriqInfo'> <FaTwitter color={`${'black'}`} size={25} /> </Nav.Link>
     <Nav.Link href='http://discord.unitary.fund'> <FaDiscord color={`${'black'}`} size={25} /> </Nav.Link>
     <Nav.Link href='https://github.com/unitaryfund/metriq-app'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
     <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
