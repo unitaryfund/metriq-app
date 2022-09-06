@@ -32,7 +32,10 @@ class Delete extends React.Component {
   }
 
   handleDeleteOnClick () {
-    const confirmString = window.prompt('To delete your account, type your username or email below, then hit "OK."', '').trim().toLowerCase()
+    let confirmString = window.prompt('To unsubscribe from all email updates, type your username or email below, then hit "OK."', '')
+    if (confirmString) {
+      confirmString = confirmString.trim().toLowerCase()
+    }
     if (confirmString && ((confirmString === this.state.data.usernameNormal) || (confirmString === this.state.data.email))) {
       axios.delete(config.api.getUriPrefix() + '/user')
         .then(res => {
