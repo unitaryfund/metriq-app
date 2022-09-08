@@ -21,7 +21,6 @@ import ResultsAddModal from '../components/ResultsAddModal'
 import SubmissionRefsDeleteModal from '../components/SubmissionRefsDeleteModal'
 import TooltipTrigger from '../components/TooltipTrigger'
 
-
 library.add(faPlus)
 
 const requiredFieldMissingError = 'Required field.'
@@ -533,9 +532,9 @@ class AddSubmission extends React.Component {
                 <i>Draft saved at {this.state.draftedAt}</i>
               </FormFieldAlertRow>}
             <FormFieldWideRow className='text-center'>
-            <TooltipTrigger message="Draft is saved under 'My Submissions'">
-              <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true, null)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
-            </TooltipTrigger>
+              <TooltipTrigger message="Draft is saved under 'My Submissions'">
+                <Button variant='light' className='submission-ref-button' onClick={() => this.handleOnSubmit(null, true, null)} disabled={!this.state.isValidated && !this.isAllValid()}>Save draft</Button>
+              </TooltipTrigger>
               <input className='btn btn-primary submission-ref-button' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
             </FormFieldWideRow>
           </form>

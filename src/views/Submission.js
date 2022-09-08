@@ -9,7 +9,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldWideRow from '../components/FormFieldWideRow'
@@ -17,13 +17,14 @@ import SocialShareIcons from '../components/SocialShareIcons'
 import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
 import ResultsTable from '../components/ResultsTable'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
+import SubscribeButton from '../components/SubscriptionButton'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
 const SubmissionRefsDeleteModal = React.lazy(() => import('../components/SubmissionRefsDeleteModal'))
 const ResultsAddModal = React.lazy(() => import('../components/ResultsAddModal'))
 
-library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript)
+library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash)
 
 class Submission extends React.Component {
   constructor (props) {
@@ -96,6 +97,7 @@ class Submission extends React.Component {
     }
 
     this.handleEditSubmissionDetails = this.handleEditSubmissionDetails.bind(this)
+    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleModerationReport = this.handleModerationReport.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
@@ -134,6 +136,20 @@ class Submission extends React.Component {
     }
     const submission = { thumbnailUrl: this.state.item.thumbnailUrl, description: this.state.item.description }
     this.setState({ showEditModal: true, modalMode: mode, submission: submission })
+  }
+
+  handleSubscribe () {
+    if (this.props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.props.match.params.id + '/subscribe', {})
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      this.handleLoginRedirect()
+    }
   }
 
   handleModerationReport () {
@@ -574,6 +590,7 @@ class Submission extends React.Component {
           <TooltipTrigger message='Edit submission'>
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
+          <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
           <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
         <br />

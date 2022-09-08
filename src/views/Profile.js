@@ -15,7 +15,7 @@ class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: { affiliation: '', name: '' },
+      data: { affiliation: '', name: '', usernameNormal: '', email: '' },
       showEditModal: false,
       requestFailedMessage: ''
     }
@@ -24,6 +24,7 @@ class Profile extends React.Component {
     this.handleHideModal = this.handleHideModal.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
     this.handleUpdateDetails = this.handleUpdateDetails.bind(this)
+    this.handleUnsubscribe = this.handleUnsubscribe.bind(this)
   }
 
   handleOnChange (field, value) {
@@ -52,6 +53,28 @@ class Profile extends React.Component {
       .catch(err => {
         this.setState({ showEditModal: false, requestFailedMessage: ErrorHandler(err) })
       })
+  }
+
+  handleUnsubscribe () {
+    let confirmString = window.prompt('To unsubscribe from all email updates, type your username or email below, then hit "OK."', '')
+    if (confirmString) {
+      confirmString = confirmString.trim().toLowerCase()
+    }
+    if (confirmString && ((confirmString === this.state.data.usernameNormal) || (confirmString === this.state.data.email))) {
+      axios.post(config.api.getUriPrefix() + '/user/unsubscribe', {})
+        .then(res => {
+          this.setState({
+            data: res.data.data,
+            requestFailedMessage: ''
+          })
+          window.alert('Successfully unsubscribed from all email updates!')
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    } else {
+      this.setState({ requestFailedMessage: 'Entered incorrect username/email!' })
+    }
   }
 
   componentDidMount () {
@@ -90,6 +113,10 @@ class Profile extends React.Component {
           <br />
           <FormFieldWideRow className='text-center'>
             <Link to='/Token'><Button variant='primary'>Manage API Token</Button></Link>
+          </FormFieldWideRow>
+          <br />
+          <FormFieldWideRow className='text-center'>
+            <Button variant='primary' onClick={this.handleUnsubscribe}>Unsubscribe From All Email Updates</Button>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>

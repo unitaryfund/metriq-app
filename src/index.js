@@ -4,8 +4,7 @@ import './index.css'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import CookieConsent from "react-cookie-consent";
-
+import CookieConsent from 'react-cookie-consent'
 
 ReactDOM.render(
   <React.StrictMode>

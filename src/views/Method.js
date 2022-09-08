@@ -13,6 +13,7 @@ import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { sortByCounts } from '../components/SortFunctions'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import SubscribeButton from '../components/SubscriptionButton'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -29,11 +30,26 @@ class Method extends React.Component {
       allMethodNames: []
     }
 
+    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
+  }
+
+  handleSubscribe () {
+    if (this.props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/method/' + this.props.match.params.id + '/subscribe', {})
+        .then(res => {
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      this.handleLoginRedirect()
+    }
   }
 
   handleShowEditModal () {
@@ -141,6 +157,7 @@ class Method extends React.Component {
             <TooltipTrigger message='Edit method'>
               <Button className='submission-button' variant='secondary' aria-label='Edit method' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
+            <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='method' onSubscribe={this.handleSubscribe} />
             <SocialShareIcons url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
