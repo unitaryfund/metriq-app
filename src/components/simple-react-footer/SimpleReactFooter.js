@@ -7,41 +7,39 @@ import { ImFacebook2, ImInstagram, ImLinkedin, ImTwitch, ImYoutube } from 'react
 import { Button } from 'react-bootstrap'
 import logo from './../../images/unitary_fund_logo.png'
 
-
 const CustomMailchimpForm = ({ status, message, onValidated }) => {
-  let email;
+  let email
   const submit = () =>
     email &&
-    email.value.indexOf("@") > -1 &&
+    email.value.indexOf('@') > -1 &&
     onValidated({
-      EMAIL: email.value,
-    });
+      EMAIL: email.value
+    })
 
   return (
     <div>
-      {status === "sending" && <div style={{ color: "blue" }}>sending...</div>}
-      {status === "error" && (
+      {status === 'sending' && <div style={{ color: 'blue' }}>sending...</div>}
+      {status === 'error' && (
         <div
-          style={{ color: "red" }}
+          style={{ color: 'red' }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
       )}
-      {status === "success" && (
+      {status === 'success' && (
         <div
-          style={{ color: "green" }}
+          style={{ color: 'green' }}
           dangerouslySetInnerHTML={{ __html: message }}
         />
       )}
       <input
         ref={node => (email = node)}
-        type="email"
-        placeholder="Your email"
+        type='email'
+        placeholder='Your email'
       />
       <Button variant='primary' className='metriq-navbar-button' onClick={submit}>Submit</Button>
     </div>
-  );
-};
-
+  )
+}
 
 class SimpleReactFooter extends React.Component {
   render () {
@@ -95,7 +93,8 @@ class SimpleReactFooter extends React.Component {
                     message={message}
                     onValidated={formData => subscribe(formData)}
                   />
-                )}/>
+                )}
+              />
             </div>
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>All content on this website is openly licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/'>CC-BY-SA</a>. Members agree to the <a href='/MetriqTermsofUse' target='_blank'>Metriq Platform Terms of Use</a>.</div>
             <div style={{ color: this.props.copyrightColor || 'grey' }} className='copyright'>Copyright &copy; {this.props.copyright}</div>

@@ -15,7 +15,7 @@ class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      data: { affiliation: '', name: '', usernameNormal: '', email: '' },
+      data: { affiliation: '', name: '', usernameNormal: '', email: '', isSubscribedToNewSubmissions: false },
       showEditModal: false,
       requestFailedMessage: ''
     }
@@ -25,6 +25,8 @@ class Profile extends React.Component {
     this.handleShowModal = this.handleShowModal.bind(this)
     this.handleUpdateDetails = this.handleUpdateDetails.bind(this)
     this.handleUnsubscribe = this.handleUnsubscribe.bind(this)
+    this.handleSubscribeNewSubmissions = this.handleSubscribeNewSubmissions.bind(this)
+    this.handleUnsubscribeNewSubmissions = this.handleUnsubscribeNewSubmissions.bind(this)
   }
 
   handleOnChange (field, value) {
@@ -77,6 +79,32 @@ class Profile extends React.Component {
     }
   }
 
+  handleSubscribeNewSubmissions () {
+    axios.post(config.api.getUriPrefix() + '/user/subscribeNewSubmissions', {})
+      .then(res => {
+        this.setState({
+          data: res.data.data,
+          requestFailedMessage: ''
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+  }
+
+  handleUnsubscribeNewSubmissions () {
+    axios.post(config.api.getUriPrefix() + '/user/unsubscribeNewSubmissions', {})
+      .then(res => {
+        this.setState({
+          data: res.data.data,
+          requestFailedMessage: ''
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+  }
+
   componentDidMount () {
     axios.get(config.api.getUriPrefix() + '/user')
       .then(res => {
@@ -116,11 +144,20 @@ class Profile extends React.Component {
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
-            <Button variant='primary' onClick={this.handleUnsubscribe}>Unsubscribe From All Email Updates</Button>
+            <Link to='/Password'><Button variant='primary'>Change password</Button></Link>
           </FormFieldWideRow>
           <br />
+          {!this.state.data.isSubscribedToNewSubmissions &&
+            <FormFieldWideRow className='text-center'>
+              <Button variant='primary' onClick={this.handleSubscribeNewSubmissions}>Subscribe to daily new submission updates</Button>
+            </FormFieldWideRow>}
+          {this.state.data.isSubscribedToNewSubmissions &&
+            <FormFieldWideRow className='text-center'>
+              <Button variant='danger' onClick={this.handleUnsubscribeNewSubmissions}>Unsubscribe from daily new submission updates</Button>
+            </FormFieldWideRow>}
+          <br />
           <FormFieldWideRow className='text-center'>
-            <Link to='/Password'><Button variant='primary'>Change password</Button></Link>
+            <Button variant='danger' onClick={this.handleUnsubscribe}>Unsubscribe From All Email Updates</Button>
           </FormFieldWideRow>
           <br />
           <FormFieldWideRow className='text-center'>
