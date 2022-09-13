@@ -1,6 +1,6 @@
 import axios from 'axios'
-import config from './../config'
-import ErrorHandler from './../components/ErrorHandler'
+import config from '../config'
+import ErrorHandler from '../components/ErrorHandler'
 import React, { useEffect, useState } from 'react'
 import { Tabs, Tab } from 'react-bootstrap'
 import { useHistory, useParams } from 'react-router-dom'
@@ -33,9 +33,13 @@ const Home = (props) => {
     setActiveTab(tab)
   }
 
+  const handleLoginRedirect = () => {
+    props.history.push('/Login/' + encodeURIComponent('Tag/' + props.match.params.tag + '/' + props.tabKey))
+  }
+
   const handleSubscribe = () => {
-    if (this.props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/tag/' + props.match.params.tag + '/subscribe', {})
+    if (props.isLoggedIn) {
+      axios.post(config.api.getUriPrefix() + '/tag/' + encodeURIComponent(props.match.params.tag) + '/subscribe', {})
         .then(res => {
           setIsSubscribed(res.data.data)
         })
@@ -43,7 +47,7 @@ const Home = (props) => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      this.handleLoginRedirect()
+      handleLoginRedirect()
     }
   }
 

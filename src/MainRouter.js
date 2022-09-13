@@ -200,22 +200,22 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Tag/:tag'
-          render={(p) => <Home {...p} onLogin={handleLogin} isTag />}
+          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag />}
         />
         <Route
           exact
           path='/Tag/:tag/Trending'
-          render={(p) => <Home {...p} onLogin={handleLogin} tabKey='Trending' />}
+          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} tabKey='Trending' />}
         />
         <Route
           exact
           path='/Tag/:tag/Popular'
-          render={(p) => <Home {...p} onLogin={handleLogin} tabKey='Popular' />}
+          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} tabKey='Popular' />}
         />
         <Route
           exact
           path='/Tag/:tag/Latest'
-          render={(p) => <Home {...p} onLogin={handleLogin} tabKey='Latest' />}
+          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} tabKey='Latest' />}
         />
         <Route
           exact
