@@ -17,7 +17,7 @@ import SocialShareIcons from '../components/SocialShareIcons'
 import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
 import ResultsTable from '../components/ResultsTable'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
-import SubscribeButton from '../components/SubscriptionButton'
+import SubscribeButton from '../components/SubscribeButton'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
