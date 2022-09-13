@@ -93,7 +93,7 @@ class Tasks extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
-          <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
+        <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
         <br />
         <FormFieldWideRow className='centered-tabs'>
           <ViewSubHeader>Categories</ViewSubHeader>
