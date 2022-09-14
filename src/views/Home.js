@@ -24,6 +24,14 @@ const Home = (props) => {
       history.replace(tag ? `/Tag/${tag}/${DEFAULT_INITIAL_TAB}` : `/Submissions/${DEFAULT_INITIAL_TAB}`)
     }
     setActiveTab(props.tabKey)
+
+    axios.get(config.api.getUriPrefix() + '/tag/' + encodeURIComponent(props.match.params.tag))
+      .then(res => {
+        setIsSubscribed(res.data.data.isSubscribed)
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
   }, [props, history, tag])
 
   const toggle = (tab) => {
