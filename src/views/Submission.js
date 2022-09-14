@@ -788,13 +788,16 @@ class Submission extends React.Component {
             <Modal.Title>Add Tag</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <FormFieldTypeaheadRow
-              inputName='tag' label='Tag'
-              onChange={(field, value) => this.handleOnChange('', field, value)}
-              validRegex={nonblankRegex}
-              options={this.state.tagNames.map(item => item.name)}
-              tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
-            /><br />
+            <Suspense fallback={<div>Loading...</div>}>
+              <FormFieldTypeaheadRow
+                inputName='tag' label='Tag'
+                onChange={(field, value) => this.handleOnChange('', field, value)}
+                validRegex={nonblankRegex}
+                options={this.state.tagNames.map(item => item.name)}
+                tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
+              />
+            </Suspense>
+            <br />
             <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
           </Modal.Body>
           <Modal.Footer>

@@ -25,6 +25,10 @@ const Home = (props) => {
     }
     setActiveTab(props.tabKey)
 
+    if (!props.match) {
+      return
+    }
+
     axios.get(config.api.getUriPrefix() + '/tag/' + encodeURIComponent(props.match.params.tag))
       .then(res => {
         setIsSubscribed(res.data.data.isSubscribed)
