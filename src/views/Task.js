@@ -16,7 +16,7 @@ import { parse } from 'json2csv'
 import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
-import SubscribeButton from '../components/SubscriptionButton'
+import SubscribeButton from '../components/SubscribeButton'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)

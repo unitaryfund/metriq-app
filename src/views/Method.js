@@ -13,7 +13,7 @@ import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { sortByCounts } from '../components/SortFunctions'
 import FormFieldWideRow from '../components/FormFieldWideRow'
-import SubscribeButton from '../components/SubscriptionButton'
+import SubscribeButton from '../components/SubscribeButton'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
