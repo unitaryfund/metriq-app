@@ -61,7 +61,7 @@ const CategoryItemBox = (props) => {
           </div>
           {props.type === 'tag' &&
             <div className='col-md-2'>
-              <SubscribeButton isSubscribed={isSubscribed} typeLabel='method' onSubscribe={handleSubscribe} />
+              <SubscribeButton isSubscribed={isSubscribed} typeLabel='tag' onSubscribe={handleSubscribe} />
             </div>}
           <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
           <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
