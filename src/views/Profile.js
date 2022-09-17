@@ -108,6 +108,7 @@ class Profile extends React.Component {
   componentDidMount () {
     axios.get(config.api.getUriPrefix() + '/user')
       .then(res => {
+        console.log(res.data.data)
         this.setState({
           data: res.data.data,
           requestFailedMessage: ''
