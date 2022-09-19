@@ -596,143 +596,157 @@ class Submission extends React.Component {
         <br />
         <div className='row'>
           <div className='col-md-6'>
-            <div>
-              <h2>Tasks
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAddRef('Task')}
-                  onClickRemove={() => this.handleOnClickRemove('Task')}
-                />
-              </h2>
-              <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
-              <hr />
+            <div className='card taxonomy-card'>
+              <div className='card-title'>
+                <h2>Tasks
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddRef('Task')}
+                    onClickRemove={() => this.handleOnClickRemove('Task')}
+                  />
+                </h2>
+                <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.tasks.length > 0) &&
+                  <Table
+                    columns={[{
+                      title: 'Task',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.tasks.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name,
+                        history: this.props.history
+                      }))}
+                    onRow={(record) => ({
+                      onClick () { record.history.push('/Task/' + record.key) }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                    showHeader={false}
+                  />}
+                {(this.state.item.tasks.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated tasks, yet.</div>
+                  </div>}
+              </div>
             </div>
-            {(this.state.item.tasks.length > 0) &&
-              <Table
-                columns={[{
-                  title: 'Task',
-                  dataIndex: 'name',
-                  key: 'name',
-                  width: 700
-                }]}
-                data={this.state.item.tasks.map(row =>
-                  ({
-                    key: row.id,
-                    name: row.name,
-                    history: this.props.history
-                  }))}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Task/' + record.key) }
-                })}
-                tableLayout='auto'
-                rowClassName='link'
-                showHeader={false}
-              />}
-            {(this.state.item.tasks.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated tasks, yet.</div>
-              </div>}
           </div>
           <div className='col-md-6'>
-            <div>
-              <h2>Methods
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAddRef('Method')}
-                  onClickRemove={() => this.handleOnClickRemove('Method')}
-                />
-              </h2>
-              <small><i>Methods can be techniques, protocols, or procedures</i></small>
-              <hr />
+            <div className='card taxonomy-card'>
+              <div className='card-title'>
+                <h2>Methods
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddRef('Method')}
+                    onClickRemove={() => this.handleOnClickRemove('Method')}
+                  />
+                </h2>
+                <small><i>Methods can be techniques, protocols, or procedures</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.methods.length > 0) &&
+                  <Table
+                    columns={[{
+                      title: 'Method',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.methods.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name,
+                        history: this.props.history
+                      }))}
+                    onRow={(record) => ({
+                      onClick () { record.history.push('/Method/' + record.key) }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                    showHeader={false}
+                  />}
+                {(this.state.item.methods.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated methods, yet.</div>
+                  </div>}
+              </div>
             </div>
-            {(this.state.item.methods.length > 0) &&
-              <Table
-                columns={[{
-                  title: 'Method',
-                  dataIndex: 'name',
-                  key: 'name',
-                  width: 700
-                }]}
-                data={this.state.item.methods.map(row =>
-                  ({
-                    key: row.id,
-                    name: row.name,
-                    history: this.props.history
-                  }))}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Method/' + record.key) }
-                })}
-                tableLayout='auto'
-                rowClassName='link'
-                showHeader={false}
-              />}
-            {(this.state.item.methods.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated methods, yet.</div>
-              </div>}
           </div>
         </div>
-        <br />
         <div className='row'>
           <div className='col-md-6'>
-            <div>
-              <h2>Platforms
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAddRef('Platform')}
-                  onClickRemove={() => this.handleOnClickRemove('Platform')}
-                />
-              </h2>
-              <small><i>Platforms refer to real or simulated hardware & software environments</i></small>
-              <hr />
+            <div className='card taxonomy-card'>
+              <div className='card-title'>
+                <h2>Platforms
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddRef('Platform')}
+                    onClickRemove={() => this.handleOnClickRemove('Platform')}
+                  />
+                </h2>
+                <small><i>Platforms refer to real or simulated hardware & software environments</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.platforms.length > 0) &&
+                  <Table
+                    columns={[{
+                      title: 'Platform',
+                      dataIndex: 'name',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.platforms.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name,
+                        history: this.props.history
+                      }))}
+                    onRow={(record) => ({
+                      onClick () { record.history.push('/Platform/' + record.key) }
+                    })}
+                    tableLayout='auto'
+                    rowClassName='link'
+                    showHeader={false}
+                  />}
+                {(this.state.item.platforms.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated platforms, yet.</div>
+                  </div>}
+              </div>
             </div>
-            {(this.state.item.platforms.length > 0) &&
-              <Table
-                columns={[{
-                  title: 'Platform',
-                  dataIndex: 'name',
-                  key: 'name',
-                  width: 700
-                }]}
-                data={this.state.item.platforms.map(row =>
-                  ({
-                    key: row.id,
-                    name: row.name,
-                    history: this.props.history
-                  }))}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Platform/' + record.key) }
-                })}
-                tableLayout='auto'
-                rowClassName='link'
-                showHeader={false}
-              />}
-            {(this.state.item.platforms.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated platforms, yet.</div>
-              </div>}
           </div>
           <div className='col-md-6'>
-            <div>
-              <h2>Tags
-                <EditButton
-                  className='float-right edit-button btn'
-                  onClickAdd={() => this.handleOnClickAdd('Tag')}
-                  onClickRemove={() => this.handleOnClickRemove('Tag')}
-                />
-              </h2>
-              <small><i>Use tags to classify and discover the state of the art</i></small>
-              <hr />
+            <div className='card taxonomy-card card-body'>
+              <div className='card-title'>
+                <h2>Tags
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAdd('Tag')}
+                    onClickRemove={() => this.handleOnClickRemove('Tag')}
+                  />
+                </h2>
+                <small><i>Use tags to classify and discover the state of the art</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.tags.length > 0) &&
+                    this.state.item.tags.map((tag, ind) => <span key={tag.id}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + tag.name}><span className='link'>{tag.name}</span></Link></span>)}
+                {(this.state.item.tags.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated tags, yet.</div>
+                  </div>}
+              </div>
             </div>
-            {(this.state.item.tags.length > 0) &&
-                this.state.item.tags.map((tag, ind) => <span key={tag.id}>{ind > 0 && <span> • </span>}<Link to={'/Tag/' + tag.name}><span className='link'>{tag.name}</span></Link></span>)}
-            {(this.state.item.tags.length === 0) &&
-              <div className='card bg-light'>
-                <div className='card-body'>There are no associated tags, yet.</div>
-              </div>}
           </div>
         </div>
-        <br />
         <ResultsTable
           results={this.state.item.results}
           onClickAdd={this.handleOnClickAddResult}

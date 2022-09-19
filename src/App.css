@@ -207,6 +207,11 @@ form > span > .row > label {
   top: -5px;
 }
 
+.taxonomy-card {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
 .task-method-item {
   width: 100%;
   text-align: left;
