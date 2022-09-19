@@ -4,6 +4,7 @@ const CategoryItemBox = React.lazy(() => import('./CategoryItemBox'))
 
 const CategoryScroll = (props) =>
   <div className='container'>
+    <br />
     {props.heading &&
       <FormFieldWideRow>
         <b>{props.heading}</b>
