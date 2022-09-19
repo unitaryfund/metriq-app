@@ -18,6 +18,7 @@ import { metricValueRegex, nonblankRegex } from '../components/ValidationRegex'
 import ResultsTable from '../components/ResultsTable'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import SubscribeButton from '../components/SubscribeButton'
+import ViewHeader from '../components/ViewHeader'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
@@ -556,7 +557,7 @@ class Submission extends React.Component {
     return (
       <div id='metriq-main-content' className='container submission-detail-container'>
         <FormFieldWideRow>
-          <div><h1>{this.state.item.name}</h1></div>
+          <ViewHeader>{this.state.item.name}</ViewHeader>
         </FormFieldWideRow>
         <div className='text-center'>
           <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
@@ -598,13 +599,13 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
-                <h2>Tasks
+                <h5>Tasks
                   <EditButton
                     className='float-right edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Task')}
                     onClickRemove={() => this.handleOnClickRemove('Task')}
                   />
-                </h2>
+                </h5>
                 <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
                 <hr />
               </div>
@@ -640,13 +641,13 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
-                <h2>Methods
+                <h5>Methods
                   <EditButton
                     className='float-right edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Method')}
                     onClickRemove={() => this.handleOnClickRemove('Method')}
                   />
-                </h2>
+                </h5>
                 <small><i>Methods can be techniques, protocols, or procedures</i></small>
                 <hr />
               </div>
@@ -684,13 +685,13 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
-                <h2>Platforms
+                <h5>Platforms
                   <EditButton
                     className='float-right edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Platform')}
                     onClickRemove={() => this.handleOnClickRemove('Platform')}
                   />
-                </h2>
+                </h5>
                 <small><i>Platforms refer to real or simulated hardware & software environments</i></small>
                 <hr />
               </div>
@@ -726,13 +727,13 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card card-body'>
               <div className='card-title'>
-                <h2>Tags
+                <h5>Tags
                   <EditButton
                     className='float-right edit-button btn'
                     onClickAdd={() => this.handleOnClickAdd('Tag')}
                     onClickRemove={() => this.handleOnClickRemove('Tag')}
                   />
-                </h2>
+                </h5>
                 <small><i>Use tags to classify and discover the state of the art</i></small>
                 <hr />
               </div>

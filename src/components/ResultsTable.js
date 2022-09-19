@@ -10,13 +10,13 @@ const ResultsTable = (props) => {
     <FormFieldWideRow>
       <div className='card taxonomy-card'>
         <div className='card-title'>
-          <h2>Results
+          <h5>Results
             <EditButton
               className='float-right edit-button btn'
               onClickAdd={props.onClickAdd}
               onClickRemove={props.onClickRemove}
             />
-          </h2>
+          </h5>
           <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>
           <hr />
         </div>
