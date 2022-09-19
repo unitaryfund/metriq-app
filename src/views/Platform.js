@@ -386,7 +386,7 @@ class Platform extends React.Component {
               <Button className='submission-button' variant='secondary' aria-label='Edit platform' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
             <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
-            <SocialShareIcons url={config.api.getUriPrefix() + '/platform/' + this.props.match.params.id} />
+            <SocialShareIcons url={config.web.getUriPrefix() + '/platform/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
           {(this.state.item.childPlatforms && (this.state.item.childPlatforms.length > 0)) &&

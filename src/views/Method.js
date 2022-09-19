@@ -158,7 +158,7 @@ class Method extends React.Component {
               <Button className='submission-button' variant='secondary' aria-label='Edit method' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
             <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='method' onSubscribe={this.handleSubscribe} />
-            <SocialShareIcons url={config.api.getUriPrefix() + '/method/' + this.props.match.params.id} />
+            <SocialShareIcons url={config.web.getUriPrefix() + '/method/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
           {this.state.item.parentMethod &&

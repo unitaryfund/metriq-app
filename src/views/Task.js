@@ -202,7 +202,7 @@ class Task extends React.Component {
               </Button>
             </TooltipTrigger>
             <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='task' onSubscribe={this.handleSubscribe} />
-            <SocialShareIcons url={config.api.getUriPrefix() + '/task/' + this.props.match.params.id} />
+            <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />
           {this.state.item.parentTask &&

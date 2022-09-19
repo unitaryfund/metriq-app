@@ -591,7 +591,7 @@ class Submission extends React.Component {
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
           <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
-          <SocialShareIcons url={config.api.getUriPrefix() + '/submission/' + this.props.match.params.id} />
+          <SocialShareIcons url={config.web.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
         <br />
         <div className='row'>
