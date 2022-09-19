@@ -6,12 +6,12 @@ const SocialShareIcons = (props) =>
   <span>
     <TooltipTrigger message='Share via Facebook'>
       <FacebookShareButton url={props.url}>
-        <FacebookIcon size={32} />
+        <FacebookIcon size={38} />
       </FacebookShareButton>
     </TooltipTrigger>
     <TooltipTrigger message='Share via Twitter'>
       <TwitterShareButton url={props.url}>
-        <TwitterIcon size={32} />
+        <TwitterIcon size={38} />
       </TwitterShareButton>
     </TooltipTrigger>
   </span>
