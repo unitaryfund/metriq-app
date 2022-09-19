@@ -110,6 +110,10 @@ form > span > .row > label {
   text-align: right;
 }
 
+.active-navlink {
+  color: #fcfcfc !important;
+}
+
 .container a {
   color: #007bff;
 }
