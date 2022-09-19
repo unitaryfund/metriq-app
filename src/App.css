@@ -114,6 +114,10 @@ form > span > .row > label {
   color: #fcfcfc !important;
 }
 
+.active-dropdown-navlink {
+  color: #0000EE !important;
+}
+
 .container a {
   color: #007bff;
 }
