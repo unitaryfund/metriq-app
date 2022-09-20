@@ -560,7 +560,7 @@ class Submission extends React.Component {
           <ViewHeader>{this.state.item.name}</ViewHeader>
         </FormFieldWideRow>
         <div className='text-center'>
-          <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-image' />
+          <img src={this.state.item.thumbnailUrl ? this.state.item.thumbnailUrl : logo} alt='Submission thumbnail' className='submission-detail-image' />
         </div>
         <FormFieldWideRow>
           <div className='submission-description'>

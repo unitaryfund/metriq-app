@@ -192,6 +192,15 @@ form > span > .row > label {
   padding: 8px;
 }
 
+.submission-detail-image {
+  display: inline-block;
+  vertical-align: -128px;
+  width: 256px;
+  height: auto;
+  max-width: 512px;
+  max-height: 512px;
+}
+
 .submission-description {
   white-space: pre-line;
   text-align: left;
