@@ -131,6 +131,10 @@ class Register extends React.Component {
             onChange={this.handleOnChange}
           />
           <FormFieldRow
+            inputName='twitterHandle' inputType='text' label='Twitter Handle'
+            onChange={this.handleOnChange}
+          />
+          <FormFieldRow
             inputName='password' inputType={this.state.isPasswordVisible ? 'text' : 'password'} label='Password'
             validatorMessage={passwordInvalidError}
             onChange={this.handleOnChangePassword}
