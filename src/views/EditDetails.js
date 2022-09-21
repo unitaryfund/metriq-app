@@ -6,6 +6,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ErrorHandler from '../components/ErrorHandler'
 
 const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const twitterHandleValidRegex = /^@[A-Za-z0-9_]{1,15}$/
 
 class EditDetails extends React.Component {
   constructor (props) {
@@ -15,7 +16,8 @@ class EditDetails extends React.Component {
       requestFailedMessage: '',
       newAffiliation: '',
       newEmail: '',
-      newName: ''
+      newName: '',
+      newTwitterHandle: ''
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -41,7 +43,8 @@ class EditDetails extends React.Component {
     const request = {
       email: this.state.newEmail,
       affiliation: this.state.newAffiliation,
-      name: this.state.newName
+      name: this.state.newName,
+      twitterHandle: this.state.newTwitterHandle
     }
 
     axios.post(config.api.getUriPrefix() + '/user', request)
@@ -54,6 +57,24 @@ class EditDetails extends React.Component {
     event.preventDefault()
   }
 
+  componentDidMount () {
+    axios.get(config.api.getUriPrefix() + '/user')
+      .then(res => {
+        const user = res.data.data
+        this.setState({
+          isRequestFailed: false,
+          requestFailedMessage: '',
+          newAffiliation: user.affiliation,
+          newEmail: user.email,
+          newName: user.name,
+          newTwitterHandle: user.twitterHandle
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+  }
+
   render () {
     return (
       <div id='metriq-main-content' className='container'>
@@ -61,15 +82,24 @@ class EditDetails extends React.Component {
         <form onSubmit={this.handleOnSubmit}>
           <FormFieldRow
             inputName='newName' inputType='text' label='Name'
+            value={this.state.newName}
             onChange={this.handleOnChange}
           />
           <FormFieldRow
             inputName='newEmail' inputType='text' label='Email'
+            value={this.state.newEmail}
             onChange={this.handleOnChange}
             validRegex={emailValidRegex}
           />
           <FormFieldRow
             inputName='newAffiliation' inputType='text' label='Affiliation'
+            value={this.state.newAffiliation}
+            onChange={this.handleOnChange}
+          />
+          <FormFieldRow
+            inputName='newTwitterHandle' inputType='text' label='Twitter Handle'
+            value={this.state.newTwitterHandle}
+            validRegex={twitterHandleValidRegex}
             onChange={this.handleOnChange}
           />
           <FormFieldWideRow className='text-center'>

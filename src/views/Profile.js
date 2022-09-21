@@ -3,10 +3,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import config from './../config'
 import FieldRow from '../components/FieldRow'
-import FormFieldRow from '../components/FormFieldRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
-import { Button, Modal } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
@@ -21,8 +20,6 @@ class Profile extends React.Component {
     }
 
     this.handleOnChange = this.handleOnChange.bind(this)
-    this.handleHideModal = this.handleHideModal.bind(this)
-    this.handleShowModal = this.handleShowModal.bind(this)
     this.handleUpdateDetails = this.handleUpdateDetails.bind(this)
     this.handleUnsubscribe = this.handleUnsubscribe.bind(this)
     this.handleSubscribeNewSubmissions = this.handleSubscribeNewSubmissions.bind(this)
@@ -33,14 +30,6 @@ class Profile extends React.Component {
     const data = this.state.data
     data[field] = value
     this.setState({ data: data })
-  }
-
-  handleHideModal () {
-    this.setState({ showEditModal: false })
-  }
-
-  handleShowModal () {
-    this.setState({ showEditModal: true })
   }
 
   handleUpdateDetails () {
@@ -108,7 +97,6 @@ class Profile extends React.Component {
   componentDidMount () {
     axios.get(config.api.getUriPrefix() + '/user')
       .then(res => {
-        console.log(res.data.data)
         this.setState({
           data: res.data.data,
           requestFailedMessage: ''
@@ -166,35 +154,6 @@ class Profile extends React.Component {
             <Link to='/Delete'><Button variant='danger'>Delete Account</Button></Link>
           </FormFieldWideRow>
         </div>
-        <Modal
-          show={this.state.showEditModal}
-          onHide={this.handleHideModal}
-          size='lg'
-          aria-labelledby='contained-modal-title-vcenter'
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Edit Details</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <span>
-              <FormFieldRow
-                inputName='affiliation' inputType='text' label='Affiliation'
-                value={this.state.data.affiliation}
-                onChange={(field, value) => this.handleOnChange(field, value)}
-              />
-              <FormFieldRow
-                inputName='twitterHandle' inputType='text' label='Twitter Handle'
-                value={this.state.data.twitterHandle}
-                onChange={(field, value) => this.handleOnChange(field, value)}
-              />
-            </span>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='primary' onClick={this.handleHideModal}>Cancel</Button>
-            <Button variant='primary' onClick={this.handleUpdateDetails}>Submit</Button>
-          </Modal.Footer>
-        </Modal>
       </div>
     )
   }
