@@ -129,6 +129,7 @@ class Profile extends React.Component {
           <FieldRow fieldName='usernameNormal' label='Normalized Username' value={this.state.data.usernameNormal} />
           <FieldRow fieldName='email' label='Email' value={this.state.data.email} />
           <FieldRow fieldName='affiliation' label='Affiliation' value={this.state.data.affiliation} />
+          <FieldRow fieldName='twitterHandle' label='Twitter Handle' value={this.state.data.twitterHandle} />
           <FieldRow fieldName='name' label='Name' value={this.state.data.name} />
           <FieldRow fieldName='clientToken' label='API Token' value={this.state.data.clientTokenCreated ? 'Active' : 'None'} />
           <FieldRow fieldName='createdAt' label='Date Joined' value={this.state.data.createdAt} />
@@ -180,6 +181,11 @@ class Profile extends React.Component {
               <FormFieldRow
                 inputName='affiliation' inputType='text' label='Affiliation'
                 value={this.state.data.affiliation}
+                onChange={(field, value) => this.handleOnChange(field, value)}
+              />
+              <FormFieldRow
+                inputName='twitterHandle' inputType='text' label='Twitter Handle'
+                value={this.state.data.twitterHandle}
                 onChange={(field, value) => this.handleOnChange(field, value)}
               />
             </span>
