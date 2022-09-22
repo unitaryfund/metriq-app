@@ -6,7 +6,8 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import ErrorHandler from '../components/ErrorHandler'
 
 const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const twitterHandleValidRegex = /^@[A-Za-z0-9_]{1,15}$/
+// https://codepen.io/SitePoint/pen/yLbqeg
+const twitterHandleValidRegex = /^$|^@[A-Za-z0-9_]{1,15}?/
 
 class EditDetails extends React.Component {
   constructor (props) {
