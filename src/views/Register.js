@@ -27,6 +27,7 @@ class Register extends React.Component {
       email: '',
       password: '',
       passwordConfirm: '',
+      twitterHandle: '',
       isAgreedToTerms: false,
       isPasswordMatch: true,
       requestFailedMessage: '',
@@ -76,7 +77,7 @@ class Register extends React.Component {
     if (!passwordValidRegex.test(this.state.passwordConfirm)) {
       return false
     }
-    if (!twitterHandleValidRegex.test(this.state.twitterHandleValidRegex)) {
+    if (!twitterHandleValidRegex.test(this.state.twitterHandle)) {
       return false
     }
     if (!this.isPasswordMatch()) {
