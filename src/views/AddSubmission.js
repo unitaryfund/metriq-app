@@ -182,9 +182,9 @@ class AddSubmission extends React.Component {
 
     let url = ''
     if (this.state.submission.id) {
-      url = config.api.getUriPrefix() + '/submission/' + this.state.submission.id
+      url = config.api.getUriPrefix() + '/Submission/' + this.state.submission.id
     } else {
-      url = config.api.getUriPrefix() + '/submission'
+      url = config.api.getUriPrefix() + '/Submission/Latest'
     }
 
     axios.post(url, request)
