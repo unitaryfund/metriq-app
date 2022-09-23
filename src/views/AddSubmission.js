@@ -184,7 +184,7 @@ class AddSubmission extends React.Component {
     if (this.state.submission.id) {
       url = config.api.getUriPrefix() + '/Submission/' + this.state.submission.id
     } else {
-      url = config.api.getUriPrefix() + '/Submission/Latest'
+      url = config.api.getUriPrefix() + '/Submission'
     }
 
     axios.post(url, request)
@@ -195,7 +195,7 @@ class AddSubmission extends React.Component {
             callback()
           }
         } else {
-          this.props.history.push('/Submissions')
+          this.props.history.push('/Submissions/Latest')
         }
       })
       .catch(err => {
