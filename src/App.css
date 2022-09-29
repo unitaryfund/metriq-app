@@ -52,6 +52,10 @@ textarea {
   margin-top: 8px;
 }
 
+.metriq-follow-button {
+  font-size: small;
+}
+
 .navbar-nav {
   border-radius: 16px;
   border: none;
