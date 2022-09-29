@@ -1,6 +1,6 @@
 # [![](src/images/metriq_logo_primary_blue_inverted.png)](http://metriq.info)
 
-MetriQ is a community-driven platform for hosting quantum benchmarks.
+Metriq is a community-driven platform for hosting quantum benchmarks.
 It's main focus is to help answer the following question:
 
 > How does quantum computing platform X running software stack Y perform on workload Z and how has that changed over time?
@@ -26,7 +26,7 @@ Metriq accelerates research by upgrading the taxonomy of reported results that a
 By making the data explorable and live-updated we’ll be able to make better progress together to develop quantum technology.
 
 
-## Setting up for MetriQ development
+## Setting up for Metriq development
 
 In order to locally run and host the `metriq` application we require the use of the following GitHub repositories:
 
