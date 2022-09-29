@@ -209,9 +209,12 @@ class AddSubmission extends React.Component {
     return true
   }
 
-  handleOnClickAddTask (taskId) {
+  handleOnClickAddTask (taskItem) {
+    if (!taskItem) {
+      return
+    }
     const tasks = this.state.tasks
-    const task = this.state.taskNames.find(x => x.id === parseInt(taskId))
+    const task = this.state.taskNames.find(x => x.id === taskItem.id)
     if (task && tasks.indexOf(task) < 0) {
       tasks.push(task)
       this.setState({ tasks: tasks, task: {} })
@@ -233,9 +236,12 @@ class AddSubmission extends React.Component {
     this.setState({ tasks: tasks })
   }
 
-  handleOnClickAddMethod (methodId) {
+  handleOnClickAddMethod (methodItem) {
+    if (!methodItem) {
+      return
+    }
     const methods = this.state.methods
-    const method = this.state.methodNames.find(x => x.id === parseInt(methodId))
+    const method = this.state.methodNames.find(x => x.id === methodItem.id)
     if (method && methods.indexOf(method) < 0) {
       methods.push(method)
       this.setState({ methods: methods, method: {} })
@@ -467,11 +473,11 @@ class AddSubmission extends React.Component {
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
             </FormFieldAlertRow>
             <br />
-            <FormFieldSelectRow
-              inputName='task' label='Tasks'
+            <FormFieldTypeaheadRow
+              inputName='task' label='Tasks' labelKey='name'
               onChange={this.handleOnChange}
               options={this.state.taskNames}
-              onClickAdd={this.handleOnClickAddTask}
+              onSelect={this.handleOnClickAddTask}
               onClickNew={this.handleOnClickNewTask}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
@@ -479,11 +485,11 @@ class AddSubmission extends React.Component {
               <b>"Tasks" are practical workloads of interest.</b>
             </FormFieldAlertRow>
             <br />
-            <FormFieldSelectRow
-              inputName='method' label='Methods'
+            <FormFieldTypeaheadRow
+              inputName='method' label='Methods' labelKey='name'
               onChange={this.handleOnChange}
               options={this.state.methodNames}
-              onClickAdd={this.handleOnClickAddMethod}
+              onSelect={this.handleOnClickAddMethod}
               onClickNew={this.handleOnClickNewMethod}
             />
             <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />

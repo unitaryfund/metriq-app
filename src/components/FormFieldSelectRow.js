@@ -85,12 +85,9 @@ const FormFieldSelectRow = (props) => {
           )}
         </select>
       </div>
-      {props.onClickAdd &&
-        <span>
-          <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickAdd(value || (options.length ? options[0].id : 0))}>Add</Button>
-          <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew}>New</Button>
-        </span>}
-      {!props.onClickAdd && <div className='col col-md-3'><FormFieldValidator message={props.validatorMessage} /></div>}
+      {props.onClickAdd && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickAdd(value || (options.length ? options[0].id : 0))}>Add</Button>}
+      {props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew}>New</Button>}
+      {!props.onClickAdd && !props.onClickNew && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator message={props.validatorMessage} /></Suspense></div>}
     </div>
   )
 }

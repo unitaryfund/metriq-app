@@ -78,9 +78,9 @@ const FormFieldTypeaheadRow = (props) => {
         onInputChange={handleOnFieldChange}
         onBlur={handleOnFieldBlur}
       />
-      {props.onClickAdd
-        ? <Button variant='primary' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>
-        : <Suspense fallback={<div>Loading...</div>}><div className='col col-md-3'><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></div></Suspense>}
+      {(!!props.onClickAdd && !props.onClickNew) && <Button variant='primary' className='submission-ref-button' onClick={handleOnButtonClick} disabled={!value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>}
+      {!!props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew}>New</Button>}
+      {(!props.onClickAdd && !props.onClickNew) && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></Suspense></div>}
     </div>
   )
 }
