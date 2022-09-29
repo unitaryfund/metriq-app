@@ -1,4 +1,32 @@
-# Locally setting up MetriQ  
+# [![](src/images/metriq_logo_primary_blue_inverted.png)](http://metriq.info)
+
+Metriq is a community-driven platform for hosting quantum benchmarks.
+It's main focus is to help answer the following question:
+
+> How does quantum computing platform X running software stack Y perform on workload Z and how has that changed over time?
+
+Below shows an example of [quantum volume](https://en.wikipedia.org/wiki/Quantum_volume) measurements that have been achieved by hardware providers over the past 3 years.
+![](src/images/qv.png)
+
+Metriq is free to sign up and submit results, whether you are a researcher publishing your own results, or a reader who wants to add data.
+Both are much appreciated!
+
+## Motivation
+
+There has been rapid progress in quantum computing, but it can be hard to track that progress.
+Researchers want to know how to compare against the state of the art and users want to know what tools best suit them.
+
+Metriq is a free and open source platform that helps anyone better answer this question for themselves.
+
+Researchers and developers in academia and industry can submit results on existing benchmarks or propose new benchmarking tasks to the community.
+Results include sources and are openly accessible.
+It is free to sign up and submit.
+
+Metriq accelerates research by upgrading the taxonomy of reported results that are often now locked away in tables of review papers.
+By making the data explorable and live-updated we’ll be able to make better progress together to develop quantum technology.
+
+
+## Setting up for Metriq development
 
 In order to locally run and host the `metriq` application we require the use of the following GitHub repositories:
 
@@ -7,7 +35,7 @@ In order to locally run and host the `metriq` application we require the use of 
 - `metriq-client`: This is a Python API client that posts submissions and other data to the back-end component of `metriq`
 - `metriq-postgres`: **(Optional)** This contains the exported PostgreSQL collections of our development and database.
 
-## Setting up `metriq-api`
+### Setting up `metriq-api`
 
 The following system variables need to be present in your `.bashrc` file. Add
 the following lines into your `.bashrc`, making sure to alter the values of the
@@ -92,76 +120,3 @@ the local instance of the database with the data from the
 Following the instructions in the `README.md` file of the `metriq-postgres` repo will
 populate your local instance of the database with dummy data from the `.JSON`
 files.
-
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-(The RESTful API project should be running at the same time, via `node index` on the command line in its respective project directory.)
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
