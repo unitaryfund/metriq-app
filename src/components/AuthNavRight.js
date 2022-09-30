@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 const handleOnClick = () => {
   axios.get(config.api.getUriPrefix() + '/logout')
-    .then(() => this.props.history.push('/'))
+    .then(() => window.location.href = '/')
     .catch(err => {
       window.alert('Error: ' + ErrorHandler(err) + '\nSorry, cannot logout. If error persists, clear your site cookies in your browser.')
     })
