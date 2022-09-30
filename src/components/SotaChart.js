@@ -249,16 +249,16 @@ class SotaChart extends React.Component {
       }
     }
     const metricNames = Object.keys(chartData)
-    let chartKey = ''
+    let chartKey = metricNames[0]
     let m = 0
     const isLowerBetterDict = {}
     for (let i = 0; i < metricNames.length; i++) {
       const length = chartData[metricNames[i]].length
+      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
       if (length > m) {
         chartKey = metricNames[i]
         m = length
       }
-      isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
     }
     let i = 0
     while (i < metricNames.length) {

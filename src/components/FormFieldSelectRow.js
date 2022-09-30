@@ -22,6 +22,9 @@ const FormFieldSelectRow = (props) => {
         : options.length && !props.isNullDefault
           ? options[0].id
           : ''))
+  if (props.value && props.value !== value) {
+    setValue(props.value)
+  }
 
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
