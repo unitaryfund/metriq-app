@@ -311,6 +311,10 @@ class Submission extends React.Component {
   }
 
   handleOnClickAddResult () {
+    let mode = 'Result'
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
     const result = {
       id: '',
       task: '',
@@ -321,7 +325,7 @@ class Submission extends React.Component {
       isHigherBetter: false,
       evaluatedDate: new Date()
     }
-    this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
+    this.setState({ result: result, showAddModal: true, modalMode: mode, showEditModal: mode === 'Login' })
   }
 
   handleOnClickEditResult (resultId) {

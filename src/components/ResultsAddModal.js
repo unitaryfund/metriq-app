@@ -182,7 +182,8 @@ const ResultsAddModal = (props) => {
         <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='primary' onClick={handleAddModalSubmit} disabled={isValidated && !isAllValid()}>Submit</Button>
+        {((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={onHide}>Cancel</Button>}
+        {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={handleAddModalSubmit} disabled={isValidated && !isAllValid()}>Submit</Button>}
       </Modal.Footer>
     </Modal>
   )
