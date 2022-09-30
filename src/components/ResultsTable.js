@@ -15,6 +15,7 @@ const ResultsTable = (props) => {
               className='float-right edit-button btn'
               onClickAdd={props.onClickAdd}
               onClickRemove={props.onClickRemove}
+              disabled={props.disabled}
             />
           </h5>
           <small><i>Results are metric name/value pairs that can be extracted from Submissions (papers, codebases, etc.)</i></small>

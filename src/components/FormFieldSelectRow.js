@@ -88,8 +88,8 @@ const FormFieldSelectRow = (props) => {
           )}
         </select>
       </div>
-      {props.onClickAdd && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickAdd(value || (options.length ? options[0].id : 0))}>Add</Button>}
-      {props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew}>New</Button>}
+      {props.onClickAdd && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickAdd(value || (options.length ? options[0].id : 0))} disabled={props.disabled}>Add</Button>}
+      {props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew} disabled={props.disabled}>New</Button>}
       {!props.onClickAdd && !props.onClickNew && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator message={props.validatorMessage} /></Suspense></div>}
     </div>
   )

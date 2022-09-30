@@ -7,7 +7,7 @@ library.add(faEdit, faPlus, faMinus)
 
 const EditButton = (props) =>
   <Dropdown className={props.className}>
-    <Dropdown.Toggle variant='Default'>
+    <Dropdown.Toggle variant='Default' disabled={props.disabled}>
       <FontAwesomeIcon className='edit-button-icon' icon='edit' /> Edit
     </Dropdown.Toggle>
 

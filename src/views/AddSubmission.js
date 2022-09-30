@@ -479,6 +479,7 @@ class AddSubmission extends React.Component {
               options={this.state.taskNames}
               onSelect={this.handleOnClickAddTask}
               onClickNew={this.handleOnClickNewTask}
+              disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
             <FormFieldRowDeleter options={this.state.tasks} onClickRemove={this.handleOnClickRemoveTask} emptyMessage='There are no associated tasks, yet.' />
             <FormFieldAlertRow>
@@ -491,6 +492,7 @@ class AddSubmission extends React.Component {
               options={this.state.methodNames}
               onSelect={this.handleOnClickAddMethod}
               onClickNew={this.handleOnClickNewMethod}
+              disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
             <FormFieldRowDeleter options={this.state.methods} onClickRemove={this.handleOnClickRemoveMethod} emptyMessage='There are no associated methods, yet.' />
             <FormFieldAlertRow>
@@ -503,6 +505,7 @@ class AddSubmission extends React.Component {
               options={this.state.platformNames}
               onClickAdd={this.handleOnClickAddPlatform}
               onClickNew={this.handleOnClickNewPlatform}
+              disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
             <FormFieldRowDeleter options={this.state.platforms} onClickRemove={this.handleOnClickRemovePlatform} emptyMessage='There are no associated platforms, yet.' />
             <FormFieldAlertRow>
@@ -515,6 +518,7 @@ class AddSubmission extends React.Component {
               options={this.state.tagNames.map(item => item.name)}
               onClickAdd={this.handleOnClickAddTag}
               onKeyDown={this.handleKeyDown}
+              disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
             <FormFieldRowDeleter options={this.state.tags.map((item) => { return { name: item } })} onClickRemove={this.handleOnClickRemoveTag} emptyMessage='There are no associated tags, yet.' />
             <FormFieldAlertRow>
@@ -527,6 +531,7 @@ class AddSubmission extends React.Component {
                 onClickAdd={this.handleOnClickNewResult}
                 onClickRemove={this.handleOnClickRemoveResult}
                 onClickEdit={this.handleOnClickEditResult}
+                disabled={!urlValidRegex.test(this.state.contentUrl)}
               />
             </FormFieldAlertRow>
             <br />
