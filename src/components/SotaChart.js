@@ -234,7 +234,8 @@ class SotaChart extends React.Component {
         metric: row.metricName,
         label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
-        isHigherBetter: row.isHigherBetter
+        isHigherBetter: row.isHigherBetter,
+        standardError: row.standardError
       }))
     const chartData = {}
     const isHigherBetterCounts = {}
