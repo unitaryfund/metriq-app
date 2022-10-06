@@ -59,6 +59,11 @@ const SubmissionRefsAddModal = (props) => {
     setIsValid(nonblankRegex.test(item.name))
   }
 
+  const handleReset = () => {
+    setShowAccordion(false)
+    setIsValid(!!item.name)
+  }
+
   const handleOnChangeParent = (field, value) => {
     if (!showAccordion) {
       return
@@ -117,11 +122,18 @@ const SubmissionRefsAddModal = (props) => {
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
       })
+
+    handleReset()
+  }
+
+  const handleOnHide = () => {
+    handleReset()
+    props.onHide()
   }
 
   return (
     <Modal
-      show={props.show} onHide={props.onHide}
+      show={props.show} onHide={handleOnHide}
       size='lg'
       aria-labelledby='contained-modal-title-vcenter'
       centered
