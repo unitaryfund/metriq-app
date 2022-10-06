@@ -334,15 +334,6 @@ class Submission extends React.Component {
       if (this.state.item.results[i].id === resultId) {
         const result = { ...this.state.item.results[i] }
         result.submissionId = this.state.item.id
-        if (result.task.id !== undefined) {
-          result.task = result.task.id
-        }
-        if (result.method.id !== undefined) {
-          result.method = result.method.id
-        }
-        if ((result.platform !== null) && (result.platform.id !== undefined)) {
-          result.platform = result.platform.id
-        }
         nResult = result
         break
       }
