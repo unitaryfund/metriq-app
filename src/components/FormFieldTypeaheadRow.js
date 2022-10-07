@@ -74,6 +74,12 @@ const FormFieldTypeaheadRow = (props) => {
           if (props.onSelect) {
             props.onSelect(selected[0])
           }
+          if (props.isClearedOnSelect) {
+            if (typeahead) {
+              typeahead.current.clear()
+            }
+            setValue('')
+          }
         }}
         onInputChange={handleOnFieldChange}
         onBlur={handleOnFieldBlur}

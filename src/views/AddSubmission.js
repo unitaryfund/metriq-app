@@ -477,7 +477,7 @@ class AddSubmission extends React.Component {
               inputName='task' label='Tasks' labelKey='name'
               onChange={this.handleOnChange}
               options={this.state.taskNames}
-              onSelect={this.handleOnClickAddTask}
+              onSelect={this.handleOnClickAddTask} isClearedOnSelect
               onClickNew={this.handleOnClickNewTask}
               disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
@@ -490,7 +490,7 @@ class AddSubmission extends React.Component {
               inputName='method' label='Methods' labelKey='name'
               onChange={this.handleOnChange}
               options={this.state.methodNames}
-              onSelect={this.handleOnClickAddMethod}
+              onSelect={this.handleOnClickAddMethod} isClearedOnSelect
               onClickNew={this.handleOnClickNewMethod}
               disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
