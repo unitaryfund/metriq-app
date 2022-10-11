@@ -14,6 +14,7 @@ import SocialShareIcons from '../components/SocialShareIcons'
 import { sortByCounts } from '../components/SortFunctions'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SubscribeButton from '../components/SubscribeButton'
+import CategoryScroll from '../components/CategoryScroll'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -172,32 +173,8 @@ class Method extends React.Component {
             </div>}
           {(this.state.item.childMethods && (this.state.item.childMethods.length > 0)) &&
             <div>
-              <h2>Child Methods</h2>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <Table
-                    className='detail-table'
-                    columns={[{
-                      title: 'Name',
-                      dataIndex: 'name',
-                      key: 'name',
-                      width: 700
-                    }]}
-                    data={this.state.item.childMethods
-                      ? this.state.item.childMethods.map(row => ({
-                          key: row.id,
-                          name: row.name,
-                          history: this.props.history
-                        }))
-                      : []}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Method/' + record.key) }
-                    })}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </div>
+              <h2>Child Tasks</h2>
+              <CategoryScroll type='method' items={this.state.item.childMethods} isLoggedIn={this.props.isLoggedIn} />
               <br />
             </div>}
           <br />
