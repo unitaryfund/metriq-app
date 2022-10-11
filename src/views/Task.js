@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { Suspense } from 'react'
 import config from './../config'
-import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
@@ -17,6 +16,7 @@ import Commento from '../components/Commento'
 import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
+import SortingTable from '../components/SortingTable'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -153,8 +153,7 @@ class Task extends React.Component {
         methodName: row.methodName,
         metricName: row.metricName,
         metricValue: row.metricValue,
-        tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString(),
-        history: this.props.history
+        tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
       }))
     this.setState({ requestFailedMessage: '', item: task, results: results, resultsJson: resultsJson })
   }
@@ -224,48 +223,40 @@ class Task extends React.Component {
             <h2>Results <Button variant='primary' onClick={this.handleCsvExport}>Export to CSV</Button></h2>}
           {(this.state.results.length > 0) &&
             <FormFieldWideRow>
-              <Table
+              <SortingTable
                 className='detail-table'
                 columns={[{
                   title: 'Submission',
-                  dataIndex: 'name',
                   key: 'name',
                   width: 250
                 },
                 {
                   title: 'Method',
-                  dataIndex: 'methodName',
                   key: 'methodName',
                   width: 250
                 },
                 {
                   title: 'Platform',
-                  dataIndex: 'platformName',
                   key: 'platformName',
                   width: 250
                 },
                 {
                   title: 'Date',
-                  dataIndex: 'tableDate',
                   key: 'tableDate',
                   width: 250
                 },
                 {
                   title: 'Metric',
-                  dataIndex: 'metricName',
                   key: 'metricName',
                   width: 250
                 },
                 {
                   title: 'Value',
-                  dataIndex: 'metricValue',
                   key: 'metricValue',
                   width: 250
                 }]}
                 data={this.state.resultsJson}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Submission/' + record.submissionId) }
-                })}
+                onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
                 tableLayout='auto'
                 rowClassName='link'
               />
@@ -274,23 +265,20 @@ class Task extends React.Component {
             <div>
               <h2>Submissions</h2>
               <FormFieldWideRow>
-                <Table
+                <SortingTable
                   className='detail-table'
                   columns={[{
                     title: 'Name',
-                    dataIndex: 'name',
                     key: 'name',
                     width: 700
                   },
                   {
                     title: 'Submitted',
-                    dataIndex: 'createdAt',
                     key: 'createdAt',
                     width: 200
                   },
                   {
                     title: 'Up-votes',
-                    dataIndex: 'upvoteCount',
                     key: 'upvoteCount',
                     width: 200
                   }]}
@@ -298,12 +286,9 @@ class Task extends React.Component {
                     key: row.id,
                     name: row.name,
                     createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                    upvoteCount: row.upvoteCount || 0,
-                    history: this.props.history
+                    upvoteCount: row.upvoteCount || 0
                   }))}
-                  onRow={(record) => ({
-                    onClick () { record.history.push('/Submission/' + record.key) }
-                  })}
+                  onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                   tableLayout='auto'
                   rowClassName='link'
                 />

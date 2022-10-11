@@ -1,10 +1,23 @@
+import { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 
 const SortingTable = (props) => {
+  const [sortKey, setSortKey] = useState('')
+  const [sortDescending, setSortDescending] = useState(false)
+
+  const handleSort = (key) => {
+    if (key === sortKey) {
+      setSortDescending(!sortDescending)
+    } else {
+      setSortKey(key)
+      setSortDescending(false)
+    }
+  }
+
   return (
     <Table striped bordered hover responsive className={props.className}>
       <thead>
-        <tr>{props.columns.map((item) => <th style={{width: item.width}}>{item.title}</th>)}</tr>
+        <tr onClick={() => handleSort(props.key)}>{props.columns.map((item) => <th style={{width: item.width}}>{item.title}</th>)}</tr>
       </thead>
       <tbody>
         {props.data.map((row) => <tr className={props.rowClassName} onClick={() => props.onRowClick(row)}>{props.columns.map((col) => <td>{row[col.key]}</td>)}</tr>)}
