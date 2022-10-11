@@ -1,0 +1,16 @@
+import Table from 'react-bootstrap/Table';
+
+const SortingTable = (props) => {
+  return (
+    <Table striped bordered hover responsive className={props.className}>
+      <thead>
+        <tr>{props.columns.map((item) => <th style={{width: item.width}}>{item.title}</th>)}</tr>
+      </thead>
+      <tbody>
+        {props.data.map((row) => <tr className={props.rowClassName} onClick={() => props.onRowClick(row)}>{props.columns.map((col) => <td>{row[col.key]}</td>)}</tr>)}
+      </tbody>
+    </Table>
+  );
+}
+
+export default SortingTable;

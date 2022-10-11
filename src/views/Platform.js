@@ -405,13 +405,10 @@ class Platform extends React.Component {
                     data={this.state.item.childPlatforms
                       ? this.state.item.childPlatforms.map(row => ({
                           key: row.id,
-                          name: row.name,
-                          history: this.props.history
+                          name: row.name
                         }))
                       : []}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Platform/' + record.key) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Platform/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                   />
@@ -465,13 +462,10 @@ class Platform extends React.Component {
                         type: property.type,
                         value: property.value,
                         platform: property.platform,
-                        parentId: this.state.item.parentPlatform.id,
-                        history: this.props.history
+                        parentId: this.state.item.parentPlatform.id
                       }
                     })}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Platform/' + record.parentId) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Platform/' + record.parentId)}
                     tableLayout='auto'
                     rowClassName='link'
                   />
@@ -507,13 +501,10 @@ class Platform extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0,
-                      history: this.props.history
+                      upvoteCount: row.upvoteCount || 0
                     }))
                   : []}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Submission/' + record.key) }
-                })}
+                onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                 tableLayout='auto'
                 rowClassName='link'
               />
