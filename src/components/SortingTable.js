@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 
 const SortingTable = (props) => {
@@ -23,7 +23,7 @@ const SortingTable = (props) => {
         {props.data.map((row) => <tr className={props.rowClassName} onClick={() => props.onRowClick(row)}>{props.columns.map((col) => <td>{row[col.key]}</td>)}</tr>)}
       </tbody>
     </Table>
-  );
+  )
 }
 
-export default SortingTable;
+export default SortingTable
