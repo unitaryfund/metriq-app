@@ -178,38 +178,40 @@ class Method extends React.Component {
               <br />
             </div>}
           <br />
-          <h2>Submissions</h2>
-          <div className='row'>
-            <div className='col-md-12'>
-              <SortingTable
-                className='detail-table'
-                columns={[{
-                  title: 'Name',
-                  key: 'name',
-                  width: 700
-                },
-                {
-                  title: 'Submitted',
-                  key: 'createdAt',
-                  width: 200
-                },
-                {
-                  title: 'Up-votes',
-                  key: 'upvoteCount',
-                  width: 200
-                }]}
-                data={this.state.item.submissions.map(row => ({
-                  key: row.id,
-                  name: row.name,
-                  createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                  upvoteCount: row.upvoteCount || 0
-                }))}
-                onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
-                tableLayout='auto'
-                rowClassName='link'
-              />
-            </div>
-          </div>
+          {(this.state.item.submissions.length > 0) &&
+            <div>
+              <h2>Submissions</h2>
+              <FormFieldWideRow>
+                <SortingTable
+                  className='detail-table'
+                  columns={[{
+                    title: 'Name',
+                    key: 'name',
+                    width: 700
+                  },
+                  {
+                    title: 'Submitted',
+                    key: 'createdAt',
+                    width: 200
+                  },
+                  {
+                    title: 'Up-votes',
+                    key: 'upvoteCount',
+                    width: 200
+                  }]}
+                  data={this.state.item.submissions.map(row => ({
+                    key: row.id,
+                    name: row.name,
+                    createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                    upvoteCount: row.upvoteCount || 0
+                  }))}
+                  onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
+                  tableLayout='auto'
+                  rowClassName='link'
+                />
+              </FormFieldWideRow>
+              <br />
+            </div>}
           <FormFieldWideRow>
             <hr />
             <Commento id={'method-' + toString(this.state.item.id)} />
