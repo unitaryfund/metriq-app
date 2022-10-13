@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import Table from 'react-bootstrap/Table'
 
 const SortingTable = (props) => {
@@ -18,8 +19,8 @@ const SortingTable = (props) => {
     setSortDescending(desc)
 
     const nData = props.data.sort((a, b) => {
-      const aStr = a[key] ? a[key].toLowerCase() : ''
-      const bStr = b[key] ? b[key].toLowerCase() : ''
+      const aStr = a[key] ? (isNaN(a[key]) ? (moment(a[key], 'M/D/YYYY', true).isValid() ? new Date(a[key]) : a[key].toLowerCase()) : a[key]) : ''
+      const bStr = b[key] ? (isNaN(b[key]) ? (moment(b[key], 'M/D/YYYY', true).isValid() ? new Date(b[key]) : b[key].toLowerCase()) : b[key]) : ''
       if (aStr < bStr) {
         return desc ? 1 : -1
       }
