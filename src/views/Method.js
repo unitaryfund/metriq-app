@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { Suspense } from 'react'
 import config from './../config'
-import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import Commento from '../components/Commento'
 import { Button, Modal } from 'react-bootstrap'
@@ -15,6 +14,7 @@ import { sortByCounts } from '../components/SortFunctions'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SubscribeButton from '../components/SubscribeButton'
 import CategoryScroll from '../components/CategoryScroll'
+import SortingTable from '../components/SortingTable'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -27,7 +27,7 @@ class Method extends React.Component {
       requestFailedMessage: '',
       showEditModal: false,
       method: { description: '', parentMethod: 0 },
-      item: { parentMethod: {} },
+      item: { parentMethod: {}, submissions: [] },
       allMethodNames: []
     }
 
@@ -181,38 +181,30 @@ class Method extends React.Component {
           <h2>Submissions</h2>
           <div className='row'>
             <div className='col-md-12'>
-              <Table
+              <SortingTable
                 className='detail-table'
                 columns={[{
                   title: 'Name',
-                  dataIndex: 'name',
                   key: 'name',
                   width: 700
                 },
                 {
                   title: 'Submitted',
-                  dataIndex: 'createdAt',
                   key: 'createdAt',
                   width: 200
                 },
                 {
                   title: 'Up-votes',
-                  dataIndex: 'upvoteCount',
                   key: 'upvoteCount',
                   width: 200
                 }]}
-                data={this.state.item.submissions
-                  ? this.state.item.submissions.map(row => ({
-                      key: row.id,
-                      name: row.name,
-                      createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0,
-                      history: this.props.history
-                    }))
-                  : []}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Submission/' + record.key) }
-                })}
+                data={this.state.item.submissions.map(row => ({
+                  key: row.id,
+                  name: row.name,
+                  createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                  upvoteCount: row.upvoteCount || 0
+                }))}
+                onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                 tableLayout='auto'
                 rowClassName='link'
               />

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { Suspense } from 'react'
 import config from './../config'
-import Table from 'rc-table'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import TooltipTrigger from '../components/TooltipTrigger'
@@ -19,6 +18,7 @@ import ResultsTable from '../components/ResultsTable'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import SubscribeButton from '../components/SubscribeButton'
 import ViewHeader from '../components/ViewHeader'
+import SortingTable from '../components/SortingTable'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
@@ -606,22 +606,18 @@ class Submission extends React.Component {
               </div>
               <div className='card-text'>
                 {(this.state.item.tasks.length > 0) &&
-                  <Table
+                  <SortingTable
                     columns={[{
                       title: 'Task',
-                      dataIndex: 'name',
                       key: 'name',
                       width: 700
                     }]}
                     data={this.state.item.tasks.map(row =>
                       ({
                         key: row.id,
-                        name: row.name,
-                        history: this.props.history
+                        name: row.name
                       }))}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Task/' + record.key) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Task/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
@@ -648,22 +644,18 @@ class Submission extends React.Component {
               </div>
               <div className='card-text'>
                 {(this.state.item.methods.length > 0) &&
-                  <Table
+                  <SortingTable
                     columns={[{
                       title: 'Method',
-                      dataIndex: 'name',
                       key: 'name',
                       width: 700
                     }]}
                     data={this.state.item.methods.map(row =>
                       ({
                         key: row.id,
-                        name: row.name,
-                        history: this.props.history
+                        name: row.name
                       }))}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Method/' + record.key) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Method/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
@@ -692,22 +684,18 @@ class Submission extends React.Component {
               </div>
               <div className='card-text'>
                 {(this.state.item.platforms.length > 0) &&
-                  <Table
+                  <SortingTable
                     columns={[{
                       title: 'Platform',
-                      dataIndex: 'name',
                       key: 'name',
                       width: 700
                     }]}
                     data={this.state.item.platforms.map(row =>
                       ({
                         key: row.id,
-                        name: row.name,
-                        history: this.props.history
+                        name: row.name
                       }))}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Platform/' + record.key) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Platform/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
