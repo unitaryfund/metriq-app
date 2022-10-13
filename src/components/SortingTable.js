@@ -2,29 +2,35 @@ import React, { useState } from 'react'
 import Table from 'react-bootstrap/Table'
 
 const SortingTable = (props) => {
+  const [data, setData] = useState(props.data)
+  const [trigger, setTrigger] = useState(Math.random())
   const [sortKey, setSortKey] = useState('')
   const [sortDescending, setSortDescending] = useState(false)
-  const [data, setData] = useState(props.data)
 
   const handleSort = (key) => {
+    let desc = sortDescending
     if (key === sortKey) {
-      setSortDescending(!sortDescending)
+      desc = !desc
     } else {
+      desc = false
       setSortKey(key)
-      setSortDescending(false)
     }
+    setSortDescending(desc)
 
-    const nData = data.sort((a, b) => {
-      if (a[sortKey].toLowerCase() < b[sortKey].toLowerCase()) {
-        return -1
+    const nData = props.data.sort((a, b) => {
+      const aStr = a[key] ? a[key].toLowerCase() : ''
+      const bStr = b[key] ? b[key].toLowerCase() : ''
+      if (aStr < bStr) {
+        return desc ? 1 : -1
       }
-      if (a[sortKey].toLowerCase() > b[sortKey].toLowerCase()) {
-        return 1
+      if (aStr > bStr) {
+        return desc ? -1 : 1
       }
       return 0
     })
 
     setData(nData)
+    setTrigger(Math.random())
   }
 
   const style = props.scrollX ? { 'overflow-x': true } : undefined
@@ -35,7 +41,7 @@ const SortingTable = (props) => {
         <thead>
           <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title}</th>)}</tr>
         </thead>}
-      <tbody>
+      <tbody key={trigger}>
         {data.map((row, id) => <tr key={id} className={props.rowClassName} onClick={() => props.onRowClick(row)}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}
       </tbody>
     </Table>
