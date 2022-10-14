@@ -329,6 +329,10 @@ class Submission extends React.Component {
   }
 
   handleOnClickEditResult (resultId) {
+    let mode = 'Result'
+    if (!this.props.isLoggedIn) {
+      mode = 'Login'
+    }
     let nResult = {}
     for (let i = 0; i < this.state.item.results.length; i++) {
       if (this.state.item.results[i].id === resultId) {
@@ -338,7 +342,7 @@ class Submission extends React.Component {
         break
       }
     }
-    this.setState({ result: nResult, showAddModal: true, modalMode: 'Result' })
+    this.setState({ result: nResult, showAddModal: true, modalMode: mode, showEditModal: mode === 'Login' })
   }
 
   handleHideAddModal () {

@@ -64,9 +64,15 @@ const ResultsAddModal = (props) => {
       window.alert('Error: Standard error is not a valid number.')
       return
     }
+    if (result.standardError) {
+      result.standardError = parseFloat(result.standardError)
+    }
     if (result.sampleSize && !sampleSizeRegex.test(result.sampleSize)) {
       window.alert('Error: Sample size is not a valid number.')
       return
+    }
+    if (result.sampleSize) {
+      result.sampleSize = parseInt(result.sampleSize)
     }
     if (!result.evaluatedAt) {
       result.evaluatedDate = new Date()
@@ -79,6 +85,15 @@ const ResultsAddModal = (props) => {
     }
     if (!result.method) {
       result.method = props.submission.methods[0].id
+    }
+    if (isNaN(result.task)) {
+      result.task = result.task.id
+    }
+    if (isNaN(result.method)) {
+      result.method = result.method.id
+    }
+    if (isNaN(result.platform)) {
+      result.platform = result.platform.id
     }
     const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + props.submission.id + '/result'))
     axios.post(resultRoute, result)
@@ -111,21 +126,21 @@ const ResultsAddModal = (props) => {
             <FormFieldSelectRow
               inputName='task' label='Task'
               options={props.submission.tasks}
-              value={result.task.id}
+              value={result.task}
               onChange={handleOnChange}
               tooltip='Task from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='method' label='Method'
               options={props.submission.methods}
-              value={result.method.id}
+              value={result.method}
               onChange={handleOnChange}
               tooltip='Method from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='platform' label='Platform'
               options={props.submission.platforms}
-              value={result.platform ? result.platform.id : ''}
+              value={result.platform}
               isNullDefault
               onChange={handleOnChange}
               tooltip='The quantum computer platform used by the method for this result'
