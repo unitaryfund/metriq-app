@@ -64,28 +64,27 @@ const ResultsTable = (props) => {
                     width: 40
                   }
                 ]}
-                data={props.results.length
-                  ? props.results.map(row =>
-                      ({
-                        key: row.id,
-                        taskName: row.task.name,
-                        methodName: row.method.name,
-                        platformName: row.platform ? row.platform.name : '(None)',
-                        metricName: row.metricName,
-                        metricValue: row.metricValue,
-                        notes:
-                    <div className='text-center'>
-                      {row.notes &&
-                        <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
-                          <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
-                        </TooltipTrigger>}
-                    </div>,
-                        edit:
-                    <div className='text-center'>
-                      <FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.key)} />
-                    </div>
-                      }))
-                  : []}
+                data={props.results.map(row =>
+                  ({
+                    key: row.id,
+                    taskName: row.task.name,
+                    methodName: row.method.name,
+                    platformName: row.platform ? row.platform.name : '(None)',
+                    metricName: row.metricName,
+                    metricValue: row.metricValue,
+                    notes:
+                      <div className='text-center'>
+                        {row.notes &&
+                          <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
+                            <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
+                          </TooltipTrigger>}
+                      </div>,
+                    edit:
+                      <div className='text-center'>
+                        <FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} />
+                      </div>
+                  })
+                )}
                 tableLayout='auto'
               />
             </Suspense>}

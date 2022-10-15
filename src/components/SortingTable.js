@@ -43,7 +43,7 @@ const SortingTable = (props) => {
           <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title}</th>)}</tr>
         </thead>}
       <tbody key={trigger}>
-        {data.map((row, id) => <tr key={id} className={props.rowClassName} onClick={() => props.onRowClick(row)}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}
+        {data.map((row, id) => <tr key={id} className={props.rowClassName} onClick={props.onRowClick ? () => props.onRowClick(row) : undefined}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}
       </tbody>
     </Table>
   )
