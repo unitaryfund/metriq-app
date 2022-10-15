@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { Suspense } from 'react'
 import config from '../config'
-import Table from 'rc-table'
 import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
@@ -14,6 +13,7 @@ import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import { intRegex, nonblankRegex, numberRegex } from '../components/ValidationRegex'
 import SubscribeButton from '../components/SubscribeButton'
+import SortingTable from '../components/SortingTable'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -394,7 +394,7 @@ class Platform extends React.Component {
               <h2>Child Platforms</h2>
               <div className='row'>
                 <div className='col-md-12'>
-                  <Table
+                  <SortingTable
                     className='detail-table'
                     columns={[{
                       title: 'Name',
@@ -405,13 +405,10 @@ class Platform extends React.Component {
                     data={this.state.item.childPlatforms
                       ? this.state.item.childPlatforms.map(row => ({
                           key: row.id,
-                          name: row.name,
-                          history: this.props.history
+                          name: row.name
                         }))
                       : []}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Platform/' + record.key) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Platform/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                   />
@@ -433,7 +430,7 @@ class Platform extends React.Component {
               <h2>Parent Properties</h2>
               <div className='row'>
                 <div className='col-md-12'>
-                  <Table
+                  <SortingTable
                     className='detail-table'
                     columns={[{
                       title: 'Name',
@@ -465,13 +462,10 @@ class Platform extends React.Component {
                         type: property.type,
                         value: property.value,
                         platform: property.platform,
-                        parentId: this.state.item.parentPlatform.id,
-                        history: this.props.history
+                        parentId: this.state.item.parentPlatform.id
                       }
                     })}
-                    onRow={(record) => ({
-                      onClick () { record.history.push('/Platform/' + record.parentId) }
-                    })}
+                    onRowClick={(record) => this.props.history.push('/Platform/' + record.parentId)}
                     tableLayout='auto'
                     rowClassName='link'
                   />
@@ -482,7 +476,7 @@ class Platform extends React.Component {
           <h2>Submissions</h2>
           <div className='row'>
             <div className='col-md-12'>
-              <Table
+              <SortingTable
                 className='detail-table'
                 columns={[{
                   title: 'Name',
@@ -507,13 +501,10 @@ class Platform extends React.Component {
                       key: row.id,
                       name: row.name,
                       createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0,
-                      history: this.props.history
+                      upvoteCount: row.upvoteCount || 0
                     }))
                   : []}
-                onRow={(record) => ({
-                  onClick () { record.history.push('/Submission/' + record.key) }
-                })}
+                onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                 tableLayout='auto'
                 rowClassName='link'
               />
@@ -532,7 +523,7 @@ class Platform extends React.Component {
               <hr />
             </div>
             {(this.state.item.properties.length > 0) &&
-              <Table
+              <SortingTable
                 columns={[
                   {
                     title: 'Name',

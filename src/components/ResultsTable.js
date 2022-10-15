@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EditButton from './EditButton'
 import FormFieldWideRow from './FormFieldWideRow'
-const Table = React.lazy(() => import('rc-table'))
+const SortingTable = React.lazy(() => import('../components/SortingTable'))
 const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 
 const ResultsTable = (props) => {
@@ -24,75 +24,67 @@ const ResultsTable = (props) => {
         <div className='card-text'>
           {(props.results.length > 0) &&
             <Suspense fallback={<div>Loading...</div>}>
-              <Table
-                scroll={{ x: 800, y: false }}
+              <SortingTable
+                scrollX
                 columns={[
                   {
                     title: 'Task',
-                    dataIndex: 'taskName',
                     key: 'taskName',
                     width: 224
                   },
                   {
                     title: 'Method',
-                    dataIndex: 'methodName',
                     key: 'methodName',
                     width: 224
                   },
                   {
                     title: 'Platform',
-                    dataIndex: 'platformName',
                     key: 'platformName',
                     width: 224
                   },
                   {
                     title: 'Metric',
-                    dataIndex: 'metricName',
                     key: 'metricName',
                     width: 224
                   },
                   {
                     title: 'Value',
-                    dataIndex: 'metricValue',
                     key: 'metricValue',
                     width: 224
                   },
                   {
                     title: 'Notes',
-                    dataIndex: 'notes',
                     key: 'notes',
-                    width: 40,
-                    render: (value, row, index) =>
+                    width: 40
+
+                  },
+                  {
+                    title: '',
+                    key: 'edit',
+                    width: 40
+                  }
+                ]}
+                data={props.results.map(row =>
+                  ({
+                    key: row.id,
+                    taskName: row.task.name,
+                    methodName: row.method.name,
+                    platformName: row.platform ? row.platform.name : '(None)',
+                    metricName: row.metricName,
+                    metricValue: row.metricValue,
+                    notes:
                       <div className='text-center'>
                         {row.notes &&
                           <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
                             <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
                           </TooltipTrigger>}
-                      </div>
-                  },
-                  {
-                    title: '',
-                    dataIndex: 'edit',
-                    key: 'edit',
-                    width: 40,
-                    render: (value, row, index) =>
+                      </div>,
+                    edit:
                       <div className='text-center'>
-                        <FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.key)} />
+                        <FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} />
                       </div>
-                  }
-                ]}
-                data={props.results.length
-                  ? props.results.map(row =>
-                      ({
-                        key: row.id,
-                        taskName: row.task.name,
-                        methodName: row.method.name,
-                        platformName: row.platform ? row.platform.name : '(None)',
-                        metricName: row.metricName,
-                        metricValue: row.metricValue,
-                        notes: row.notes
-                      }))
-                  : []}
+                  })
+                )}
                 tableLayout='auto'
               />
             </Suspense>}
