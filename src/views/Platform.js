@@ -52,6 +52,7 @@ class Platform extends React.Component {
         id: 0,
         name: '',
         fullName: '',
+        typeId: '',
         dataTypeId: 1,
         typeFriendlyName: 'bool',
         typeDescription: '',
@@ -148,7 +149,8 @@ class Platform extends React.Component {
       name: this.state.property.name,
       fullName: this.state.property.fullName,
       value: this.state.property.value,
-      dataTypeId: this.state.property.dataTypeId
+      dataTypeId: this.state.property.dataTypeId,
+      typeId: this.state.property.typeId
     }
     if (!property.name) {
       window.alert('Error: Property name cannot be blank.')
@@ -199,17 +201,16 @@ class Platform extends React.Component {
 
   handleOnChangePropertyId (value) {
     const property = this.state.property
-    property.id = parseInt(value)
     for (let i = 0; i < this.state.allPropertyNames.length; i++) {
       const propName = this.state.allPropertyNames[i]
       if (property.id === propName.id) {
-        this.handleOnTypeChange(propName.dataTypeId, propName.id, propName.name, propName.fullName)
+        this.handleOnTypeChange(propName.dataTypeId, propName.typeId, propName.id, propName.name, propName.fullName)
         break
       }
     }
   }
 
-  handleOnTypeChange (dataTypeId, id, name, fullName, value) {
+  handleOnTypeChange (dataTypeId, typeId, id, name, fullName, value) {
     const friendlyType = this.state.allDataTypeNames ? this.state.allDataTypeNames.find(x => x.id === dataTypeId).friendlyType : 'bool'
 
     let inputType = 'textarea'
@@ -233,6 +234,7 @@ class Platform extends React.Component {
     }
 
     const property = this.state.property
+    property.typeId = typeId === undefined ? this.state.property.typeId : typeId
     property.dataTypeId = dataTypeId
     property.typeFriendlyName = friendlyType
     property.inputType = inputType
@@ -248,7 +250,7 @@ class Platform extends React.Component {
   handleOnClickAddProperty () {
     if (this.state.allPropertyNames.length) {
       const property = this.state.allPropertyNames[0]
-      this.handleOnTypeChange(property.dataTypeId, property.id, property.name, property.fullName)
+      this.handleOnTypeChange(property.dataTypeId, property.typeId, property.id, property.name, property.fullName)
     } else {
       this.handleOnTypeChange(1)
     }
@@ -298,7 +300,7 @@ class Platform extends React.Component {
       if (this.state.item.properties[i].id === propertyId) {
         const property = this.state.item.properties[i]
         property.submissionId = this.state.item.id
-        this.handleOnTypeChange(property.dataTypeId, propertyId, property.name, property.fullName, property.value)
+        this.handleOnTypeChange(property.dataTypeId, property.typeId, propertyId, property.name, property.fullName, property.value)
         break
       }
     }
@@ -547,19 +549,19 @@ class Platform extends React.Component {
                     title: '',
                     dataIndex: 'edit',
                     key: 'edit',
-                    width: 42,
-                    render: (value, row, index) => <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.key)} /></div>
+                    width: 42
                   }
                 ]}
-                data={this.state.item.properties.length
-                  ? this.state.item.properties.map(row =>
-                      ({
-                        key: row.id,
-                        name: row.name,
-                        type: row.typeFriendlyName,
-                        value: row.value
-                      }))
-                  : []}
+                data={this.state.item.properties.map(row => ({
+                  key: row.id,
+                  name: row.name,
+                  type: row.typeFriendlyName,
+                  value: row.value,
+                  edit:
+  <div className='text-center'>
+    <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.id)} />
+  </div>
+                }))}
                 tableLayout='auto'
               />}
             {(this.state.item.properties.length === 0) &&
@@ -630,10 +632,10 @@ class Platform extends React.Component {
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
                   <FormFieldSelectRow
-                    inputName='id'
+                    inputName='typeId'
                     label='Property'
                     options={this.state.allPropertyNames}
-                    value={this.state.property.id}
+                    value={this.state.property.typeId}
                     onChange={(field, value) => this.handleOnChangePropertyId(value)}
                     tooltip='An explicitly-typed key/value property of this platform'
                     disabled={this.state.showAccordion}
