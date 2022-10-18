@@ -70,7 +70,7 @@ app.get('*', (req, res, next) => {
         }))
     } else if (req.url.startsWith('/Platform/')) {
       const id = truncateBefore(req.url, '/Platform/')
-      const route = config.api.getUriPrefix() + '/Platform/' + id
+      const route = config.api.getUriPrefix() + '/platform/' + id
       await (axios.get(route)
         .then(subRes => {
           const response = subRes.data.data
