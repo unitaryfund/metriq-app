@@ -70,6 +70,8 @@ class Platform extends React.Component {
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
     this.handleAddModalSubmit = this.handleAddModalSubmit.bind(this)
+    this.handleValidateModalSubmit = this.handleValidateModalSubmit.bind(this)
+    this.handleEditModalSubmit = this.handleEditModalSubmit.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnChangePropertyId = this.handleOnChangePropertyId.bind(this)
     this.handleOnClickAdd = this.handleOnClickAdd.bind(this)
@@ -138,41 +140,65 @@ class Platform extends React.Component {
       })
   }
 
-  handleAddModalSubmit () {
+  handleValidateModalSubmit (property) {
     if (!this.props.isLoggedIn) {
       this.props.history.push('/Login')
-      return
+      return false
     }
 
-    const property = {
-      id: this.state.showAccordion ? undefined : this.state.property.id,
-      name: this.state.property.name,
-      fullName: this.state.property.fullName,
-      value: this.state.property.value,
-      dataTypeId: this.state.property.dataTypeId,
-      typeId: this.state.property.typeId
-    }
+    property.id = this.state.showAccordion ? undefined : this.state.property.id
+    property.name = this.state.property.name
+    property.fullName = this.state.property.fullName
+    property.value = this.state.property.value
+    property.dataTypeId = this.state.property.dataTypeId
+    property.typeId = this.state.property.typeId
+
     if (!property.name) {
       window.alert('Error: Property name cannot be blank.')
-      return
+      return false
     }
     if (!property.dataTypeId) {
       window.alert('Error: Property type cannot be null.')
-      return
+      return false
     }
     if (!property.value) {
       if (property.dataTypeId === 1) {
         property.value = false
       } else {
         window.alert('Error: Property value cannot be blank.')
-        return
+        return false
       }
     }
     if (!property.fullName) {
       property.fullName = property.name
     }
 
+    return true
+  }
+
+  handleAddModalSubmit () {
+    const property = {}
+    if (!this.handleValidateModalSubmit(property)) {
+      return
+    }
+
     const propertyRoute = config.api.getUriPrefix() + '/platform/' + this.state.item.id + '/property'
+    axios.post(propertyRoute, property)
+      .then(res => {
+        window.location.reload()
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
+  }
+
+  handleEditModalSubmit () {
+    const property = {}
+    if (!this.handleValidateModalSubmit(property)) {
+      return
+    }
+
+    const propertyRoute = config.api.getUriPrefix() + '/property/' + this.state.property.id
     axios.post(propertyRoute, property)
       .then(res => {
         window.location.reload()
@@ -257,12 +283,12 @@ class Platform extends React.Component {
     this.handleOnClickAdd('Property')
   }
 
-  handleOnClickAdd (mode) {
+  handleOnClickAdd (mode, isEdit) {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
     this.handleOnChangePropertyId(this.state.allPlatformNames.length ? this.state.allPlatformNames[0].id : 0)
-    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, modalEditMode: 'Add', isValidated: false })
+    this.setState({ showAddModal: true, showAccordion: false, modalMode: mode, modalEditMode: isEdit ? 'Edit' : 'Add', isValidated: false })
   }
 
   handleHideAddModal () {
@@ -304,7 +330,7 @@ class Platform extends React.Component {
         break
       }
     }
-    this.handleOnClickAdd('property')
+    this.handleOnClickAdd('property', true)
   }
 
   handleCombineParentProperties (platform) {
@@ -557,10 +583,7 @@ class Platform extends React.Component {
                   name: row.name,
                   type: row.typeFriendlyName,
                   value: row.value,
-                  edit:
-  <div className='text-center'>
-    <FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.id)} />
-  </div>
+                  edit: <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.id)} /></div>
                 }))}
                 tableLayout='auto'
               />}
@@ -716,7 +739,7 @@ class Platform extends React.Component {
               </span>}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit}>
+            <Button variant='primary' onClick={(this.state.modalEditMode === 'Add') ? this.handleAddModalSubmit : this.handleEditModalSubmit}>
               {(this.state.modalMode === 'Login') ? 'Cancel' : 'Done'}
             </Button>
           </Modal.Footer>
