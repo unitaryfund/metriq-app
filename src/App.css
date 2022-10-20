@@ -18,6 +18,10 @@ textarea {
   overflow: auto;
 }
 
+.hide {
+  display: none;
+}
+
 .search-bar {
   padding-top: 10px;
 }

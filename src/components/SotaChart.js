@@ -349,7 +349,7 @@ class SotaChart extends React.Component {
   // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
   render () {
     return (
-      <span>
+      <span className={!this.state.metricNames.length ? 'hide' : undefined}>
         <div className='container'>
           <FormFieldSelectRow
             inputName='chartKey'

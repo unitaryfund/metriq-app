@@ -17,6 +17,7 @@ import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
 import SortingTable from '../components/SortingTable'
+import { sortByCounts } from '../components/SortFunctions'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -130,12 +131,23 @@ class Task extends React.Component {
   componentDidMount () {
     window.scrollTo(0, 0)
 
-    const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
-    axios.get(taskNamesRoute)
+    const taskRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
+    axios.get(taskRoute)
       .then(res => {
-        const tasks = [...res.data.data]
-        this.handleTrimTasks(this.props.match.params.id, tasks)
-        this.setState({ requestFailedMessage: '', allTaskNames: tasks })
+        const task = res.data.data
+        task.childTasks.sort(sortByCounts)
+        this.setState({ requestFailedMessage: '', item: task })
+
+        const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
+        axios.get(taskNamesRoute)
+          .then(res => {
+            const tasks = [...res.data.data]
+            this.handleTrimTasks(task.id, tasks)
+            this.setState({ requestFailedMessage: '', allTaskNames: tasks })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
