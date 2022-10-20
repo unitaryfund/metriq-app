@@ -72,17 +72,8 @@ const ResultsTable = (props) => {
                     platformName: row.platform ? row.platform.name : '(None)',
                     metricName: row.metricName,
                     metricValue: row.metricValue,
-                    notes:
-                      <div className='text-center'>
-                        {row.notes &&
-                          <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}>
-                            <div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div>
-                          </TooltipTrigger>}
-                      </div>,
-                    edit:
-                      <div className='text-center'>
-                        <FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} />
-                      </div>
+                    notes: <div className='text-center'>{row.notes && <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></TooltipTrigger>}</div>,
+                    edit: <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} /></div>
                   })
                 )}
                 tableLayout='auto'
