@@ -31,6 +31,7 @@ class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      key: Math.random(),
       isValidated: false,
       requestFailedMessage: '',
       isArxiv: false,
@@ -164,7 +165,7 @@ class Submission extends React.Component {
   }
 
   handleHideEditModal () {
-    this.setState({ showEditModal: false })
+    this.setState({ showEditModal: false, key: Math.random() })
   }
 
   handleEditModalDone () {
@@ -278,22 +279,22 @@ class Submission extends React.Component {
 
     if (mode === 'Task') {
       this.handleTrimTasks(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames, key: Math.random() })
     } else if (mode === 'Method') {
       this.handleTrimMethods(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames, key: Math.random() })
     } else if (mode === 'Platform') {
       this.handleTrimPlatforms(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames, key: Math.random() })
     }
   }
 
   handleModalResultAddNew (submission) {
-    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
+    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '', key: Math.random() })
   }
 
   handleModalRefSubmit (submission) {
-    this.setState({ item: submission, requestFailedMessage: '' })
+    this.setState({ showAddRefsModal: false, item: submission, requestFailedMessage: '', key: Math.random() })
   }
 
   handleOnClickAdd (mode) {
@@ -355,7 +356,7 @@ class Submission extends React.Component {
   }
 
   handleHideRemoveModal () {
-    this.setState({ showRemoveModal: false })
+    this.setState({ showRemoveModal: false, key: Math.random() })
   }
 
   handleAddModalSubmit () {
@@ -374,7 +375,7 @@ class Submission extends React.Component {
             break
           }
         }
-        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
+        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission, key: Math.random() })
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -630,6 +631,7 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
+                    key={this.state.key}
                   />}
                 {(this.state.item.tasks.length === 0) &&
                   <div className='card bg-light'>
@@ -668,6 +670,7 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
+                    key={this.state.key}
                   />}
                 {(this.state.item.methods.length === 0) &&
                   <div className='card bg-light'>
@@ -708,6 +711,7 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
+                    key={this.state.key}
                   />}
                 {(this.state.item.platforms.length === 0) &&
                   <div className='card bg-light'>

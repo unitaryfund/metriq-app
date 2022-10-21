@@ -71,7 +71,7 @@ const SubmissionRefsDeleteModal = (props) => {
                         {key === 'results' && (ref.task.name + ', ' + ref.method.name + (ref.platform ? ', ' + ref.platform.name : '') + ', ' + ref.metricName + ', ' + ref.metricValue)}
                       </div>
                       <div className='col-md-2'>
-                        <Button variant='danger' aria-label='Delete' onClick={() => handleOnRemove(ref.id)}><FontAwesomeIcon icon='trash' /></Button>
+                        <Button variant='danger' aria-label='Delete' onClick={() => handleOnRemove(key === 'tags' ? encodeURIComponent(ref.name) : ref.id)}><FontAwesomeIcon icon='trash' /></Button>
                       </div>
                     </div>
                   </div>
