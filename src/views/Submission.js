@@ -125,6 +125,7 @@ class Submission extends React.Component {
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
     this.handleLoginRedirect = this.handleLoginRedirect.bind(this)
+    this.handlePublishOnClick = this.handlePublishOnClick.bind(this)
   }
 
   handleLoginRedirect () {
@@ -453,6 +454,32 @@ class Submission extends React.Component {
     return true
   }
 
+  handlePublishOnClick (event) {
+    let confirmString = window.prompt('To publish your submission, type its name below, then hit "OK." (You can\'t "unpublish" your submission after that point, only delete it.)\n\n' + this.state.item.name, '')
+    if (confirmString) {
+      confirmString = confirmString.trim().toLowerCase()
+    }
+    if (confirmString && (confirmString === this.state.item.nameNormal)) {
+      const submission = { ...(this.state.item) }
+      submission.isPublished = true
+      submission.tags = undefined
+      submission.tasks = undefined
+      submission.methods = undefined
+      submission.platforms = undefined
+      axios.post(config.api.getUriPrefix() + '/submission/' + this.state.item.id, submission)
+        .then(res => {
+          window.alert("This submission has now been published! Thank you!")
+          this.setState({ item: res.data.data })
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    } else {
+      window.alert('The submission was not published. (Please enter the correct submission name, to publish.)')
+    }
+    event.preventDefault()
+  }
+
   componentDidMount () {
     window.scrollTo(0, 0)
 
@@ -597,6 +624,11 @@ class Submission extends React.Component {
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
           <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
+          {!this.state.item.publishedAt &&
+            <TooltipTrigger message='Publish submission'>
+              <Button className='submission-button' variant='danger' aria-label='Publish submission' onClick={this.handlePublishOnClick}>Publish</Button>
+            </TooltipTrigger>
+          }
           <SocialShareIcons url={config.web.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
         <br />
