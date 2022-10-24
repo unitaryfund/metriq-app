@@ -105,6 +105,28 @@ const ResultsAddModal = (props) => {
       })
   }
 
+  const handleOnRemove = (id) => {
+    if (!window.confirm('Are you sure you want to remove this result from the submission?')) {
+      return
+    }
+
+    const url = config.api.getUriPrefix() + '/result/' + id
+    axios.delete(url)
+      .then(res => {
+        const submissionRoute = config.api.getUriPrefix() + '/submission/' + props.submission.id
+        axios.get(submissionRoute)
+          .then(subRes => {
+            props.onAddOrEdit(subRes.data.data)
+          })
+          .catch(err => {
+            window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+          })
+      })
+      .catch(err => {
+        window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+      })
+  }
+
   return (
     <Modal
       show={props.show}
@@ -198,6 +220,7 @@ const ResultsAddModal = (props) => {
       </Modal.Body>
       <Modal.Footer>
         {((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={onHide}>Cancel</Button>}
+        {result.id && <Button variant='primary' onClick={() => handleOnRemove(result.id, result.name)}>Delete</Button>}
         {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={handleAddModalSubmit} disabled={isValidated && !isAllValid()}>Submit</Button>}
       </Modal.Footer>
     </Modal>
