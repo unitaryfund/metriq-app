@@ -220,7 +220,7 @@ const ResultsAddModal = (props) => {
       </Modal.Body>
       <Modal.Footer>
         {((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={onHide}>Cancel</Button>}
-        {result.id && <Button variant='primary' onClick={() => handleOnRemove(result.id, result.name)}>Delete</Button>}
+        {result.id && <Button variant='primary' onClick={() => handleOnRemove(result.id)}>Delete</Button>}
         {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={handleAddModalSubmit} disabled={isValidated && !isAllValid()}>Submit</Button>}
       </Modal.Footer>
     </Modal>
