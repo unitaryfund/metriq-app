@@ -812,7 +812,7 @@ class Submission extends React.Component {
             <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Submit</Button>
+            <Button variant='primary' onClick={this.handleAddModalSubmit} disabled={!this.state.isValidated && !this.isAllValid()}>Add</Button>
           </Modal.Footer>
         </Modal>
         <Modal

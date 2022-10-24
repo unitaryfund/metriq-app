@@ -92,7 +92,7 @@ class LogIn extends React.Component {
             <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
           <FormFieldWideRow className='text-center'>
-            <input className='btn btn-primary' type='submit' value='Submit' disabled={!this.state.isValidated && !this.isAllValid()} />
+            <input className='btn btn-primary' type='submit' value='Log in' disabled={!this.state.isValidated && !this.isAllValid()} />
           </FormFieldWideRow>
         </form>
         <Link to={this.props.next ? '/Register/' + this.props.next : '/Register'}>Create a new account</Link><br />
