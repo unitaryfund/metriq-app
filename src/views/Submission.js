@@ -468,7 +468,7 @@ class Submission extends React.Component {
       submission.platforms = undefined
       axios.post(config.api.getUriPrefix() + '/submission/' + this.state.item.id, submission)
         .then(res => {
-          window.alert("This submission has now been published! Thank you!")
+          window.alert('This submission has now been published! Thank you!')
           this.setState({ item: res.data.data })
         })
         .catch(err => {
@@ -627,8 +627,7 @@ class Submission extends React.Component {
           {!this.state.item.publishedAt &&
             <TooltipTrigger message='Publish submission'>
               <Button className='submission-button' variant='danger' aria-label='Publish submission' onClick={this.handlePublishOnClick}>Publish</Button>
-            </TooltipTrigger>
-          }
+            </TooltipTrigger>}
           <SocialShareIcons url={config.web.getUriPrefix() + '/submission/' + this.props.match.params.id} />
         </FormFieldWideRow>
         <br />
@@ -781,6 +780,7 @@ class Submission extends React.Component {
           onClickAdd={this.handleOnClickAddResult}
           onClickRemove={() => this.handleOnClickRemove('Result')}
           onClickEdit={this.handleOnClickEditResult}
+          key={this.state.key}
         />
         <br />
         <FormFieldWideRow>
