@@ -99,6 +99,7 @@ const ResultsAddModal = (props) => {
     axios.post(resultRoute, result)
       .then(res => {
         props.onAddOrEdit(res.data.data)
+        setIsUpdated(false)
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -117,6 +118,7 @@ const ResultsAddModal = (props) => {
         axios.get(submissionRoute)
           .then(subRes => {
             props.onAddOrEdit(subRes.data.data)
+            setIsUpdated(false)
           })
           .catch(err => {
             window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
