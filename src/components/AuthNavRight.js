@@ -20,13 +20,13 @@ const AuthNavRight = () =>
     <Nav.Link href='http://discord.unitary.fund'> <FaDiscord color={`${'black'}`} size={25} /> </Nav.Link>
     <Nav.Link href='https://github.com/unitaryfund/metriq-app'> <FaGithub color={`${'black'}`} size={25} /> </Nav.Link>
     <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
-      <NavDropdown.Item as={Link} to='/Profile'><p class='font-weight-bold'>Settings</p></NavDropdown.Item>
-      <NavDropdown.Item as={Link} to='/AddSubmission'><p class='font-weight-bold'>Add Submission</p></NavDropdown.Item>
-      <NavDropdown.Item as={Link} to='/MySubmissions'><p class='font-weight-bold'>My Submissions</p></NavDropdown.Item>
-      <NavDropdown.Item as={Link} to='/Token'><p class='font-weight-bold'>API Token</p></NavDropdown.Item>
-      <NavDropdown.Item as={Link} to='/Password'><p class='font-weight-bold'>Change password</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/Profile'><p className='font-weight-bold'>Settings</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/AddSubmission'><p className='font-weight-bold'>Add Submission</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/MySubmissions'><p className='font-weight-bold'>My Submissions</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/Token'><p className='font-weight-bold'>API Token</p></NavDropdown.Item>
+      <NavDropdown.Item as={Link} to='/Password'><p className='font-weight-bold'>Change password</p></NavDropdown.Item>
       <NavDropdown.Divider />
-      <NavDropdown.Item onClick={handleOnClick}><p class='font-weight-bold'>Logout</p></NavDropdown.Item>
+      <NavDropdown.Item onClick={handleOnClick}><p className='font-weight-bold'>Logout</p></NavDropdown.Item>
     </NavDropdown>
     <Nav.Link as={Link} to='/AddSubmission'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
   </Nav>

@@ -10,10 +10,10 @@ const MainNavLeft = () =>
     <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
     <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text'>Submissions</Nav.Link>
     <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About'><p class='font-weight-bold'>About</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners'><p class='font-weight-bold'>Partners</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p class='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p class='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
+      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About'><p className='font-weight-bold'>About</p></NavDropdown.Item>
+      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
+      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
+      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
     </NavDropdown>
   </Nav>
 
