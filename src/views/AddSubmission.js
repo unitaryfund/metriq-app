@@ -4,7 +4,6 @@ import config from './../config'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldRowDeleter from '../components/FormFieldRowDeleter'
-import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import FormFieldValidator from '../components/FormFieldValidator'
 import ErrorHandler from '../components/ErrorHandler'
@@ -263,9 +262,12 @@ class AddSubmission extends React.Component {
     this.setState({ methods: methods })
   }
 
-  handleOnClickAddPlatform (platformId) {
+  handleOnClickAddPlatform (platformItem) {
+    if (!platformItem) {
+      return
+    }
     const platforms = this.state.platforms
-    const platform = this.state.platformNames.find(x => x.id === parseInt(platformId))
+    const platform = this.state.platformNames.find(x => x.id === platformItem.id)
     if (platform && platforms.indexOf(platform) < 0) {
       platforms.push(platform)
       this.setState({ platforms: platforms, platform: {} })
@@ -499,11 +501,11 @@ class AddSubmission extends React.Component {
               <b>"Methods" are algorithms, techniques, or hardware to perform "tasks."</b>
             </FormFieldAlertRow>
             <br />
-            <FormFieldSelectRow
-              inputName='platform' label='Platforms'
+            <FormFieldTypeaheadRow
+              inputName='platform' label='Platforms' labelKey='name'
               onChange={this.handleOnChange}
               options={this.state.platformNames}
-              onClickAdd={this.handleOnClickAddPlatform}
+              onSelect={this.handleOnClickAddPlatform} isClearedOnSelect
               onClickNew={this.handleOnClickNewPlatform}
               disabled={!urlValidRegex.test(this.state.contentUrl)}
             />
