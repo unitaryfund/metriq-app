@@ -82,9 +82,8 @@ const FormFieldRow = (props) => {
           />}
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        {props.imageUrl
-          ? <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>
-          : <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />}
+        {props.imageUrl && <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>}
+        <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />
         {imagePreviewUrl && isValid &&
           <FormFieldWideRow className='text-center'>
             <img src={imagePreviewUrl} alt='Submission thumbnail preview' className='submission-image' />

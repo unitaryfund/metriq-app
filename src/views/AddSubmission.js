@@ -23,6 +23,7 @@ import TooltipTrigger from '../components/TooltipTrigger'
 library.add(faPlus)
 
 const requiredFieldMissingError = 'Required field.'
+const invalidUrlError = 'Invalid URL.'
 
 class AddSubmission extends React.Component {
   constructor (props) {
@@ -468,6 +469,7 @@ class AddSubmission extends React.Component {
             </FormFieldAlertRow>
             <FormFieldRow
               inputName='thumbnailUrl' inputType='text' label='Image URL' imageUrl
+              validatorMessage={invalidUrlError}
               onChange={this.handleOnChange}
               validRegex={blankOrurlValidRegex}
             />
