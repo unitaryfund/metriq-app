@@ -74,7 +74,7 @@ const FormFieldTypeaheadRow = (props) => {
           if (props.onSelect) {
             props.onSelect(selected[0])
           }
-          if (props.isClearedOnSelect) {
+          if (value && props.isClearedOnSelect) {
             if (typeahead) {
               typeahead.current.clear()
             }
