@@ -127,10 +127,11 @@ class AddSubmission extends React.Component {
   handleOnChange (field, value) {
     // parent class change handler is always called with field name and value
     this.setState({ [field]: value, isValidated: false })
+    this.handleOnFieldBlur(field, value)
   }
 
   handleOnFieldBlur (field, value) {
-    if ((field === 'thumbnailUrl' || field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
+    if ((field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
           this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isValidated: false })
