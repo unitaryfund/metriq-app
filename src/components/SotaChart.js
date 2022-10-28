@@ -58,13 +58,18 @@ class SotaChart extends React.Component {
     const isLowerBetter = state.isLowerBetterDict[state.chartKey]
     const d = state.chartData[state.chartKey]
     const sotaData = d.length ? [d[0]] : []
+    let min = d.length ? d[0] : 0
+    let max = d.length ? d[0] : 100
     for (let i = 1; i < d.length; i++) {
-      if (isLowerBetter) {
-        if (d[i].value < sotaData[sotaData.length - 1].value) {
+      if (d[i].value < sotaData[sotaData.length - 1].value) {
+        min = d[i]
+        if (isLowerBetter) {
           sotaData.push(d[i])
         }
-      } else {
-        if (d[i].value > sotaData[sotaData.length - 1].value) {
+      }
+      if (d[i].value > sotaData[sotaData.length - 1].value) {
+        max = d[i]
+        if (!isLowerBetter) {
           sotaData.push(d[i])
         }
       }
@@ -152,6 +157,10 @@ class SotaChart extends React.Component {
           }
         },
         y: {
+          ticks: {
+            min: min,
+            max: max
+          },
           title: {
             display: true,
             text: state.chartKey ? state.chartKey : 'Metric value'
