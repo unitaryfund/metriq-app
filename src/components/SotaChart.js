@@ -56,13 +56,17 @@ class SotaChart extends React.Component {
   loadChartFromState (state) {
     const z95 = percentileZ(0.95)
     const isLowerBetter = state.isLowerBetterDict[state.chartKey]
-    const d = state.chartData[state.chartKey]
+    const d = [...state.chartData[state.chartKey]]
     const sotaData = d.length ? [d[0]] : []
+    let canLog = true
     for (let i = 1; i < d.length; i++) {
       if (isLowerBetter && (d[i].value < sotaData[sotaData.length - 1].value)) {
         sotaData.push(d[i])
       } else if (!isLowerBetter && (d[i].value > sotaData[sotaData.length - 1].value)) {
         sotaData.push(d[i])
+      }
+      if (d[i].value <= 0) {
+        canLog = false
       }
     }
     if (state.isLog) {
@@ -70,7 +74,6 @@ class SotaChart extends React.Component {
       while (i < d.length) {
         if ((isLowerBetter && (d[i].value > sotaData[0].value)) || (!isLowerBetter && (d[i].value < sotaData[0].value))) {
           d.splice(i, 1)
-          console.log('Test')
         } else {
           i++
         }
@@ -89,9 +92,9 @@ class SotaChart extends React.Component {
             label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
             isShowLabel: false,
             x: obj.label,
-            y: obj.value,
-            yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
-            yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+            y: (state.isLog && canLog) ? Math.log(obj.value) : obj.value,
+            yMin: obj.standardError ? ((state.isLog && canLog) ? Math.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+            yMax: obj.standardError ? ((state.isLog && canLog) ? Math.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
         })
       },
@@ -103,9 +106,9 @@ class SotaChart extends React.Component {
         data: d.map((obj, index) => {
           return {
             x: obj.label,
-            y: obj.value,
-            yMin: obj.standardError ? (obj.value - obj.standardError * z95) : undefined,
-            yMax: obj.standardError ? (obj.value + obj.standardError * z95) : undefined
+            y: (state.isLog && canLog) ? Math.log(obj.value) : obj.value,
+            yMin: obj.standardError ? ((state.isLog && canLog) ? Math.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+            yMax: obj.standardError ? ((state.isLog && canLog) ? Math.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
         })
       },
@@ -120,7 +123,7 @@ class SotaChart extends React.Component {
             label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
             isShowLabel: true,
             x: obj.label,
-            y: obj.value
+            y: (state.isLog && canLog) ? Math.log(obj.value) : obj.value
           }
         })
       }]
@@ -161,9 +164,9 @@ class SotaChart extends React.Component {
         y: {
           title: {
             display: true,
-            text: state.chartKey ? state.chartKey : 'Metric value'
+            text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
           },
-          type: state.isLog ? 'logarithmic' : 'linear'
+          type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
         }
       },
       plugins: {
