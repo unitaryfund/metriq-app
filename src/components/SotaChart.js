@@ -121,7 +121,22 @@ class SotaChart extends React.Component {
         data: sotaData.map((obj, index) => {
           return {
             label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
-            isShowLabel: true,
+            isShowLabel: index === (sotaData.length - 1),
+            x: obj.label,
+            y: (state.isLog && canLog) ? Math.log(obj.value) : obj.value
+          }
+        })
+      },
+      {
+        type: 'scatter',
+        label: 'Historical state-of-the-art labels',
+        labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+        backgroundColor: 'rgb(60, 210, 249)',
+        borderColor: 'rgb(60, 210, 249)',
+        data: sotaData.map((obj, index) => {
+          return {
+            label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+            isShowLabel: index !== (sotaData.length - 1),
             x: obj.label,
             y: (state.isLog && canLog) ? Math.log(obj.value) : obj.value
           }
