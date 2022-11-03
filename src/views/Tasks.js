@@ -82,7 +82,21 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
         featured.push(res.data.data)
-        this.setState({ featured: featured })
+        axios.get(config.api.getUriPrefix() + '/task/submissionCount/51')
+          .then(res => {
+            featured.push(res.data.data)
+            axios.get(config.api.getUriPrefix() + '/task/submissionCount/38')
+              .then(res => {
+                featured.push(res.data.data)
+                this.setState({ featured: featured })
+              })
+              .catch(err => {
+                this.setState({ requestFailedMessage: ErrorHandler(err) })
+              })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -128,29 +142,28 @@ class Tasks extends React.Component {
         <br />
         <FormFieldWideRow>
           <h5>Featured</h5>
-          <div className='task card'>
-            <div className='row h-100'>
-              <div className='col-md col h-100'>
-                <table className='task-method-item'>
-                  <tbody>
-                    {this.state.featured.map((item, index) => {
-                      return (
-                        <div key={index}>
-                          <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' />
-                          <SotaChart
-                            chartId={index}
-                            xLabel='Time'
-                            taskId={item.id}
-                            key={index}
-                          />
-                        </div>
-                      )
-                    })}
-                  </tbody>
-                </table>
+          {this.state.featured.map((item, index) => {
+            return (
+              <div className='task card' key={index}>
+                <div className='row h-100'>
+                  <div className='col-md col h-100'>
+                    <table className='task-method-item'>
+                      <tbody>
+                        <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
+                        <SotaChart
+                          chartId={index}
+                          xLabel='Time'
+                          taskId={item.id}
+                          key={index}
+                          isLog
+                        />
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          })}
         </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />

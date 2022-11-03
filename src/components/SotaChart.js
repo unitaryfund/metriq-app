@@ -41,7 +41,7 @@ class SotaChart extends React.Component {
       windowWidth: 0,
       chart: null,
       task: {},
-      isLog: false,
+      isLog: props.isLog ? props.isLog : false,
       chartKey: '',
       chartData: [],
       metricNames: [],
