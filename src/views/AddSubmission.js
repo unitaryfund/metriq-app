@@ -292,6 +292,9 @@ class AddSubmission extends React.Component {
   }
 
   handleOnClickAddTag () {
+    if (!this.state.tag) {
+      return
+    }
     const tags = this.state.tags
     if (tags.indexOf(this.state.tag) < 0) {
       tags.push(this.state.tag)
@@ -300,6 +303,9 @@ class AddSubmission extends React.Component {
   }
 
   handleKeyDown (e) {
+    if (!this.state.tag) {
+      return
+    }
     const tags = this.state.tags
     if (e.keyCode === 13) {
       e.preventDefault()
