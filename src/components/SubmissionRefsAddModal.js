@@ -18,7 +18,7 @@ const SubmissionRefsAddModal = (props) => {
   const [showAccordion, setShowAccordion] = useState(!!props.isNewOnly)
   const [item, setItem] = useState({
     id: props.filteredNames.length ? props.filteredNames[0].id : 0,
-    name: '',
+    name: props.refName ? props.refName : '',
     fullName: '',
     parent: '',
     description: '',
@@ -26,9 +26,18 @@ const SubmissionRefsAddModal = (props) => {
   })
 
   useEffect(() => {
-    item.submissions = props.submissionId.toString()
-    setItem(item)
-  }, [props.submissionId, item])
+    const nItem = { ...item }
+    const submissions = props.submissionId.toString()
+    let isChanged = nItem.submissions !== submissions
+    nItem.submissions = submissions
+    if (props.refName) {
+      isChanged |= nItem.name !== props.refName
+      nItem.name = props.refName
+    }
+    if (isChanged) {
+      setItem(nItem)
+    }
+  }, [props.submissionId, props.refName, item])
 
   const key = props.modalMode === 'Task'
     ? 'task'
@@ -178,6 +187,7 @@ const SubmissionRefsAddModal = (props) => {
                       inputName='name'
                       inputType='text'
                       label='Name'
+                      value={item.name}
                       onChange={handleOnChangeName}
                       validRegex={nonblankRegex}
                       tooltip={`Short name of new ${key}`}
