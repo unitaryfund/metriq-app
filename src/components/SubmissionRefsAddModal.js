@@ -8,6 +8,7 @@ import axios from 'axios'
 import config from './../config'
 import { nonblankRegex } from './ValidationRegex'
 import ErrorHandler from './ErrorHandler'
+import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 
@@ -17,7 +18,7 @@ const SubmissionRefsAddModal = (props) => {
   const [isValid, setIsValid] = useState(false)
   const [showAccordion, setShowAccordion] = useState(!!props.isNewOnly)
   const [item, setItem] = useState({
-    id: props.filteredNames.length ? props.filteredNames[0].id : 0,
+    id: 0,
     name: props.refName ? props.refName : '',
     fullName: '',
     parent: '',
@@ -50,12 +51,23 @@ const SubmissionRefsAddModal = (props) => {
     setShowAccordion(!showAccordion)
   }
 
-  const handleOnChangeSelect = (field, value) => {
+  const handleOnSelectRef = (nItem) => {
+    if (showAccordion || !nItem) {
+      setIsValid(false)
+      return
+    }
+
+    item.id = nItem.id
+    setItem(item)
+    setIsValid(true)
+  }
+
+  const handleOnChangeRef = () => {
     if (showAccordion) {
       return
     }
-    item.id = value
-    setItem(item)
+
+    setIsValid(false)
   }
 
   const handleOnChangeName = (field, value) => {
@@ -159,17 +171,18 @@ const SubmissionRefsAddModal = (props) => {
           <Suspense fallback={<div>Loading...</div>}>
             {!props.isNewOnly &&
               <span>
-                <FormFieldSelectRow
+                <FormFieldTypeaheadRow
                   inputName={`${key}Id`}
-                  label={props.modalMode}
+                  label={props.modalMode} labelKey='name'
                   options={props.filteredNames}
-                  onChange={handleOnChangeSelect}
+                  onSelect={handleOnSelectRef}
+                  onChange={handleOnChangeRef}
+                  disabled={showAccordion}
                   tooltip={(props.modalMode === 'Method')
                     ? 'A method used in or by this submission, (to perform a task)'
                     : (props.modalMode === 'Task')
                         ? 'A task performed in or by this submission, (using a method)'
                         : 'A platform on which a method was used to perform a task.'}
-                  disabled={showAccordion}
                 /><br />
                 Not in the list?<br />
               </span>}
@@ -223,7 +236,7 @@ const SubmissionRefsAddModal = (props) => {
       </Modal.Body>
       <Modal.Footer>
         {(props.modalMode === 'Login') && <Button variant='primary' onClick={props.onHide}>Cancel</Button>}
-        {(props.modalMode !== 'Login') && <Button variant='primary' onClick={handleSubmit} disabled={showAccordion && !isValid}>Submit</Button>}
+        {(props.modalMode !== 'Login') && <Button variant='primary' onClick={handleSubmit} disabled={!isValid}>Submit</Button>}
       </Modal.Footer>
     </Modal>
   )
