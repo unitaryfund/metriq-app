@@ -222,11 +222,11 @@ class AddSubmission extends React.Component {
     }
   }
 
-  handleOnClickNewTask () {
+  handleOnClickNewTask (name) {
     if (!this.state.submission.id) {
-      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames }))
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames, refName: name }))
     } else {
-      this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames })
+      this.setState({ showAddRefsModal: true, modalMode: 'Task', allNames: this.state.taskNames, refName: name })
     }
   }
 
@@ -249,11 +249,11 @@ class AddSubmission extends React.Component {
     }
   }
 
-  handleOnClickNewMethod () {
+  handleOnClickNewMethod (name) {
     if (!this.state.submission.id) {
-      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames }))
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames, refName: name }))
     } else {
-      this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames })
+      this.setState({ showAddRefsModal: true, modalMode: 'Method', allNames: this.state.methodNames, refName: name })
     }
   }
 
@@ -276,11 +276,11 @@ class AddSubmission extends React.Component {
     }
   }
 
-  handleOnClickNewPlatform () {
+  handleOnClickNewPlatform (name) {
     if (!this.state.submission.id) {
-      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames }))
+      this.handleOnSubmit(null, true, () => this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames, refName: name }))
     } else {
-      this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames })
+      this.setState({ showAddRefsModal: true, modalMode: 'Platform', allNames: this.state.platformNames, refName: name })
     }
   }
 
@@ -565,6 +565,7 @@ class AddSubmission extends React.Component {
               show={this.state.showAddRefsModal}
               onHide={() => this.setState({ showAddRefsModal: false })}
               modalMode={this.state.modalMode}
+              refName={this.state.refName}
               submissionId={this.state.submission.id}
               allNames={this.state.allNames}
               filteredNames={this.state.allNames}

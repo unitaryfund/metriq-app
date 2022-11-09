@@ -10,6 +10,9 @@ const FormFieldTypeaheadRow = (props) => {
   const typeahead = useRef(null)
   const coalescedId = props.inputId ? props.inputId : props.inputName
 
+  // See https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript#answer-17772086
+  const isString = (x) => (Object.prototype.toString.call(x) === '[object String]')
+
   const handleOnFieldChange = (input) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = props.inputName
@@ -17,7 +20,7 @@ const FormFieldTypeaheadRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
+    if (isString(fieldValue) && (fieldValue !== value)) {
       if (props.onChange) {
         props.onChange(fieldName, fieldValue)
       }
@@ -32,7 +35,7 @@ const FormFieldTypeaheadRow = (props) => {
     if (props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
-    if (fieldValue !== value) {
+    if (isString(fieldValue) && (fieldValue !== value)) {
       if (props.onBlur) {
         props.onBlur(fieldName, fieldValue)
       }
@@ -86,7 +89,7 @@ const FormFieldTypeaheadRow = (props) => {
         disabled={props.disabled}
       />
       {(!!props.onClickAdd && !props.onClickNew) && <Button variant='primary' className='submission-ref-button' onClick={handleOnButtonClick} disabled={props.disabled || !value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>}
-      {!!props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={props.onClickNew} disabled={props.disabled}>New</Button>}
+      {!!props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickNew(value)} disabled={props.disabled}>New</Button>}
       {(!props.onClickAdd && !props.onClickNew) && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></Suspense></div>}
     </div>
   )
