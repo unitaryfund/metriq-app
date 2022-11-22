@@ -46,11 +46,27 @@ class SotaChart extends React.Component {
       chartData: [],
       metricNames: [],
       isLowerBetterDict: {},
-      key: Math.random()
+      key: Math.random(),
+      log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
+      logBase: props.logBase ? props.logBase : 10
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
+    this.handleOnChangeLogBase = this.handleOnChangeLogBase.bind(this)
+  }
+
+  handleOnChangeLogBase (event) {
+    console.log(event.target)
+    this.setState({ logBase: event.target.value, log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log)) })
+    this.loadChartFromState({
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log))
+    })
   }
 
   loadChartFromState (state) {
@@ -82,9 +98,9 @@ class SotaChart extends React.Component {
             label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
             isShowLabel: false,
             x: obj.label,
-            y: (state.isLog && canLog) ? Math.log2(obj.value) : obj.value,
-            yMin: obj.standardError ? ((state.isLog && canLog) ? Math.log2(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-            yMax: obj.standardError ? ((state.isLog && canLog) ? Math.log2(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+            yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+            yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
         })
       },
@@ -96,9 +112,9 @@ class SotaChart extends React.Component {
         data: d.map((obj, index) => {
           return {
             x: obj.label,
-            y: (state.isLog && canLog) ? Math.log2(obj.value) : obj.value,
-            yMin: obj.standardError ? ((state.isLog && canLog) ? Math.log2(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-            yMax: obj.standardError ? ((state.isLog && canLog) ? Math.log2(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+            yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+            yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
         })
       },
@@ -113,7 +129,7 @@ class SotaChart extends React.Component {
             label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
             isShowLabel: index === (sotaData.length - 1),
             x: obj.label,
-            y: (state.isLog && canLog) ? Math.log2(obj.value) : obj.value
+            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
           }
         })
       },
@@ -128,7 +144,7 @@ class SotaChart extends React.Component {
             label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
             isShowLabel: index !== (sotaData.length - 1),
             x: obj.label,
-            y: (state.isLog && canLog) ? Math.log2(obj.value) : obj.value
+            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
           }
         })
       }]
@@ -169,7 +185,7 @@ class SotaChart extends React.Component {
         y: {
           title: {
             display: true,
-            text: ((state.isLog && canLog) ? 'Log-2 ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
+            text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
           },
           type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
         }
@@ -286,7 +302,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog })
+    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
   }
 
   componentDidMount () {
@@ -383,7 +399,8 @@ class SotaChart extends React.Component {
                 chartKey: value,
                 chartData: this.state.chartData,
                 isLowerBetterDict: this.state.isLowerBetterDict,
-                isLog: this.state.isLog
+                isLog: this.state.isLog,
+                log: this.state.log
               })
             }}
             tooltip='A metric performance measure of any "method" on this "task"'
@@ -394,7 +411,7 @@ class SotaChart extends React.Component {
               className='col col-md-3 form-field-label metric-chart-label'
               dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
             />
-            <div className='col col-md-6'>
+            <div className='col col-md-2'>
               <input
                 type='checkbox'
                 id='logcheckbox'
@@ -409,12 +426,30 @@ class SotaChart extends React.Component {
                     chartKey: this.state.chartKey,
                     chartData: this.state.chartData,
                     isLowerBetterDict: this.state.isLowerBetterDict,
+                    log: this.state.log,
                     isLog: val
                   })
                 }}
               />
             </div>
-            <div className='col col-md-3' />
+            <span
+              htmlFor='logdropdown'
+              className='col col-md-2 form-field-label metric-chart-label'
+              dangerouslySetInnerHTML={{ __html: 'Log base:' }}
+            />
+            <div className='col col-md-2'>
+              <select
+                id='logdropdown'
+                name='logdropdown'
+                className='form-control'
+                onChange={this.handleOnChangeLogBase}
+                value={this.state.logBase}
+              >
+                <option value='2'>2</option>
+                <option value='10'>10</option>
+                <option value='e'>e</option>
+              </select>
+            </div>
           </div>
         </div>
         <div className='chart-container sota-chart'>
