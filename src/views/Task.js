@@ -198,7 +198,6 @@ class Task extends React.Component {
                 xLabel='Time'
                 taskId={this.props.match.params.id}
                 onLoadData={this.handleOnLoadData}
-                logBase={this.logBase}
               />
             </Suspense>}
           <FormFieldWideRow>
