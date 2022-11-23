@@ -156,6 +156,7 @@ class Tasks extends React.Component {
                           taskId={item.id}
                           key={index}
                           isLog
+                          logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
                         />
                       </tbody>
                     </table>
