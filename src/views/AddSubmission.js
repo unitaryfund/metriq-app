@@ -31,6 +31,7 @@ class AddSubmission extends React.Component {
     this.state = {
       submission: { id: 0, results: [], tasks: [], methods: [], platforms: [] },
       draftedAt: (new Date()).toLocaleTimeString(),
+      isAlreadyInDatabase: false,
       name: '',
       contentUrl: '',
       thumbnailUrl: '',
@@ -134,7 +135,7 @@ class AddSubmission extends React.Component {
     if ((field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
-          this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isValidated: false })
+          this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isAlreadyInDatabase: res.data.data.isAlreadyInDatabase, isValidated: false })
         })
         .catch(err => {
           this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -153,6 +154,11 @@ class AddSubmission extends React.Component {
 
     if (this.state.thumbnailUrl && !urlValidRegex.test(this.state.thumbnailUrl.trim())) {
       this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'Invalid thumbnail url' } } }) })
+      validatedPassed = false
+    }
+
+    if (this.state.isAlreadyInDatabase) {
+      this.setState({ requestFailedMessage: ErrorHandler({ response: { data: { message: 'URL is already in database!' } } }) })
       validatedPassed = false
     }
 
@@ -447,10 +453,10 @@ class AddSubmission extends React.Component {
             </FormFieldAlertRow>
             <FormFieldRow
               inputName='contentUrl' inputType='text' label='Content URL'
-              validatorMessage={requiredFieldMissingError}
+              validatorMessage={this.state.isAlreadyInDatabase ? 'URL is already in database!' : requiredFieldMissingError}
               onChange={this.handleOnChange}
               onBlur={this.handleOnFieldBlur}
-              validRegex={urlValidRegex}
+              validRegex={this.state.isAlreadyInDatabase ? /^$/ : urlValidRegex}
             />
             <FormFieldAlertRow>
               <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
