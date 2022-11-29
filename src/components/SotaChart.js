@@ -271,13 +271,14 @@ class SotaChart extends React.Component {
     const chartData = {}
     const isHigherBetterCounts = {}
     for (let i = 0; i < allData.length; i++) {
-      if (!chartData[allData[i].metric]) {
-        chartData[allData[i].metric] = []
-        isHigherBetterCounts[allData[i].metric] = 0
+      const metricName = allData[i].metric.charAt(0).toUpperCase() + allData[i].metric.slice(1).toLowerCase()
+      if (!chartData[metricName]) {
+        chartData[metricName] = []
+        isHigherBetterCounts[metricName] = 0
       }
-      chartData[allData[i].metric].push(allData[i])
+      chartData[metricName].push(allData[i])
       if (allData[i].isHigherBetter) {
-        isHigherBetterCounts[allData[i].metric]++
+        isHigherBetterCounts[metricName]++
       }
     }
     const metricNames = Object.keys(chartData)
