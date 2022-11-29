@@ -62,12 +62,19 @@ const SubmissionRefsAddModal = (props) => {
     setIsValid(true)
   }
 
-  const handleOnChangeRef = () => {
+  const handleOnChangeRef = (key, value) => {
     if (showAccordion) {
       return
     }
 
-    setIsValid(false)
+    const fn = props.filteredNames.find(f => f.name === value)
+    if (fn) {
+      item.id = fn.id
+      setItem(item)
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
   }
 
   const handleOnChangeName = (field, value) => {

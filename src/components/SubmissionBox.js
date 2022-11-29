@@ -123,7 +123,9 @@ const SubmissionBox = (props) => {
             </TooltipTrigger>&nbsp;•&nbsp;
             <TooltipTrigger message='Submission link'>
               <span>
-                <span onClick={handleExternalLinkClick} className='link wrap'>{parseContentUrl()}</span>&nbsp;•&nbsp;
+                <span onClick={handleExternalLinkClick} className='link wrap'>
+                  {parseContentUrl()}
+                </span>&nbsp;•&nbsp;
                 {props.item.createdAt ? new Date(props.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
               </span>
             </TooltipTrigger>
