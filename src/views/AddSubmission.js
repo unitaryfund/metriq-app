@@ -132,10 +132,23 @@ class AddSubmission extends React.Component {
   }
 
   handleOnFieldBlur (field, value) {
-    if ((field === 'contentUrl') && (urlValidRegex.test((value.trim())))) {
+    if (!urlValidRegex.test((value.trim()))) {
+      return
+    }
+    if (field === 'contentUrl') {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
           this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isAlreadyInDatabase: res.data.data.isAlreadyInDatabase, isValidated: false })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    } else if (field === 'thumbnailUrl') {
+      axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
+        .then(res => {
+          console.log(res)
+          const images = res.data.data.images
+          this.setState({ thumbnailUrl: images[images.length - 1].src, isValidated: false })
         })
         .catch(err => {
           this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -485,6 +498,7 @@ class AddSubmission extends React.Component {
               validatorMessage={invalidUrlError}
               onChange={this.handleOnChange}
               validRegex={blankOrurlValidRegex}
+              value={this.state.thumbnailUrl}
             />
             <FormFieldAlertRow>
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
