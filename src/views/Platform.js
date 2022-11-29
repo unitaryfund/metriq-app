@@ -85,6 +85,10 @@ class Platform extends React.Component {
     this.handleOnPropertyRemove = this.handleOnPropertyRemove.bind(this)
   }
 
+  handleLoginRedirect () {
+    this.props.history.push('/Login/' + encodeURIComponent('Platform/' + this.props.match.params.id))
+  }
+
   handleSubscribe () {
     if (this.props.isLoggedIn) {
       axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id + '/subscribe', {})
@@ -142,7 +146,7 @@ class Platform extends React.Component {
 
   handleValidateModalSubmit (property) {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return false
     }
 
@@ -304,7 +308,7 @@ class Platform extends React.Component {
 
   handleOnPropertyRemove (propertyId) {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
       return
     }
     if (!window.confirm('Are you sure you want to remove this property from the submission?')) {
@@ -606,7 +610,7 @@ class Platform extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Platform/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
@@ -649,7 +653,7 @@ class Platform extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Platform/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
@@ -751,7 +755,7 @@ class Platform extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Platform/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>

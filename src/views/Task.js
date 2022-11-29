@@ -84,7 +84,7 @@ class Task extends React.Component {
 
   handleEditModalDone () {
     if (!this.props.isLoggedIn) {
-      this.props.history.push('/Login')
+      this.handleLoginRedirect()
     }
 
     const reqBody = {
@@ -326,7 +326,7 @@ class Task extends React.Component {
           <Modal.Body>
             {(this.state.modalMode === 'Login') &&
               <span>
-                Please <Link to='/Login'>login</Link> before editing.
+                Please <Link to={'/Login/' + encodeURIComponent('Task/' + this.props.match.params.id)}>login</Link> before editing.
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
