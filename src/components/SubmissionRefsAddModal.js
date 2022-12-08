@@ -10,7 +10,6 @@ import { nonblankRegex } from './ValidationRegex'
 import ErrorHandler from './ErrorHandler'
 import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
-const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 
 library.add(faPlus)
 
@@ -51,6 +50,42 @@ const SubmissionRefsAddModal = (props) => {
     setShowAccordion(!showAccordion)
   }
 
+  const handleOnSelectParent = (nItem) => {
+    if (showAccordion || !nItem) {
+      return
+    }
+
+    item.parent = nItem.id
+    setIsValid(!!(item.name))
+    setItem(item)
+  }
+
+  const handleOnChangeParent = (field, value) => {
+    if (!showAccordion) {
+      return
+    }
+
+    console.log(value)
+    console.log(props.allNames)
+    console.log(item.name)
+
+    const fn = props.allNames.find(f => f.name === value)
+    if (fn) {
+      console.log('Hit!')
+      item.parent = fn.id
+      if (props.modalMode === 'Task') {
+        setIsValid(!!(item.name))
+      }
+    } else {
+      console.log('Fail!')
+      item.parent = undefined
+      if (value || (props.modalMode === 'Task')) {
+        setIsValid(false)
+      }
+    }
+    setItem(item)
+  }
+
   const handleOnSelectRef = (nItem) => {
     if (showAccordion || !nItem) {
       setIsValid(false)
@@ -84,21 +119,12 @@ const SubmissionRefsAddModal = (props) => {
 
     item.name = value
     setItem(item)
-    setIsValid(nonblankRegex.test(item.name))
+    setIsValid(!!(item.name))
   }
 
   const handleReset = () => {
     setShowAccordion(false)
     setIsValid(!!item.name)
-  }
-
-  const handleOnChangeParent = (field, value) => {
-    if (!showAccordion) {
-      return
-    }
-
-    item.parent = value
-    setItem(item)
   }
 
   const handleOnChange = (field, value) => {
@@ -219,12 +245,13 @@ const SubmissionRefsAddModal = (props) => {
                       onChange={handleOnChange}
                       tooltip={`Long name of new ${key}`}
                     /><br />
-                    <FormFieldSelectRow
+                    <FormFieldTypeaheadRow
                       inputName={`parent${props.modalMode}`}
-                      label={`Parent ${key}<br/>(if any)`}
-                      isNullDefault
+                      label={`Parent ${key}` + (props.modalMode === 'Task' ? '(required)' : '<br/>(if any)')} labelKey='name'
                       options={props.allNames}
+                      onSelect={handleOnSelectParent}
                       onChange={handleOnChangeParent}
+                      validRegex={(item.parent || isValid) ? undefined : /a^/}
                       tooltip={`Optionally, the new ${key} is a sub-${key} of a "parent" ${key}.`}
                     /><br />
                     <FormFieldRow

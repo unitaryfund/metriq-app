@@ -25,6 +25,7 @@ const FormFieldTypeaheadRow = (props) => {
         props.onChange(fieldName, fieldValue)
       }
       setValue(fieldValue)
+      setIsValid(true)
     }
   }
 
@@ -40,6 +41,7 @@ const FormFieldTypeaheadRow = (props) => {
         props.onBlur(fieldName, fieldValue)
       }
       setValue(fieldValue)
+      setIsValid(true)
     }
   }
 

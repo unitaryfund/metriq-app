@@ -160,7 +160,7 @@ class Task extends React.Component {
       ({
         key: row.id,
         name: row.submissionName,
-        submissionId: task.submissions.find(e => e.name === row.submissionName).id,
+        submissionId: task.submissions.find(e => e.name === row.submissionName) ? task.submissions.find(e => e.name === row.submissionName).id : 0,
         platformName: row.platformName,
         methodName: row.methodName,
         metricName: row.metricName,
