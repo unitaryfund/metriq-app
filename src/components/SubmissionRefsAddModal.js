@@ -65,19 +65,13 @@ const SubmissionRefsAddModal = (props) => {
       return
     }
 
-    console.log(value)
-    console.log(props.allNames)
-    console.log(item.name)
-
     const fn = props.allNames.find(f => f.name === value)
     if (fn) {
-      console.log('Hit!')
       item.parent = fn.id
       if (props.modalMode === 'Task') {
         setIsValid(!!(item.name))
       }
     } else {
-      console.log('Fail!')
       item.parent = undefined
       if (value || (props.modalMode === 'Task')) {
         setIsValid(false)
