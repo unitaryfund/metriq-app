@@ -16,8 +16,8 @@ const FormFieldTypeaheadRow = (props) => {
   const handleOnFieldChange = (input) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = props.inputName
-    const fieldValue = input
-    if (props.validRegex) {
+    const fieldValue = (input && input.name) ? input.name : input
+    if (isString(fieldValue) && props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
     if (isString(fieldValue) && (fieldValue !== value)) {
@@ -25,14 +25,15 @@ const FormFieldTypeaheadRow = (props) => {
         props.onChange(fieldName, fieldValue)
       }
       setValue(fieldValue)
+      setIsValid(true)
     }
   }
 
   const handleOnFieldBlur = (input) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = props.inputName
-    const fieldValue = input
-    if (props.validRegex) {
+    const fieldValue = (input && input.name) ? input.name : input
+    if (isString(fieldValue) && props.validRegex) {
       setIsValid(props.validRegex.test(fieldValue))
     }
     if (isString(fieldValue) && (fieldValue !== value)) {
@@ -40,6 +41,7 @@ const FormFieldTypeaheadRow = (props) => {
         props.onBlur(fieldName, fieldValue)
       }
       setValue(fieldValue)
+      setIsValid(true)
     }
   }
 
