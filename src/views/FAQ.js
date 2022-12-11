@@ -27,6 +27,10 @@ const FAQ = () => {
             <p>
               A metriq <b>"submission"</b> can be an arXiv preprint, GitHub repository, or links to peer reviewed and published articles.
             </p>
+            <center>
+              <iframe title='How to make a submission on Metriq: the platform for community driven quantum benchmarks' width='420' height='315' src='https://www.youtube.com/embed/XjLeutpo3v0'>
+              </iframe>
+            </center>
             <p>
               A submission can present or utilize one of more <b>"methods"</b> by which they accomplish one or more <b>"tasks"</b>, which are workloads of interest.
             </p>
