@@ -138,6 +138,10 @@ class AddSubmission extends React.Component {
     if (field === 'contentUrl') {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
+          const edid = res.data.data.ExistingDraftId
+          if (edid && (window.confirm('You have an existing draft with this URL. Press "OK" to be redirected to this draft.') === true)) {
+            this.props.history.push('/Submission/' + edid)
+          }
           this.setState({ name: res.data.data.og.title, description: res.data.data.og.description.replace(/\n/g, ' '), isAlreadyInDatabase: res.data.data.isAlreadyInDatabase, isValidated: false })
         })
         .catch(err => {
