@@ -253,7 +253,7 @@ const SubmissionRefsAddModal = (props) => {
                     /><br />
                     <FormFieldTypeaheadRow
                       inputName={`parent${props.modalMode}`}
-                      label={`Parent ${key}` + (props.modalMode === 'Task' ? '(required)' : '<br/>(if any)')} labelKey='name'
+                      label={`Parent ${key}` + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
                       options={props.allNames}
                       onSelect={handleOnSelectParent}
                       onChange={handleOnChangeParent}

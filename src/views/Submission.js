@@ -120,6 +120,7 @@ class Submission extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleSortNames = this.handleSortNames.bind(this)
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
+    this.handleTrimParentTasks = this.handleTrimParentTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
     this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
@@ -398,12 +399,22 @@ class Submission extends React.Component {
   }
 
   handleTrimTasks (submission, tasks) {
+    this.handleTrimParentTasks(tasks)
     for (let i = 0; i < submission.tasks.length; i++) {
       for (let j = 0; j < tasks.length; j++) {
         if (submission.tasks[i].id === tasks[j].id) {
           tasks.splice(j, 1)
           break
         }
+      }
+    }
+  }
+
+  handleTrimParentTasks (tasks) {
+    for (let j = 0; j < tasks.length; j++) {
+      if (tasks[j].top) {
+        tasks.splice(j, 1)
+        --j
       }
     }
   }
