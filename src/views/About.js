@@ -9,10 +9,8 @@ const About = () => {
             <p>
               Make transparent, accessible benchmarks available to everyone in the quantum computing community.
             </p>
-            <center>
-              <iframe title='Metriq: the open source platform for community driven quantum benchmarks' width='420' height='315' src='https://www.youtube.com/embed/tg6Q5fnw2EE'>
-              </iframe>
-            </center>
+            <iframe title='Metriq: the open source platform for community driven quantum benchmarks' width='420' height='315' src='https://www.youtube.com/embed/tg6Q5fnw2EE'>
+            </iframe>
           </div>
           <br />
           <h1 className='text-center'>About</h1>
