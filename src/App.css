@@ -313,6 +313,13 @@ form > span > .row > label {
   width: 100%;
 }
 
+iframe {
+  display: block;
+  border-style:none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /** Simple generic styling */
 
 .text-center {
