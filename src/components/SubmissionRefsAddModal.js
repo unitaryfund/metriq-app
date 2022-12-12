@@ -20,7 +20,7 @@ const SubmissionRefsAddModal = (props) => {
     id: 0,
     name: props.refName ? props.refName : '',
     fullName: '',
-    parent: '',
+    parent: 0,
     description: '',
     submissions: props.submissionId
   })
@@ -45,8 +45,15 @@ const SubmissionRefsAddModal = (props) => {
       ? 'method'
       : props.modalMode === 'Platform' ? 'platform' : 'login'
 
+  const handleValidation = (i) => {
+    if (!i) {
+      i = item
+    }
+    setIsValid(!!i.name && (i.parent || (props.modalMode !== 'Task')))
+  }
+
   const handleAccordionToggle = () => {
-    setIsValid(showAccordion || !!item.name)
+    setIsValid(showAccordion || (!!item.name && (item.parent || (props.modalMode !== 'Task'))))
     setShowAccordion(!showAccordion)
   }
 
@@ -55,9 +62,10 @@ const SubmissionRefsAddModal = (props) => {
       return
     }
 
+    console.log(nItem)
     item.parent = nItem.id
-    setIsValid(!!(item.name))
     setItem(item)
+    handleValidation(item)
   }
 
   const handleOnChangeParent = (field, value) => {
@@ -68,11 +76,13 @@ const SubmissionRefsAddModal = (props) => {
     const fn = props.allNames.find(f => f.name === value)
     if (fn) {
       item.parent = fn.id
-      setIsValid(!!(item.name))
+      handleValidation(item)
     } else {
-      item.parent = undefined
-      if (value || (props.modalMode === 'Task')) {
+      item.parent = 0
+      if (value) {
         setIsValid(false)
+      } else {
+        handleValidation(item)
       }
     }
     setItem(item)
@@ -86,7 +96,7 @@ const SubmissionRefsAddModal = (props) => {
 
     item.id = nItem.id
     setItem(item)
-    setIsValid(true)
+    handleValidation(item)
   }
 
   const handleOnChangeRef = (key, value) => {
@@ -98,10 +108,8 @@ const SubmissionRefsAddModal = (props) => {
     if (fn) {
       item.id = fn.id
       setItem(item)
-      setIsValid(true)
-    } else {
-      setIsValid(false)
     }
+    handleValidation(item)
   }
 
   const handleOnChangeName = (field, value) => {
@@ -111,12 +119,17 @@ const SubmissionRefsAddModal = (props) => {
 
     item.name = value
     setItem(item)
-    setIsValid(!!(item.name))
+    handleValidation(item)
   }
 
   const handleReset = () => {
     setShowAccordion(false)
-    setIsValid(!!item.name)
+    setIsValid(false)
+    item.name = ''
+    item.fullName = ''
+    item.description = ''
+    item.parent = 0
+    setItem(item)
   }
 
   const handleOnChange = (field, value) => {
@@ -126,6 +139,7 @@ const SubmissionRefsAddModal = (props) => {
 
     item[field] = value
     setItem(item)
+    handleValidation(item)
   }
 
   const handleSubmit = () => {
@@ -243,7 +257,7 @@ const SubmissionRefsAddModal = (props) => {
                       options={props.allNames}
                       onSelect={handleOnSelectParent}
                       onChange={handleOnChangeParent}
-                      validRegex={(item.parent || isValid) ? undefined : /a^/}
+                      isError={!isValid}
                       tooltip={`Optionally, the new ${key} is a sub-${key} of a "parent" ${key}.`}
                     /><br />
                     <FormFieldRow
@@ -261,7 +275,7 @@ const SubmissionRefsAddModal = (props) => {
           </Suspense>}
       </Modal.Body>
       <Modal.Footer>
-        {(props.modalMode === 'Login') && <Button variant='primary' onClick={props.onHide}>Cancel</Button>}
+        {(props.modalMode === 'Login') && <Button variant='primary' onClick={handleOnHide}>Cancel</Button>}
         {(props.modalMode !== 'Login') && <Button variant='primary' onClick={handleSubmit} disabled={!isValid}>Submit</Button>}
       </Modal.Footer>
     </Modal>

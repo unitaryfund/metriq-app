@@ -92,7 +92,7 @@ const FormFieldTypeaheadRow = (props) => {
       />
       {(!!props.onClickAdd && !props.onClickNew) && <Button variant='primary' className='submission-ref-button' onClick={handleOnButtonClick} disabled={props.disabled || !value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>}
       {!!props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickNew(value)} disabled={props.disabled}>New</Button>}
-      {(!props.onClickAdd && !props.onClickNew) && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid} message={props.validatorMessage} /></Suspense></div>}
+      {(!props.onClickAdd && !props.onClickNew) && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid || props.isError} message={props.validatorMessage} /></Suspense></div>}
     </div>
   )
 }
