@@ -49,20 +49,19 @@ const SubmissionRefsAddModal = (props) => {
     if (!i) {
       i = item
     }
-    setIsValid(!!i.name && (i.parent || (props.modalMode !== 'Task')))
+    setIsValid((!!i.id && !showAccordion) || (showAccordion && !!i.name && (i.parent || (key !== 'task'))))
   }
 
   const handleAccordionToggle = () => {
-    setIsValid(showAccordion || (!!item.name && (item.parent || (props.modalMode !== 'Task'))))
+    setIsValid((!!item.id && showAccordion) || (!showAccordion && !!item.name && (item.parent || (key !== 'task'))))
     setShowAccordion(!showAccordion)
   }
 
   const handleOnSelectParent = (nItem) => {
-    if (showAccordion || !nItem) {
+    if (!showAccordion || !nItem) {
       return
     }
 
-    console.log(nItem)
     item.parent = nItem.id
     setItem(item)
     handleValidation(item)
@@ -89,7 +88,7 @@ const SubmissionRefsAddModal = (props) => {
   }
 
   const handleOnSelectRef = (nItem) => {
-    if (showAccordion || !nItem) {
+    if (!nItem) {
       setIsValid(false)
       return
     }
@@ -100,23 +99,17 @@ const SubmissionRefsAddModal = (props) => {
   }
 
   const handleOnChangeRef = (key, value) => {
-    if (showAccordion) {
-      return
-    }
-
     const fn = props.filteredNames.find(f => f.name === value)
     if (fn) {
       item.id = fn.id
-      setItem(item)
+    } else {
+      item.id = 0
     }
+    setItem(item)
     handleValidation(item)
   }
 
   const handleOnChangeName = (field, value) => {
-    if (!showAccordion) {
-      return
-    }
-
     item.name = value
     setItem(item)
     handleValidation(item)
