@@ -466,11 +466,8 @@ class Submission extends React.Component {
   }
 
   handlePublishOnClick (event) {
-    let confirmString = window.prompt('To publish your submission, type its name below, then hit "OK." (You can\'t "unpublish" your submission after that point, only delete it.)\n\n' + this.state.item.name, '')
-    if (confirmString) {
-      confirmString = confirmString.trim().toLowerCase()
-    }
-    if (confirmString && (confirmString === this.state.item.nameNormal)) {
+    const confirmBool = window.confirm('To publish your submission, hit "OK." (You can\'t "unpublish" your submission after that point, only delete it.)\n')
+    if (confirmBool) {
       const submission = { ...(this.state.item) }
       submission.isPublished = true
       submission.tags = undefined
