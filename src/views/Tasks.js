@@ -14,6 +14,7 @@ import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFun
 import SotaChart from '../components/SotaChart'
 import { withRouter } from 'react-router-dom'
 import ViewSubHeader from '../components/ViewSubHeader'
+import SortingTable from '../components/SortingTable'
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -26,7 +27,8 @@ class Tasks extends React.Component {
       allNames: [],
       featured: [],
       filterId: null,
-      requestFailedMessage: ''
+      requestFailedMessage: '',
+      topSubmitters: { weekly: [], monthly: [], allTime: [] }
     }
 
     this.handleOnFilter = this.handleOnFilter.bind(this)
@@ -46,6 +48,9 @@ class Tasks extends React.Component {
   }
 
   componentDidMount () {
+    axios.get(config.api.getUriPrefix() + '/user/topSubmitters')
+      .then(res => this.setState({ topSubmitters: res.data.data }))
+
     axios.get(config.api.getUriPrefix() + '/task/submissionCount')
       .then(res => {
         const common = [...res.data.data]
@@ -138,6 +143,71 @@ class Tasks extends React.Component {
             </Tab>
           </Tabs>
         </FormFieldWideRow>
+        <br />
+        <br />
+        <h5>Top Submitters</h5>
+        <Tabs id='top-submissions-tabs'>
+          <Tab eventKey='Weekly' title='Weekly' className='metriq-nav-tab'>
+            <div className='card'>
+              <SortingTable
+                columns={[
+                  {
+                    title: 'Name',
+                    key: 'username',
+                    width: 400
+                  },
+                  {
+                    title: 'Submission Count',
+                    key: 'submissionsCount',
+                    width: 400
+                  }
+                ]}
+                data={this.state.topSubmitters.weekly}
+                key={Math.random()}
+              />
+            </div>
+          </Tab>
+          <Tab eventKey='Monthly' title='Monthly' className='metriq-nav-tab'>
+            <div className='card'>
+              <SortingTable
+                columns={[
+                  {
+                    title: 'Name',
+                    key: 'username',
+                    width: 400
+                  },
+                  {
+                    title: 'Submission Count',
+                    key: 'submissionsCount',
+                    width: 400
+                  }
+                ]}
+                data={this.state.topSubmitters.monthly}
+                key={Math.random()}
+              />
+            </div>
+          </Tab>
+          <Tab eventKey='AllTime' title='All Time' className='metriq-nav-tab'>
+            <div className='card'>
+              <SortingTable
+                columns={[
+                  {
+                    title: 'Name',
+                    key: 'username',
+                    width: 400
+                  },
+                  {
+                    title: 'Submission Count',
+                    key: 'submissionsCount',
+                    width: 400
+                  }
+                ]}
+                data={this.state.topSubmitters.allTime}
+                key={Math.random()}
+              />
+            </div>
+          </Tab>
+        </Tabs>
         <br />
         <br />
         <FormFieldWideRow>
