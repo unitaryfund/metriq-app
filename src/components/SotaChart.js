@@ -48,18 +48,20 @@ class SotaChart extends React.Component {
       isLowerBetterDict: {},
       key: Math.random(),
       log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
-      logBase: props.logBase ? props.logBase : 10
+      logBase: props.logBase ? props.logBase : 10,
+      subset: 'qubits'
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
     this.handleOnChangeLogBase = this.handleOnChangeLogBase.bind(this)
+    this.handleOnChangeSubset = this.handleOnChangeSubset.bind(this)
   }
 
   handleOnChangeLogBase (event) {
-    console.log(event.target)
     this.setState({ logBase: event.target.value, log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log)) })
     this.loadChartFromState({
+      subset: this.state.subset,
       metricNames: this.state.metricNames,
       chartKey: this.state.chartKey,
       chartData: this.state.chartData,
@@ -69,13 +71,26 @@ class SotaChart extends React.Component {
     })
   }
 
+  handleOnChangeSubset (event) {
+    this.setState({ subset: event.target.value })
+    this.loadChartFromState({
+      subset: event.target.value,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      log: this.state.log
+    })
+  }
+
   loadChartFromState (state) {
     const z95 = percentileZ(0.95)
     const isLowerBetter = state.isLowerBetterDict[state.chartKey]
     const d = [...state.chartData[state.chartKey]]
     const sotaData = d.length ? [d[0]] : []
     let canLog = true
-    for (let i = 1; i < d.length; i++) {
+    for (let i = 1; i < d.length; ++i) {
       if (isLowerBetter && (d[i].value < sotaData[sotaData.length - 1].value)) {
         sotaData.push(d[i])
       } else if (!isLowerBetter && (d[i].value > sotaData[sotaData.length - 1].value)) {
@@ -86,14 +101,111 @@ class SotaChart extends React.Component {
       }
     }
     const data = {
-      datasets: [{
+      datasets: [
+        {
+          type: 'scatterWithErrorBars',
+          label: 'Error bars',
+          backgroundColor: 'rgb(128, 128, 128)',
+          borderColor: 'rgb(128, 128, 128)',
+          data: d.map((obj, index) => {
+            return {
+              x: obj.label,
+              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+              yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+              yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+            }
+          }),
+          pointRadius: 0,
+          pointHoverRadius: 0
+        },
+        {
+          type: 'line',
+          label: 'State-of-the-art',
+          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+          backgroundColor: 'rgb(60, 210, 249)',
+          borderColor: 'rgb(60, 210, 249)',
+          data: sotaData.map((obj, index) => {
+            return {
+              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+              isShowLabel: index === (sotaData.length - 1),
+              x: obj.label,
+              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
+            }
+          }),
+          pointRadius: 0,
+          pointHoverRadius: 0
+        },
+        {
+          type: 'scatter',
+          label: 'Historical state-of-the-art labels',
+          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+          backgroundColor: 'rgb(60, 210, 249)',
+          borderColor: 'rgb(60, 210, 249)',
+          data: sotaData.map((obj, index) => {
+            return {
+              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+              isShowLabel: index !== (sotaData.length - 1),
+              x: obj.label,
+              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
+            }
+          }),
+          pointRadius: 0,
+          pointHoverRadius: 0
+        }]
+    }
+
+    const subsets = {}
+    if (state.subset === 'qubits') {
+      d.sort((a, b) => (a.qubitCount > b.qubitCount) ? 1 : -1)
+    } else {
+      d.sort((a, b) => (a.circuitDepth > b.circuitDepth) ? 1 : -1)
+    }
+    for (let i = 0; i < d.length; ++i) {
+      let key = 'Uncategorized'
+      if (state.subset === 'qubits') {
+        key = d[i].qubitCount ? d[i].qubitCount.toString() : 'Uncategorized'
+      } else {
+        key = d[i].circuitDepth ? d[i].circuitDepth.toString() : 'Uncategorized'
+      }
+      if (subsets[key]) {
+        subsets[key].push(d[i])
+      } else {
+        subsets[key] = [d[i]]
+      }
+    }
+
+    let color = 0
+    for (const key in subsets) {
+      let rgb = '#000000'
+      switch (color) {
+        case 0:
+          rgb = '#dc3545'
+          break
+        case 1:
+          rgb = '#fd7e14'
+          break
+        case 2:
+          rgb = '#ffc107'
+          break
+        case 3:
+          rgb = '#28a745'
+          break
+        case 4:
+          rgb = '#007bff'
+          break
+        case 5:
+          rgb = '#6610f2'
+          break
+        default:
+          break
+      }
+      data.datasets.push({
         type: 'scatter',
-        label: 'All (±95% CI, when provided)',
-        labels: d.map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
-        backgroundColor: 'rgb(0, 0, 0)',
-        borderColor: 'rgb(0, 0, 0)',
-        pointHitRadius: 16,
-        data: d.map(obj => {
+        label: (subsets.length === 1) ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
+        labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+        backgroundColor: rgb,
+        borderColor: rgb,
+        data: subsets[key].map(obj => {
           return {
             label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
             isShowLabel: false,
@@ -102,53 +214,14 @@ class SotaChart extends React.Component {
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
             yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
-        })
-      },
-      {
-        type: 'scatterWithErrorBars',
-        label: '[HIDE LABEL] 1',
-        backgroundColor: 'rgb(128, 128, 128)',
-        borderColor: 'rgb(128, 128, 128)',
-        data: d.map((obj, index) => {
-          return {
-            x: obj.label,
-            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
-            yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-            yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
-          }
-        })
-      },
-      {
-        type: 'line',
-        label: 'State-of-the-art',
-        labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-        backgroundColor: 'rgb(60, 210, 249)',
-        borderColor: 'rgb(60, 210, 249)',
-        data: sotaData.map((obj, index) => {
-          return {
-            label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
-            isShowLabel: index === (sotaData.length - 1),
-            x: obj.label,
-            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
-          }
-        })
-      },
-      {
-        type: 'scatter',
-        label: 'Historical state-of-the-art labels',
-        labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-        backgroundColor: 'rgb(60, 210, 249)',
-        borderColor: 'rgb(60, 210, 249)',
-        data: sotaData.map((obj, index) => {
-          return {
-            label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
-            isShowLabel: index !== (sotaData.length - 1),
-            x: obj.label,
-            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
-          }
-        })
-      }]
+        }),
+        pointRadius: 4,
+        pointHitRadius: 4
+      })
+      ++color
+      color = color % 6
     }
+
     const options = {
       responsive: true,
       maintainAspectRatio: false,
@@ -266,7 +339,9 @@ class SotaChart extends React.Component {
         label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter,
-        standardError: row.standardError
+        standardError: row.standardError,
+        qubitCount: row.qubitCount,
+        circuitDepth: row.circuitDepth
       }))
     const chartData = {}
     const isHigherBetterCounts = {}
@@ -303,7 +378,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
+    this.loadChartFromState({ subset: this.state.subset, metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
   }
 
   componentDidMount () {
@@ -396,6 +471,7 @@ class SotaChart extends React.Component {
             onChange={(field, value) => {
               this.setState({ chartKey: value })
               this.loadChartFromState({
+                subset: this.state.subset,
                 metricNames: this.state.metricNames,
                 chartKey: value,
                 chartData: this.state.chartData,
@@ -406,6 +482,25 @@ class SotaChart extends React.Component {
             }}
             tooltip='A metric performance measure of any "method" on this "task"'
           />
+          <div className='row' style={{ marginTop: '5px' }}>
+            <span
+              htmlFor='subsetPicker'
+              className='col col-md-3 form-field-label metric-chart-label'
+              dangerouslySetInnerHTML={{ __html: 'Series subset:' }}
+            />
+            <div className='col col-md-6'>
+              <select
+                id='subsetPicker'
+                name='subsetPicker'
+                className='form-control'
+                onChange={this.handleOnChangeSubset}
+                value={this.state.subset}
+              >
+                <option value='qubits'>Qubit Count</option>
+                <option value='depth'>Circuit depth</option>
+              </select>
+            </div>
+          </div>
           <div className='row' style={{ marginTop: '5px' }}>
             <span
               htmlFor='logcheckbox'
@@ -423,6 +518,7 @@ class SotaChart extends React.Component {
                   const val = !this.state.isLog
                   this.setState({ isLog: val })
                   this.loadChartFromState({
+                    subset: this.state.subset,
                     metricNames: this.state.metricNames,
                     chartKey: this.state.chartKey,
                     chartData: this.state.chartData,

@@ -3,7 +3,7 @@ import React, { useState, Suspense } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
-import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex } from './ValidationRegex'
+import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex, qubitCountRegex, circuitDepthRegex } from './ValidationRegex'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('./FormFieldTypeaheadRow'))
@@ -210,6 +210,20 @@ const ResultsAddModal = (props) => {
               validRegex={sampleSizeRegex}
               onChange={handleOnChange}
               tooltip='Report the sample size used to calculate the metric value.'
+            /><br />
+            <FormFieldRow
+              inputName='qubitCount' inputType='number' label='Qubit count (optional)'
+              value={result.qubitCount}
+              validRegex={qubitCountRegex}
+              onChange={handleOnChange}
+              tooltip='Task plots can be subset by qubit count of the benchmark.'
+            /><br />
+            <FormFieldRow
+              inputName='circuitDepth' inputType='number' label='Circuit depth (optional)'
+              value={result.sampleSize}
+              validRegex={circuitDepthRegex}
+              onChange={handleOnChange}
+              tooltip='Task plots can be subset by circuit depth of the benchmark.'
             /><br />
             <FormFieldRow
               inputName='notes' inputType='textarea' label='Notes'

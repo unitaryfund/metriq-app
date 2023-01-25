@@ -30,27 +30,37 @@ const ResultsTable = (props) => {
                   {
                     title: 'Task',
                     key: 'taskName',
-                    width: 224
+                    width: 160
                   },
                   {
                     title: 'Method',
                     key: 'methodName',
-                    width: 224
+                    width: 160
                   },
                   {
                     title: 'Platform',
                     key: 'platformName',
-                    width: 224
+                    width: 160
                   },
                   {
                     title: 'Metric',
                     key: 'metricName',
-                    width: 224
+                    width: 160
                   },
                   {
                     title: 'Value',
                     key: 'metricValue',
-                    width: 224
+                    width: 160
+                  },
+                  {
+                    title: 'Qubits',
+                    key: 'qubitCount',
+                    width: 160
+                  },
+                  {
+                    title: 'Depth',
+                    key: 'circuitDepth',
+                    width: 160
                   },
                   {
                     title: 'Notes',
@@ -72,6 +82,8 @@ const ResultsTable = (props) => {
                     platformName: row.platform ? row.platform.name : '(None)',
                     metricName: row.metricName,
                     metricValue: row.metricValue,
+                    qubitCount: row.qubitCount,
+                    circuitDepth: row.circuitDepth,
                     notes: <div className='text-center'>{row.notes && <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></TooltipTrigger>}</div>,
                     edit: <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} /></div>
                   })
