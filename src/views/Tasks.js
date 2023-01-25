@@ -49,7 +49,21 @@ class Tasks extends React.Component {
 
   componentDidMount () {
     axios.get(config.api.getUriPrefix() + '/user/topSubmitters')
-      .then(res => this.setState({ topSubmitters: res.data.data }))
+      .then(res => {
+        const topSubmitters = res.data.data
+        console.log(topSubmitters)
+        topSubmitters.allTime[0].rank = '🥇'
+        topSubmitters.allTime[1].rank = '🥈'
+        topSubmitters.allTime[2].rank = '🥉'
+        topSubmitters.monthly[0].rank = '🥇'
+        topSubmitters.monthly[1].rank = '🥈'
+        topSubmitters.monthly[2].rank = '🥉'
+        topSubmitters.weekly[0].rank = '🥇'
+        topSubmitters.weekly[1].rank = '🥈'
+        topSubmitters.weekly[2].rank = '🥉'
+
+        this.setState({ topSubmitters: topSubmitters })
+      })
 
     axios.get(config.api.getUriPrefix() + '/task/submissionCount')
       .then(res => {
@@ -154,16 +168,24 @@ class Tasks extends React.Component {
                   {
                     title: 'Name',
                     key: 'username',
-                    width: 400
+                    width: 360
+                  },
+                  {
+                    title: 'Rank',
+                    key: 'rank',
+                    width: 80
                   },
                   {
                     title: 'Submission Count',
                     key: 'submissionsCount',
-                    width: 400
+                    width: 360
                   }
                 ]}
                 data={this.state.topSubmitters.weekly}
                 key={Math.random()}
+                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                tableLayout='auto'
+                rowClassName='link'
               />
             </div>
           </Tab>
@@ -174,16 +196,24 @@ class Tasks extends React.Component {
                   {
                     title: 'Name',
                     key: 'username',
-                    width: 400
+                    width: 360
+                  },
+                  {
+                    title: 'Rank',
+                    key: 'rank',
+                    width: 80
                   },
                   {
                     title: 'Submission Count',
                     key: 'submissionsCount',
-                    width: 400
+                    width: 360
                   }
                 ]}
                 data={this.state.topSubmitters.monthly}
                 key={Math.random()}
+                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                tableLayout='auto'
+                rowClassName='link'
               />
             </div>
           </Tab>
@@ -194,16 +224,24 @@ class Tasks extends React.Component {
                   {
                     title: 'Name',
                     key: 'username',
-                    width: 400
+                    width: 360
+                  },
+                  {
+                    title: 'Rank',
+                    key: 'rank',
+                    width: 80
                   },
                   {
                     title: 'Submission Count',
                     key: 'submissionsCount',
-                    width: 400
+                    width: 360
                   }
                 ]}
                 data={this.state.topSubmitters.allTime}
                 key={Math.random()}
+                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                tableLayout='auto'
+                rowClassName='link'
               />
             </div>
           </Tab>
