@@ -165,6 +165,8 @@ class Task extends React.Component {
         methodName: row.methodName,
         metricName: row.metricName,
         metricValue: row.metricValue,
+        qubitCount: row.qubitCount,
+        circuitDepth: row.circuitDepth,
         tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
       }))
     this.setState({ requestFailedMessage: '', item: task, results: results, resultsJson: resultsJson })

@@ -3,7 +3,7 @@ import React, { useState, Suspense } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
-import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex } from './ValidationRegex'
+import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex, qubitCountRegex, circuitDepthRegex } from './ValidationRegex'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('./FormFieldTypeaheadRow'))
@@ -74,6 +74,16 @@ const ResultsAddModal = (props) => {
     if (result.sampleSize) {
       result.sampleSize = parseInt(result.sampleSize)
     }
+    if (result.qubitCount && !qubitCountRegex.test(result.qubitCount)) {
+      window.alert('Error: Qubit count is not a valid number.')
+      return
+    }
+    result.qubitCount = result.qubitCount ? parseInt(result.qubitCount) : null
+    if (result.circuitDepth && !circuitDepthRegex.test(result.circuitDepth)) {
+      window.alert('Error: Circuit depth is not a valid number.')
+      return
+    }
+    result.circuitDepth = result.circuitDepth ? parseInt(result.circuitDepth) : null
     if (!result.evaluatedAt) {
       result.evaluatedDate = new Date()
     } else if (!dateRegex.test(result.evaluatedAt)) {
@@ -210,6 +220,20 @@ const ResultsAddModal = (props) => {
               validRegex={sampleSizeRegex}
               onChange={handleOnChange}
               tooltip='Report the sample size used to calculate the metric value.'
+            /><br />
+            <FormFieldRow
+              inputName='qubitCount' inputType='number' label='Qubit count (optional)'
+              value={result.qubitCount}
+              validRegex={qubitCountRegex}
+              onChange={handleOnChange}
+              tooltip='Task plots can be subset by qubit count of the benchmark.'
+            /><br />
+            <FormFieldRow
+              inputName='circuitDepth' inputType='number' label='Circuit depth (optional)'
+              value={result.circuitDepth}
+              validRegex={circuitDepthRegex}
+              onChange={handleOnChange}
+              tooltip='Task plots can be subset by circuit depth of the benchmark.'
             /><br />
             <FormFieldRow
               inputName='notes' inputType='textarea' label='Notes'

@@ -6,6 +6,8 @@ const numberRegex = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/
 const passwordValidRegex = /.{12,}/
 const sampleSizeRegex = /^[0-9]+$/
 const standardErrorRegex = /^[0-9]+([.][0-9]*)?|[.][0-9]+$/
+const qubitCountRegex = /^[0-9]+$/
+const circuitDepthRegex = /^[0-9]+$/
 const urlValidRegex = new RegExp('^(https?:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -29,6 +31,8 @@ module.exports = {
   passwordValidRegex,
   sampleSizeRegex,
   standardErrorRegex,
+  qubitCountRegex,
+  circuitDepthRegex,
   urlValidRegex,
   blankOrurlValidRegex,
   usernameValidRegex
