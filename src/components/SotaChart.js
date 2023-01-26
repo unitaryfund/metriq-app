@@ -49,7 +49,8 @@ class SotaChart extends React.Component {
       key: Math.random(),
       log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
       logBase: props.logBase ? props.logBase : 10,
-      subset: 'qubits'
+      subset: 'qubits',
+      isSubset: true
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
@@ -343,6 +344,26 @@ class SotaChart extends React.Component {
         qubitCount: row.qubitCount,
         circuitDepth: row.circuitDepth
       }))
+
+    let isQubits = false
+    let isDepth = false
+    for (let i = 0; i < allData.length; ++i) {
+      if (allData[i].qubitCount) {
+        isQubits = true
+      }
+      if (allData[i].circuitDepth) {
+        isDepth = true
+      }
+    }
+
+    if (isQubits && isDepth) {
+      this.setState({ isSubset: true })
+    } else if (isQubits) {
+      this.setState({ isSubset: false, subset: 'qubits' })
+    } else {
+      this.setState({ isSubset: false, subset: 'depth' })
+    }
+
     const chartData = {}
     const isHigherBetterCounts = {}
     for (let i = 0; i < allData.length; i++) {
@@ -482,25 +503,26 @@ class SotaChart extends React.Component {
             }}
             tooltip='A metric performance measure of any "method" on this "task"'
           />
-          <div className='row' style={{ marginTop: '5px' }}>
-            <span
-              htmlFor='subsetPicker'
-              className='col col-md-3 form-field-label metric-chart-label'
-              dangerouslySetInnerHTML={{ __html: 'Series subset:' }}
-            />
-            <div className='col col-md-6'>
-              <select
-                id='subsetPicker'
-                name='subsetPicker'
-                className='form-control'
-                onChange={this.handleOnChangeSubset}
-                value={this.state.subset}
-              >
-                <option value='qubits'>Qubit Count</option>
-                <option value='depth'>Circuit depth</option>
-              </select>
-            </div>
-          </div>
+          {this.state.isSubset &&
+            <div className='row' style={{ marginTop: '5px' }}>
+              <span
+                htmlFor='subsetPicker'
+                className='col col-md-3 form-field-label metric-chart-label'
+                dangerouslySetInnerHTML={{ __html: 'Series subset:' }}
+              />
+              <div className='col col-md-6'>
+                <select
+                  id='subsetPicker'
+                  name='subsetPicker'
+                  className='form-control'
+                  onChange={this.handleOnChangeSubset}
+                  value={this.state.subset}
+                >
+                  <option value='qubits'>Qubit Count</option>
+                  <option value='depth'>Circuit depth</option>
+                </select>
+              </div>
+            </div>}
           <div className='row' style={{ marginTop: '5px' }}>
             <span
               htmlFor='logcheckbox'

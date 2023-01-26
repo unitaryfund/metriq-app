@@ -74,6 +74,16 @@ const ResultsAddModal = (props) => {
     if (result.sampleSize) {
       result.sampleSize = parseInt(result.sampleSize)
     }
+    if (result.qubitCount && !qubitCountRegex.test(result.qubitCount)) {
+      window.alert('Error: Qubit count is not a valid number.')
+      return
+    }
+    result.qubitCount = result.qubitCount ? parseInt(result.qubitCount) : null
+    if (result.circuitDepth && !circuitDepthRegex.test(result.circuitDepth)) {
+      window.alert('Error: Circuit depth is not a valid number.')
+      return
+    }
+    result.circuitDepth = result.circuitDepth ? parseInt(result.circuitDepth) : null
     if (!result.evaluatedAt) {
       result.evaluatedDate = new Date()
     } else if (!dateRegex.test(result.evaluatedAt)) {
@@ -220,7 +230,7 @@ const ResultsAddModal = (props) => {
             /><br />
             <FormFieldRow
               inputName='circuitDepth' inputType='number' label='Circuit depth (optional)'
-              value={result.sampleSize}
+              value={result.circuitDepth}
               validRegex={circuitDepthRegex}
               onChange={handleOnChange}
               tooltip='Task plots can be subset by circuit depth of the benchmark.'
