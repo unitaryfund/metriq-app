@@ -49,7 +49,7 @@ class SotaChart extends React.Component {
       key: Math.random(),
       log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
       logBase: props.logBase ? props.logBase : 10,
-      subset: 'qubits',
+      subset: '',
       isSubset: true
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -202,14 +202,14 @@ class SotaChart extends React.Component {
       }
       data.datasets.push({
         type: 'scatter',
-        label: (subsets.length === 1) ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
+        label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
         labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
         backgroundColor: rgb,
         borderColor: rgb,
         data: subsets[key].map(obj => {
           return {
-            label: obj.method + (obj.platform ? ' | ' + obj.platform : ''),
-            isShowLabel: false,
+            label: obj.arXivId + '\n',
+            isShowLabel: !!obj.arXivId,
             x: obj.label,
             y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
@@ -332,11 +332,13 @@ class SotaChart extends React.Component {
 
       return 0
     })
+    console.log(results)
     const allData = results.map(row =>
       ({
         method: row.methodName,
         platform: row.platformName,
         metric: row.metricName,
+        arXivId: row.submissionUrl.toLowerCase().startsWith('https://arxiv.org/') ? ('arXiv:' + row.submissionUrl.substring(18)) : '',
         label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter,
@@ -360,8 +362,10 @@ class SotaChart extends React.Component {
       this.setState({ isSubset: true })
     } else if (isQubits) {
       this.setState({ isSubset: false, subset: 'qubits' })
-    } else {
+    } else if (isDepth) {
       this.setState({ isSubset: false, subset: 'depth' })
+    } else {
+      this.setState({ isSubset: false, subset: '' })
     }
 
     const chartData = {}
