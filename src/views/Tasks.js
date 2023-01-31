@@ -51,7 +51,6 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/user/topSubmitters')
       .then(res => {
         const topSubmitters = res.data.data
-        console.log(topSubmitters)
         topSubmitters.allTime[0].rank = '🥇'
         topSubmitters.allTime[1].rank = '🥈'
         topSubmitters.allTime[2].rank = '🥉'

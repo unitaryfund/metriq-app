@@ -150,7 +150,6 @@ class AddSubmission extends React.Component {
     } else if (field === 'thumbnailUrl') {
       axios.post(config.api.getUriPrefix() + '/pagemetadata', { url: value.trim() })
         .then(res => {
-          console.log(res)
           const images = res.data.data.images
           this.setState({ thumbnailUrl: images[images.length - 1].src, isValidated: false })
         })
