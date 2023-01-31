@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Table from 'react-bootstrap/Table'
 
@@ -7,6 +7,12 @@ const SortingTable = (props) => {
   const [trigger, setTrigger] = useState(Math.random())
   const [sortKey, setSortKey] = useState('')
   const [sortDescending, setSortDescending] = useState(false)
+
+  useEffect(() => {
+    if (props.data !== data) {
+      setData(props.data)
+    }
+  }, [props.data, data])
 
   const handleSort = (key) => {
     let desc = sortDescending
