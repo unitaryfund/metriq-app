@@ -31,7 +31,6 @@ class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      key: Math.random(),
       isValidated: false,
       requestFailedMessage: '',
       isArxiv: false,
@@ -167,7 +166,7 @@ class Submission extends React.Component {
   }
 
   handleHideEditModal () {
-    this.setState({ showEditModal: false, key: Math.random() })
+    this.setState({ showEditModal: false })
   }
 
   handleEditModalDone () {
@@ -281,22 +280,22 @@ class Submission extends React.Component {
 
     if (mode === 'Task') {
       this.handleTrimTasks(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames, key: Math.random() })
+      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
     } else if (mode === 'Method') {
       this.handleTrimMethods(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames, key: Math.random() })
+      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
     } else if (mode === 'Platform') {
       this.handleTrimPlatforms(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames, key: Math.random() })
+      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
     }
   }
 
   handleModalResultAddNew (submission) {
-    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '', key: Math.random() })
+    this.setState({ showAddModal: false, item: submission, requestFailedMessage: '' })
   }
 
   handleModalRefSubmit (submission) {
-    this.setState({ showAddRefsModal: false, item: submission, requestFailedMessage: '', key: Math.random() })
+    this.setState({ showAddRefsModal: false, item: submission, requestFailedMessage: '' })
   }
 
   handleOnClickAdd (mode) {
@@ -358,7 +357,7 @@ class Submission extends React.Component {
   }
 
   handleHideRemoveModal () {
-    this.setState({ showRemoveModal: false, key: Math.random() })
+    this.setState({ showRemoveModal: false })
   }
 
   handleAddModalSubmit () {
@@ -377,7 +376,7 @@ class Submission extends React.Component {
             break
           }
         }
-        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission, key: Math.random() })
+        this.setState({ requestFailedMessage: '', tagNames: tags, item: submission })
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -672,7 +671,6 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
-                    key={this.state.key}
                   />}
                 {(this.state.item.tasks.length === 0) &&
                   <div className='card bg-light'>
@@ -711,7 +709,6 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
-                    key={this.state.key}
                   />}
                 {(this.state.item.methods.length === 0) &&
                   <div className='card bg-light'>
@@ -752,7 +749,6 @@ class Submission extends React.Component {
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
-                    key={this.state.key}
                   />}
                 {(this.state.item.platforms.length === 0) &&
                   <div className='card bg-light'>
@@ -790,7 +786,6 @@ class Submission extends React.Component {
           onClickAdd={this.handleOnClickAddResult}
           onClickRemove={() => this.handleOnClickRemove('Result')}
           onClickEdit={this.handleOnClickEditResult}
-          key={this.state.key}
         />
         <br />
         <FormFieldWideRow>
