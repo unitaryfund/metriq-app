@@ -41,7 +41,9 @@ class Platform extends React.Component {
         id: 0,
         description: '',
         parentPlatform: null,
-        properties: []
+        childPlatforms: [],
+        properties: [],
+        submissions: []
       },
       allPlatformNames: [],
       allPropertyNames: [],
@@ -434,15 +436,14 @@ class Platform extends React.Component {
                       key: 'name',
                       width: 700
                     }]}
-                    data={this.state.item.childPlatforms
-                      ? this.state.item.childPlatforms.map(row => ({
-                          key: row.id,
-                          name: row.name
-                        }))
-                      : []}
+                    data={this.state.item.childPlatforms.map(row => ({
+                      key: row.id,
+                      name: row.name
+                    }))}
                     onRowClick={(record) => this.props.history.push('/Platform/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
+                    key={this.state.key}
                   />
                 </div>
               </div>
@@ -488,18 +489,17 @@ class Platform extends React.Component {
                       key: 'platform',
                       width: 300
                     }]}
-                    data={this.state.parentProperties.map((property) => {
-                      return {
-                        name: property.name,
-                        type: property.type,
-                        value: property.value,
-                        platform: property.platform,
-                        parentId: this.state.item.parentPlatform.id
-                      }
-                    })}
+                    data={this.state.parentProperties.map((property) => ({
+                      name: property.name,
+                      type: property.type,
+                      value: property.value,
+                      platform: property.platform,
+                      parentId: this.state.item.parentPlatform.id
+                    }))}
                     onRowClick={(record) => this.props.history.push('/Platform/' + record.parentId)}
                     tableLayout='auto'
                     rowClassName='link'
+                    key={this.state.key}
                   />
                 </div>
               </div>
@@ -528,14 +528,11 @@ class Platform extends React.Component {
                   key: 'upvoteCount',
                   width: 200
                 }]}
-                data={this.state.item.submissions
-                  ? this.state.item.submissions.map(row => ({
-                      key: row.id,
-                      name: row.name,
-                      createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                      upvoteCount: row.upvoteCount || 0
-                    }))
-                  : []}
+                data={this.state.item.submissions.map(row => ({
+                  name: row.name,
+                  createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                  upvoteCount: row.upvoteCount || 0
+                }))}
                 onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                 tableLayout='auto'
                 rowClassName='link'
@@ -590,6 +587,7 @@ class Platform extends React.Component {
                   edit: <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => this.handleOnClickEditProperty(row.id)} /></div>
                 }))}
                 tableLayout='auto'
+                key={this.state.key}
               />}
             {(this.state.item.properties.length === 0) &&
               <div className='card bg-light'>
