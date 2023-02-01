@@ -199,7 +199,7 @@ const ResultsAddModal = (props) => {
               value={result.evaluatedAt}
               validRegex={dateRegex}
               onChange={handleOnChange}
-              tooltip='(Optionally) What date was the metric value collected on?'
+              tooltip='Publication date. If not published, latest arXiv/submission date.'
             /><br />
             <FormFieldRow
               inputName='isHigherBetter' inputType='checkbox' label='Is higher better?'
