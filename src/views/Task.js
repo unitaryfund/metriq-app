@@ -180,7 +180,7 @@ class Task extends React.Component {
     const csv = parse(this.state.resultsJson, opts)
 
     const element = document.createElement('a')
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv))
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
     element.setAttribute('download', this.state.item.name)
 
     element.style.display = 'none'
