@@ -156,11 +156,12 @@ class Task extends React.Component {
 
   handleOnLoadData (task) {
     const results = task.results
-    const resultsJson = results.map(row =>
-      ({
+    const resultsJson = results.map(row => {
+      const submission = task.submissions.find(e => e.name === row.submissionName)
+      return {
         key: row.id,
         name: row.submissionName,
-        submissionId: task.submissions.find(e => e.name === row.submissionName) ? task.submissions.find(e => e.name === row.submissionName).id : 0,
+        submissionId: submission ? submission.id : 0,
         platformName: row.platformName,
         methodName: row.methodName,
         metricName: row.metricName,
@@ -168,7 +169,8 @@ class Task extends React.Component {
         qubitCount: row.qubitCount,
         circuitDepth: row.circuitDepth,
         tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
-      }))
+      }
+    })
     this.setState({ requestFailedMessage: '', item: task, results: results, resultsJson: resultsJson })
   }
 
