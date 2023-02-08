@@ -259,8 +259,8 @@ const ResultsAddModal = (props) => {
         {result.id && <Button variant='primary' onClick={() => handleOnRemove(result.id)}>Delete</Button>}
         {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) &&
           <span>
-            <Button variant='primary' onClick={() => handleAddModalSubmit(false)} disabled={isValidated && !isAllValid()}>Submit</Button>&bnsp;
-            <Button variant='secondary' onClick={() => handleAddModalSubmit(true)} disabled={isValidated && !isAllValid()}>Submit & Repeat</Button>
+            <Button variant='secondary' onClick={() => handleAddModalSubmit(true)} disabled={isValidated && !isAllValid()}>Submit & Repeat</Button>&nbsp;
+            <Button variant='primary' onClick={() => handleAddModalSubmit(false)} disabled={isValidated && !isAllValid()}>Submit</Button>
           </span>}
       </Modal.Footer>
     </Modal>
