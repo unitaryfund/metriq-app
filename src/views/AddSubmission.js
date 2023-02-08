@@ -34,6 +34,8 @@ class AddSubmission extends React.Component {
       isAlreadyInDatabase: false,
       name: '',
       contentUrl: '',
+      codeUrl: '',
+      supplementUrl: '',
       thumbnailUrl: '',
       description: '',
       tasks: [],
@@ -194,6 +196,8 @@ class AddSubmission extends React.Component {
     const request = {
       name: this.state.name,
       contentUrl: this.state.contentUrl,
+      codeUrl: this.state.codeUrl,
+      supplementUrl: this.state.supplementUrl,
       thumbnailUrl: this.state.thumbnailUrl,
       description: this.state.description,
       tags: this.state.tags.join(','),
@@ -476,6 +480,22 @@ class AddSubmission extends React.Component {
             />
             <FormFieldAlertRow>
               <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='codeUrl' inputType='text' label='Code URL'
+              onChange={this.handleOnChange}
+              value={this.state.codeUrl}
+            />
+            <FormFieldAlertRow>
+              <b>(Optional) A URL that points to relevant code, (like a GitHub repository).</b>
+            </FormFieldAlertRow>
+            <FormFieldRow
+              inputName='supplementUrl' inputType='text' label='Supplement URL'
+              onChange={this.handleOnChange}
+              value={this.state.codeUrl}
+            />
+            <FormFieldAlertRow>
+              <b>(Optional) A URL that points to relevant supplemental materials, (like a DOI).</b>
             </FormFieldAlertRow>
             <FormFieldRow
               inputName='name' inputType='text' label='Submission Name'

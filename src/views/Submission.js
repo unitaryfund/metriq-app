@@ -8,7 +8,7 @@ import { Button, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash, faCode, faDownload } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import Commento from '../components/Commento'
 import FormFieldWideRow from '../components/FormFieldWideRow'
@@ -25,7 +25,7 @@ const SubmissionRefsAddModal = React.lazy(() => import('../components/Submission
 const SubmissionRefsDeleteModal = React.lazy(() => import('../components/SubmissionRefsDeleteModal'))
 const ResultsAddModal = React.lazy(() => import('../components/ResultsAddModal'))
 
-library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash)
+library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash, faCode, faDownload)
 
 class Submission extends React.Component {
   constructor (props) {
@@ -37,6 +37,8 @@ class Submission extends React.Component {
       vanityUrl: '',
       bibtexUrl: '',
       thumbnailUrl: '',
+      codeUrl: '',
+      supplementUrl: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       allNames: [],
       filteredNames: [],
@@ -56,7 +58,10 @@ class Submission extends React.Component {
       modalMode: '',
       modalTextMode: '',
       submission: {
-        description: ''
+        description: '',
+        thumbnailUrl: '',
+        codeUrl: '',
+        supplementUrl: ''
       },
       moderationReport: {
         description: ''
@@ -137,7 +142,12 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const submission = { thumbnailUrl: this.state.item.thumbnailUrl, description: this.state.item.description }
+    const submission = {
+      thumbnailUrl: this.state.item.thumbnailUrl,
+      description: this.state.item.description,
+      codeUrl: this.state.item.codeUrl,
+      supplementUrl: this.state.item.supplementUrl
+    }
     this.setState({ showEditModal: true, modalMode: mode, submission: submission })
   }
 
@@ -161,7 +171,12 @@ class Submission extends React.Component {
     if (!this.props.isLoggedIn) {
       mode = 'Login'
     }
-    const submission = { thumbnailUrl: this.state.item.thumbnailUrl, description: this.state.item.description }
+    const submission = {
+      thumbnailUrl: this.state.item.thumbnailUrl,
+      description: this.state.item.description,
+      codeUrl: this.state.item.codeUrl,
+      supplementUrl: this.state.item.supplementUrl
+    }
     this.setState({ showEditModal: true, modalMode: mode, modalTextMode: modalTextMode, submission: submission })
   }
 
@@ -182,6 +197,8 @@ class Submission extends React.Component {
       reqBody.description = this.state.moderationReport.description
     } else {
       reqBody.thumbnailUrl = this.state.submission.thumbnailUrl
+      reqBody.codeUrl = this.state.submission.codeUrl
+      reqBody.supplementUrl = this.state.submission.supplementUrl
       reqBody.description = this.state.submission.description
     }
 
@@ -499,6 +516,8 @@ class Submission extends React.Component {
         let vanityUrl = ''
         let bibtexUrl = ''
         const thumbnailUrl = submission.thumbnailUrl
+        const codeUrl = submission.codeUrl
+        const supplementUrl = submission.supplementUrl
         const url = submission.contentUrl
         if (url.toLowerCase().startsWith('https://arxiv.org/')) {
           isArxiv = true
@@ -509,7 +528,16 @@ class Submission extends React.Component {
         }
 
         // Just get the view populated as quickly as possible, before we "trim."
-        this.setState({ requestFailedMessage: '', item: submission, isArxiv: isArxiv, vanityUrl: vanityUrl, thumbnailUrl: thumbnailUrl, bibtexUrl: bibtexUrl })
+        this.setState({
+          requestFailedMessage: '',
+          item: submission,
+          isArxiv: isArxiv,
+          vanityUrl: vanityUrl,
+          thumbnailUrl: thumbnailUrl,
+          bibtexUrl: bibtexUrl,
+          codeUrl: codeUrl,
+          supplementUrl: supplementUrl
+        })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
         axios.get(taskNamesRoute)
@@ -629,6 +657,14 @@ class Submission extends React.Component {
                 <Button className='submission-button' variant='secondary' aria-label='Get arXiv BibTex reference' onClick={() => { window.open(this.state.bibtexUrl, '_blank') }}><FontAwesomeIcon icon={faSuperscript} /></Button>
               </TooltipTrigger>
             </span>}
+          {this.state.codeUrl &&
+            <TooltipTrigger message='Code link'>
+              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.codeUrl, '_blank') }}><FontAwesomeIcon icon={faCode} /></Button>
+            </TooltipTrigger>}
+          {this.state.supplementUrl &&
+            <TooltipTrigger message='Supplement link'>
+              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.supplementUrl, '_blank') }}><FontAwesomeIcon icon={faDownload} /></Button>
+            </TooltipTrigger>}
           <TooltipTrigger message='Edit submission'>
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
@@ -892,6 +928,22 @@ class Submission extends React.Component {
                       />
                       <FormFieldAlertRow className='text-center'>
                         <b>The image URL is loaded as a thumbnail, for the submission. (For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
+                      </FormFieldAlertRow>
+                      <FormFieldRow
+                        inputName='codeUrl' inputType='text' label='Code URL'
+                        value={this.state.submission.codeUrl}
+                        onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                      />
+                      <FormFieldAlertRow className='text-center'>
+                        <b>The code URL is for any code associated with the submission.</b>
+                      </FormFieldAlertRow>
+                      <FormFieldRow
+                        inputName='supplementUrl' inputType='text' label='Supplement URL'
+                        value={this.state.submission.supplementUrl}
+                        onChange={(field, value) => this.handleOnChange('submission', field, value)}
+                      />
+                      <FormFieldAlertRow className='text-center'>
+                        <b>The supplement URL is for any supplemental materials associated with the submission, (such as a DOI).</b>
                       </FormFieldAlertRow>
                       <FormFieldRow
                         inputName='description' inputType='textarea' label='Description' rows='12'
