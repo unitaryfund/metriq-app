@@ -12,6 +12,7 @@ const ResultsAddModal = (props) => {
   const [isValidated, setIsValidated] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
   const [result, setResult] = useState(props.result)
+  const [submission, setSubmission] = useState({})
 
   if (!isUpdated && props.show) {
     setIsUpdated(true)
@@ -26,6 +27,10 @@ const ResultsAddModal = (props) => {
 
   const onHide = () => {
     setIsUpdated(false)
+    if (submission.id) {
+      props.onAddOrEdit({ ...submission })
+      setSubmission({})
+    }
     props.onHide()
   }
 
@@ -51,7 +56,7 @@ const ResultsAddModal = (props) => {
     return true
   }
 
-  const handleAddModalSubmit = (event) => {
+  const handleAddModalSubmit = (isDuplicating) => {
     if (!nonblankRegex.test(result.metricName)) {
       window.alert('Error: Metric Name cannot be blank.')
       return
@@ -108,7 +113,12 @@ const ResultsAddModal = (props) => {
     const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + props.submission.id + '/result'))
     axios.post(resultRoute, result)
       .then(res => {
-        props.onAddOrEdit(res.data.data)
+        if (isDuplicating) {
+          setSubmission(res.data.data)
+          window.alert("Added result! The form is prepopulated with your old result, if you'd like to add anothher.")
+        } else {
+          props.onAddOrEdit(res.data.data)
+        }
         setIsUpdated(false)
       })
       .catch(err => {
@@ -247,7 +257,11 @@ const ResultsAddModal = (props) => {
       <Modal.Footer>
         {((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={onHide}>Cancel</Button>}
         {result.id && <Button variant='primary' onClick={() => handleOnRemove(result.id)}>Delete</Button>}
-        {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) && <Button variant='primary' onClick={handleAddModalSubmit} disabled={isValidated && !isAllValid()}>Submit</Button>}
+        {!((props.submission.tasks.length === 0) || (props.submission.methods.length === 0)) &&
+          <span>
+            <Button variant='secondary' onClick={() => handleAddModalSubmit(true)} disabled={isValidated && !isAllValid()}>Submit & Repeat</Button>&nbsp;
+            <Button variant='primary' onClick={() => handleAddModalSubmit(false)} disabled={isValidated && !isAllValid()}>Submit</Button>
+          </span>}
       </Modal.Footer>
     </Modal>
   )
