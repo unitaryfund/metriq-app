@@ -91,6 +91,7 @@ class SotaChart extends React.Component {
     const d = [...state.chartData[state.chartKey]]
     const sotaData = d.length ? [d[0]] : []
     let canLog = true
+    let isErrorBars = false
     for (let i = 1; i < d.length; ++i) {
       if (isLowerBetter && (d[i].value < sotaData[sotaData.length - 1].value)) {
         sotaData.push(d[i])
@@ -100,25 +101,12 @@ class SotaChart extends React.Component {
       if (d[i].value <= 0) {
         canLog = false
       }
+      if (d[i].standardError) {
+        isErrorBars = true
+      }
     }
     const data = {
       datasets: [
-        {
-          type: 'scatterWithErrorBars',
-          label: 'Error bars',
-          backgroundColor: 'rgb(128, 128, 128)',
-          borderColor: 'rgb(128, 128, 128)',
-          data: d.map((obj, index) => {
-            return {
-              x: obj.label,
-              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
-              yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-              yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
-            }
-          }),
-          pointRadius: 0,
-          pointHoverRadius: 0
-        },
         {
           type: 'line',
           label: 'State-of-the-art',
@@ -153,6 +141,25 @@ class SotaChart extends React.Component {
           pointRadius: 0,
           pointHoverRadius: 0
         }]
+    }
+
+    if (isErrorBars) {
+      data.datasets.push({
+        type: 'scatterWithErrorBars',
+        label: 'Error bars',
+        backgroundColor: 'rgb(128, 128, 128)',
+        borderColor: 'rgb(128, 128, 128)',
+        data: d.map((obj, index) => {
+          return {
+            x: obj.label,
+            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+            yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+            yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+          }
+        }),
+        pointRadius: 0,
+        pointHoverRadius: 0
+      })
     }
 
     const subsets = {}
@@ -209,7 +216,7 @@ class SotaChart extends React.Component {
         data: subsets[key].map(obj => {
           return {
             label: obj.arXivId + '\n',
-            isShowLabel: !!obj.arXivId,
+            isShowLabel: false,
             x: obj.label,
             y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
@@ -359,7 +366,11 @@ class SotaChart extends React.Component {
     }
 
     if (isQubits && isDepth) {
-      this.setState({ isSubset: true })
+      if (this.state.subset) {
+        this.setState({ isSubset: true })
+      } else {
+        this.setState({ isSubset: true, subset: 'qubits' })
+      }
     } else if (isQubits) {
       this.setState({ isSubset: false, subset: 'qubits' })
     } else if (isDepth) {
