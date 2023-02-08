@@ -659,11 +659,11 @@ class Submission extends React.Component {
             </span>}
           {this.state.codeUrl &&
             <TooltipTrigger message='Code link'>
-              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.item.codeUrl, '_blank') }}><FontAwesomeIcon icon={faCode} /></Button>
+              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.codeUrl, '_blank') }}><FontAwesomeIcon icon={faCode} /></Button>
             </TooltipTrigger>}
           {this.state.supplementUrl &&
             <TooltipTrigger message='Supplement link'>
-              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.item.codeUrl, '_blank') }}><FontAwesomeIcon icon={faDownload} /></Button>
+              <Button className='submission-button' variant='secondary' aria-label='Visit code link' onClick={() => { window.open(this.state.supplementUrl, '_blank') }}><FontAwesomeIcon icon={faDownload} /></Button>
             </TooltipTrigger>}
           <TooltipTrigger message='Edit submission'>
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>

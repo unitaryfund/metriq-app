@@ -45,7 +45,7 @@ const FAQ = () => {
           <h2 className='text-center'>My result has overlapping task, method, or metric names</h2>
           <div>
             <p>
-            In most cases, submitting an associated result with a submission will result in distinct task, method, and metric names (i.e. <a href='https://metriq.info/Submission/42'>https://metriq.info/Submission/42</a>). However, based on our taxonomy and the way in which certain results are presented, it is possible that when submitting a result, the task, method, and metric names may all be some variation of the same thing (i.e. <a href='https://metriq.info/Submission/244'>https://metriq.info/Submission/244</a>). As results can be fairly case-by-case, please use your best discretion as to how best populate these fields, but know that duplication (as in <a href='https://metriq.info/Submission/244'>https://metriq.info/Submission/244</a>) can arise and be valid. 
+              In most cases, submitting an associated result with a submission will result in distinct task, method, and metric names (i.e. <a href='https://metriq.info/Submission/42'>https://metriq.info/Submission/42</a>). However, based on our taxonomy and the way in which certain results are presented, it is possible that when submitting a result, the task, method, and metric names may all be some variation of the same thing (i.e. <a href='https://metriq.info/Submission/244'>https://metriq.info/Submission/244</a>). As results can be fairly case-by-case, please use your best discretion as to how best populate these fields, but know that duplication (as in <a href='https://metriq.info/Submission/244'>https://metriq.info/Submission/244</a>) can arise and be valid.
             </p>
           </div>
         </div>
