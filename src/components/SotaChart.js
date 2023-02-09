@@ -123,7 +123,6 @@ class SotaChart extends React.Component {
         isErrorBars = true
       }
     }
-    console.log(state.label)
     const data = {
       datasets: [
         {
