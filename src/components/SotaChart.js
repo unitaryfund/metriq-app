@@ -50,19 +50,22 @@ class SotaChart extends React.Component {
       log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
       logBase: props.logBase ? props.logBase : 10,
       subset: '',
-      isSubset: true
+      isSubset: true,
+      label: 'arXiv'
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
     this.handleOnChangeLogBase = this.handleOnChangeLogBase.bind(this)
     this.handleOnChangeSubset = this.handleOnChangeSubset.bind(this)
+    this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
   }
 
   handleOnChangeLogBase (event) {
     this.setState({ logBase: event.target.value, log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log)) })
     this.loadChartFromState({
       subset: this.state.subset,
+      label: this.state.label,
       metricNames: this.state.metricNames,
       chartKey: this.state.chartKey,
       chartData: this.state.chartData,
@@ -76,6 +79,21 @@ class SotaChart extends React.Component {
     this.setState({ subset: event.target.value })
     this.loadChartFromState({
       subset: event.target.value,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      log: this.state.log
+    })
+  }
+
+  handleOnChangeLabel (event) {
+    this.setState({ label: event.target.value })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: event.target.value,
       metricNames: this.state.metricNames,
       chartKey: this.state.chartKey,
       chartData: this.state.chartData,
@@ -105,6 +123,7 @@ class SotaChart extends React.Component {
         isErrorBars = true
       }
     }
+    console.log(state.label)
     const data = {
       datasets: [
         {
@@ -115,7 +134,7 @@ class SotaChart extends React.Component {
           borderColor: 'rgb(60, 210, 249)',
           data: sotaData.map((obj, index) => {
             return {
-              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+              label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
               isShowLabel: index === (sotaData.length - 1),
               x: obj.label,
               y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
@@ -132,7 +151,7 @@ class SotaChart extends React.Component {
           borderColor: 'rgb(60, 210, 249)',
           data: sotaData.map((obj, index) => {
             return {
-              label: obj.method + (obj.platform ? '\n' + obj.platform : ''),
+              label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
               isShowLabel: index !== (sotaData.length - 1),
               x: obj.label,
               y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
@@ -339,7 +358,6 @@ class SotaChart extends React.Component {
 
       return 0
     })
-    console.log(results)
     const allData = results.map(row =>
       ({
         method: row.methodName,
@@ -414,7 +432,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
   }
 
   componentDidMount () {
@@ -508,6 +526,7 @@ class SotaChart extends React.Component {
               this.setState({ chartKey: value })
               this.loadChartFromState({
                 subset: this.state.subset,
+                label: this.state.label,
                 metricNames: this.state.metricNames,
                 chartKey: value,
                 chartData: this.state.chartData,
@@ -541,10 +560,10 @@ class SotaChart extends React.Component {
           <div className='row' style={{ marginTop: '5px' }}>
             <span
               htmlFor='logcheckbox'
-              className='col col-md-3 form-field-label metric-chart-label'
+              className='col col-md-2 form-field-label metric-chart-label'
               dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
             />
-            <div className='col col-md-2'>
+            <div className='col col-md-1'>
               <input
                 type='checkbox'
                 id='logcheckbox'
@@ -556,6 +575,7 @@ class SotaChart extends React.Component {
                   this.setState({ isLog: val })
                   this.loadChartFromState({
                     subset: this.state.subset,
+                    label: this.state.label,
                     metricNames: this.state.metricNames,
                     chartKey: this.state.chartKey,
                     chartData: this.state.chartData,
@@ -582,6 +602,23 @@ class SotaChart extends React.Component {
                 <option value='2'>2</option>
                 <option value='10'>10</option>
                 <option value='e'>e</option>
+              </select>
+            </div>
+            <span
+              htmlFor='labeldropdown'
+              className='col col-md-2 form-field-label metric-chart-label'
+              dangerouslySetInnerHTML={{ __html: 'Label:' }}
+            />
+            <div className='col col-md-2'>
+              <select
+                id='labeldropdown'
+                name='labeldropdown'
+                className='form-control'
+                onChange={this.handleOnChangeLabel}
+                value={this.state.label}
+              >
+                <option value='arXiv'>arXiv ID</option>
+                <option value='method'>Method and platform</option>
               </select>
             </div>
           </div>
