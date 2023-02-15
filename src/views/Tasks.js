@@ -126,6 +126,7 @@ class Tasks extends React.Component {
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
         <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
+        <p>Search the task hierarchy to see charts of comparative performance across methods, see our submitter leader board and featured task charts, or click into the parent/child task hierarchy through top-level task categories.</p>
         <br />
         <FormFieldWideRow className='centered-tabs'>
           <ViewSubHeader>Categories</ViewSubHeader>
@@ -135,28 +136,13 @@ class Tasks extends React.Component {
             options={this.state.allNames}
             labelKey='name'
             inputName='name'
-            label='Search name'
+            label='Search tasks'
             value=''
             onChange={(field, value) => this.handleOnFilter(value)}
             onSelect={this.handleOnSelect}
             alignLabelRight
           />
         </FormFieldWideRow>
-        <br />
-        <FormFieldWideRow className='centered-tabs'>
-          <Tabs defaultActiveKey='common' id='categories-tabs'>
-            <Tab eventKey='common' title='Common'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
-            </Tab>
-            <Tab eventKey='popular' title='Popular'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
-            </Tab>
-            <Tab eventKey='alphabetical' title='Alphabetical'>
-              <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
-            </Tab>
-          </Tabs>
-        </FormFieldWideRow>
-        <br />
         <br />
         <h5>Top Submitters</h5>
         <Tabs id='top-submissions-tabs'>
@@ -272,6 +258,10 @@ class Tasks extends React.Component {
               </div>
             )
           })}
+        </FormFieldWideRow>
+        <br />
+        <FormFieldWideRow className='centered-tabs'>
+          <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
         </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
