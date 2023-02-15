@@ -358,19 +358,27 @@ class SotaChart extends React.Component {
 
       return 0
     })
-    const allData = results.map(row =>
-      ({
+    const allData = results.map(row => {
+      let aid = ''
+      if (row.submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
+        const parts = row.submissionUrl.split('/')
+        console.log(parts)
+        aid = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
+        aid = 'arXiv:' + aid
+      }
+      return {
         method: row.methodName,
         platform: row.platformName,
         metric: row.metricName,
-        arXivId: row.submissionUrl.toLowerCase().startsWith('https://arxiv.org/') ? ('arXiv:' + row.submissionUrl.substring(18)) : '',
+        arXivId: aid,
         label: moment(new Date(row.evaluatedAt ? row.evaluatedAt : row.createdAt)),
         value: row.metricValue,
         isHigherBetter: row.isHigherBetter,
         standardError: row.standardError,
         qubitCount: row.qubitCount,
         circuitDepth: row.circuitDepth
-      }))
+      }
+    })
 
     let isQubits = false
     let isDepth = false
