@@ -362,7 +362,6 @@ class SotaChart extends React.Component {
       let aid = ''
       if (row.submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
         const parts = row.submissionUrl.split('/')
-        console.log(parts)
         aid = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
         aid = 'arXiv:' + aid
       }
