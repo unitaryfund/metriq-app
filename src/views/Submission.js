@@ -633,7 +633,7 @@ class Submission extends React.Component {
         </div>
         <FormFieldWideRow>
           <div className='submission-description'>
-            <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}</b>
+            <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {(this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '') + (this.state.isArxiv ? ', arXiv:' + this.state.item.contentUrl.split('/abs/')[1] : '')}</b>
           </div>
         </FormFieldWideRow>
         <FormFieldWideRow>
