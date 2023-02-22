@@ -26,21 +26,33 @@ const CategoryItemBox = (props) => {
   const history = useHistory()
   const [isSubscribed, setIsSubscribed] = useState(props.item.isSubscribed)
 
-  const handleLoginRedirect = () => {
-    history.push('/Login/Tags')
+  const handleLoginRedirect = (type) => {
+    if (type === 'tag') {
+      history.push('/Login/Tags')
+    } else if (type === 'task') {
+      history.push('/Login/Tasks')
+    } else if (type === 'method') {
+      history.push('/Login/Methods')
+    } else if (type === 'platform') {
+      history.push('/Login/Platforms')
+    }
   }
 
   const handleSubscribe = () => {
     if (props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/tag/' + encodeURIComponent(props.item.name) + '/subscribe', {})
+      axios.post(config.api.getUriPrefix() + '/' + props.type + '/' + (props.type === 'tag' ? encodeURIComponent(props.item.name) : props.item.id) + '/subscribe', {})
         .then(res => {
-          setIsSubscribed(res.data.data)
+          if (props.type === 'tag') {
+            setIsSubscribed(res.data.data)
+          } else {
+            setIsSubscribed(!!res.data.data.isSubscribed)
+          }
         })
         .catch(err => {
           window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
         })
     } else {
-      handleLoginRedirect()
+      handleLoginRedirect(props.type)
     }
   }
 
@@ -59,10 +71,9 @@ const CategoryItemBox = (props) => {
                 <div className='submission-heading-only'>{props.item.name}</div>}
             </Link>
           </div>
-          {props.type === 'tag' &&
-            <div className='col-12 col-md-2 text-center'>
-              <SubscribeButton isSubscribed={isSubscribed} typeLabel='tag' onSubscribe={handleSubscribe} />
-            </div>}
+          <div className='col-12 col-md-2 text-center'>
+            <SubscribeButton isSubscribed={isSubscribed} typeLabel={props.type} onSubscribe={handleSubscribe} />
+          </div>
           <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
           <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
           <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
