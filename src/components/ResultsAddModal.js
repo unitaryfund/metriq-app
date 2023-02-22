@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState, Suspense } from 'react'
+import React, { useState, Suspense, useEffect } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
@@ -13,6 +13,15 @@ const ResultsAddModal = (props) => {
   const [isUpdated, setIsUpdated] = useState(false)
   const [result, setResult] = useState(props.result)
   const [submission, setSubmission] = useState({})
+  const [key, setKey] = useState(Math.random())
+
+  useEffect(() => {
+    if (!result.evaluatedAt) {
+      result.evaluatedAt = props.evaluatedAt
+      setResult(result)
+      setKey(Math.random())
+    }
+  }, [props.evaluatedAt, result, setResult, setKey])
 
   if (!isUpdated && props.show) {
     setIsUpdated(true)
@@ -90,7 +99,7 @@ const ResultsAddModal = (props) => {
     }
     result.circuitDepth = result.circuitDepth ? parseInt(result.circuitDepth) : null
     if (!result.evaluatedAt) {
-      result.evaluatedDate = new Date()
+      result.evaluatedAt = (new Date()).toISOString().split('T')[0]
     } else if (!dateRegex.test(result.evaluatedAt)) {
       window.alert('Error: "Evaluated at" is not a date.')
       return
@@ -206,6 +215,7 @@ const ResultsAddModal = (props) => {
             /><br />
             <FormFieldRow
               inputName='evaluatedAt' inputType='date' label='Evaluated'
+              key={key}
               value={result.evaluatedAt}
               validRegex={dateRegex}
               onChange={handleOnChange}

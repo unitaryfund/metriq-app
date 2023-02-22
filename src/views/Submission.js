@@ -39,6 +39,7 @@ class Submission extends React.Component {
       thumbnailUrl: '',
       codeUrl: '',
       supplementUrl: '',
+      evaluatedAt: '',
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       allNames: [],
       filteredNames: [],
@@ -74,7 +75,7 @@ class Submission extends React.Component {
         metricName: '',
         metricValue: 0,
         isHigherBetter: false,
-        evaluatedDate: new Date()
+        evaluatedAt: ''
       },
       task: {
         name: '',
@@ -342,7 +343,7 @@ class Submission extends React.Component {
       metricName: '',
       metricValue: 0,
       isHigherBetter: false,
-      evaluatedDate: new Date()
+      evaluatedAt: ''
     }
     this.setState({ result: result, showAddModal: true, modalMode: mode, showEditModal: mode === 'Login' })
   }
@@ -525,6 +526,17 @@ class Submission extends React.Component {
           vanityUrl = 'https://www.arxiv-vanity.com/' + urlTail
           urlTail = urlTail.substring(4)
           bibtexUrl = 'https://arxiv.org/bibtex/' + urlTail
+
+          axios.get('https://export.arxiv.org/api/query?id_list=' + urlTail)
+            .then((response) => {
+              const html = response.data.toString()
+              const noHead = html.split('<published>')[1]
+              const noTail = noHead.split('</published>')[0]
+              this.setState({ evaluatedAt: (new Date(noTail).toISOString().split('T')[0]) })
+            })
+            .catch(err => {
+              this.setState({ requestFailedMessage: ErrorHandler(err) })
+            })
         }
 
         // Just get the view populated as quickly as possible, before we "trim."
@@ -857,6 +869,7 @@ class Submission extends React.Component {
             onHide={this.handleHideAddModal}
             submission={this.state.item}
             result={this.state.result}
+            evaluatedAt={this.state.evaluatedAt}
             metricNames={this.state.metricNames}
             onAddOrEdit={this.handleModalResultAddNew}
           />
