@@ -7,7 +7,7 @@ const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
 const FormFieldRow = (props) => {
   const [value, setValue] = useState(props.value)
   const [checked, setChecked] = useState(props.checked ? props.checked : false)
-  const [isValid, setIsValid] = useState(true)
+  const [isValid, setIsValid] = useState((props.isValidatedOnStart && props.validRegex) ? props.validRegex.test(props.value) : true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
   useEffect(() => { setValue(props.value) }, [props.value])
