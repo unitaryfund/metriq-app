@@ -13,7 +13,7 @@ import ViewHeader from '../components/ViewHeader'
 import { sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
 import { withRouter } from 'react-router-dom'
-import SortingTable from '../components/SortingTable'
+const SortingTable = React.lazy(() => import('../components/SortingTable'))
 const SubmissionBox = React.lazy(() => import('../components/SubmissionBox'))
 
 class Tasks extends React.Component {
@@ -187,92 +187,94 @@ class Tasks extends React.Component {
             </Suspense>
             <br />
             <h5>Top Submitters</h5>
-            <Tabs id='top-submissions-tabs'>
-              <Tab eventKey='Weekly' title='Weekly' className='metriq-nav-tab'>
-                <div className='card'>
-                  <SortingTable
-                    columns={[
-                      {
-                        title: 'Name',
-                        key: 'username',
-                        width: 360
-                      },
-                      {
-                        title: 'Rank',
-                        key: 'rank',
-                        width: 80
-                      },
-                      {
-                        title: 'Submission Count',
-                        key: 'submissionsCount',
-                        width: 360
-                      }
-                    ]}
-                    data={this.state.topSubmitters.weekly}
-                    key={Math.random()}
-                    onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </Tab>
-              <Tab eventKey='Monthly' title='Monthly' className='metriq-nav-tab'>
-                <div className='card'>
-                  <SortingTable
-                    columns={[
-                      {
-                        title: 'Name',
-                        key: 'username',
-                        width: 360
-                      },
-                      {
-                        title: 'Rank',
-                        key: 'rank',
-                        width: 80
-                      },
-                      {
-                        title: 'Submission Count',
-                        key: 'submissionsCount',
-                        width: 360
-                      }
-                    ]}
-                    data={this.state.topSubmitters.monthly}
-                    key={Math.random()}
-                    onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </Tab>
-              <Tab eventKey='AllTime' title='All Time' className='metriq-nav-tab'>
-                <div className='card'>
-                  <SortingTable
-                    columns={[
-                      {
-                        title: 'Name',
-                        key: 'username',
-                        width: 360
-                      },
-                      {
-                        title: 'Rank',
-                        key: 'rank',
-                        width: 80
-                      },
-                      {
-                        title: 'Submission Count',
-                        key: 'submissionsCount',
-                        width: 360
-                      }
-                    ]}
-                    data={this.state.topSubmitters.allTime}
-                    key={Math.random()}
-                    onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                    tableLayout='auto'
-                    rowClassName='link'
-                  />
-                </div>
-              </Tab>
-            </Tabs>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Tabs id='top-submissions-tabs'>
+                <Tab eventKey='Weekly' title='Weekly' className='metriq-nav-tab'>
+                  <div className='card'>
+                    <SortingTable
+                      columns={[
+                        {
+                          title: 'Name',
+                          key: 'username',
+                          width: 360
+                        },
+                        {
+                          title: 'Rank',
+                          key: 'rank',
+                          width: 80
+                        },
+                        {
+                          title: 'Submission Count',
+                          key: 'submissionsCount',
+                          width: 360
+                        }
+                      ]}
+                      data={this.state.topSubmitters.weekly}
+                      key={Math.random()}
+                      onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                      tableLayout='auto'
+                      rowClassName='link'
+                    />
+                  </div>
+                </Tab>
+                <Tab eventKey='Monthly' title='Monthly' className='metriq-nav-tab'>
+                  <div className='card'>
+                    <SortingTable
+                      columns={[
+                        {
+                          title: 'Name',
+                          key: 'username',
+                          width: 360
+                        },
+                        {
+                          title: 'Rank',
+                          key: 'rank',
+                          width: 80
+                        },
+                        {
+                          title: 'Submission Count',
+                          key: 'submissionsCount',
+                          width: 360
+                        }
+                      ]}
+                      data={this.state.topSubmitters.monthly}
+                      key={Math.random()}
+                      onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                      tableLayout='auto'
+                      rowClassName='link'
+                    />
+                  </div>
+                </Tab>
+                <Tab eventKey='AllTime' title='All Time' className='metriq-nav-tab'>
+                  <div className='card'>
+                    <SortingTable
+                      columns={[
+                        {
+                          title: 'Name',
+                          key: 'username',
+                          width: 360
+                        },
+                        {
+                          title: 'Rank',
+                          key: 'rank',
+                          width: 80
+                        },
+                        {
+                          title: 'Submission Count',
+                          key: 'submissionsCount',
+                          width: 360
+                        }
+                      ]}
+                      data={this.state.topSubmitters.allTime}
+                      key={Math.random()}
+                      onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                      tableLayout='auto'
+                      rowClassName='link'
+                    />
+                  </div>
+                </Tab>
+              </Tabs>
+            </Suspense>
             <br />
             <br />
           </span>}
