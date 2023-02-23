@@ -60,7 +60,7 @@ const CategoryItemBox = (props) => {
     <tr>
       <td>
         <div className='row submission'>
-          <div className={props.type === 'tag' ? 'col-12 col-md-7' : 'col-12 col-md-9'}>
+          <div className={'col-12 col-md-7'}>
             <Link to={pickDetailUrl(props.type, props.item)}>
               {props.type !== 'tag' && props.item.description &&
                 <div>
