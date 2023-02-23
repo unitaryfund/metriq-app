@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import config from './../config'
 import { Tabs, Tab } from 'react-bootstrap'
 import ErrorHandler from '../components/ErrorHandler'
@@ -14,7 +14,7 @@ import { sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
 import { withRouter } from 'react-router-dom'
 import SortingTable from '../components/SortingTable'
-import SubmissionBox from '../components/SubmissionBox'
+const SubmissionBox = React.lazy(() => import('../components/SubmissionBox'))
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -148,41 +148,43 @@ class Tasks extends React.Component {
           <span>
             <ViewHeader>Top Submissions</ViewHeader>
             <h5>Submissions are articles and code presenting research and tools for quantum technologies.</h5>
-            <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={this.handleOnToggle}>
-              <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
-                {this.state.trending.map((item, index) =>
-                  <SubmissionBox
-                    item={item}
-                    key={index}
-                    isLoggedIn={this.props.isLoggedIn}
-                    isEditView={false}
-                    isUnderReview={!(item.approvedAt)}
-                    isDraft={!(item.publishedAt)}
-                  />)}
-              </Tab>
-              <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
-                {this.state.popular.map((item, index) =>
-                  <SubmissionBox
-                    item={item}
-                    key={index}
-                    isLoggedIn={this.props.isLoggedIn}
-                    isEditView={false}
-                    isUnderReview={!(item.approvedAt)}
-                    isDraft={!(item.publishedAt)}
-                  />)}
-              </Tab>
-              <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
-                {this.state.latest.map((item, index) =>
-                  <SubmissionBox
-                    item={item}
-                    key={index}
-                    isLoggedIn={this.props.isLoggedIn}
-                    isEditView={false}
-                    isUnderReview={!(item.approvedAt)}
-                    isDraft={!(item.publishedAt)}
-                  />)}
-              </Tab>
-            </Tabs>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={this.handleOnToggle}>
+                <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
+                  {this.state.trending.map((item, index) =>
+                    <SubmissionBox
+                      item={item}
+                      key={index}
+                      isLoggedIn={this.props.isLoggedIn}
+                      isEditView={false}
+                      isUnderReview={!(item.approvedAt)}
+                      isDraft={!(item.publishedAt)}
+                    />)}
+                </Tab>
+                <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
+                  {this.state.popular.map((item, index) =>
+                    <SubmissionBox
+                      item={item}
+                      key={index}
+                      isLoggedIn={this.props.isLoggedIn}
+                      isEditView={false}
+                      isUnderReview={!(item.approvedAt)}
+                      isDraft={!(item.publishedAt)}
+                    />)}
+                </Tab>
+                <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
+                  {this.state.latest.map((item, index) =>
+                    <SubmissionBox
+                      item={item}
+                      key={index}
+                      isLoggedIn={this.props.isLoggedIn}
+                      isEditView={false}
+                      isUnderReview={!(item.approvedAt)}
+                      isDraft={!(item.publishedAt)}
+                    />)}
+                </Tab>
+              </Tabs>
+            </Suspense>
             <br />
             <h5>Top Submitters</h5>
             <Tabs id='top-submissions-tabs'>
