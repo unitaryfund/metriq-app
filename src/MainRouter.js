@@ -59,7 +59,7 @@ const MainRouter = (props) => {
           exact
           path='/'
         >
-          <Tasks isLoggedIn={isLoggedIn} />
+          <Tasks isLoggedIn={isLoggedIn} isHomepage />
         </Route>
         <Route
           exact
@@ -95,7 +95,7 @@ const MainRouter = (props) => {
           exact
           path='/Tasks'
         >
-          <Tasks isLoggedIn={isLoggedIn} />
+          <Tasks isLoggedIn={isLoggedIn} isHomepage={false} />
         </Route>
         <Route
           exact
