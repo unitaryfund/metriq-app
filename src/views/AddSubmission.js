@@ -477,6 +477,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               onBlur={this.handleOnFieldBlur}
               validRegex={this.state.isAlreadyInDatabase ? /^$/ : urlValidRegex}
+              isValidatedOnStart
             />
             <FormFieldAlertRow>
               <b>The external content URL points to the full content of the submission.<br />(This could be a link to arXiv, for example.)<br /><i>This cannot be changed after hitting "Submit."</i></b>
@@ -503,6 +504,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               validRegex={nonblankRegex}
               value={this.state.name}
+              isValidatedOnStart
             />
             <FormFieldAlertRow>
               <b>The submission name must be unique.</b>
@@ -522,6 +524,7 @@ class AddSubmission extends React.Component {
               onChange={this.handleOnChange}
               validRegex={blankOrurlValidRegex}
               value={this.state.thumbnailUrl}
+              isValidatedOnStart
             />
             <FormFieldAlertRow>
               <b>The image URL is loaded as a thumbnail, for the submission.<br />(For free image hosting, see <a href='https://imgbb.com/' target='_blank' rel='noreferrer'>https://imgbb.com/</a>, for example.)</b>
