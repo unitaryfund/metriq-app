@@ -7,7 +7,6 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
-import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter } from 'react-router-dom'
@@ -82,18 +81,17 @@ class Methods extends React.Component {
         <ViewHeader>Methods</ViewHeader>
         <ViewSubHeader>Methods are the algorithms used in a submission.</ViewSubHeader>
         <br />
-        <FormFieldWideRow className='search-bar'>
-          <FormFieldTypeaheadRow
-            options={this.state.allNames}
-            labelKey='name'
-            inputName='name'
-            label='Search name'
-            value=''
-            onChange={(field, value) => this.handleOnFilter(value)}
-            onSelect={this.handleOnSelect}
-            alignLabelRight
-          />
-        </FormFieldWideRow>
+        <FormFieldTypeaheadRow
+          className='search-bar'
+          options={this.state.allNames}
+          labelKey='name'
+          inputName='name'
+          label='Search name'
+          value=''
+          onChange={(field, value) => this.handleOnFilter(value)}
+          onSelect={this.handleOnSelect}
+          alignLabelRight
+        />
         <br />
         <div className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>

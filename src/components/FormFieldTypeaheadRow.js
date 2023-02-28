@@ -54,7 +54,7 @@ const FormFieldTypeaheadRow = (props) => {
   }
 
   return (
-    <div className='row'>
+    <div className={props.className ? props.className + ' row' : 'row'}>
       {props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
