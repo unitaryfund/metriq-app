@@ -26,6 +26,11 @@ textarea {
   padding-top: 10px;
 }
 
+.main-search-bar {
+  display: inline-block;
+  padding-top: 8px;
+}
+
 .metriq-navbar {
   background-color: #3cd2f9;
   font-family: 'Arial', sans-serif;

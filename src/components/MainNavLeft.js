@@ -1,6 +1,7 @@
 import React from 'react'
 import { Nav, NavDropdown } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
+import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 
 const MainNavLeft = () =>
   <Nav className='metriq-navbar'>
@@ -15,6 +16,15 @@ const MainNavLeft = () =>
       <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
       <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
     </NavDropdown>
+    <div className='main-search-bar'>
+      <FormFieldTypeaheadRow
+        labelKey='name'
+        inputName='name'
+        label='Search'
+        value=''
+        alignLabelRight
+      />
+    </div>
   </Nav>
 
 export default MainNavLeft
