@@ -1,20 +1,110 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Nav, NavDropdown } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
+import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
+import config from './../config'
 
-const MainNavLeft = () =>
-  <Nav className='metriq-navbar'>
-    <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
-    <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
-    <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Platforms' className='metriq-navbar-text'>Platforms</Nav.Link>
-    <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
-    <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text'>Submissions</Nav.Link>
-    <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About'><p className='font-weight-bold'>About</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
-      <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
-    </NavDropdown>
-  </Nav>
+const MainNavLeft = () => {
+  const [allNames, setAllNames] = useState([])
+  const [taskNames, setTaskNames] = useState([])
+  const [methodNames, setMethodNames] = useState([])
+  const [platformNames, setPlatformNames] = useState([])
+  const [submissionNames, setSubmissionNames] = useState([])
+  const history = useHistory()
+
+  useEffect(() => {
+    if (allNames.length > 0) {
+      return
+    }
+
+    axios.get(config.api.getUriPrefix() + '/task/names')
+      .then(res => {
+        const tNames = res.data.data
+        setTaskNames(tNames)
+
+        axios.get(config.api.getUriPrefix() + '/method/names')
+          .then(res => {
+            const mNames = res.data.data
+            setMethodNames(mNames)
+
+            axios.get(config.api.getUriPrefix() + '/platform/names')
+              .then(res => {
+                const pNames = res.data.data
+                setPlatformNames(pNames)
+
+                axios.get(config.api.getUriPrefix() + '/submission/names')
+                  .then(res => {
+                    const sNames = res.data.data
+                    setSubmissionNames(sNames)
+
+                    setAllNames(tNames.concat(mNames).concat(pNames).concat(sNames))
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [allNames, setAllNames,
+    taskNames, setTaskNames,
+    methodNames, setMethodNames,
+    platformNames, setPlatformNames,
+    submissionNames, setSubmissionNames])
+
+  const handleOnSelect = (value) => {
+    if (!value) {
+      return
+    }
+    if (taskNames.includes(value)) {
+      history.push('/Task/' + value.id)
+    }
+    if (methodNames.includes(value)) {
+      history.push('/Method/' + value.id)
+    }
+    if (platformNames.includes(value)) {
+      history.push('/Platform/' + value.id)
+    }
+    if (submissionNames.includes(value)) {
+      history.push('/Submission/' + value.id)
+    }
+  }
+
+  return (
+    <Nav className='metriq-navbar'>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Platforms' className='metriq-navbar-text'>Platforms</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text'>Submissions</Nav.Link>
+      <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About'><p className='font-weight-bold'>About</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
+      </NavDropdown>
+      <div className='main-search-bar'>
+        <FormFieldTypeaheadRow
+          options={allNames}
+          labelKey='name'
+          inputName='name'
+          label='Search'
+          value=''
+          onSelect={handleOnSelect}
+          alignLabelRight
+        />
+      </div>
+    </Nav>
+  )
+}
 
 export default MainNavLeft

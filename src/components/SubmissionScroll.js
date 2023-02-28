@@ -112,17 +112,16 @@ class SubmissionScroll extends React.Component {
   render () {
     return (
       <div className='container'>
-        <FormFieldWideRow className='search-bar'>
-          <FormFieldTypeaheadRow
-            options={this.state.filterOptions}
-            inputName='nameOrUrl'
-            inputId={'nameOrUrl-' + this.props.sortType}
-            label='Search title or URL'
-            value=''
-            onChange={(field, value) => this.onFilter(value)}
-            alignLabelRight
-          />
-        </FormFieldWideRow>
+        <FormFieldTypeaheadRow
+          className='search-bar'
+          options={this.state.filterOptions}
+          inputName='nameOrUrl'
+          inputId={'nameOrUrl-' + this.props.sortType}
+          label='Search title or URL'
+          value=''
+          onChange={(field, value) => this.onFilter(value)}
+          alignLabelRight
+        />
         <FormFieldWideRow>
           {this.state.items.length && (
             <Suspense fallback={<div>Loading...</div>}>
