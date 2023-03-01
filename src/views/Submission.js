@@ -40,6 +40,7 @@ class Submission extends React.Component {
       codeUrl: '',
       supplementUrl: '',
       evaluatedAt: '',
+      authors: [],
       item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       allNames: [],
       filteredNames: [],
@@ -532,7 +533,13 @@ class Submission extends React.Component {
               const html = response.data.toString()
               const noHead = html.split('<published>')[1]
               const noTail = noHead.split('</published>')[0]
-              this.setState({ evaluatedAt: (new Date(noTail).toISOString().split('T')[0]) })
+              const authorsSection = noHead.split('<author>')
+              const authors = []
+              for (let i = 1; i < authorsSection.length; ++i) {
+                const name = (((authorsSection[i].split('<name>'))[1]).split('</name>'))[0]
+                authors.push(name)
+              }
+              this.setState({ evaluatedAt: (new Date(noTail).toISOString().split('T')[0]), authors: authors })
             })
             .catch(err => {
               this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -645,7 +652,7 @@ class Submission extends React.Component {
         </div>
         <FormFieldWideRow>
           <div className='submission-description'>
-            <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {(this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '') + (this.state.isArxiv ? ', arXiv:' + this.state.item.contentUrl.split('/abs/')[1] : '')}</b>
+            <b>Submitted by <Link to={'/User/' + this.state.item.userId + '/Submissions'}>{this.state.item.user.username}</Link> on {(this.state.item.createdAt ? new Date(this.state.item.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '') + (this.state.isArxiv ? ', arXiv:' + this.state.item.contentUrl.split('/abs/')[1] + ', authored by ' + this.state.authors.join(', ') : '')}</b>
           </div>
         </FormFieldWideRow>
         <FormFieldWideRow>
