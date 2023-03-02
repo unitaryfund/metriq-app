@@ -81,16 +81,16 @@ const MainNavLeft = () => {
 
   return (
     <Nav className='metriq-navbar'>
-      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tasks' className='metriq-navbar-text'>Tasks</Nav.Link>
-      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Methods' className='metriq-navbar-text'>Methods</Nav.Link>
-      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Platforms' className='metriq-navbar-text'>Platforms</Nav.Link>
-      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text'>Tags</Nav.Link>
-      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text'>Submissions</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tasks' className='metriq-navbar-text' eventKey='1'>Tasks</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Methods' className='metriq-navbar-text' eventKey='2'>Methods</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Platforms' className='metriq-navbar-text' eventKey='3'>Platforms</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text' eventKey='4'>Tags</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text' eventKey='5'>Submissions</Nav.Link>
       <NavDropdown title='About' active='true' className='metriq-navbar-text' alignRight>
-        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About'><p className='font-weight-bold'>About</p></NavDropdown.Item>
-        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
-        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
-        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About' eventKey='6'><p className='font-weight-bold'>About</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners' eventKey='7'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ' eventKey='8'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines' eventKey='9'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
       </NavDropdown>
       <div className='main-search-bar'>
         <FormFieldTypeaheadRow

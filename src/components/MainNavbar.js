@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 const MainNavbar = (props) =>
   <div>
-    <Navbar className='metriq-navbar' expand='lg'>
+    <Navbar collapseOnSelect className='metriq-navbar' expand='lg'>
       <Navbar.Brand as={Link} to='/' className='metriq-navbar'>
         <img src={logo} alt='Metriq logo' className='logo-image' />
       </Navbar.Brand>
