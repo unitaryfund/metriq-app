@@ -101,6 +101,7 @@ const MainNavLeft = () => {
           value=''
           onSelect={handleOnSelect}
           alignLabelRight
+          isWide
         />
       </div>
     </Nav>

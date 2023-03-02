@@ -29,7 +29,7 @@ textarea {
 .main-search-bar {
   display: inline-block;
   padding-top: 8px;
-  width: 512px;
+  width: 192px;
 }
 
 @media only screen and (max-width: 448px) {
