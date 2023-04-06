@@ -17,7 +17,7 @@ const passwordMismatchError = 'Confirm does not match.'
 const usernameValidRegex = /^(?!\s*$).+/
 const emailValidRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const passwordValidRegex = /.{12,}/
-const twitterHandleValidRegex = /^@?[A-Za-z0-9_]{1,15}$/
+const twitterHandleValidRegex = /^$|^@?[A-Za-z0-9_]{1,15}$/
 
 class Register extends React.Component {
   constructor (props) {
@@ -77,7 +77,7 @@ class Register extends React.Component {
     if (!passwordValidRegex.test(this.state.passwordConfirm)) {
       return false
     }
-    if (!twitterHandleValidRegex.test(this.state.twitterHandle)) {
+    if (this.state.twitterHandle && !twitterHandleValidRegex.test(this.state.twitterHandle)) {
       return false
     }
     if (!this.isPasswordMatch()) {
