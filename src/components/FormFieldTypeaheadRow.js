@@ -55,13 +55,13 @@ const FormFieldTypeaheadRow = (props) => {
 
   return (
     <div className={props.className ? props.className + ' row' : 'row'}>
-      {props.tooltip &&
+      {props.label && props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
             <span htmlFor={coalescedId} className={'col' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
-      {!props.tooltip &&
+      {props.label && !props.tooltip &&
         <label htmlFor={coalescedId} className={'col' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
@@ -71,8 +71,9 @@ const FormFieldTypeaheadRow = (props) => {
           name: coalescedId
         }}
         labelKey={props.labelKey ? props.labelKey : undefined}
-        className={'col' + (props.isWide ? ' col-md-8' : ' col-md-6')}
+        className={'col' + (props.isWide ? (props.label ? ' col-md-8' : ' col-md-12') : ' col-md-6')}
         options={props.options}
+        placeholder={props.placeholder}
         defaultSelected={[props.value ? props.value : '']}
         onChange={selected => {
           handleOnFieldChange(selected[0])
