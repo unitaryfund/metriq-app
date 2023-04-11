@@ -97,7 +97,7 @@ const MainNavLeft = () => {
           options={allNames}
           labelKey='name'
           inputName='name'
-          label='Search'
+          placeholder='Search...'
           value=''
           onSelect={handleOnSelect}
           alignLabelRight
