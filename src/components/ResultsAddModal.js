@@ -3,7 +3,7 @@ import React, { useState, Suspense, useEffect } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
-import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, sampleSizeRegex, qubitCountRegex, circuitDepthRegex } from './ValidationRegex'
+import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, numeralRegex } from './ValidationRegex'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('./FormFieldTypeaheadRow'))
@@ -56,7 +56,7 @@ const ResultsAddModal = (props) => {
     if (!standardErrorRegex.test(result.standardError)) {
       return false
     }
-    if (!sampleSizeRegex.test(result.sampleSize)) {
+    if (!numeralRegex.test(result.sampleSize)) {
       return false
     }
 
@@ -81,23 +81,28 @@ const ResultsAddModal = (props) => {
     if (result.standardError) {
       result.standardError = parseFloat(result.standardError)
     }
-    if (result.sampleSize && !sampleSizeRegex.test(result.sampleSize)) {
+    if (result.sampleSize && !numeralRegex.test(result.sampleSize)) {
       window.alert('Error: Sample size is not a valid number.')
       return
     }
     if (result.sampleSize) {
       result.sampleSize = parseInt(result.sampleSize)
     }
-    if (result.qubitCount && !qubitCountRegex.test(result.qubitCount)) {
+    if (result.qubitCount && !numeralRegex.test(result.qubitCount)) {
       window.alert('Error: Qubit count is not a valid number.')
       return
     }
     result.qubitCount = result.qubitCount ? parseInt(result.qubitCount) : null
-    if (result.circuitDepth && !circuitDepthRegex.test(result.circuitDepth)) {
+    if (result.circuitDepth && !numeralRegex.test(result.circuitDepth)) {
       window.alert('Error: Circuit depth is not a valid number.')
       return
     }
     result.circuitDepth = result.circuitDepth ? parseInt(result.circuitDepth) : null
+    if (result.shots && !numeralRegex.test(result.shots)) {
+      window.alert('Error: Shots is not a valid number.')
+      return
+    }
+    result.shots = result.shots ? parseInt(result.shots) : null
     if (!result.evaluatedAt) {
       result.evaluatedAt = (new Date()).toISOString().split('T')[0]
     } else if (!dateRegex.test(result.evaluatedAt)) {
@@ -237,23 +242,30 @@ const ResultsAddModal = (props) => {
             <FormFieldRow
               inputName='sampleSize' inputType='number' label='Sample size (optional)'
               value={result.sampleSize}
-              validRegex={sampleSizeRegex}
+              validRegex={numeralRegex}
               onChange={handleOnChange}
               tooltip='Report the sample size used to calculate the metric value.'
             /><br />
             <FormFieldRow
               inputName='qubitCount' inputType='number' label='Qubit count (optional)'
               value={result.qubitCount}
-              validRegex={qubitCountRegex}
+              validRegex={numeralRegex}
               onChange={handleOnChange}
               tooltip='Task plots can be subset by qubit count of the benchmark.'
             /><br />
             <FormFieldRow
               inputName='circuitDepth' inputType='number' label='Circuit depth (optional)'
               value={result.circuitDepth}
-              validRegex={circuitDepthRegex}
+              validRegex={numeralRegex}
               onChange={handleOnChange}
               tooltip='Task plots can be subset by circuit depth of the benchmark.'
+            /><br />
+            <FormFieldRow
+              inputName='shots' inputType='number' label='Shots (optional)'
+              value={result.shots}
+              validRegex={numeralRegex}
+              onChange={handleOnChange}
+              tooltip='Report the measurement shots used (per trial or overall) to calculate the metric value.'
             /><br />
             <FormFieldRow
               inputName='notes' inputType='textarea' label='Notes'

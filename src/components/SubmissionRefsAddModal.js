@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState, useCallback } from 'react'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,6 +25,19 @@ const SubmissionRefsAddModal = (props) => {
     submissions: props.submissionId
   })
 
+  const key = props.modalMode === 'Task'
+    ? 'task'
+    : props.modalMode === 'Method'
+      ? 'method'
+      : props.modalMode === 'Platform' ? 'platform' : 'login'
+
+  const handleValidation = useCallback((i) => {
+    if (!i) {
+      i = item
+    }
+    setIsValid((!!i.id && !showAccordion) || (showAccordion && !!i.name && (i.parent || (key !== 'task'))))
+  }, [item, showAccordion, key])
+
   useEffect(() => {
     const nItem = { ...item }
     const submissions = props.submissionId.toString()
@@ -33,24 +46,12 @@ const SubmissionRefsAddModal = (props) => {
     if (props.refName) {
       isChanged |= nItem.name !== props.refName
       nItem.name = props.refName
+      handleValidation(nItem)
     }
     if (isChanged) {
       setItem(nItem)
     }
-  }, [props.submissionId, props.refName, item])
-
-  const key = props.modalMode === 'Task'
-    ? 'task'
-    : props.modalMode === 'Method'
-      ? 'method'
-      : props.modalMode === 'Platform' ? 'platform' : 'login'
-
-  const handleValidation = (i) => {
-    if (!i) {
-      i = item
-    }
-    setIsValid((!!i.id && !showAccordion) || (showAccordion && !!i.name && (i.parent || (key !== 'task'))))
-  }
+  }, [props.submissionId, props.refName, item, handleValidation])
 
   const handleAccordionToggle = () => {
     setIsValid((!!item.id && showAccordion) || (!showAccordion && !!item.name && (item.parent || (key !== 'task'))))

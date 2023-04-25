@@ -50,17 +50,22 @@ const ResultsTable = (props) => {
                   {
                     title: 'Value',
                     key: 'metricValue',
-                    width: 160
+                    width: 120
                   },
                   {
                     title: 'Qubits',
                     key: 'qubitCount',
-                    width: 160
+                    width: 120
                   },
                   {
                     title: 'Depth',
                     key: 'circuitDepth',
-                    width: 160
+                    width: 120
+                  },
+                  {
+                    title: 'Shots',
+                    key: 'shots',
+                    width: 120
                   },
                   {
                     title: 'Notes',
@@ -84,6 +89,7 @@ const ResultsTable = (props) => {
                     metricValue: row.metricValue,
                     qubitCount: row.qubitCount,
                     circuitDepth: row.circuitDepth,
+                    shots: row.shots,
                     notes: <div className='text-center'>{row.notes && <TooltipTrigger message={<span className='display-linebreak'>{row.notes}</span>}><div className='text-center'><FontAwesomeIcon icon='sticky-note' /></div></TooltipTrigger>}</div>,
                     edit: <div className='text-center'><FontAwesomeIcon icon='edit' onClick={() => props.onClickEdit(row.id)} /></div>
                   })
