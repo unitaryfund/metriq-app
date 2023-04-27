@@ -316,6 +316,74 @@ class Task extends React.Component {
             <hr />
             <Commento id={'task-' + toString(this.state.item.id)} />
           </FormFieldWideRow>
+          <h2>Algorithmic Qubits Performance</h2>
+          <div className='row'>
+            <div className='col-md-12'>
+              <SortingTable
+                className='detail-table'
+                columns={[{
+                  title: 'Platform',
+                  dataIndex: 'platform',
+                  key: 'platform',
+                  width: 700
+                },
+                {
+                  title: 'AQ',
+                  dataIndex: 'aq',
+                  key: 'aq',
+                  width: 200
+                },
+                {
+                  title: 'Date',
+                  dataIndex: 'date',
+                  key: 'date',
+                  width: 200
+                }]}
+                data={[
+                  {
+                    key: 20,
+                    platform: 'ibmq-lagos',
+                    aq: '16',
+                    date: '2022-12-15'
+                  },
+                  {
+                    key: 2,
+                    platform: 'ibmq-bogota',
+                    aq: '20',
+                    date: '2023-01-01'
+                  },
+                  {
+                    key: 40,
+                    platform: 'ibmq-santiago',
+                    aq: '20',
+                    date: '2022-01-02'
+                  },
+                  {
+                    key: 56,
+                    platform: 'ibmq-prague',
+                    aq: '15',
+                    date: '2023-01-14'
+                  },
+                  {
+                    key: 11,
+                    platform: 'ibmq-montreal',
+                    aq: '14',
+                    date: '2023-02-20'
+                  },
+                  {
+                    key: 18,
+                    platform: 'ibmq-brooklyn',
+                    aq: '16',
+                    date: '2023-03-16'
+                  }
+                ]}
+                onRowClick={(record) => this.props.history.push('/Platform/' + record.key)}
+                tableLayout='auto'
+                rowClassName='link'
+              />
+            </div>
+          </div>
+          <br />
         </div>
         <Modal
           show={this.state.showEditModal}

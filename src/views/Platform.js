@@ -594,6 +594,75 @@ class Platform extends React.Component {
                 <div className='card-body'>There are no associated properties, yet.</div>
               </div>}
           </FormFieldWideRow>
+          <br />
+          <h2>Algorithmic Qubits Performance</h2>
+          <div className='row'>
+            <div className='col-md-12'>
+              <SortingTable
+                className='detail-table'
+                columns={[{
+                  title: 'Task',
+                  dataIndex: 'task',
+                  key: 'task',
+                  width: 700
+                },
+                {
+                  title: 'AQ',
+                  dataIndex: 'aq',
+                  key: 'aq',
+                  width: 200
+                },
+                {
+                  title: 'Date',
+                  dataIndex: 'date',
+                  key: 'date',
+                  width: 200
+                }]}
+                data={[
+                  {
+                    key: 142,
+                    task: 'Quantum Fourier transform',
+                    aq: '16',
+                    date: '2022-12-15'
+                  },
+                  {
+                    key: 150,
+                    task: 'Bernstein-Vazirani',
+                    aq: '20',
+                    date: '2023-01-01'
+                  },
+                  {
+                    key: 172,
+                    task: 'Deustch-Josza',
+                    aq: '20',
+                    date: '2022-01-02'
+                  },
+                  {
+                    key: 97,
+                    task: 'Grover\'s search algorithm',
+                    aq: '15',
+                    date: '2023-01-14'
+                  },
+                  {
+                    key: 175,
+                    task: 'Shor\'s order-finding',
+                    aq: '14',
+                    date: '2023-02-20'
+                  },
+                  {
+                    key: 151,
+                    task: 'Variational quantum eigensolver',
+                    aq: '16',
+                    date: '2023-03-16'
+                  }
+                ]}
+                onRowClick={(record) => this.props.history.push('/Task/' + record.key)}
+                tableLayout='auto'
+                rowClassName='link'
+              />
+            </div>
+          </div>
+          <br />
         </div>
         <Modal
           show={this.state.showEditModal}
