@@ -162,14 +162,14 @@ class Task extends React.Component {
 
   componentDidMount () {
     const { id } = this.props.params
-    this.setState({ submissionId: id })
+    this.setState({ taskId: id })
     this.fetchData(id)
   }
 
   componentDidUpdate (prevProps) {
     const { id } = this.props.params
-    if (this.state.submissionId !== id) {
-      this.setState({ submissionId: id })
+    if (this.state.taskId !== id) {
+      this.setState({ taskId: id })
       this.fetchData(id)
     }
   }

@@ -4,7 +4,7 @@ import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
 import Commento from '../components/Commento'
 import { Button, Modal } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,10 +20,15 @@ const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelec
 
 library.add(faEdit)
 
+function withParams (Component) {
+  return props => <Component {...props} params={useParams()} />
+}
+
 class Method extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      methodId: this.props.params.id,
       requestFailedMessage: '',
       showEditModal: false,
       method: { description: '', parentMethod: 0 },
@@ -31,6 +36,7 @@ class Method extends React.Component {
       allMethodNames: []
     }
 
+    this.fetchData = this.fetchData.bind(this)
     this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
@@ -121,10 +127,10 @@ class Method extends React.Component {
     })
   }
 
-  componentDidMount () {
+  fetchData (id) {
     window.scrollTo(0, 0)
 
-    const methodRoute = config.api.getUriPrefix() + '/method/' + this.props.match.params.id
+    const methodRoute = config.api.getUriPrefix() + '/method/' + id
     axios.get(methodRoute)
       .then(res => {
         const method = res.data.data
@@ -146,6 +152,20 @@ class Method extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+  }
+
+  componentDidMount () {
+    const { id } = this.props.params
+    this.setState({ methodId: id })
+    this.fetchData(id)
+  }
+
+  componentDidUpdate (prevProps) {
+    const { id } = this.props.params
+    if (this.state.methodId !== id) {
+      this.setState({ methodId: id })
+      this.fetchData(id)
+    }
   }
 
   render () {
@@ -266,4 +286,4 @@ class Method extends React.Component {
   }
 }
 
-export default Method
+export default withParams(Method)
