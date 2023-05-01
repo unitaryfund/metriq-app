@@ -1,11 +1,11 @@
 import axios from 'axios'
 import React, { Suspense } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import config from './../config'
 import ErrorHandler from './../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import TooltipTrigger from '../components/TooltipTrigger'
 import { Button, Modal } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash, faCode, faDownload } from '@fortawesome/free-solid-svg-icons'
@@ -27,10 +27,15 @@ const ResultsAddModal = React.lazy(() => import('../components/ResultsAddModal')
 
 library.add(faEdit, faLink, faHeart, faMobileAlt, faStickyNote, faSuperscript, faBell, faBellSlash, faCode, faDownload)
 
+function withParams (Component) {
+  return props => <Component {...props} params={useParams()} />
+}
+
 class Submission extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      submissionId: this.props.params.id,
       isValidated: false,
       requestFailedMessage: '',
       isArxiv: false,
@@ -104,6 +109,7 @@ class Submission extends React.Component {
       tag: ''
     }
 
+    this.fetchData = this.fetchData.bind(this)
     this.handleEditSubmissionDetails = this.handleEditSubmissionDetails.bind(this)
     this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleModerationReport = this.handleModerationReport.bind(this)
@@ -506,10 +512,10 @@ class Submission extends React.Component {
     event.preventDefault()
   }
 
-  componentDidMount () {
+  fetchData (id) {
     window.scrollTo(0, 0)
 
-    const submissionRoute = config.api.getUriPrefix() + '/submission/' + this.props.match.params.id
+    const submissionRoute = config.api.getUriPrefix() + '/submission/' + id
     axios.get(submissionRoute)
       .then(subRes => {
         const submission = subRes.data.data
@@ -637,6 +643,20 @@ class Submission extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+  }
+
+  componentDidMount () {
+    const { id } = this.props.params
+    this.setState({ submissionId: id })
+    this.fetchData(id)
+  }
+
+  componentDidUpdate (prevProps) {
+    const { id } = this.props.params
+    if (this.state.submissionId !== id) {
+      this.setState({ submissionId: id })
+      this.fetchData(id)
+    }
   }
 
   render () {
@@ -984,4 +1004,4 @@ class Submission extends React.Component {
   }
 }
 
-export default Submission
+export default withParams(Submission)
