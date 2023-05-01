@@ -6,7 +6,7 @@ import FormFieldRow from '../components/FormFieldRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
 import { Button, Modal } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,10 +22,15 @@ const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
 
+function withParams (Component) {
+  return props => <Component {...props} params={useParams()} />
+}
+
 class Task extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      taskId: this.props.params.id,
       requestFailedMessage: '',
       showEditModal: false,
       task: { description: '', parentTask: 0 },
@@ -37,6 +42,7 @@ class Task extends React.Component {
       isLog: false
     }
 
+    this.fetchData = this.fetchData.bind(this)
     this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
@@ -128,10 +134,10 @@ class Task extends React.Component {
     })
   }
 
-  componentDidMount () {
+  fetchData (id) {
     window.scrollTo(0, 0)
 
-    const taskRoute = config.api.getUriPrefix() + '/task/' + this.props.match.params.id
+    const taskRoute = config.api.getUriPrefix() + '/task/' + id
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
@@ -152,6 +158,20 @@ class Task extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+  }
+
+  componentDidMount () {
+    const { id } = this.props.params
+    this.setState({ submissionId: id })
+    this.fetchData(id)
+  }
+
+  componentDidUpdate (prevProps) {
+    const { id } = this.props.params
+    if (this.state.submissionId !== id) {
+      this.setState({ submissionId: id })
+      this.fetchData(id)
+    }
   }
 
   handleOnLoadData (task) {
@@ -360,4 +380,4 @@ class Task extends React.Component {
   }
 }
 
-export default Task
+export default withParams(Task)
