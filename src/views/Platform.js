@@ -4,7 +4,7 @@ import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
 import EditButton from '../components/EditButton'
 import { Accordion, Button, Card, Modal } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,10 +24,15 @@ const defaultRegex = /.+/
 
 library.add(faEdit)
 
+function withParams (Component) {
+  return props => <Component {...props} params={useParams()} />
+}
+
 class Platform extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      platformId: this.props.params.id,
       requestFailedMessage: '',
       showAddModal: false,
       showRemoveModal: false,
@@ -66,6 +71,7 @@ class Platform extends React.Component {
       }
     }
 
+    this.fetchData = this.fetchData.bind(this)
     this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
@@ -356,10 +362,10 @@ class Platform extends React.Component {
     this.setState({ parentProperties })
   }
 
-  componentDidMount () {
+  fetchData (id) {
     window.scrollTo(0, 0)
 
-    const platformRoute = config.api.getUriPrefix() + '/platform/' + this.props.match.params.id
+    const platformRoute = config.api.getUriPrefix() + '/platform/' + id
     axios.get(platformRoute)
       .then(res => {
         const platform = res.data.data
@@ -403,6 +409,20 @@ class Platform extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+  }
+
+  componentDidMount () {
+    const { id } = this.props.params
+    this.setState({ platformId: id })
+    this.fetchData(id)
+  }
+
+  componentDidUpdate (prevProps) {
+    const { id } = this.props.params
+    if (this.state.platformId !== id) {
+      this.setState({ platformId: id })
+      this.fetchData(id)
+    }
   }
 
   render () {
@@ -787,4 +807,4 @@ class Platform extends React.Component {
   }
 }
 
-export default Platform
+export default withParams(Platform)
