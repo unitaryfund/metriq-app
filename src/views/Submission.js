@@ -902,7 +902,7 @@ class Submission extends React.Component {
           />
         </Suspense>
         <Modal
-          show={this.state.showAddModal && (this.state.modalMode === 'Tag')}
+          show={this.state.showAddModal && ((this.state.modalMode === 'Tag') || (this.state.modalMode === 'Login'))}
           onHide={this.handleHideAddModal}
           size='lg'
           aria-labelledby='contained-modal-title-vcenter'
@@ -912,15 +912,20 @@ class Submission extends React.Component {
             <Modal.Title>Add Tag</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Suspense fallback={<div>Loading...</div>}>
-              <FormFieldTypeaheadRow
-                inputName='tag' label='Tag'
-                onChange={(field, value) => this.handleOnChange('', field, value)}
-                validRegex={nonblankRegex}
-                options={this.state.tagNames.map(item => item.name)}
-                tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
-              />
-            </Suspense>
+            {(this.state.modalMode === 'Login') &&
+              <span>
+                Please <Link to={'/Login/' + encodeURIComponent('Submission/' + this.props.submissionId)}>login</Link> before editing.
+              </span>}
+            {(this.state.modalMode !== 'Login') &&
+              <Suspense fallback={<div>Loading...</div>}>
+                <FormFieldTypeaheadRow
+                  inputName='tag' label='Tag'
+                  onChange={(field, value) => this.handleOnChange('', field, value)}
+                  validRegex={nonblankRegex}
+                  options={this.state.tagNames.map(item => item.name)}
+                  tooltip='A "tag" can be any string that loosely categorizes a submission by relevant topic.'
+                />
+              </Suspense>}
             <br />
             <div className='text-center'><br /><b>(Mouse-over or tap labels for explanation.)</b></div>
           </Modal.Body>
