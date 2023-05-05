@@ -124,6 +124,9 @@ const SubmissionRefsAddModal = (props) => {
     item.description = ''
     item.parent = 0
     setItem(item)
+    if (props.isNewOnly) {
+      setShowAccordion(true)
+    }
   }
 
   const handleOnChange = (field, value) => {
