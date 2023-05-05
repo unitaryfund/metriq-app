@@ -108,7 +108,6 @@ class SotaChart extends React.Component {
     const isLowerBetter = state.isLowerBetterDict[state.chartKey]
     const d = [...state.chartData[state.chartKey]]
     const sotaData = d.length ? [d[0]] : []
-    console.log()
     const dataDate = d.length ? d[0].label : ''
     let isSameDate = true
     let canLog = true
@@ -130,7 +129,6 @@ class SotaChart extends React.Component {
       if ((new Date(dataDate)).getTime() !== (new Date(d[i].label)).getTime()) {
         isSameDate = false
       }
-      console.log(d[i].value)
       if (d[i].value < lowest) {
         lowest = d[i].value
       }
