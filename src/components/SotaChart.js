@@ -259,7 +259,7 @@ class SotaChart extends React.Component {
         data.datasets.push({
           labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
           data: subsets[key].map(obj => (state.isLog && canLog) ? state.log(obj.value) : obj.value),
-          backgroundColor: rgb,
+          backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
           borderColor: rgb,
           pointRadius: 4,
           pointHitRadius: 4
@@ -308,7 +308,10 @@ class SotaChart extends React.Component {
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
             suggestedMin: lowest,
-            suggestedMax: highest
+            suggestedMax: highest,
+            ticks: {
+              fontStyle: 'bold'
+            }
           }
         },
         plugins: {
@@ -320,7 +323,15 @@ class SotaChart extends React.Component {
                 return label
               }
             }
+          },
+          datalabels: {
+            color: '#000000',
+            font: {
+              weight: 'bold',
+              size: 16
+            }
           }
+
         }
       }
     } else {
