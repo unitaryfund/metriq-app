@@ -10,6 +10,7 @@ const MainNavLeft = () => {
   const [taskNames, setTaskNames] = useState([])
   const [methodNames, setMethodNames] = useState([])
   const [platformNames, setPlatformNames] = useState([])
+  const [tagNames, setTagNames] = useState([])
   const [submissionNames, setSubmissionNames] = useState([])
   const history = useHistory()
 
@@ -33,15 +34,21 @@ const MainNavLeft = () => {
                 const pNames = res.data.data
                 setPlatformNames(pNames)
 
-                axios.get(config.api.getUriPrefix() + '/submission/names')
+                axios.get(config.api.getUriPrefix() + '/tag/names')
                   .then(res => {
-                    const sNames = res.data.data
-                    setSubmissionNames(sNames)
+                    const tgNames = res.data.data
+                    setTagNames(tgNames)
 
-                    setAllNames(tNames.concat(mNames).concat(pNames).concat(sNames))
-                  })
-                  .catch(err => {
-                    console.log(err)
+                    axios.get(config.api.getUriPrefix() + '/submission/names')
+                      .then(res => {
+                        const sNames = res.data.data
+                        setSubmissionNames(sNames)
+
+                        setAllNames(tNames.concat(mNames).concat(pNames).concat(tgNames).concat(sNames))
+                      })
+                      .catch(err => {
+                        console.log(err)
+                      })
                   })
               })
               .catch(err => {
@@ -73,6 +80,9 @@ const MainNavLeft = () => {
     }
     if (platformNames.includes(value)) {
       history.push('/Platform/' + value.id)
+    }
+    if (tagNames.includes(value)) {
+      history.push('/Tag/' + encodeURIComponent(value.name))
     }
     if (submissionNames.includes(value)) {
       history.push('/Submission/' + value.id)
