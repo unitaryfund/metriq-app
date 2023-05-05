@@ -5,7 +5,7 @@
 import React from 'react'
 import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { LineWithErrorBarsChart } from 'chartjs-chart-error-bars'
+import { BarWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
 import 'chartjs-adapter-moment'
 import FormFieldSelectRow from './FormFieldSelectRow'
@@ -108,8 +108,12 @@ class SotaChart extends React.Component {
     const isLowerBetter = state.isLowerBetterDict[state.chartKey]
     const d = [...state.chartData[state.chartKey]]
     const sotaData = d.length ? [d[0]] : []
+    const dataDate = d.length ? d[0].label : ''
+    let isSameDate = true
     let canLog = true
     let isErrorBars = false
+    let highest = d.length ? d[0].value : 1
+    let lowest = d.length ? d[0].value : 1
     for (let i = 1; i < d.length; ++i) {
       if (isLowerBetter && (d[i].value < sotaData[sotaData.length - 1].value)) {
         sotaData.push(d[i])
@@ -122,46 +126,70 @@ class SotaChart extends React.Component {
       if (d[i].standardError) {
         isErrorBars = true
       }
-    }
-    const data = {
-      datasets: [
-        {
-          type: 'line',
-          label: 'State-of-the-art',
-          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-          backgroundColor: 'rgb(60, 210, 249)',
-          borderColor: 'rgb(60, 210, 249)',
-          data: sotaData.map((obj, index) => {
-            return {
-              label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
-              isShowLabel: index === (sotaData.length - 1),
-              x: obj.label,
-              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
-            }
-          }),
-          pointRadius: 0,
-          pointHoverRadius: 0
-        },
-        {
-          type: 'scatter',
-          label: 'Historical state-of-the-art labels',
-          labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-          backgroundColor: 'rgb(60, 210, 249)',
-          borderColor: 'rgb(60, 210, 249)',
-          data: sotaData.map((obj, index) => {
-            return {
-              label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
-              isShowLabel: index !== (sotaData.length - 1),
-              x: obj.label,
-              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
-            }
-          }),
-          pointRadius: 0,
-          pointHoverRadius: 0
-        }]
+      if ((new Date(dataDate)).getTime() !== (new Date(d[i].label)).getTime()) {
+        isSameDate = false
+      }
+      if (d[i].value < lowest) {
+        lowest = d[i].value
+      }
+      if (d[i].value > highest) {
+        highest = d[i].value
+      }
     }
 
-    if (isErrorBars) {
+    if (state.isLog && canLog) {
+      lowest = state.log(lowest)
+      highest = state.log(highest)
+    }
+
+    let data = {}
+    if (isSameDate) {
+      data = {
+        datasets: [],
+        labels: d.map((obj, index) => ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')))
+      }
+    }
+    if (!isSameDate) {
+      data = {
+        datasets: [
+          {
+            type: 'line',
+            label: 'State-of-the-art',
+            labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+            backgroundColor: 'rgb(60, 210, 249)',
+            borderColor: 'rgb(60, 210, 249)',
+            data: sotaData.map((obj, index) => {
+              return {
+                label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
+                isShowLabel: index === (sotaData.length - 1),
+                x: obj.label,
+                y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
+              }
+            }),
+            pointRadius: 0,
+            pointHoverRadius: 0
+          },
+          {
+            type: 'scatter',
+            label: 'Historical state-of-the-art labels',
+            labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+            backgroundColor: 'rgb(60, 210, 249)',
+            borderColor: 'rgb(60, 210, 249)',
+            data: sotaData.map((obj, index) => {
+              return {
+                label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
+                isShowLabel: index !== (sotaData.length - 1),
+                x: obj.label,
+                y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
+              }
+            }),
+            pointRadius: 0,
+            pointHoverRadius: 0
+          }]
+      }
+    }
+
+    if (!isSameDate && isErrorBars) {
       data.datasets.push({
         type: 'scatterWithErrorBars',
         label: 'Error bars',
@@ -225,102 +253,160 @@ class SotaChart extends React.Component {
         default:
           break
       }
-      data.datasets.push({
-        type: 'scatter',
-        label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
-        labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
-        backgroundColor: rgb,
-        borderColor: rgb,
-        data: subsets[key].map(obj => {
-          return {
-            label: obj.arXivId + '\n',
-            isShowLabel: false,
-            x: obj.label,
-            y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
-            yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-            yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
-          }
-        }),
-        pointRadius: 4,
-        pointHitRadius: 4
-      })
+      if (isSameDate) {
+        data.datasets.push({
+          labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+          data: subsets[key].map(obj => (state.isLog && canLog) ? state.log(obj.value) : obj.value),
+          backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
+          borderColor: rgb,
+          pointRadius: 4,
+          pointHitRadius: 4
+        })
+      } else {
+        data.datasets.push({
+          type: 'scatter',
+          label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
+          labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+          backgroundColor: rgb,
+          borderColor: rgb,
+          data: subsets[key].map(obj => {
+            return {
+              label: obj.arXivId + '\n',
+              isShowLabel: false,
+              x: obj.label,
+              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+              yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+              yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+            }
+          }),
+          pointRadius: 4,
+          pointHitRadius: 4
+        })
+      }
       ++color
       color = color % 6
     }
 
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: this.state.windowWidth >= 820 ? 40 : 8,
-          right: this.state.windowWidth >= 820 ? 100 : 16
-        }
-      },
-      scales: {
-        x: {
-          type: 'time',
-          title: {
-            display: true,
-            text: this.props.xLabel ? this.props.xLabel : 'Time'
-          },
-          ticks: {
-            autoSkip: true,
-            maxTicksLimit: 10
-          },
-          time: {
-            displayFormats: {
-              millisecond: 'YYYY-MM-DD',
-              second: 'YYYY-MM-DD',
-              minute: 'YYYY-MM-DD',
-              hour: 'YYYY-MM-DD',
-              day: 'YYYY-MM-DD',
-              week: 'YYYY-MM-DD',
-              month: 'YYYY-MM',
-              quarter: 'YYYY-MM',
-              year: 'YYYY'
-            }
+    let options = {}
+    if (isSameDate) {
+      options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: this.state.windowWidth >= 820 ? 40 : 8,
+            right: this.state.windowWidth >= 820 ? 100 : 16
           }
         },
-        y: {
-          title: {
-            display: true,
-            text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
-          },
-          type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
-        }
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            title: function (ctx) {
-              return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
-            label: function (ctx) {
-              let label = ctx.dataset.labels[ctx.dataIndex]
-              label += ' (' + ctx.parsed.y + ')'
-              return label
+            type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
+            suggestedMin: lowest,
+            suggestedMax: highest,
+            ticks: {
+              fontStyle: 'bold'
             }
-          },
-          filter: function (tooltipItem) {
-            const type = tooltipItem.dataset.type
-            return (type === 'scatter')
           }
         },
-        datalabels: this.state.windowWidth < 820
-          ? { display: false }
-          : {
-              font: { weight: '600', color: '#000000' },
-              align: 'center',
-              formatter: function (value, context) {
-                return value.isShowLabel ? value.label : ''
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (ctx) {
+                let label = ctx.dataset.labels[ctx.dataIndex]
+                label += ' (' + ctx.parsed.y + ')'
+                return label
+              }
+            }
+          },
+          datalabels: {
+            color: '#000000',
+            font: {
+              weight: 'bold',
+              size: 16
+            }
+          }
+
+        }
+      }
+    } else {
+      options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: this.state.windowWidth >= 820 ? 40 : 8,
+            right: this.state.windowWidth >= 820 ? 100 : 16
+          }
+        },
+        scales: {
+          x: {
+            type: 'time',
+            title: {
+              display: true,
+              text: this.props.xLabel ? this.props.xLabel : 'Time'
+            },
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 10
+            },
+            time: {
+              displayFormats: {
+                millisecond: 'YYYY-MM-DD',
+                second: 'YYYY-MM-DD',
+                minute: 'YYYY-MM-DD',
+                hour: 'YYYY-MM-DD',
+                day: 'YYYY-MM-DD',
+                week: 'YYYY-MM-DD',
+                month: 'YYYY-MM',
+                quarter: 'YYYY-MM',
+                year: 'YYYY'
+              }
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
+            },
+            type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: function (ctx) {
+                return moment(ctx[0].parsed.x).format('YYYY-MM-DD')
+              },
+              label: function (ctx) {
+                let label = ctx.dataset.labels[ctx.dataIndex]
+                label += ' (' + ctx.parsed.y + ')'
+                return label
               }
             },
-        legend: {
-          labels: {
-            filter: function (item, chart) {
-            // Logic to remove a particular legend item goes here
-              return !item.text.includes('[HIDE LABEL]')
+            filter: function (tooltipItem) {
+              const type = tooltipItem.dataset.type
+              return (type === 'scatter')
+            }
+          },
+          datalabels: this.state.windowWidth < 820
+            ? { display: false }
+            : {
+                font: { weight: '600', color: '#000000' },
+                align: 'center',
+                formatter: function (value, context) {
+                  return value.isShowLabel ? value.label : ''
+                }
+              },
+          legend: {
+            labels: {
+              filter: function (item, chart) {
+              // Logic to remove a particular legend item goes here
+                return !item.text.includes('[HIDE LABEL]')
+              }
             }
           }
         }
@@ -331,7 +417,7 @@ class SotaChart extends React.Component {
       if (this.state.chart) {
         this.state.chart.destroy()
       }
-      this.setState({ chart: new LineWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data: data, options: options }) })
+      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data: data, options: options }) })
     }
     chartFunc()
   }
