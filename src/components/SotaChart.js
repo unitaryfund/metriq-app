@@ -256,7 +256,13 @@ class SotaChart extends React.Component {
       if (isSameDate) {
         data.datasets.push({
           labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-          data: subsets[key].map(obj => (state.isLog && canLog) ? state.log(obj.value) : obj.value),
+          data: subsets[key].map(obj => (state.isLog && canLog)
+            ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
+                ? state.log(obj.value)
+                : state.log(obj.value).toExponential())
+            : (((obj.value < 1000) && (obj.value >= 0.01))
+                ? obj.value
+                : obj.value.toExponential())),
           backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
           borderColor: rgb,
           pointRadius: 4,
