@@ -258,11 +258,11 @@ class SotaChart extends React.Component {
           labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
           data: subsets[key].map(obj => (state.isLog && canLog)
             ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
-                ? state.log(obj.value).toPrecision(3)
-                : state.log(obj.value).toPrecision(3).toExponential())
+                ? parseFloat(state.log(obj.value).toPrecision(3))
+                : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
             : (((obj.value < 1000) && (obj.value >= 0.01))
-                ? obj.value.toPrecision(3)
-                : obj.value.toPrecision(3).toExponential())),
+                ? parseFloat(obj.value.toPrecision(3))
+                : parseFloat(obj.value.toPrecision(3)).toExponential())),
           backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
           borderColor: rgb,
           pointRadius: 4,
