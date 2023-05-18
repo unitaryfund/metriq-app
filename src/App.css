@@ -202,6 +202,11 @@ form > span > .row > label {
   padding: 0 8px 8px 8px
 }
 
+.qedc-label {
+  font-weight: bold;
+  color: green;
+}
+
 .submission-image {
   display: inline-block;
   vertical-align: -80px;
