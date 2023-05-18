@@ -241,6 +241,7 @@ class Tasks extends React.Component {
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow>
+          <h5>QED-C Benchmark Submissions</h5>
           <SubmissionScroll sortType='trending' isLoggedIn={this.props.isLoggedIn} tag='qed-c' key={Math.random()} />
         </FormFieldWideRow>
         <br />
