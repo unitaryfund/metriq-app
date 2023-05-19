@@ -33,7 +33,7 @@ class Task extends React.Component {
       taskId: this.props.params.id,
       requestFailedMessage: '',
       showEditModal: false,
-      task: { description: '', parentTask: 0 },
+      task: { name: '', fullName: '', description: '', parentTask: 0 },
       item: { submissions: [], childTasks: [], parentTask: {} },
       allTaskNames: [],
       results: [],
@@ -78,8 +78,12 @@ class Task extends React.Component {
       mode = 'Login'
     }
     const task = {
+      name: this.state.item.name,
+      fullName: this.state.item.fullName,
       description: this.state.item.description,
-      parentTask: { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name }
+      parentTask: this.state.item.parentTask
+        ? { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name }
+        : { id: 0, name: '(None)' }
     }
     this.setState({ showEditModal: true, modalMode: mode, task: task })
   }
@@ -94,6 +98,8 @@ class Task extends React.Component {
     }
 
     const reqBody = {
+      name: this.state.task.name,
+      fullName: this.state.task.fullName,
       description: this.state.task.description,
       parentTask: this.state.task.parentTask
     }
@@ -354,6 +360,18 @@ class Task extends React.Component {
               </span>}
             {(this.state.modalMode !== 'Login') &&
               <span>
+                <FormFieldRow
+                  inputName='name' inputType='text' label='Name'
+                  value={this.state.task.name}
+                  onChange={(field, value) => this.handleOnChange('task', field, value)}
+                  disabled={!this.state.item.parentTask}
+                /><br />
+                <FormFieldRow
+                  inputName='fullName' inputType='text' label='Full Name'
+                  value={this.state.task.fullName}
+                  onChange={(field, value) => this.handleOnChange('task', field, value)}
+                  disabled={!this.state.item.parentTask}
+                /><br />
                 <FormFieldSelectRow
                   inputName='parentTask'
                   label='Parent task'
@@ -361,6 +379,7 @@ class Task extends React.Component {
                   value={this.state.task.parentTask.id}
                   onChange={(field, value) => this.handleOnChange('task', field, value)}
                   tooltip='The new task is a sub-task of a "parent" task.'
+                  disabled={!this.state.item.parentTask}
                 /><br />
                 <FormFieldRow
                   inputName='description' inputType='textarea' label='Description' rows='12'

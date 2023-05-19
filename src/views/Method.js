@@ -31,7 +31,7 @@ class Method extends React.Component {
       methodId: this.props.params.id,
       requestFailedMessage: '',
       showEditModal: false,
-      method: { description: '', parentMethod: 0 },
+      method: { name: '', fullName: '', description: '', parentMethod: 0 },
       item: { parentMethod: {}, submissions: [] },
       allMethodNames: []
     }
@@ -69,6 +69,8 @@ class Method extends React.Component {
       mode = 'Login'
     }
     const method = {
+      name: this.state.item.name,
+      fullName: this.state.item.fullName,
       description: this.state.item.description,
       parentMethod: this.state.item.parentMethod
         ? { id: this.state.item.parentMethod.id, name: this.state.item.parentMethod.id }
@@ -87,6 +89,8 @@ class Method extends React.Component {
     }
 
     const reqBody = {
+      name: this.state.method.name,
+      fullName: this.state.method.fullName,
       description: this.state.method.description,
       parentMethod: this.state.method.parentMethod ? this.state.method.parentMethod : null
     }
@@ -259,6 +263,16 @@ class Method extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
+                  <FormFieldRow
+                    inputName='name' inputType='text' label='Name'
+                    value={this.state.method.name}
+                    onChange={(field, value) => this.handleOnChange('method', field, value)}
+                  /><br />
+                  <FormFieldRow
+                    inputName='fullName' inputType='text' label='Full Name'
+                    value={this.state.method.fullName}
+                    onChange={(field, value) => this.handleOnChange('method', field, value)}
+                  /><br />
                   <FormFieldSelectRow
                     inputName='parentMethod'
                     label='Parent method<br/>(if any)'
