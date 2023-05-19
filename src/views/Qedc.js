@@ -211,8 +211,8 @@ class Tasks extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>QED-C  Benchmarks</ViewHeader>
-        <h5>Metriq and Unitary Fund are working with QED-C to run and share our own benchmarks of quantum cloud providers.</h5>
-        <p>QED-C has produced a <Link to='/Submission/14'>repository of quantum benchmarks</Link> for independent testing of quantum cloud service performance on many standard applications and algorithms. From these results, we extract metrics like <Link to='/Task/34'>quantum volume</Link> and "algorithmic qubits" (or "AQ").</p>
+        <h5>Metriq and Unitary Fund are working to run and share our own benchmarks of quantum cloud providers.</h5>
+        <p>QED-C has produced a <Link to='/Submission/14'>repository of quantum benchmarks</Link> for independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted these open source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like <Link to='/Task/34'>quantum volume</Link> and "algorithmic qubits" (or "AQ").</p>
         <br />
         <FormFieldWideRow>
           <h5>QED-C Benchmark Tasks</h5>

@@ -69,7 +69,7 @@ const CategoryItemBox = (props) => {
                   <div className='submission-heading'>
                     {props.item.name}
                     {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
-                      <span> <Link to='/QEDC'><span className='qedc-label'>(QED-C)</span></Link></span>}
+                      <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
                   </div>
                   <div className='submission-description'>{props.item.description}</div>
                 </div>}
