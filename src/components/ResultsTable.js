@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react'
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EditButton from './EditButton'
 import FormFieldWideRow from './FormFieldWideRow'
@@ -82,9 +83,9 @@ const ResultsTable = (props) => {
                 data={props.results.map(row =>
                   ({
                     key: row.id,
-                    taskName: row.task.name,
-                    methodName: row.method.name,
-                    platformName: row.platform ? row.platform.name : '(None)',
+                    taskName: <Link to={'/Task/' + row.task.id}>{row.task.name}</Link>,
+                    methodName: <Link to={'/Method/' + row.method.id}>{row.method.name}</Link>,
+                    platformName: row.platform ? <Link to={'/Platform/' + row.platform.id}>{row.platform.name}</Link> : '(None)',
                     metricName: row.metricName,
                     metricValue: row.metricValue,
                     qubitCount: row.qubitCount,
