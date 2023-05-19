@@ -45,30 +45,6 @@ class Tasks extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/submission/trending/0')
-      .then(res => {
-        this.setState({ trending: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
-    axios.get(config.api.getUriPrefix() + '/submission/popular/0')
-      .then(res => {
-        this.setState({ popular: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
-    axios.get(config.api.getUriPrefix() + '/submission/latest/0')
-      .then(res => {
-        this.setState({ latest: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
     axios.get(config.api.getUriPrefix() + '/task/submissionCount')
       .then(res => {
         const alphabetical = res.data.data

@@ -65,6 +65,7 @@ const FormFieldRow = (props) => {
             value={value}
             onChange={handleOnFieldChange}
             onBlur={handleOnFieldBlur}
+            disabled={props.disabled}
           >
             {props.value}
           </textarea>}
@@ -79,6 +80,7 @@ const FormFieldRow = (props) => {
             checked={checked}
             onChange={handleOnFieldChange}
             onBlur={handleOnFieldBlur}
+            disabled={props.disabled}
           />}
       </div>
       <Suspense fallback={<div>Loading...</div>}>
