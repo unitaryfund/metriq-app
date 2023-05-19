@@ -10,6 +10,8 @@ import ErrorHandler from './ErrorHandler'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
+const qedcIds = [34, 2, 97, 142, 150, 172, 173, 174, 175, 176, 177, 178, 179]
+
 const pickDetailUrl = (type, item) => {
   if (type === 'tag') {
     return ('/Tag/' + item.name)
@@ -64,7 +66,11 @@ const CategoryItemBox = (props) => {
             <Link to={pickDetailUrl(props.type, props.item)}>
               {props.type !== 'tag' && props.item.description &&
                 <div>
-                  <div className='submission-heading'>{props.item.name}</div>
+                  <div className='submission-heading'>
+                    {props.item.name}
+                    {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
+                      <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                  </div>
                   <div className='submission-description'>{props.item.description}</div>
                 </div>}
               {(props.type === 'tag' || !props.item.description) &&

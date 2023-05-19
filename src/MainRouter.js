@@ -29,6 +29,7 @@ import Platform from './views/Platform'
 import NotFound from './views/NotFound'
 import UserGuidelines from './views/UserGuidelines'
 import MainNavbar from './components/MainNavbar'
+import Qedc from './views/Qedc'
 
 const MainRouter = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -167,6 +168,12 @@ const MainRouter = (props) => {
           path='/UserGuidelines'
           component={UserGuidelines}
         />
+        <Route
+          exact
+          path='/QEDC'
+        >
+          <Qedc isLoggedIn={isLoggedIn} />
+        </Route>
         <Route
           exact
           path='/Profile'
