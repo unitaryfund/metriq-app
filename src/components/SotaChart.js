@@ -381,6 +381,13 @@ class SotaChart extends React.Component {
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
           }
         },
+        onClick (event, elements) {
+          if (!elements.length) {
+            return
+          }
+          const selected = d[elements[0].index]
+          window.location.href = config.web.getUriPrefix() + '/Submission/' + selected.submissionId
+        },
         plugins: {
           tooltip: {
             callbacks: {
@@ -458,6 +465,7 @@ class SotaChart extends React.Component {
         aid = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
         aid = 'arXiv:' + aid
       }
+      console.log(row)
       return {
         method: row.methodName,
         platform: row.platformName,
@@ -468,7 +476,8 @@ class SotaChart extends React.Component {
         isHigherBetter: row.isHigherBetter,
         standardError: row.standardError,
         qubitCount: row.qubitCount,
-        circuitDepth: row.circuitDepth
+        circuitDepth: row.circuitDepth,
+        submissionId: row.submissionId
       }
     })
 
