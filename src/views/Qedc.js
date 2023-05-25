@@ -211,10 +211,12 @@ class Tasks extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>QED-C  Benchmarks</ViewHeader>
-        <h5>Metriq and Unitary Fund are working to run and share our own benchmarks of quantum cloud providers.</h5>
-        <p>QED-C has produced a <Link to='/Submission/14'>repository of quantum benchmarks</Link> for independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted these open source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like <Link to='/Task/34'>quantum volume</Link> and "algorithmic qubits" (or "AQ").</p>
+        <h5>Metriq is the open platform to share application-oriented benchmarks of quantum cloud providers.</h5>
+        <p>Here you can find and contribute to application-oriented benchmarks as defined in the <Link to='Submission/14'>QED-C repository</Link>. The Quantum Economic Development Consortium (<a href='https://quantumconsortium.org/'>QED-C</a>) is a consortium of stakeholders that aims to enable and grow the quantum industry. Metriq enables independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted these open source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like <Link to='Task/34'>quantum volume</Link>, Grover's search, and quantum Fourier transform.</p>
+        <p>The Metriq Python client (metriq-client) and API (metriq-api) are compatible with the QED-C repository and enable addition of new data points on metriq.info. You can read more about automatically running QED-C benchmarks on Metriq in <a href='https://unitary.fund/posts/2023_metriq_qedc.html'>this blog post</a> on the Unitary Fund website.</p>
+        <p>Below you can find the list of <a href='#Tasks'>QED-C Benchmark Tasks</a> (containing a Task surveyed in the QED-C Benchmarks repository) and <a href='#Submissions'>QED-C Benchmarks Submissions</a> (containing the "qed-c" tag). Consider contributing your results with novel data points related to new measurements, methods, or new quantum quantum cloud service providers.</p>
         <br />
-        <FormFieldWideRow>
+        <FormFieldWideRow id='Tasks'>
           <h5>QED-C Benchmark Tasks</h5>
           {this.state.featured.map((item, index) => {
             return (
@@ -240,7 +242,7 @@ class Tasks extends React.Component {
           })}
         </FormFieldWideRow>
         <br />
-        <FormFieldWideRow>
+        <FormFieldWideRow id='Submissions'>
           <h5>QED-C Benchmark Submissions</h5>
           <SubmissionScroll sortType='trending' isLoggedIn={this.props.isLoggedIn} tag='qed-c' key={Math.random()} />
         </FormFieldWideRow>
