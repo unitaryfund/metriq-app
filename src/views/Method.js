@@ -15,6 +15,7 @@ import FormFieldWideRow from '../components/FormFieldWideRow'
 import SubscribeButton from '../components/SubscribeButton'
 import CategoryScroll from '../components/CategoryScroll'
 import SortingTable from '../components/SortingTable'
+import { renderLatex } from '../components/RenderLatex'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 
@@ -179,7 +180,7 @@ class Method extends React.Component {
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
             <div className='submission-description'>
-              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
+              {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
             </div>
           </FormFieldWideRow>
           <FormFieldWideRow>
