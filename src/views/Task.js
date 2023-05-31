@@ -18,6 +18,7 @@ import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
 import SortingTable from '../components/SortingTable'
 import { sortByCounts } from '../components/SortFunctions'
+import { renderLatex } from '../components/RenderLatex'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -234,7 +235,7 @@ class Task extends React.Component {
           <FormFieldWideRow>
             <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
             <div className='submission-description'>
-              {this.state.item.description ? this.state.item.description : <i>No description provided.</i>}
+              {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
             </div>
           </FormFieldWideRow>
           <FormFieldWideRow>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Suspense } from 'react'
 import { Button } from 'react-bootstrap'
-import LatexRender from './LatexRender'
 const FormFieldValidator = React.lazy(() => import('./FormFieldValidator'))
 const FormFieldWideRow = React.lazy(() => import('./FormFieldWideRow'))
 const TooltipTrigger = React.lazy(() => import('./TooltipTrigger'))
@@ -10,7 +9,6 @@ const FormFieldRow = (props) => {
   const [checked, setChecked] = useState(props.checked ? props.checked : false)
   const [isValid, setIsValid] = useState((props.isValidatedOnStart && props.validRegex) ? props.validRegex.test(props.value) : true)
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
-  const [latexMode, setLatexMode] = useState(false)
 
   useEffect(() => { setValue(props.value) }, [props.value])
 
@@ -43,7 +41,6 @@ const FormFieldRow = (props) => {
       props.onBlur(fieldName, fieldValue)
     }
     setValue(fieldValue)
-    setLatexMode(/\$(.*?)\$/.test(fieldValue))
   }
 
   return (
@@ -58,43 +55,33 @@ const FormFieldRow = (props) => {
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
       <div className='col-md-6 '>
         {(props.inputType === 'textarea') &&
-          (latexMode 
-            ? <LatexRender text={value} /> 
-            : <textarea
-              id={props.inputName}
-              name={props.inputName}
-              className='form-control'
-              rows={props.rows}
-              cols={props.cols}
-              placeholder={props.placeholder}
-              value={value}
-              onChange={handleOnFieldChange}
-              onBlur={handleOnFieldBlur}
-              onFocus={() => setLatexMode(false)}
-              disabled={props.disabled}
-            >
-              {props.value}
-            </textarea>
-          )
-        }
+          <textarea
+            id={props.inputName}
+            name={props.inputName}
+            className='form-control'
+            rows={props.rows}
+            cols={props.cols}
+            placeholder={props.placeholder}
+            value={value}
+            onChange={handleOnFieldChange}
+            onBlur={handleOnFieldBlur}
+            disabled={props.disabled}
+          >
+            {props.value}
+          </textarea>}
         {(props.inputType !== 'textarea') &&
-          (latexMode 
-            ? <LatexRender text={value} /> 
-            : <input
-              id={props.inputName}
-              name={props.inputName}
-              className='form-control'
-              type={props.inputType}
-              selected={props.defaultValue}
-              value={value}
-              checked={checked}
-              onChange={handleOnFieldChange}
-              onBlur={handleOnFieldBlur}
-              onFocus={() => setLatexMode(false)}
-              disabled={props.disabled}
-            />
-          )
-        }
+          <input
+            id={props.inputName}
+            name={props.inputName}
+            className='form-control'
+            type={props.inputType}
+            selected={props.defaultValue}
+            value={value}
+            checked={checked}
+            onChange={handleOnFieldChange}
+            onBlur={handleOnFieldBlur}
+            disabled={props.disabled}
+          />}
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         {props.imageUrl && <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>}
