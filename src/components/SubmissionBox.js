@@ -8,6 +8,8 @@ import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import logo from './../images/metriq_logo_secondary_blue.png'
 import ErrorHandler from './ErrorHandler'
 import TooltipTrigger from './TooltipTrigger'
+import 'katex/dist/katex.min.css';
+import { InlineMath } from 'react-katex';
 
 library.add(faExternalLinkAlt)
 
@@ -21,6 +23,19 @@ const SubmissionBox = (props) => {
 
   const [upvotes, setUpvotes] = useState(props.item.upvotesCount || 0)
   const [isUpvoted, setIsUpvoted] = useState(props.item.isUpvoted)
+
+  const renderLaTeX = (text) => {
+    const regex = /\$(.*?)\$/g; // Matches LaTeX expressions wrapped in $ symbols
+    const parts = text.split(regex);
+  
+    return parts.map((part, index) => {
+      if (index % 2 === 0) { // Non-LaTeX content
+        return part;
+      } else { // LaTeX content
+        return <InlineMath math={part} />;
+      }
+    })
+  }
 
   const handleDeleteOnClick = (event) => {
     let confirmString = window.prompt('To delete your submission, type its name below, then hit "OK."\n\n' + props.item.name, '')
@@ -104,7 +119,7 @@ const SubmissionBox = (props) => {
           <div className='col-md-8 col-sm-12 h-100'>
             <div className='submission-heading'>{props.item.name} {props.isEditView && ' - '} {props.isEditView && <b>{props.isDraft ? 'Unpublished draft' : props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
             <div className='submission-description'>
-              {description ? description.replace(/\0.*$/g, '').split('. ')[0] + '.' : <i>(No description provided.)</i>}
+              {description ? renderLaTeX(description.replace(/\0.*$/g, '').split('. ')[0] + '.') : <i>(No description provided.)</i>}
             </div>
             {tags.length > 0 &&
               <div className='submission-description'>
