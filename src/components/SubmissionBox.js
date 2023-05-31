@@ -105,7 +105,7 @@ const SubmissionBox = (props) => {
           <div className='col-md-8 col-sm-12 h-100'>
             <div className='submission-heading'>{props.item.name} {props.isEditView && ' - '} {props.isEditView && <b>{props.isDraft ? 'Unpublished draft' : props.isUnderReview ? 'Under Review' : 'Approved'}</b>}</div>
             <div className='submission-description'>
-              {description 
+              {description
                 ? renderLatex(description.replace(/\0.*$/g, '').split('. ')[0] + '.')
                 : <i>(No description provided.)</i>}
             </div>
