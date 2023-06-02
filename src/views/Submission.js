@@ -19,7 +19,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import SubscribeButton from '../components/SubscribeButton'
 import ViewHeader from '../components/ViewHeader'
 import SortingTable from '../components/SortingTable'
-import { renderLatex} from '../components/RenderLatex'
+import { renderLatex } from '../components/RenderLatex'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 const SubmissionRefsAddModal = React.lazy(() => import('../components/SubmissionRefsAddModal'))
@@ -678,8 +678,8 @@ class Submission extends React.Component {
         </FormFieldWideRow>
         <FormFieldWideRow>
           <div className='submission-description'>
-            {this.state.item.description 
-              ? renderLatex(this.state.item.description) 
+            {this.state.item.description
+              ? renderLatex(this.state.item.description)
               : <div className='card bg-light'><div className='card-body'><i>(No description provided.)</i><button className='btn btn-link' onClick={this.handleEditSubmissionDetails}>Add one.</button></div></div>}
           </div>
         </FormFieldWideRow>

@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
+import { renderLatex } from '../components/RenderLatex'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -71,7 +72,7 @@ const CategoryItemBox = (props) => {
                     {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
                       <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
                   </div>
-                  <div className='submission-description'>{props.item.description}</div>
+                  <div className='submission-description'>{renderLatex(props.item.description)}</div>
                 </div>}
               {(props.type === 'tag' || !props.item.description) &&
                 <div className='submission-heading-only'>{props.item.name}</div>}
