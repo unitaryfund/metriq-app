@@ -465,7 +465,6 @@ class SotaChart extends React.Component {
         aid = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
         aid = 'arXiv:' + aid
       }
-      console.log(row)
       return {
         method: row.methodName,
         platform: row.platformName,
