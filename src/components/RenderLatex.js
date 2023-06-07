@@ -12,7 +12,7 @@ export function renderLatex (text) {
         if (index % 2 === 0) { // Non-LaTeX content
           return part
         } else { // LaTeX content
-          return <InlineMath math={part} renderError={renderError} />
+          return <InlineMath key={index} math={part} renderError={renderError} />
         }
       })}
     </>

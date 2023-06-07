@@ -430,7 +430,7 @@ class SotaChart extends React.Component {
       if (this.state.chart) {
         this.state.chart.destroy()
       }
-      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data: data, options: options }) })
+      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options }) })
     }
     chartFunc()
   }
@@ -539,8 +539,8 @@ class SotaChart extends React.Component {
         i++
       }
     }
-    this.setState({ metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames: metricNames, chartKey: chartKey, chartData: chartData, isLowerBetterDict: isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
+    this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
   }
 
   componentDidMount () {
@@ -595,7 +595,7 @@ class SotaChart extends React.Component {
             return 0
           }
         })
-        this.setState({ task: task })
+        this.setState({ task })
         this.sliceChartData(task)
         if (this.props.onLoadData) {
           this.props.onLoadData(task)
@@ -628,7 +628,7 @@ class SotaChart extends React.Component {
             options={this.state.metricNames.map(name =>
               ({
                 id: name,
-                name: name
+                name
               }))}
             onChange={(field, value) => {
               this.setState({ chartKey: value })

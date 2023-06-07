@@ -49,7 +49,7 @@ class Tasks extends React.Component {
       .then(res => {
         const alphabetical = res.data.data
         alphabetical.sort(sortAlphabetical)
-        this.setState({ alphabetical: alphabetical, isLoading: false })
+        this.setState({ alphabetical, isLoading: false })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })

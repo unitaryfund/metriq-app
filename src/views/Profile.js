@@ -29,7 +29,7 @@ class Profile extends React.Component {
   handleOnChange (field, value) {
     const data = this.state.data
     data[field] = value
-    this.setState({ data: data })
+    this.setState({ data })
   }
 
   handleUpdateDetails () {

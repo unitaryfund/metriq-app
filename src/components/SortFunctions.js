@@ -71,8 +71,8 @@ function sortByCounts (a, b) {
 }
 
 module.exports = {
-  sortCommon: sortCommon,
-  sortPopular: sortPopular,
-  sortAlphabetical: sortAlphabetical,
-  sortByCounts: sortByCounts
+  sortCommon,
+  sortPopular,
+  sortAlphabetical,
+  sortByCounts
 }

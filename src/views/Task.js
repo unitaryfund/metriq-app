@@ -86,7 +86,7 @@ class Task extends React.Component {
         ? { id: this.state.item.parentTask.id, name: this.state.item.parentTask.name }
         : { id: 0, name: '(None)' }
     }
-    this.setState({ showEditModal: true, modalMode: mode, task: task })
+    this.setState({ showEditModal: true, modalMode: mode, task })
   }
 
   handleHideEditModal () {
@@ -198,7 +198,7 @@ class Task extends React.Component {
         tableDate: row.evaluatedAt ? new Date(row.evaluatedAt).toLocaleDateString() : new Date(row.createdAt).toLocaleDateString()
       }
     })
-    this.setState({ requestFailedMessage: '', item: task, results: results, resultsJson: resultsJson })
+    this.setState({ requestFailedMessage: '', item: task, results, resultsJson })
   }
 
   handleCsvExport () {

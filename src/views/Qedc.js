@@ -72,7 +72,7 @@ class Tasks extends React.Component {
       .then(res => {
         const alphabetical = res.data.data
         alphabetical.sort(sortAlphabetical)
-        this.setState({ alphabetical: alphabetical, isLoading: false })
+        this.setState({ alphabetical, isLoading: false })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -92,67 +92,67 @@ class Tasks extends React.Component {
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
         let featured = [res.data.data]
-        this.setState({ featured: featured })
+        this.setState({ featured })
 
         axios.get(config.api.getUriPrefix() + '/task/submissionCount/2')
           .then(res => {
             featured = featured.concat([res.data.data])
-            this.setState({ featured: featured })
+            this.setState({ featured })
 
             axios.get(config.api.getUriPrefix() + '/task/submissionCount/97')
               .then(res => {
                 featured = featured.concat([res.data.data])
-                this.setState({ featured: featured })
+                this.setState({ featured })
 
                 axios.get(config.api.getUriPrefix() + '/task/submissionCount/142')
                   .then(res => {
                     featured = featured.concat([res.data.data])
-                    this.setState({ featured: featured })
+                    this.setState({ featured })
 
                     axios.get(config.api.getUriPrefix() + '/task/submissionCount/150')
                       .then(res => {
                         featured = featured.concat([res.data.data])
-                        this.setState({ featured: featured })
+                        this.setState({ featured })
 
                         axios.get(config.api.getUriPrefix() + '/task/submissionCount/172')
                           .then(res => {
                             featured = featured.concat([res.data.data])
-                            this.setState({ featured: featured })
+                            this.setState({ featured })
 
                             axios.get(config.api.getUriPrefix() + '/task/submissionCount/173')
                               .then(res => {
                                 featured = featured.concat([res.data.data])
-                                this.setState({ featured: featured })
+                                this.setState({ featured })
 
                                 axios.get(config.api.getUriPrefix() + '/task/submissionCount/174')
                                   .then(res => {
                                     featured = featured.concat([res.data.data])
-                                    this.setState({ featured: featured })
+                                    this.setState({ featured })
 
                                     axios.get(config.api.getUriPrefix() + '/task/submissionCount/175')
                                       .then(res => {
                                         featured = featured.concat([res.data.data])
-                                        this.setState({ featured: featured })
+                                        this.setState({ featured })
 
                                         axios.get(config.api.getUriPrefix() + '/task/submissionCount/176')
                                           .then(res => {
                                             featured = featured.concat([res.data.data])
-                                            this.setState({ featured: featured })
+                                            this.setState({ featured })
 
                                             axios.get(config.api.getUriPrefix() + '/task/submissionCount/177')
                                               .then(res => {
                                                 featured = featured.concat([res.data.data])
-                                                this.setState({ featured: featured })
+                                                this.setState({ featured })
 
                                                 axios.get(config.api.getUriPrefix() + '/task/submissionCount/178')
                                                   .then(res => {
                                                     featured = featured.concat([res.data.data])
-                                                    this.setState({ featured: featured })
+                                                    this.setState({ featured })
 
                                                     axios.get(config.api.getUriPrefix() + '/task/submissionCount/179')
                                                       .then(res => {
                                                         featured = featured.concat([res.data.data])
-                                                        this.setState({ featured: featured })
+                                                        this.setState({ featured })
                                                       })
                                                       .catch(err => {
                                                         this.setState({ requestFailedMessage: ErrorHandler(err) })

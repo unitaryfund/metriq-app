@@ -77,7 +77,7 @@ class Method extends React.Component {
         ? { id: this.state.item.parentMethod.id, name: this.state.item.parentMethod.id }
         : { id: 0, name: '(None)' }
     }
-    this.setState({ showEditModal: true, modalMode: mode, method: method })
+    this.setState({ showEditModal: true, modalMode: mode, method })
   }
 
   handleHideEditModal () {

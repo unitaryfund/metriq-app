@@ -244,7 +244,7 @@ class AddSubmission extends React.Component {
     const task = this.state.taskNames.find(x => x.id === taskItem.id)
     if (task && tasks.indexOf(task) < 0) {
       tasks.push(task)
-      this.setState({ tasks: tasks, task: {} })
+      this.setState({ tasks, task: {} })
     }
   }
 
@@ -260,7 +260,7 @@ class AddSubmission extends React.Component {
     const tasks = this.state.tasks
     const task = tasks.find(x => x.id === taskId)
     tasks.splice(tasks.indexOf(task), 1)
-    this.setState({ tasks: tasks })
+    this.setState({ tasks })
   }
 
   handleOnClickAddMethod (methodItem) {
@@ -271,7 +271,7 @@ class AddSubmission extends React.Component {
     const method = this.state.methodNames.find(x => x.id === methodItem.id)
     if (method && methods.indexOf(method) < 0) {
       methods.push(method)
-      this.setState({ methods: methods, method: {} })
+      this.setState({ methods, method: {} })
     }
   }
 
@@ -287,7 +287,7 @@ class AddSubmission extends React.Component {
     const methods = this.state.methods
     const method = methods.find(x => x.id === methodId)
     methods.splice(methods.indexOf(method), 1)
-    this.setState({ methods: methods })
+    this.setState({ methods })
   }
 
   handleOnClickAddPlatform (platformItem) {
@@ -298,7 +298,7 @@ class AddSubmission extends React.Component {
     const platform = this.state.platformNames.find(x => x.id === platformItem.id)
     if (platform && platforms.indexOf(platform) < 0) {
       platforms.push(platform)
-      this.setState({ platforms: platforms, platform: {} })
+      this.setState({ platforms, platform: {} })
     }
   }
 
@@ -314,7 +314,7 @@ class AddSubmission extends React.Component {
     const platforms = this.state.platforms
     const platform = platforms.find(x => x.id === platformId)
     platforms.splice(platforms.indexOf(platform), 1)
-    this.setState({ platforms: platforms })
+    this.setState({ platforms })
   }
 
   handleOnClickAddTag () {
@@ -324,7 +324,7 @@ class AddSubmission extends React.Component {
     const tags = this.state.tags
     if (tags.indexOf(this.state.tag) < 0) {
       tags.push(this.state.tag)
-      this.setState({ tags: tags, tag: '' })
+      this.setState({ tags, tag: '' })
     }
   }
 
@@ -336,14 +336,14 @@ class AddSubmission extends React.Component {
     if (e.keyCode === 13) {
       e.preventDefault()
       tags.push(this.state.tag)
-      this.setState({ tags: tags, tag: '' })
+      this.setState({ tags, tag: '' })
     }
   }
 
   handleOnClickRemoveTag (tag) {
     const tags = this.state.tags
     tags.splice(tags.indexOf(tag), 1)
-    this.setState({ tags: tags })
+    this.setState({ tags })
   }
 
   handleOnClickRemoveResult () {
@@ -373,7 +373,7 @@ class AddSubmission extends React.Component {
   }
 
   handleModalResultAddNew (submission) {
-    this.setState({ showAddModal: false, submission: submission, requestFailedMessage: '' })
+    this.setState({ showAddModal: false, submission, requestFailedMessage: '' })
   }
 
   handleOnClickNewResult () {
@@ -388,12 +388,12 @@ class AddSubmission extends React.Component {
       evaluatedDate: new Date()
     }
     this.handleOnSubmit(null, true, () => {
-      this.setState({ result: result, showAddModal: true, modalMode: 'Result' })
+      this.setState({ result, showAddModal: true, modalMode: 'Result' })
     })
   }
 
   handleModalRefSubmit (submission) {
-    this.setState({ submission: submission, requestFailedMessage: '' })
+    this.setState({ submission, requestFailedMessage: '' })
   }
 
   handleSortNames (names) {
@@ -452,7 +452,7 @@ class AddSubmission extends React.Component {
     axios.get(metricNameRoute)
       .then(subRes => {
         const metricNames = subRes.data.data
-        this.setState({ metricNames: metricNames })
+        this.setState({ metricNames })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })

@@ -46,8 +46,8 @@ class SubmissionScroll extends React.Component {
         this.setState({
           requestFailedMessage: '',
           nextPage: 1,
-          items: items,
-          filterOptions: filterOptions,
+          items,
+          filterOptions,
           filteredItems: items
         })
       })

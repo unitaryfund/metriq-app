@@ -157,7 +157,7 @@ class Submission extends React.Component {
       codeUrl: this.state.item.codeUrl,
       supplementUrl: this.state.item.supplementUrl
     }
-    this.setState({ showEditModal: true, modalMode: mode, submission: submission })
+    this.setState({ showEditModal: true, modalMode: mode, submission })
   }
 
   handleSubscribe () {
@@ -186,7 +186,7 @@ class Submission extends React.Component {
       codeUrl: this.state.item.codeUrl,
       supplementUrl: this.state.item.supplementUrl
     }
-    this.setState({ showEditModal: true, modalMode: mode, modalTextMode: modalTextMode, submission: submission })
+    this.setState({ showEditModal: true, modalMode: mode, modalTextMode, submission })
   }
 
   handleHideEditModal () {
@@ -277,7 +277,7 @@ class Submission extends React.Component {
       allNames = this.state.allPlatformNames
       filteredNames = this.state.platformNames
     }
-    this.setState({ showAddRefsModal: true, modalMode: mode, allNames: allNames, filteredNames: filteredNames })
+    this.setState({ showAddRefsModal: true, modalMode: mode, allNames, filteredNames })
   }
 
   handleModalRefAddNew (ref) {
@@ -306,13 +306,13 @@ class Submission extends React.Component {
 
     if (mode === 'Task') {
       this.handleTrimTasks(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allTaskNames: allNames, taskNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item, allTaskNames: allNames, taskNames: filteredNames })
     } else if (mode === 'Method') {
       this.handleTrimMethods(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allMethodNames: allNames, methodNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item, allMethodNames: allNames, methodNames: filteredNames })
     } else if (mode === 'Platform') {
       this.handleTrimPlatforms(this.state.item, filteredNames)
-      this.setState({ showAddRefsModal: false, item: item, allPlatformNames: allNames, platformNames: filteredNames })
+      this.setState({ showAddRefsModal: false, item, allPlatformNames: allNames, platformNames: filteredNames })
     }
   }
 
@@ -353,7 +353,7 @@ class Submission extends React.Component {
       isHigherBetter: false,
       evaluatedAt: ''
     }
-    this.setState({ result: result, showAddModal: true, modalMode: mode, showEditModal: mode === 'Login' })
+    this.setState({ result, showAddModal: true, modalMode: mode, showEditModal: mode === 'Login' })
   }
 
   handleOnClickEditResult (resultId) {
@@ -546,7 +546,7 @@ class Submission extends React.Component {
                 const name = (((authorsSection[i].split('<name>'))[1]).split('</name>'))[0]
                 authors.push(name)
               }
-              this.setState({ evaluatedAt: (new Date(noTail).toISOString().split('T')[0]), authors: authors })
+              this.setState({ evaluatedAt: (new Date(noTail).toISOString().split('T')[0]), authors })
             })
             .catch(err => {
               this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -557,12 +557,12 @@ class Submission extends React.Component {
         this.setState({
           requestFailedMessage: '',
           item: submission,
-          isArxiv: isArxiv,
-          vanityUrl: vanityUrl,
-          thumbnailUrl: thumbnailUrl,
-          bibtexUrl: bibtexUrl,
-          codeUrl: codeUrl,
-          supplementUrl: supplementUrl
+          isArxiv,
+          vanityUrl,
+          thumbnailUrl,
+          bibtexUrl,
+          codeUrl,
+          supplementUrl
         })
 
         const taskNamesRoute = config.api.getUriPrefix() + '/task/names'
@@ -639,7 +639,7 @@ class Submission extends React.Component {
     axios.get(metricNameRoute)
       .then(subRes => {
         const metricNames = subRes.data.data
-        this.setState({ metricNames: metricNames })
+        this.setState({ metricNames })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })

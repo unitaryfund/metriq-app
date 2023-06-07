@@ -126,7 +126,7 @@ class Platform extends React.Component {
       description: this.state.item.description,
       parentPlatform: this.state.item.parentPlatform
     }
-    this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform: platform })
+    this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform })
   }
 
   handleHideEditModal () {
@@ -283,7 +283,7 @@ class Platform extends React.Component {
     property.fullName = fullName === undefined ? property.name : fullName
     property.value = value === undefined ? this.state.property.value : value
 
-    this.setState({ property: property })
+    this.setState({ property })
   }
 
   handleOnClickAddProperty () {

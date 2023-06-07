@@ -48,16 +48,16 @@ class Methods extends React.Component {
         common.sort(sortCommon)
         this.setState({
           requestFailedMessage: '',
-          common: common
+          common
         })
 
         const popular = [...res.data.data]
         popular.sort(sortPopular)
-        this.setState({ popular: popular })
+        this.setState({ popular })
 
         const alphabetical = res.data.data
         alphabetical.sort(sortAlphabetical)
-        this.setState({ alphabetical: alphabetical, isLoading: false })
+        this.setState({ alphabetical, isLoading: false })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
