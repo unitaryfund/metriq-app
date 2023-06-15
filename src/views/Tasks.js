@@ -78,7 +78,6 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <h3><a href='https://unitaryhack.dev/'>unitaryHACK</a> has begun, and will run until Jun 13! Get rewarded for contributing to open source quantum software!</h3>
         <br />
         <ViewHeader>Tasks</ViewHeader>
         <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
