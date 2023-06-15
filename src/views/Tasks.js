@@ -78,7 +78,6 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <br />
         <ViewHeader>Tasks</ViewHeader>
         <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
         <p>Search the task hierarchy to see charts of comparative performance across methods, see our submitter leader board and featured task charts, or click into the parent/child task hierarchy through top-level task categories.</p>
