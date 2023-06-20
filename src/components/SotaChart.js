@@ -41,13 +41,14 @@ class SotaChart extends React.Component {
       windowWidth: 0,
       chart: null,
       task: {},
-      isLog: props.isLog ? props.isLog : false,
+      isLog: props.isLog ? 1 : 0,
       chartKey: '',
       chartData: [],
       metricNames: [],
       isLowerBetterDict: {},
       key: Math.random(),
-      log: !props.logBase ? Math.log2 : ((props.logBase.toString() === '10') ? Math.log10 : ((props.logBase.toString() === '2') ? Math.log2 : Math.log)),
+      log: (props.isLog < 2) ? (((props.logBase === '10') ? Math.log10 : ((props.logBase === '2') ? Math.log2 : Math.log))) :
+        ((props.logBase === '10') ? (x => Math.log10(Math.log10(x))) : ((props.logBase === '2') ? (x => Math.log2(Math.log2(x))) : (x => Math.log(Math.log(x))))),
       logBase: props.logBase ? props.logBase : 10,
       subset: '',
       isSubset: true,
@@ -56,13 +57,20 @@ class SotaChart extends React.Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.sliceChartData = this.sliceChartData.bind(this)
-    this.handleOnChangeLogBase = this.handleOnChangeLogBase.bind(this)
+    this.handleOnChangeLog = this.handleOnChangeLog.bind(this)
     this.handleOnChangeSubset = this.handleOnChangeSubset.bind(this)
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
   }
 
-  handleOnChangeLogBase (event) {
-    this.setState({ logBase: event.target.value, log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log)) })
+  pickLog (type, value) {
+    return (type < 2) ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log))) :
+          ((value === '10') ? (x => Math.log10(Math.log10(x))) : ((value === '2') ? (x => Math.log2(Math.log2(x))) : (x => Math.log(Math.log(x)))))
+  }
+
+  handleOnChangeLog (type, logBase) {
+    type = parseInt(type)
+    const log = this.pickLog(type, logBase)
+    this.setState({ isLog: type, logBase, log })
     this.loadChartFromState({
       subset: this.state.subset,
       label: this.state.label,
@@ -70,8 +78,8 @@ class SotaChart extends React.Component {
       chartKey: this.state.chartKey,
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
-      isLog: this.state.isLog,
-      log: ((event.target.value === '10') ? Math.log10 : ((event.target.value === '2') ? Math.log2 : Math.log))
+      isLog: type,
+      log
     })
   }
 
@@ -308,7 +316,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
             suggestedMin: lowest,
@@ -376,7 +384,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? 'Log ' : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
           }
@@ -667,32 +675,22 @@ class SotaChart extends React.Component {
             </div>}
           <div className='row' style={{ marginTop: '5px' }}>
             <span
-              htmlFor='logcheckbox'
+              htmlFor='logOption'
               className='col col-md-2 form-field-label metric-chart-label'
               dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
             />
             <div className='col col-md-1'>
-              <input
-                type='checkbox'
-                id='logcheckbox'
-                name='logcheckbox'
-                className='form-control'
-                checked={this.state.isLog}
-                onChange={() => {
-                  const val = !this.state.isLog
-                  this.setState({ isLog: val })
-                  this.loadChartFromState({
-                    subset: this.state.subset,
-                    label: this.state.label,
-                    metricNames: this.state.metricNames,
-                    chartKey: this.state.chartKey,
-                    chartData: this.state.chartData,
-                    isLowerBetterDict: this.state.isLowerBetterDict,
-                    log: this.state.log,
-                    isLog: val
-                  })
-                }}
-              />
+              <select
+                  id='subsetPicker'
+                  name='subsetPicker'
+                  className='form-control'
+                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                  value={this.state.isLog}
+                >
+                  <option value='0'>Linear</option>
+                  <option value='1'>Log</option>
+                  <option value='2'>LogLog</option>
+                </select>
             </div>
             <span
               htmlFor='logdropdown'
@@ -704,7 +702,7 @@ class SotaChart extends React.Component {
                 id='logdropdown'
                 name='logdropdown'
                 className='form-control'
-                onChange={this.handleOnChangeLogBase}
+                onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
                 value={this.state.logBase}
               >
                 <option value='2'>2</option>
