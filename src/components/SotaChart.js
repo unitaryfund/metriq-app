@@ -316,7 +316,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
             suggestedMin: lowest,
@@ -384,7 +384,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
           }
