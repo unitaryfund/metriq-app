@@ -45,6 +45,10 @@ textarea {
   font-weight: bold;
 }
 
+.metriq-navbar-right {
+  margin-top: 16px;
+}
+
 .metriq-header {
   margin-top: 16px;
   font-family: 'Arial', sans-serif;

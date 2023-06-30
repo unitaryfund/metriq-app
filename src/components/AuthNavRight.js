@@ -15,7 +15,7 @@ const handleOnClick = () => {
 }
 
 const AuthNavRight = () =>
-  <Nav className='ml-auto metriq-navbar'>
+  <Nav className='ml-auto metriq-navbar metriq-navbar-right'>
     <MainSearchBar />
     <NavDropdown title='Account' active='true' className='metriq-navbar-text' alignRight>
       <NavDropdown.Item as={Link} to='/Profile' eventKey='15'><p className='font-weight-bold'>Settings</p></NavDropdown.Item>
