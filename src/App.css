@@ -28,7 +28,7 @@ textarea {
 
 .main-search-bar {
   display: inline-block;
-  padding-top: 7px;
+  padding-top: 8px;
   width: 192px;
 }
 
@@ -41,8 +41,14 @@ textarea {
 .metriq-navbar {
   background-color: #3cd2f9;
   font-family: 'Arial', sans-serif;
-   color:white;
-   font-weight: bold;
+  color:white;
+  font-weight: bold;
+}
+
+.metriq-header {
+  margin-top: 16px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
 }
 
 .metriq-navbar h2 {
@@ -55,8 +61,6 @@ textarea {
 
 .metriq-navbar-button {
   font-weight: bold;
-  color: black;
-  background-color: white;
 }
 
 .metriq-submission-ref-row {
@@ -88,15 +92,41 @@ textarea {
   justify-content: center;
 }
 
+.metriq-navbar-spacer {
+  width: 16px;
+}
+
+.metriq-navbar-social-icon {
+  margin-top: 2px;
+}
+
 .navbar-nav .metriq-navbar-text.nav-link {
-    padding-top: 0.9rem;
-    color:black;
+    padding-top: 0.6rem;
+    color: #FFFFFF;
     font-weight: bold;
 }
 
 .navbar-nav .metriq-navbar-text.nav-item {
   padding-top: 0.4rem;
-  color: black;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+#metriq-navbar-dropdown {
+  padding-top: 0.2rem;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+#metriq-navbar-dropdown:hover {
+  padding-top: 0.2rem;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+}
+
+.show > #metriq-navbar-dropdown.active {
+  padding-top: 0.2rem;
+  color: #000000;
   font-weight: bold;
 }
 
@@ -131,7 +161,7 @@ form > span > .row > label {
 }
 
 .active-navlink {
-  color: #fcfcfc !important;
+  color: #000000 !important;
 }
 
 .active-dropdown-navlink {

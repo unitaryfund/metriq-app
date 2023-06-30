@@ -39,7 +39,7 @@ class Task extends React.Component {
       allTaskNames: [],
       results: [],
       resultsJson: [],
-      isLowerBetterDict: {},
+      isLowerBetterDict: {}
     }
 
     this.fetchData = this.fetchData.bind(this)
