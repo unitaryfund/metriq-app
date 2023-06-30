@@ -96,6 +96,7 @@ const MainSearchBar = () => {
         placeholder='Search...'
         value=''
         onSelect={handleOnSelect}
+        className='main-search-bar-form-field-row'
         alignLabelRight
         isWide
       />
