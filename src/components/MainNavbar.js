@@ -18,7 +18,7 @@ const MainNavbar = (props) =>
     </Navbar>
     <div className='metriq-header'>
       <h2>{props.title}</h2>
-      <h3>{props.subtitle}</h3>
+      <p>{props.subtitle}</p>
       <br />
     </div>
   </div>
