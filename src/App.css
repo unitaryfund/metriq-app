@@ -220,6 +220,10 @@ form > span > .row > label {
   top: -8px;
 }
 
+.submit-button {
+  background: #04165D;
+}
+
 .submission-button {
   width: 80px;
   height: 38px;

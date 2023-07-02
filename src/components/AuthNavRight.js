@@ -26,7 +26,7 @@ const AuthNavRight = () =>
       <NavDropdown.Divider />
       <NavDropdown.Item onClick={handleOnClick} eventKey='20'><p className='font-weight-bold'>Logout</p></NavDropdown.Item>
     </NavDropdown>
-    <Nav.Link as={Link} to='/AddSubmission' eventKey='14'><Button variant='primary' className='metriq-navbar-button'>Submit</Button></Nav.Link>
+    <Nav.Link as={Link} to='/AddSubmission' eventKey='14'><Button variant='primary' className='metriq-navbar-button submit-button'>Submit</Button></Nav.Link>
   </Nav>
 
 export default AuthNavRight
