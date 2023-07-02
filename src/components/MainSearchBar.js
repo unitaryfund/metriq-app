@@ -93,7 +93,7 @@ const MainSearchBar = () => {
         options={allNames}
         labelKey='name'
         inputName='name'
-        placeholder='Search...'
+        placeholder='Search'
         value=''
         onSelect={handleOnSelect}
         className='main-search-bar-form-field-row'
