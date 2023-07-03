@@ -40,6 +40,10 @@
     padding: 16px;
 }
 
+.stay-connected-shim {
+    height: 32px;
+}
+
 .description {
     font-family: 'Arial', sans-serif;
     font-size: 16px;
