@@ -14,6 +14,7 @@ import SotaChart from '../components/SotaChart'
 import { withRouter, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
+import TopSubmitters from '../components/TopSubmitters'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -30,6 +31,7 @@ class Tasks extends React.Component {
       trending: [],
       popular: [],
       latest: [],
+      topSubmitters: [],
       filterId: null,
       requestFailedMessage: ''
     }
@@ -101,51 +103,58 @@ class Tasks extends React.Component {
         />
         <br />
         <FormFieldWideRow>
-          <h4>Featured</h4>
-          {this.state.featured.map((item, index) => {
-            return (
-              <div className='task card' key={index}>
-                <div className='row h-100'>
-                  <div className='col-md col h-100 text-left'>
-                    <table>
-                      <tr>
-                        <td style={{ width: '350px' }}>
-                          <SotaChart
-                            isPreview
-                            chartId={index}
-                            xLabel='Time'
-                            taskId={item.id}
-                            key={index}
-                            isLog
-                            logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
-                          />
-                        </td>
-                        <td>
-                          <h5>
-                            {item.name}
-                            {qedcIds.includes(parseInt(item.id)) &&
-                              <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                          </h5>
-                          {item.description}
-                        </td>
-                      </tr>
-                      <tr><td colSpan={2}><hr /></td></tr>
-                      <tr>
-                        <td>
-                          <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
-                        </td>
-                        <td className='text-right'>
-                          <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                          <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                          <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                        </td>
-                      </tr>
-                    </table>
+          <div className='row'>
+            <div className='col-md-8'>
+              <h4>Featured</h4>
+              {this.state.featured.map((item, index) => {
+                return (
+                  <div className='task card' key={index}>
+                    <div className='row h-100'>
+                      <div className='col-md col h-100 text-left'>
+                        <table>
+                          <tr>
+                            <td style={{ width: '350px' }}>
+                              <SotaChart
+                                isPreview
+                                chartId={index}
+                                xLabel='Time'
+                                taskId={item.id}
+                                key={index}
+                                isLog
+                                logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
+                              />
+                            </td>
+                            <td>
+                              <h5>
+                                {item.name}
+                                {qedcIds.includes(parseInt(item.id)) &&
+                                  <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                              </h5>
+                              {item.description}
+                            </td>
+                          </tr>
+                          <tr><td colSpan={2}><hr /></td></tr>
+                          <tr>
+                            <td>
+                              <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
+                            </td>
+                            <td className='text-right'>
+                              <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                              <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                              <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            )
-          })}
+                )
+              })}
+            </div>
+            <div className='col-md-4'>
+              <TopSubmitters />
+            </div>
+          </div>
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow className='centered-tabs'>

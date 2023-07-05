@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import axios from 'axios'
 import React, { useState } from 'react'
 import config from './config'
-import Home from './views/Home'
+import Submissions from './views/Submissions'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
 import Delete from './views/Delete'
@@ -66,25 +66,25 @@ const MainRouter = (props) => {
           exact
           path='/Submissions/'
         >
-          <Home isLoggedIn={isLoggedIn} />
+          <Submissions isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
           path='/Submissions/Trending'
         >
-          <Home isLoggedIn={isLoggedIn} tabKey='Trending' />
+          <Submissions isLoggedIn={isLoggedIn} tabKey='Trending' />
         </Route>
         <Route
           exact
           path='/Submissions/Popular'
         >
-          <Home isLoggedIn={isLoggedIn} tabKey='Popular' />
+          <Submissions isLoggedIn={isLoggedIn} tabKey='Popular' />
         </Route>
         <Route
           exact
           path='/Submissions/Latest'
         >
-          <Home isLoggedIn={isLoggedIn} tabKey='Latest' />
+          <Submissions isLoggedIn={isLoggedIn} tabKey='Latest' />
         </Route>
         <Route
           exact
@@ -207,22 +207,22 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Tag/:tag'
-          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag />}
+          render={(p) => <Submissions {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag />}
         />
         <Route
           exact
           path='/Tag/:tag/Trending'
-          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Trending' />}
+          render={(p) => <Submissions {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Trending' />}
         />
         <Route
           exact
           path='/Tag/:tag/Popular'
-          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Popular' />}
+          render={(p) => <Submissions {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Popular' />}
         />
         <Route
           exact
           path='/Tag/:tag/Latest'
-          render={(p) => <Home {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Latest' />}
+          render={(p) => <Submissions {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isTag tabKey='Latest' />}
         />
         <Route
           exact

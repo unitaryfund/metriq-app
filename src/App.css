@@ -394,9 +394,8 @@ form > span > .row > label {
 
 .sota-preview {
   display: inline-block;
-  height: 300px;
-  width: 450px;
-  padding: 32px 0 16px 0;
+  height: 256px;
+  width: 256px;
 }
 
 iframe {
