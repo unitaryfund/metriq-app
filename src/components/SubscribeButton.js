@@ -5,7 +5,7 @@ const SubscribeButton = (props) =>
   <span>
     {!props.isSubscribed &&
       <TooltipTrigger message={'Subscribe to ' + props.typeLabel}>
-        <Button className='submission-button metriq-follow-button' variant='secondary' aria-label={'Subscribe to ' + props.typeLabel} onClick={props.onSubscribe}>Follow</Button>
+        <Button className='submission-button metriq-follow-button' variant='outline-dark' aria-label={'Subscribe to ' + props.typeLabel} onClick={props.onSubscribe}>Follow</Button>
       </TooltipTrigger>}
     {props.isSubscribed &&
       <TooltipTrigger message={'Unsubscribe from ' + props.typeLabel}>

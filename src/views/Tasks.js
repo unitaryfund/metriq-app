@@ -5,13 +5,19 @@ import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
-import CategoryItemBox from '../components/CategoryItemBox'
+import CategoryItemIcon from '../components/CategoryItemIcon'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faHeart, faExternalLinkAlt, faChartLine)
+
+const qedcIds = [34, 2, 97, 142, 150, 172, 173, 174, 175, 176, 177, 178, 179]
 
 class Tasks extends React.Component {
   constructor (props) {
@@ -79,7 +85,7 @@ class Tasks extends React.Component {
     return (
       <div id='metriq-main-content' className='container'>
         <ViewHeader>Tasks</ViewHeader>
-        <h5>Tasks are workloads of interest performed on a quantum computer.</h5>
+        <h4>Tasks are workloads of interest performed on a quantum computer.</h4>
         <p>Search the task hierarchy to see charts of comparative performance across methods, see our submitter leader board and featured task charts, or click into the parent/child task hierarchy through top-level task categories.</p>
         <br />
         <FormFieldTypeaheadRow
@@ -95,24 +101,45 @@ class Tasks extends React.Component {
         />
         <br />
         <FormFieldWideRow>
-          <h5>Featured</h5>
+          <h4>Featured</h4>
           {this.state.featured.map((item, index) => {
             return (
               <div className='task card' key={index}>
                 <div className='row h-100'>
-                  <div className='col-md col h-100'>
-                    <table className='task-method-item'>
-                      <tbody>
-                        <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
-                        <SotaChart
-                          chartId={index}
-                          xLabel='Time'
-                          taskId={item.id}
-                          key={index}
-                          isLog
-                          logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
-                        />
-                      </tbody>
+                  <div className='col-md col h-100 text-left'>
+                    <table>
+                      <tr>
+                        <td style={{ width: '350px' }}>
+                          <SotaChart
+                            isPreview
+                            chartId={index}
+                            xLabel='Time'
+                            taskId={item.id}
+                            key={index}
+                            isLog
+                            logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
+                          />
+                        </td>
+                        <td>
+                          <h5>
+                            {item.name}
+                            {qedcIds.includes(parseInt(item.id)) &&
+                              <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                          </h5>
+                          {item.description}
+                        </td>
+                      </tr>
+                      <tr><td colSpan={2}><hr /></td></tr>
+                      <tr>
+                        <td>
+                          <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
+                        </td>
+                        <td className='text-right'>
+                          <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                          <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                          <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                        </td>
+                      </tr>
                     </table>
                   </div>
                 </div>

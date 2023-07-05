@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import TooltipTrigger from './TooltipTrigger'
 
 const CategoryItemIcon = (props) =>
-  <div className='col-4 col-md-1'>
-    <TooltipTrigger message={'Count of ' + props.word + ', with ' + props.type}>
-      <span><FontAwesomeIcon icon={props.icon} /><br />{props.count}</span>
-    </TooltipTrigger>
-  </div>
+  <TooltipTrigger message={'Count of ' + props.word + ', with ' + props.type}>
+    <div className='category-item-icon'><FontAwesomeIcon icon={props.icon} /> {props.count}</div>
+  </TooltipTrigger>
 
 export default CategoryItemIcon

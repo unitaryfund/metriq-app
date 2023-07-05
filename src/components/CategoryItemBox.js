@@ -60,33 +60,37 @@ const CategoryItemBox = (props) => {
   }
 
   return (
-    <tr>
-      <td>
-        <div className='row submission'>
-          <div className='col-12 col-md-7'>
-            <Link to={pickDetailUrl(props.type, props.item)}>
-              {props.type !== 'tag' && props.item.description &&
-                <div>
-                  <div className='submission-heading'>
-                    {props.item.name}
-                    {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
-                      <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                  </div>
-                  <div className='submission-description'>{renderLatex(props.item.description)}</div>
-                </div>}
-              {(props.type === 'tag' || !props.item.description) &&
-                <div className='submission-heading-only'>{props.item.name}</div>}
-            </Link>
-          </div>
-          <div className='col-12 col-md-2 text-center'>
-            <SubscribeButton isSubscribed={isSubscribed} typeLabel={props.type} onSubscribe={handleSubscribe} />
-          </div>
-          <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
-          <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
-          <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
-        </div>
-      </td>
-    </tr>
+    <td className={props.isPreview ? undefined : 'submission-cell'}>
+      <div className='submission'>
+        <Link to={pickDetailUrl(props.type, props.item)} className='category-item-box'>
+          {props.type !== 'tag' && props.item.description &&
+            <div>
+              <div className='submission-heading'>
+                {props.item.name}
+                {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
+                  <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+              </div>
+              <div className='submission-description'>{renderLatex(
+                !props.item.description
+                  ? ''
+                  : ((!props.isPreview && (props.item.description.length > 128))
+                      ? (props.item.description.substring(0, 125) + '...')
+                      : props.item.description))}
+              </div>
+            </div>}
+          {(props.type === 'tag' || !props.item.description) &&
+            <div className='submission-heading-only'>{props.item.name}</div>}
+        </Link>
+        <br />
+        <SubscribeButton isSubscribed={isSubscribed} typeLabel={props.type} onSubscribe={handleSubscribe} />
+        {!props.isPreview &&
+          <span>
+            <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
+            <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
+            <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
+          </span>}
+      </div>
+    </td>
   )
 }
 

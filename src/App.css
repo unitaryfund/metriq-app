@@ -204,15 +204,29 @@ form > span > .row > label {
   padding: 12px;
 }
 
+.task {
+  padding: 16px;
+}
+
+.submission-cell {
+  padding: 8px;
+  width: 33%;
+}
+
 .submission {
   border-radius: 16px;
-  margin: 6px;
   padding: 8px;
+  margin: 6px;
   background-color: #FFFFFF;
 }
 
 .submission:hover {
   box-shadow: 0 0 16px rgba(33,33,33,.2); 
+}
+
+.category-item-box {
+  display: inline-block;
+  height: 128px;
 }
 
 .delete-button {
@@ -300,6 +314,12 @@ form > span > .row > label {
   text-align: left;
 }
 
+.category-item-icon {
+  width: 22%;
+  display: inline-block;
+  padding-left: 24px;
+}
+
 .edit-button {
   width: 80px;
   height: 40px;
@@ -370,6 +390,13 @@ form > span > .row > label {
   min-height: 500px;
   max-height: 600px;
   width: 100%;
+}
+
+.sota-preview {
+  display: inline-block;
+  height: 300px;
+  width: 450px;
+  padding: 32px 0 16px 0;
 }
 
 iframe {

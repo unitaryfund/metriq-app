@@ -1,35 +1,55 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import FormFieldWideRow from './FormFieldWideRow'
 const CategoryItemBox = React.lazy(() => import('./CategoryItemBox'))
 
-const CategoryScroll = (props) =>
-  <div className='container'>
-    <br />
-    {props.heading &&
+const CategoryScroll = (props) => {
+  const [rows, setRows] = useState([])
+
+  useEffect(() => {
+    const rws = []
+    for (let i = 0; i < props.items.length / 3; ++i) {
+      const row = []
+      for (let j = 0; j < 3; ++j) {
+        if ((3 * i + j) >= props.items.length) {
+          break
+        }
+        row.push(props.items[3 * i + j])
+      }
+      rws.push(row)
+    }
+    setRows(rws)
+  }, [props.items])
+
+  return (
+    <div className='container'>
+      <br />
+      {props.heading &&
+        <FormFieldWideRow>
+          <h4>{props.heading}</h4>
+        </FormFieldWideRow>}
       <FormFieldWideRow>
-        <b>{props.heading}</b>
-      </FormFieldWideRow>}
-    <FormFieldWideRow>
-      {!props.items.length &&
+        {!props.items.length &&
         (props.isLoading
           ? <p><b>Fetching items from server...</b></p>
           : <p><b>There are no approved items, yet.</b></p>)}
-      {(props.items.length > 0) &&
-        <Suspense fallback={<div>Loading...</div>}>
-          <div className='task'>
-            <div className='row h-100'>
-              <div className='col-md col h-100'>
-                <table className='task-method-item'>
-                  <tbody>
-                    {props.items.map((item, index) => <CategoryItemBox item={item} key={index} isLoggedIn={props.isLoggedIn} type={props.type} />)}
-                  </tbody>
-                </table>
+        {(props.items.length > 0) &&
+          <Suspense fallback={<div>Loading...</div>}>
+            <div className='task'>
+              <div className='row h-100'>
+                <div className='col-md col h-100'>
+                  <table className='task-method-item'>
+                    <tbody>
+                      {rows.map((row, rid) => <tr key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</tr>)}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-        </Suspense>}
-    </FormFieldWideRow>
-    <br />
-  </div>
+          </Suspense>}
+      </FormFieldWideRow>
+      <br />
+    </div>
+  )
+}
 
 export default CategoryScroll
