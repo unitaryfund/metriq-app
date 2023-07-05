@@ -47,8 +47,9 @@ class SotaChart extends React.Component {
       metricNames: [],
       isLowerBetterDict: {},
       key: Math.random(),
-      log: (props.isLog < 2) ? (((props.logBase === '10') ? Math.log10 : ((props.logBase === '2') ? Math.log2 : Math.log))) :
-        ((props.logBase === '10') ? (x => Math.log10(Math.log10(x))) : ((props.logBase === '2') ? (x => Math.log2(Math.log2(x))) : (x => Math.log(Math.log(x))))),
+      log: (props.isLog < 2)
+        ? (((props.logBase === '10') ? Math.log10 : ((props.logBase === '2') ? Math.log2 : Math.log)))
+        : ((props.logBase === '10') ? x => Math.log10(Math.log10(x)) : ((props.logBase === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x)))),
       logBase: props.logBase ? props.logBase : 10,
       subset: '',
       isSubset: true,
@@ -63,8 +64,9 @@ class SotaChart extends React.Component {
   }
 
   pickLog (type, value) {
-    return (type < 2) ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log))) :
-          ((value === '10') ? (x => Math.log10(Math.log10(x))) : ((value === '2') ? (x => Math.log2(Math.log2(x))) : (x => Math.log(Math.log(x)))))
+    return (type < 2)
+      ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log)))
+      : ((value === '10') ? x => Math.log10(Math.log10(x)) : ((value === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x))))
   }
 
   handleOnChangeLog (type, logBase) {
@@ -681,16 +683,16 @@ class SotaChart extends React.Component {
             />
             <div className='col col-md-1'>
               <select
-                  id='subsetPicker'
-                  name='subsetPicker'
-                  className='form-control'
-                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
-                  value={this.state.isLog}
-                >
-                  <option value='0'>Linear</option>
-                  <option value='1'>Log</option>
-                  <option value='2'>LogLog</option>
-                </select>
+                id='subsetPicker'
+                name='subsetPicker'
+                className='form-control'
+                onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                value={this.state.isLog}
+              >
+                <option value='0'>Linear</option>
+                <option value='1'>Log</option>
+                <option value='2'>LogLog</option>
+              </select>
             </div>
             <span
               htmlFor='logdropdown'

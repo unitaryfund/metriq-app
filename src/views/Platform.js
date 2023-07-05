@@ -550,6 +550,7 @@ class Platform extends React.Component {
                   width: 200
                 }]}
                 data={this.state.item.submissions.map(row => ({
+                  key: row.id,
                   name: row.name,
                   createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
                   upvoteCount: row.upvoteCount || 0

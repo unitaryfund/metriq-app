@@ -1,2 +1,2 @@
-const ViewSubHeader = (props) => <header><h5>{props.children}</h5></header>
+const ViewSubHeader = (props) => <header><h3>{props.children}</h3></header>
 export default ViewSubHeader

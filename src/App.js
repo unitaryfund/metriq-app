@@ -8,17 +8,17 @@ const App = () =>
     <SimpleReactFooter
       title='metriq'
       description='Quantum computing benchmarks by community contributors'
-      copyright='2021, 2022 Unitary Fund'
+      copyright='2021-2023 Unitary Fund'
       discord='unitary.fund'
       github='unitaryfund'
       twitch='unitaryfund'
       twitter='unitaryfund'
       youtube='UCDbDLAzGRTHnhkoMMOX7D1A'
       linkedin='unitary-fund'
-      backgroundColor='#212529'
+      backgroundColor='#04165D'
       fontColor='#FFFFFF'
       iconColor='#FFFFFF'
-      columns={[]}
+      copyrightColor='#FFFFFF'
     />
   </div>
 
