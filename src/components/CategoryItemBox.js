@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React from 'react'
 import CategoryItemIcon from './CategoryItemIcon'
 import SubscribeButton from './SubscribeButton'
-import { useHistory, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
-import config from '../config'
-import ErrorHandler from './ErrorHandler'
 import { renderLatex } from '../components/RenderLatex'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
@@ -26,39 +23,6 @@ const pickDetailUrl = (type, item) => {
 }
 
 const CategoryItemBox = (props) => {
-  const history = useHistory()
-  const [isSubscribed, setIsSubscribed] = useState(props.item.isSubscribed)
-
-  const handleLoginRedirect = (type) => {
-    if (type === 'tag') {
-      history.push('/Login/Tags')
-    } else if (type === 'task') {
-      history.push('/Login/Tasks')
-    } else if (type === 'method') {
-      history.push('/Login/Methods')
-    } else if (type === 'platform') {
-      history.push('/Login/Platforms')
-    }
-  }
-
-  const handleSubscribe = () => {
-    if (props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/' + props.type + '/' + (props.type === 'tag' ? encodeURIComponent(props.item.name) : props.item.id) + '/subscribe', {})
-        .then(res => {
-          if (props.type === 'tag') {
-            setIsSubscribed(res.data.data)
-          } else {
-            setIsSubscribed(!!res.data.data.isSubscribed)
-          }
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      handleLoginRedirect(props.type)
-    }
-  }
-
   return (
     <td className={props.isPreview ? undefined : 'submission-cell'}>
       <div className='submission'>
@@ -82,7 +46,7 @@ const CategoryItemBox = (props) => {
             <div className='submission-heading-only'>{props.item.name}</div>}
         </Link>
         <br />
-        <SubscribeButton isSubscribed={isSubscribed} typeLabel={props.type} onSubscribe={handleSubscribe} />
+        <SubscribeButton item={props.item} type={props.type} isLoggedIn={props.isLoggedIn} />
         {!props.isPreview &&
           <span>
             <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />

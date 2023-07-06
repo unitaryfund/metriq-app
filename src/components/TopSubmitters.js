@@ -7,6 +7,9 @@ import SortingTable from '../components/SortingTable'
 const TopSubmitters = (props) => {
   const [data, setData] = useState({ weekly: [], monthly: [], allTime: [] })
   useEffect(() => {
+    if (data.allTime.length) {
+      return
+    }
     axios.get(config.api.getUriPrefix() + '/user/topSubmitters')
       .then(res => {
         const tSubmitters = res.data.data

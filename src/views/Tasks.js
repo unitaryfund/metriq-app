@@ -6,6 +6,7 @@ import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 import CategoryItemIcon from '../components/CategoryItemIcon'
+import SubscribeButton from '../components/SubscribeButton'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
@@ -106,50 +107,49 @@ class Tasks extends React.Component {
           <div className='row'>
             <div className='col-md-8'>
               <h4>Featured</h4>
-              {this.state.featured.map((item, index) => {
-                return (
-                  <div className='task card' key={index}>
-                    <div className='row h-100'>
-                      <div className='col-md col h-100 text-left'>
-                        <table>
-                          <tr>
-                            <td style={{ width: '350px' }}>
-                              <SotaChart
-                                isPreview
-                                chartId={index}
-                                xLabel='Time'
-                                taskId={item.id}
-                                key={index}
-                                isLog
-                                logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
-                              />
-                            </td>
-                            <td>
-                              <h5>
-                                {item.name}
-                                {qedcIds.includes(parseInt(item.id)) &&
-                                  <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                              </h5>
-                              {item.description}
-                            </td>
-                          </tr>
-                          <tr><td colSpan={2}><hr /></td></tr>
-                          <tr>
-                            <td>
-                              <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
-                            </td>
-                            <td className='text-right'>
-                              <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                              <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                              <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
+              {this.state.featured.map((item, index) =>
+                <div className='task card' key={index}>
+                  <div className='row h-100'>
+                    <div className='col-md col h-100 text-left'>
+                      <table>
+                        <tr>
+                          <td style={{ width: '350px' }}>
+                            <SotaChart
+                              isPreview
+                              chartId={index}
+                              xLabel='Time'
+                              taskId={item.id}
+                              key={index}
+                              isLog
+                              logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
+                            />
+                          </td>
+                          <td>
+                            <h5>
+                              {item.name}
+                              {qedcIds.includes(parseInt(item.id)) &&
+                                <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                              <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
+                            </h5>
+                            {item.description}
+                          </td>
+                        </tr>
+                        <tr><td colSpan={2}><hr /></td></tr>
+                        <tr>
+                          <td>
+                            <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
+                          </td>
+                          <td className='text-right'>
+                            <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                            <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                            <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                          </td>
+                        </tr>
+                      </table>
                     </div>
                   </div>
-                )
-              })}
+                </div>
+              )}
             </div>
             <div className='col-md-4'>
               <TopSubmitters />

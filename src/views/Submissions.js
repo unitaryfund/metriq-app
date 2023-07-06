@@ -45,24 +45,6 @@ const Submissions = (props) => {
     setActiveTab(tab)
   }
 
-  const handleLoginRedirect = () => {
-    props.history.push('/Login/' + encodeURIComponent('Tag/' + props.match.params.tag + '/' + props.tabKey))
-  }
-
-  const handleSubscribe = () => {
-    if (props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/tag/' + encodeURIComponent(props.match.params.tag) + '/subscribe', {})
-        .then(res => {
-          setIsSubscribed(res.data.data)
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      handleLoginRedirect()
-    }
-  }
-
   return (
     <div id='metriq-main-content' className='container'>
       <Suspense fallback={<div>Loading...</div>}>
@@ -73,7 +55,7 @@ const Submissions = (props) => {
       <ViewHeader>
         Top Submissions {props.match ? 'for "' + props.match.params.tag + '"' : ''}
         {props.match &&
-          <span>&nbsp;<SubscribeButton isSubscribed={isSubscribed} typeLabel='method' onSubscribe={handleSubscribe} /></span>}
+          <span>&nbsp;<SubscribeButton item={tag} isSubscribed={isSubscribed} typeLabel='tag' /></span>}
       </ViewHeader>
       <br />
       <Tabs id='top-submissions-tabs' activeKey={activeTab} onSelect={toggle}>
