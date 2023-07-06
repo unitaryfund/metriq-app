@@ -1,11 +1,13 @@
 import axios from 'axios'
 import React from 'react'
+import { Button } from 'react-bootstrap'
 import config from './../config'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
 import CategoryItemIcon from '../components/CategoryItemIcon'
+import CategoryItemBox from '../components/CategoryItemBox'
 import SubscribeButton from '../components/SubscribeButton'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
@@ -28,6 +30,7 @@ class Tasks extends React.Component {
       isLoading: true,
       alphabetical: [],
       allNames: [],
+      platforms: [],
       featured: [],
       trending: [],
       popular: [],
@@ -74,6 +77,24 @@ class Tasks extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
+    axios.get(config.api.getUriPrefix() + '/platform/names')
+      .then(res => {
+        const rws = []
+        for (let i = 0; i < 2; ++i) {
+          const row = []
+          for (let j = 0; j < 3; ++j) {
+            row.push(res.data.data[3 * i + j])
+          }
+          rws.push(row)
+        }
+        this.setState({
+          requestFailedMessage: '',
+          platforms: rws
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
 
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
@@ -114,24 +135,26 @@ class Tasks extends React.Component {
                       <table>
                         <tr>
                           <td style={{ width: '350px' }}>
-                            <SotaChart
-                              isPreview
-                              chartId={index}
-                              xLabel='Time'
-                              taskId={item.id}
-                              key={index}
-                              isLog
-                              logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
-                            />
+                            <Link to={'/Task/' + item.id} className='active-navlink'>
+                              <SotaChart
+                                isPreview
+                                chartId={index}
+                                xLabel='Time'
+                                taskId={item.id}
+                                key={index}
+                                isLog
+                                logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
+                              />
+                            </Link>
                           </td>
                           <td>
                             <h5>
-                              {item.name}
+                              <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
                               {qedcIds.includes(parseInt(item.id)) &&
                                 <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
                               <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
                             </h5>
-                            {item.description}
+                            <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
                           </td>
                         </tr>
                         <tr><td colSpan={2}><hr /></td></tr>
@@ -140,9 +163,11 @@ class Tasks extends React.Component {
                             <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
                           </td>
                           <td className='text-right'>
-                            <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                            <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                            <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                            <Link to={'/Task/' + item.id} className='active-navlink'>
+                              <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                              <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                              <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                            </Link>
                           </td>
                         </tr>
                       </table>
@@ -160,6 +185,30 @@ class Tasks extends React.Component {
         <FormFieldWideRow className='centered-tabs'>
           <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
         </FormFieldWideRow>
+        <br />
+        {(this.state.platforms.length > 0) &&
+          <span>
+            <FormFieldWideRow>
+              <h4>Platforms</h4>
+            </FormFieldWideRow>
+            <FormFieldWideRow>
+              <div className='task'>
+                <div className='row h-100'>
+                  <div className='col-md col h-100'>
+                    <table className='task-method-item'>
+                      <tbody>
+                        {this.state.platforms.map((row, rid) => <tr key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</tr>)}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </FormFieldWideRow>
+            <br />
+            <FormFieldWideRow className='text-left'>
+              <Link to='/Platforms'><Button variant='outline-light' className='platforms-more-button'>See more platforms</Button></Link>
+            </FormFieldWideRow>
+          </span>}
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>

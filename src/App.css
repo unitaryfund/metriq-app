@@ -320,6 +320,11 @@ form > span > .row > label {
   padding-left: 24px;
 }
 
+.platforms-more-button {
+  background-color: #68D0F4;
+  margin-left: 24px;
+}
+
 .edit-button {
   width: 80px;
   height: 40px;
