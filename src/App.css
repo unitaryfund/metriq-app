@@ -47,6 +47,12 @@ textarea {
   font-family: 'Arial', sans-serif;
   color:white;
   font-weight: bold;
+  font-size: 0.875rem
+}
+
+.metriq-navbar-button {
+  font-size: small;
+  margin-bottom: 4px;
 }
 
 .metriq-navbar.navbar {
@@ -82,10 +88,6 @@ textarea {
 .metriq-submission-ref-row-label {
   text-align: left;
   margin-top: 8px;
-}
-
-.metriq-follow-button {
-  font-size: small;
 }
 
 .navbar-nav {
@@ -258,7 +260,6 @@ form > span > .row > label {
 }
 
 .submission-subheading {
-  font-size: 80%;
   padding: 0 8px 8px 8px
 }
 
@@ -284,7 +285,6 @@ form > span > .row > label {
 .submission-description {
   white-space: pre-line;
   text-align: left;
-  font-size: 90%;
   padding: 0 8px 8px 8px
 }
 
@@ -329,7 +329,6 @@ form > span > .row > label {
   width: 80px;
   height: 40px;
   margin: 4px;
-  font-size: 0.5em;
   display: inline-block;
 }
 
