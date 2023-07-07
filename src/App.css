@@ -51,8 +51,9 @@ textarea {
 }
 
 .metriq-navbar-button {
-  font-size: small;
-  margin-bottom: 4px;
+  font-size: smaller;
+  margin-bottom: 3px;
+  height: 26px;
 }
 
 .metriq-navbar.navbar {

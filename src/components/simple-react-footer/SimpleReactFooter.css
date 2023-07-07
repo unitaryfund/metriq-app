@@ -34,7 +34,6 @@
 
 .stay-connected-title {
     font-family: 'Arial', sans-serif;
-    font-size: 18px;
     text-align: left;
     letter-spacing: 2px;
     width: 100%;
@@ -47,7 +46,6 @@
 
 .description {
     font-family: 'Arial', sans-serif;
-    font-size: 16px;
     letter-spacing: 1px;
     margin-right: 30px;
     margin-bottom: 10px;
@@ -56,14 +54,12 @@
 
 .resources {
     font-family: 'Arial', sans-serif;
-    font-size: 16px;
     letter-spacing: 1px;
     color: black;
 }
 
 .copyright {
     text-align: left;
-    font-size: 18px;
     margin-top: 10px;
     letter-spacing: 1px;
 }
@@ -74,7 +70,6 @@
 
 .license-row {
     font-family: 'Arial', sans-serif;
-    font-size: 18px;
     text-align: left;
     letter-spacing: 2px;
     width: 100%;
@@ -83,7 +78,6 @@
 
 .copyright-row {
     font-family: 'Arial', sans-serif;
-    font-size: 18px;
     text-align: left;
     letter-spacing: 2px;
     width: 100%;
