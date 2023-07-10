@@ -57,6 +57,8 @@ textarea {
 .metriq-footer-button {
   font-size: smaller;
   margin-bottom: 3px;
+  padding-top: 0;
+  padding-bottom: 0;
   height: 26px;
 }
 
