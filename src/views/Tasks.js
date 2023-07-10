@@ -107,7 +107,7 @@ class Tasks extends React.Component {
 
   render () {
     return (
-      <div id='metriq-main-content' className='container'>
+      <div id='metriq-main-content'>
         <ViewHeader>Tasks</ViewHeader>
         <h4>Tasks are workloads of interest performed on a quantum computer.</h4>
         <p>Search the task hierarchy to see charts of comparative performance across methods, see our submitter leader board and featured task charts, or click into the parent/child task hierarchy through top-level task categories.</p>
@@ -127,7 +127,7 @@ class Tasks extends React.Component {
         <FormFieldWideRow>
           <div className='row'>
             <div className='col-md-8'>
-              <h4>Featured</h4>
+              <h4 align='left'>Featured</h4>
               {this.state.featured.map((item, index) =>
                 <div className='task card' key={index}>
                   <div className='row h-100'>
@@ -189,13 +189,13 @@ class Tasks extends React.Component {
         {(this.state.platforms.length > 0) &&
           <span>
             <FormFieldWideRow>
-              <h4>Platforms</h4>
+              <h4 align='left'>Platforms</h4>
             </FormFieldWideRow>
             <FormFieldWideRow>
               <div className='task'>
                 <div className='row h-100'>
                   <div className='col-md col h-100'>
-                    <table className='task-method-item'>
+                    <table className='category-scroll task-method-item'>
                       <tbody>
                         {this.state.platforms.map((row, rid) => <tr key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</tr>)}
                       </tbody>

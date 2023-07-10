@@ -48,7 +48,7 @@ class Tags extends React.Component {
 
   render () {
     return (
-      <div id='metriq-main-content' className='container'>
+      <div id='metriq-main-content'>
         <ViewHeader>Tags</ViewHeader>
         <ViewSubHeader>Tags are keywords assigned to a submission that enable retrieval by search.</ViewSubHeader>
         <br />

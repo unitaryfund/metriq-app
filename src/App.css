@@ -7,7 +7,7 @@
 .centered-tabs > nav {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 textarea {
@@ -110,7 +110,7 @@ textarea {
 .nav-tabs {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  /* justify-content: center;*/
 }
 
 .metriq-navbar-spacer {
@@ -158,6 +158,8 @@ textarea {
 #metriq-main-content {
   min-height: 700px;
   padding-top: 20px;
+  padding-left: 32px;
+  padding-right: 32px;
 }
 
 @keyframes App-logo-spin {
@@ -376,7 +378,7 @@ form > span > .row > label {
   color: white;
 }
 
-.container .submission a {
+.category-scroll .submission a {
   color: #000000;
   text-decoration: none;
 }

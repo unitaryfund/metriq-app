@@ -21,11 +21,11 @@ const CategoryScroll = (props) => {
   }, [props.items])
 
   return (
-    <div className='container'>
+    <div class='category-scroll'>
       <br />
       {props.heading &&
         <FormFieldWideRow>
-          <h4>{props.heading}</h4>
+          <h4 align='left'>{props.heading}</h4>
         </FormFieldWideRow>}
       <FormFieldWideRow>
         {!props.items.length &&

@@ -77,7 +77,7 @@ class Methods extends React.Component {
 
   render () {
     return (
-      <div id='metriq-main-content' className='container'>
+      <div id='metriq-main-content'>
         <ViewHeader>Methods</ViewHeader>
         <ViewSubHeader>Methods are the algorithms used in a submission.</ViewSubHeader>
         <br />

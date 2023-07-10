@@ -4,7 +4,7 @@ import SimpleReactFooter from './components/simple-react-footer/SimpleReactFoote
 
 const App = () =>
   <div className='App'>
-    <MainRouter id='metriq-main-content' />
+    <MainRouter />
     <SimpleReactFooter
       title='metriq'
       description='Quantum computing benchmarks by community contributors'
