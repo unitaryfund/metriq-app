@@ -36,7 +36,7 @@ const CustomMailchimpForm = ({ status, message, onValidated }) => {
         type='email'
         placeholder='Your email'
       />
-      <Button variant='primary' className='metriq-navbar-button' onClick={submit}>Submit</Button>
+      <Button variant='primary' className='metriq-footer-button' onClick={submit}>Submit</Button>
     </div>
   )
 }
