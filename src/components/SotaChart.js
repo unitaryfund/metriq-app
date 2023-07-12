@@ -81,6 +81,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: type,
+      logBase,
       log
     })
   }
@@ -95,6 +96,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
+      logBase: this.state.logBase,
       log: this.state.log
     })
   }
@@ -109,6 +111,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
+      logBase: this.state.logBase,
       log: this.state.log
     })
   }
@@ -318,7 +321,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? (((state.isLog > 1) ? 'Log Log ' : 'Log ') + state.logBase.toString() + ' ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
             suggestedMin: lowest,
@@ -386,7 +389,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? (((state.isLog > 1) ? 'Log Log ' : 'Log ') + state.logBase.toString() + ' ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
           }
@@ -551,7 +554,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log })
   }
 
   componentDidMount () {
@@ -652,6 +655,7 @@ class SotaChart extends React.Component {
                   chartData: this.state.chartData,
                   isLowerBetterDict: this.state.isLowerBetterDict,
                   isLog: this.state.isLog,
+                  logBase: this.state.logBase,
                   log: this.state.log
                 })
               }}

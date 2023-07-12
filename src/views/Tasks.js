@@ -98,7 +98,24 @@ class Tasks extends React.Component {
 
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
-        this.setState({ featured: [res.data.data] })
+        let featured = [res.data.data]
+
+        axios.get(config.api.getUriPrefix() + '/task/submissionCount/50')
+          .then(res => {
+            featured.push(res.data.data)
+
+            axios.get(config.api.getUriPrefix() + '/task/submissionCount/164')
+              .then(res => {
+                featured.push(res.data.data)
+                this.setState({ featured })
+              })
+              .catch(err => {
+                this.setState({ requestFailedMessage: ErrorHandler(err) })
+              })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
       })
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -143,7 +160,7 @@ class Tasks extends React.Component {
                                 taskId={item.id}
                                 key={index}
                                 isLog
-                                logBase={(index === 0) ? '2' : ((index === 1) ? 'e' : '10')}
+                                logBase={(index === 0) ? '2' : '10'}
                               />
                             </Link>
                           </td>
