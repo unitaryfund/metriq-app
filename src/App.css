@@ -221,7 +221,6 @@ form > span > .row > label {
 
 .submission-cell {
   padding: 8px;
-  width: 33%;
 }
 
 .submission {
@@ -378,7 +377,7 @@ form > span > .row > label {
   color: white;
 }
 
-.category-scroll .submission a {
+.submission a {
   color: #000000;
   text-decoration: none;
 }

@@ -6,6 +6,7 @@ import FormFieldValidator from './FormFieldValidator'
 import FormFieldAlertRow from './FormFieldAlertRow'
 import FormFieldWideRow from './FormFieldWideRow'
 import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
+import SubmissionBoxSmall from './SubmissionBoxSmall'
 const InfiniteScroll = React.lazy(() => import('react-infinite-scroll-component'))
 const SubmissionBox = React.lazy(() => import('./SubmissionBox'))
 
@@ -48,7 +49,7 @@ class SubmissionScroll extends React.Component {
           nextPage: 1,
           items,
           filterOptions,
-          filteredItems: items
+          filteredItems: this.props.isSmall ? items.slice(0, 3) : items
         })
       })
       .catch(err => {
@@ -111,28 +112,38 @@ class SubmissionScroll extends React.Component {
 
   render () {
     return (
-      <div className='container'>
-        <FormFieldTypeaheadRow
-          className='search-bar'
-          options={this.state.filterOptions}
-          inputName='nameOrUrl'
-          inputId={'nameOrUrl-' + this.props.sortType}
-          label='Search title or URL'
-          value=''
-          onChange={(field, value) => this.onFilter(value)}
-          alignLabelRight
-        />
+      <div>
+        {!this.props.isSmall &&
+          <FormFieldTypeaheadRow
+            className='search-bar'
+            options={this.state.filterOptions}
+            inputName='nameOrUrl'
+            inputId={'nameOrUrl-' + this.props.sortType}
+            label='Search title or URL'
+            value=''
+            onChange={(field, value) => this.onFilter(value)}
+            alignLabelRight
+          />}
         <FormFieldWideRow>
           {this.state.items.length && (
             <Suspense fallback={<div>Loading...</div>}>
               <InfiniteScroll
                 dataLength={this.state.filteredItems.length}
                 next={this.fetchMoreData}
-                hasMore={this.state.hasMore}
+                hasMore={this.props.isSmall ? (this.state.filteredItems.length < 3) : this.state.hasMore}
                 loader={<h4>Loading...</h4>}
-                endMessage={<p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}
+                endMessage={this.props.isSmall ? <span /> : <p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}
               >
-                {this.state.filteredItems.map((item, index) =>
+                {this.props.isSmall && this.state.filteredItems.map((item, index) =>
+                  <SubmissionBoxSmall
+                    item={item}
+                    key={index}
+                    isLoggedIn={this.props.isLoggedIn}
+                    isEditView={this.props.isEditView}
+                    isUnderReview={!(item.approvedAt)}
+                    isDraft={!(item.publishedAt)}
+                  />)}
+                {!this.props.isSmall && this.state.filteredItems.map((item, index) =>
                   <SubmissionBox
                     item={item}
                     key={index}

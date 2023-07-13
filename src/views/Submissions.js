@@ -46,7 +46,7 @@ const Submissions = (props) => {
   }
 
   return (
-    <div id='metriq-main-content' className='container'>
+    <div id='metriq-main-content'>
       <Suspense fallback={<div>Loading...</div>}>
         <TopSubmitters />
       </Suspense>

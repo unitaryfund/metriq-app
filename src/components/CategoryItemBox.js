@@ -24,7 +24,7 @@ const pickDetailUrl = (type, item) => {
 
 const CategoryItemBox = (props) => {
   return (
-    <td className={props.isPreview ? undefined : 'submission-cell'}>
+    <div className={'col-md-4 col ' + (props.isPreview ? '' : 'submission-cell')}>
       <div className='submission'>
         <Link to={pickDetailUrl(props.type, props.item)} className='category-item-box'>
           {props.type !== 'tag' && props.item.description &&
@@ -54,7 +54,7 @@ const CategoryItemBox = (props) => {
             <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
           </span>}
       </div>
-    </td>
+    </div>
   )
 }
 

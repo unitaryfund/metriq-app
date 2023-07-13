@@ -21,7 +21,7 @@ const CategoryScroll = (props) => {
   }, [props.items])
 
   return (
-    <div class='category-scroll'>
+    <div className='category-scroll'>
       <br />
       {props.heading &&
         <FormFieldWideRow>
@@ -36,12 +36,8 @@ const CategoryScroll = (props) => {
           <Suspense fallback={<div>Loading...</div>}>
             <div className='task'>
               <div className='row h-100'>
-                <div className='col-md col h-100'>
-                  <table className='task-method-item'>
-                    <tbody>
-                      {rows.map((row, rid) => <tr key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</tr>)}
-                    </tbody>
-                  </table>
+                <div className={'h-100' + (props.className ? (' ' + props.className) : 'col-md col')}>
+                  {rows.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</div>)}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Button, Tab, Tabs } from 'react-bootstrap'
 import config from './../config'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
@@ -18,6 +18,7 @@ import { withRouter, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import TopSubmitters from '../components/TopSubmitters'
+import SubmissionScroll from '../components/SubmissionScroll'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -36,6 +37,7 @@ class Tasks extends React.Component {
       popular: [],
       latest: [],
       topSubmitters: [],
+      activeTab: 'Trending',
       filterId: null,
       requestFailedMessage: ''
     }
@@ -98,7 +100,7 @@ class Tasks extends React.Component {
 
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
       .then(res => {
-        let featured = [res.data.data]
+        const featured = [res.data.data]
 
         axios.get(config.api.getUriPrefix() + '/task/submissionCount/50')
           .then(res => {
@@ -143,64 +145,70 @@ class Tasks extends React.Component {
         <br />
         <FormFieldWideRow>
           <div className='row'>
-            <div className='col-md-8'>
+            <div className='col-md-9'>
               <h4 align='left'>Featured</h4>
               {this.state.featured.map((item, index) =>
                 <div className='task card' key={index}>
+                  <div className='row h-100 text-left'>
+                    <div className='col-md-3 col'>
+                      <Link to={'/Task/' + item.id} className='active-navlink'>
+                        <SotaChart
+                          isPreview
+                          chartId={index}
+                          xLabel='Time'
+                          taskId={item.id}
+                          key={index}
+                          isLog
+                          logBase={(index === 0) ? '2' : '10'}
+                        />
+                      </Link>
+                    </div>
+                    <div className='col-md-9 col'>
+                      <h5>
+                        <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
+                        {qedcIds.includes(parseInt(item.id)) &&
+                          <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                        <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
+                      </h5>
+                      <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
+                    </div>
+                  </div>
                   <div className='row h-100'>
-                    <div className='col-md col h-100 text-left'>
-                      <table>
-                        <tr>
-                          <td style={{ width: '350px' }}>
-                            <Link to={'/Task/' + item.id} className='active-navlink'>
-                              <SotaChart
-                                isPreview
-                                chartId={index}
-                                xLabel='Time'
-                                taskId={item.id}
-                                key={index}
-                                isLog
-                                logBase={(index === 0) ? '2' : '10'}
-                              />
-                            </Link>
-                          </td>
-                          <td>
-                            <h5>
-                              <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
-                              {qedcIds.includes(parseInt(item.id)) &&
-                                <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                              <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
-                            </h5>
-                            <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
-                          </td>
-                        </tr>
-                        <tr><td colSpan={2}><hr /></td></tr>
-                        <tr>
-                          <td>
-                            <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
-                          </td>
-                          <td className='text-right'>
-                            <Link to={'/Task/' + item.id} className='active-navlink'>
-                              <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                              <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                              <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                            </Link>
-                          </td>
-                        </tr>
-                      </table>
+                    <div className='col-md-4 col text-left'>
+                      <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
+                    </div>
+                    <div className='col-md-8 col text_right'>
+                      <Link to={'/Task/' + item.id} className='active-navlink text-right' style={{ width: 'auto' }}>
+                        <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                        <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                        <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                      </Link>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-            <div className='col-md-4'>
+            <div className='col-md-3'>
               <TopSubmitters />
+              <br />
+              <h5>Top Submissions</h5>
+              <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
+                <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
+                  <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                </Tab>
+                <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
+                  <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                </Tab>
+                <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
+                  <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                </Tab>
+              </Tabs>
             </div>
           </div>
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow className='centered-tabs'>
-          <CategoryScroll type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
+          <CategoryScroll className='col-md-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
         </FormFieldWideRow>
         <br />
         {(this.state.platforms.length > 0) &&
@@ -211,12 +219,8 @@ class Tasks extends React.Component {
             <FormFieldWideRow>
               <div className='task'>
                 <div className='row h-100'>
-                  <div className='col-md col h-100'>
-                    <table className='category-scroll task-method-item'>
-                      <tbody>
-                        {this.state.platforms.map((row, rid) => <tr key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</tr>)}
-                      </tbody>
-                    </table>
+                  <div className='col-md-9 col h-100'>
+                    {this.state.platforms.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</div>)}
                   </div>
                 </div>
               </div>
