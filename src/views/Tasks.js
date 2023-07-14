@@ -148,44 +148,47 @@ class Tasks extends React.Component {
             <div className='col-md-9'>
               <h4 align='left'>Featured</h4>
               {this.state.featured.map((item, index) =>
-                <div className='task card' key={index}>
-                  <div className='row h-100 text-left'>
-                    <div className='col-md-3 col'>
-                      <Link to={'/Task/' + item.id} className='active-navlink'>
-                        <SotaChart
-                          isPreview
-                          chartId={index}
-                          xLabel='Time'
-                          taskId={item.id}
-                          key={index}
-                          isLog
-                          logBase={(index === 0) ? '2' : '10'}
-                        />
-                      </Link>
+                <span key={index}>
+                  <div className='task card'>
+                    <div className='row h-100 text-left'>
+                      <div className='col-md-3 col'>
+                        <Link to={'/Task/' + item.id} className='active-navlink'>
+                          <SotaChart
+                            isPreview
+                            chartId={index}
+                            xLabel='Time'
+                            taskId={item.id}
+                            key={index}
+                            isLog
+                            logBase={(index === 0) ? '2' : '10'}
+                          />
+                        </Link>
+                      </div>
+                      <div className='col-md-9 col'>
+                        <h5>
+                          <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
+                          {qedcIds.includes(parseInt(item.id)) &&
+                            <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+                          <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
+                        </h5>
+                        <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
+                      </div>
                     </div>
-                    <div className='col-md-9 col'>
-                      <h5>
-                        <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
-                        {qedcIds.includes(parseInt(item.id)) &&
-                          <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                        <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
-                      </h5>
-                      <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
+                    <div className='row h-100'>
+                      <div className='col-md-4 col text-left'>
+                        <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
+                      </div>
+                      <div className='col-md-8 col text_right'>
+                        <Link to={'/Task/' + item.id} className='active-navlink text-right' style={{ width: 'auto' }}>
+                          <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
+                          <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
+                          <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                  <div className='row h-100'>
-                    <div className='col-md-4 col text-left'>
-                      <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
-                    </div>
-                    <div className='col-md-8 col text_right'>
-                      <Link to={'/Task/' + item.id} className='active-navlink text-right' style={{ width: 'auto' }}>
-                        <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                        <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                        <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                  <br />
+                </span>
               )}
             </div>
             <div className='col-md-3'>
@@ -217,11 +220,9 @@ class Tasks extends React.Component {
               <h4 align='left'>Platforms</h4>
             </FormFieldWideRow>
             <FormFieldWideRow>
-              <div className='task'>
-                <div className='row h-100'>
-                  <div className='col-md-9 col h-100'>
-                    {this.state.platforms.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</div>)}
-                  </div>
+              <div className='row h-100'>
+                <div className='col-md-9 col h-100'>
+                  {this.state.platforms.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</div>)}
                 </div>
               </div>
             </FormFieldWideRow>

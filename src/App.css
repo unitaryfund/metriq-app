@@ -1,7 +1,6 @@
 .App {
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #F6F6F6;
 }
 
 .centered-tabs > nav {
@@ -74,6 +73,7 @@ textarea {
 .metriq-header {
   margin-top: 16px;
   font-family: 'Arial', sans-serif;
+  color: #04165D
 }
 
 .metriq-navbar h2 {
@@ -215,8 +215,13 @@ form > span > .row > label {
   padding: 12px;
 }
 
+.view-header {
+  color: #04165D
+}
+
 .task {
   padding: 16px;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
 .submission-cell {
@@ -228,10 +233,11 @@ form > span > .row > label {
   padding: 8px;
   margin: 6px;
   background-color: #FFFFFF;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
 .submission:hover {
-  box-shadow: 0 0 16px rgba(33,33,33,.2); 
+  box-shadow: 0 3px 16px rgba(33,33,33,.2);
 }
 
 .category-item-box {

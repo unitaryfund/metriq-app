@@ -34,11 +34,9 @@ const CategoryScroll = (props) => {
           : <p><b>There are no approved items, yet.</b></p>)}
         {(props.items.length > 0) &&
           <Suspense fallback={<div>Loading...</div>}>
-            <div className='task'>
-              <div className='row h-100'>
-                <div className={'h-100' + (props.className ? (' ' + props.className) : 'col-md col')}>
-                  {rows.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</div>)}
-                </div>
+            <div className='row h-100'>
+              <div className={'h-100' + (props.className ? (' ' + props.className) : 'col-md col')}>
+                {rows.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</div>)}
               </div>
             </div>
           </Suspense>}
