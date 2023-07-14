@@ -151,7 +151,7 @@ class Tasks extends React.Component {
                 <span key={index}>
                   <div className='task card'>
                     <div className='row h-100 text-left'>
-                      <div className='col-md-3 col'>
+                      <div className='col-lg-3 col-md-5 col'>
                         <Link to={'/Task/' + item.id} className='active-navlink'>
                           <SotaChart
                             isPreview
@@ -164,7 +164,7 @@ class Tasks extends React.Component {
                           />
                         </Link>
                       </div>
-                      <div className='col-md-9 col'>
+                      <div className='col-lg-9 col-md-7 col'>
                         <h5>
                           <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
                           {qedcIds.includes(parseInt(item.id)) &&
@@ -175,11 +175,11 @@ class Tasks extends React.Component {
                       </div>
                     </div>
                     <div className='row h-100'>
-                      <div className='col-md-4 col text-left'>
+                      <div className='col-lg-4 col text-left'>
                         <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
                       </div>
-                      <div className='col-md-8 col text_right'>
-                        <Link to={'/Task/' + item.id} className='active-navlink text-right' style={{ width: 'auto' }}>
+                      <div className='col-lg-8 col'>
+                        <Link to={'/Task/' + item.id} className='active-navlink' style={{ width: 'auto' }}>
                           <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
                           <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
                           <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
@@ -211,7 +211,7 @@ class Tasks extends React.Component {
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow className='centered-tabs'>
-          <CategoryScroll className='col-md-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
+          <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
         </FormFieldWideRow>
         <br />
         {(this.state.platforms.length > 0) &&
@@ -221,7 +221,7 @@ class Tasks extends React.Component {
             </FormFieldWideRow>
             <FormFieldWideRow>
               <div className='row h-100'>
-                <div className='col-md-9 col h-100'>
+                <div className='col-lg-9 col h-100'>
                   {this.state.platforms.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</div>)}
                 </div>
               </div>

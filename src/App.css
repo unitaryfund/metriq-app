@@ -226,6 +226,7 @@ form > span > .row > label {
 
 .submission-cell {
   padding: 8px;
+  min-width: 256px;
 }
 
 .submission {
