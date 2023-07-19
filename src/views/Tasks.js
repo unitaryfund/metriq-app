@@ -12,7 +12,7 @@ import SubscribeButton from '../components/SubscribeButton'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import ViewHeader from '../components/ViewHeader'
-import { sortAlphabetical } from '../components/SortFunctions'
+import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
 import { withRouter, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -79,13 +79,16 @@ class Tasks extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
-    axios.get(config.api.getUriPrefix() + '/platform/names')
+
+    axios.get(config.api.getUriPrefix() + '/platform/submissionCount')
       .then(res => {
+        const common = [...res.data.data]
+        common.sort(sortCommon)
         const rws = []
         for (let i = 0; i < 2; ++i) {
           const row = []
           for (let j = 0; j < 3; ++j) {
-            row.push(res.data.data[3 * i + j])
+            row.push(common[3 * i + j])
           }
           rws.push(row)
         }
@@ -145,8 +148,12 @@ class Tasks extends React.Component {
         <br />
         <FormFieldWideRow>
           <div className='row'>
-            <div className='col-md-9'>
+            <div className='col'>
               <h4 align='left'>Featured</h4>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-9'>
               {this.state.featured.map((item, index) =>
                 <span key={index}>
                   <div className='task card'>
@@ -192,20 +199,24 @@ class Tasks extends React.Component {
               )}
             </div>
             <div className='col-md-3'>
-              <TopSubmitters isOnlyAllTime />
+              <div className='card top-submitters-card'>
+                <TopSubmitters isOnlyAllTime />
+              </div>
               <br />
-              <h5>Top Submissions</h5>
-              <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
-                <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
-                  <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
-                </Tab>
-                <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
-                  <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
-                </Tab>
-                <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
-                  <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
-                </Tab>
-              </Tabs>
+              <div className='card top-submitters-card'>
+                <h5>Top Submissions</h5>
+                <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
+                  <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                  </Tab>
+                  <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                  </Tab>
+                  <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                  </Tab>
+                </Tabs>
+              </div>
             </div>
           </div>
         </FormFieldWideRow>

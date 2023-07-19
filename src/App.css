@@ -304,6 +304,11 @@ form > span > .row > label {
   padding-bottom: 16px;
 }
 
+.top-submitters-card {
+  padding: 8px 16px 8px 16px;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
+}
+
 .submission-detail-image {
   display: inline-block;
   vertical-align: -128px;

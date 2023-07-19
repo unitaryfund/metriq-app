@@ -125,7 +125,17 @@ class SubmissionScroll extends React.Component {
             alignLabelRight
           />}
         <FormFieldWideRow>
-          {this.state.items.length && (
+          {this.props.isSmall && this.state.items.length &&
+          this.state.filteredItems.map((item, index) =>
+            <SubmissionBoxSmall
+              item={item}
+              key={index}
+              isLoggedIn={this.props.isLoggedIn}
+              isEditView={this.props.isEditView}
+              isUnderReview={!(item.approvedAt)}
+              isDraft={!(item.publishedAt)}
+            />)}
+          {!this.props.isSmall && this.state.items.length && (
             <Suspense fallback={<div>Loading...</div>}>
               <InfiniteScroll
                 dataLength={this.state.filteredItems.length}
@@ -134,16 +144,7 @@ class SubmissionScroll extends React.Component {
                 loader={<h4>Loading...</h4>}
                 endMessage={this.props.isSmall ? <span /> : <p style={{ textAlign: 'center' }}><b>You have seen all submissions.</b></p>}
               >
-                {this.props.isSmall && this.state.filteredItems.map((item, index) =>
-                  <SubmissionBoxSmall
-                    item={item}
-                    key={index}
-                    isLoggedIn={this.props.isLoggedIn}
-                    isEditView={this.props.isEditView}
-                    isUnderReview={!(item.approvedAt)}
-                    isDraft={!(item.publishedAt)}
-                  />)}
-                {!this.props.isSmall && this.state.filteredItems.map((item, index) =>
+                {this.state.filteredItems.map((item, index) =>
                   <SubmissionBox
                     item={item}
                     key={index}
@@ -159,10 +160,13 @@ class SubmissionScroll extends React.Component {
             ? <p><b>You have no submissions, yet.</b></p>
             : <p><b>There are no approved submissions, yet.</b></p>)}
         </FormFieldWideRow>
-        <br />
-        <FormFieldAlertRow>
-          <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
-        </FormFieldAlertRow>
+        {!this.props.isSmall &&
+          <span>
+            <br />
+            <FormFieldAlertRow>
+              <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
+            </FormFieldAlertRow>
+          </span>}
       </div>
     )
   }
