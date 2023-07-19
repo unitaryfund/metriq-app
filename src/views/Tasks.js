@@ -133,17 +133,18 @@ class Tasks extends React.Component {
         <ViewHeader>Tasks</ViewHeader>
         <h4>Tasks are workloads of interest performed on a quantum computer.</h4>
         <p>Search the task hierarchy to see charts of comparative performance across methods, see our submitter leader board and featured task charts, or click into the parent/child task hierarchy through top-level task categories.</p>
-        <br />
         <FormFieldTypeaheadRow
           className='search-bar'
+          innerClassName='search-accent'
           options={this.state.allNames}
           labelKey='name'
           inputName='name'
-          label='Search tasks'
           value=''
+          placeholder='🔎'
           onChange={(field, value) => this.handleOnFilter(value)}
           onSelect={this.handleOnSelect}
           alignLabelRight
+          isRow
         />
         <br />
         <FormFieldWideRow>

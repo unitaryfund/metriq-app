@@ -25,6 +25,14 @@ textarea {
   padding-top: 10px;
 }
 
+.search-accent {
+  outline: solid !important;
+  outline-width: 4px !important;
+  outline-color: #68D0F4 !important;
+  border-radius: 4px;
+  padding: 0;
+}
+
 .main-search-bar {
   display: inline-block;
   padding-top: 8px;
@@ -244,6 +252,7 @@ form > span > .row > label {
 .category-item-box {
   display: inline-block;
   height: 128px;
+  padding: 12px;
 }
 
 .delete-button {
