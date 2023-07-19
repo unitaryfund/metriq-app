@@ -192,7 +192,7 @@ class Tasks extends React.Component {
               )}
             </div>
             <div className='col-md-3'>
-              <TopSubmitters />
+              <TopSubmitters isOnlyAllTime />
               <br />
               <h5>Top Submissions</h5>
               <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>

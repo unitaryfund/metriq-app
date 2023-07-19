@@ -42,95 +42,123 @@ const TopSubmitters = (props) => {
   return (
     <span>
       <h5>Top Submitters</h5>
-      <Tabs id='top-submissions-tabs'>
-        {(data.weekly.length > 0) &&
-          <Tab eventKey='Weekly' title='Weekly' className='metriq-nav-tab'>
-            <div className='card'>
-              <SortingTable
-                columns={[
-                  {
-                    title: 'Name',
-                    key: 'username',
-                    width: 360
-                  },
-                  {
-                    title: 'Rank',
-                    key: 'rank',
-                    width: 80
-                  },
-                  {
-                    title: 'Submission Count',
-                    key: 'submissionsCount',
-                    width: 360
-                  }
-                ]}
-                data={data.weekly}
-                key={Math.random()}
-                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                tableLayout='auto'
-                rowClassName='link'
-              />
-            </div>
-          </Tab>}
-        {(data.monthly.length > 0) &&
-          <Tab eventKey='Monthly' title='Monthly' className='metriq-nav-tab'>
-            <div className='card'>
-              <SortingTable
-                columns={[
-                  {
-                    title: 'Name',
-                    key: 'username',
-                    width: 360
-                  },
-                  {
-                    title: 'Rank',
-                    key: 'rank',
-                    width: 80
-                  },
-                  {
-                    title: 'Submission Count',
-                    key: 'submissionsCount',
-                    width: 360
-                  }
-                ]}
-                data={data.monthly}
-                key={Math.random()}
-                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                tableLayout='auto'
-                rowClassName='link'
-              />
-            </div>
-          </Tab>}
-        {(data.allTime.length > 0) &&
-          <Tab eventKey='AllTime' title='All Time' className='metriq-nav-tab'>
-            <div className='card'>
-              <SortingTable
-                columns={[
-                  {
-                    title: 'Name',
-                    key: 'username',
-                    width: 360
-                  },
-                  {
-                    title: 'Rank',
-                    key: 'rank',
-                    width: 80
-                  },
-                  {
-                    title: 'Submission Count',
-                    key: 'submissionsCount',
-                    width: 360
-                  }
-                ]}
-                data={data.allTime}
-                key={Math.random()}
-                onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
-                tableLayout='auto'
-                rowClassName='link'
-              />
-            </div>
-          </Tab>}
-      </Tabs>
+      {props.isOnlyAllTime &&
+        <div className='card'>
+          <SortingTable
+            columns={[
+              {
+                title: 'Name',
+                key: 'username',
+                width: 360
+              },
+              {
+                title: 'Rank',
+                key: 'rank',
+                width: 80
+              },
+              {
+                title: 'Submission Count',
+                key: 'submissionsCount',
+                width: 360
+              }
+            ]}
+            data={data.allTime}
+            key={Math.random()}
+            onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+            tableLayout='auto'
+            rowClassName='link'
+          />
+        </div>}
+      {!props.isOnlyAllTime &&
+        <Tabs id='top-submissions-tabs'>
+          {(data.weekly.length > 0) &&
+            <Tab eventKey='Weekly' title='Weekly' className='metriq-nav-tab'>
+              <div className='card'>
+                <SortingTable
+                  columns={[
+                    {
+                      title: 'Name',
+                      key: 'username',
+                      width: 360
+                    },
+                    {
+                      title: 'Rank',
+                      key: 'rank',
+                      width: 80
+                    },
+                    {
+                      title: 'Submission Count',
+                      key: 'submissionsCount',
+                      width: 360
+                    }
+                  ]}
+                  data={data.weekly}
+                  key={Math.random()}
+                  onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                  tableLayout='auto'
+                  rowClassName='link'
+                />
+              </div>
+            </Tab>}
+          {(data.monthly.length > 0) &&
+            <Tab eventKey='Monthly' title='Monthly' className='metriq-nav-tab'>
+              <div className='card'>
+                <SortingTable
+                  columns={[
+                    {
+                      title: 'Name',
+                      key: 'username',
+                      width: 360
+                    },
+                    {
+                      title: 'Rank',
+                      key: 'rank',
+                      width: 80
+                    },
+                    {
+                      title: 'Submission Count',
+                      key: 'submissionsCount',
+                      width: 360
+                    }
+                  ]}
+                  data={data.monthly}
+                  key={Math.random()}
+                  onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                  tableLayout='auto'
+                  rowClassName='link'
+                />
+              </div>
+            </Tab>}
+          {(data.allTime.length > 0) &&
+            <Tab eventKey='AllTime' title='All Time' className='metriq-nav-tab'>
+              <div className='card'>
+                <SortingTable
+                  columns={[
+                    {
+                      title: 'Name',
+                      key: 'username',
+                      width: 360
+                    },
+                    {
+                      title: 'Rank',
+                      key: 'rank',
+                      width: 80
+                    },
+                    {
+                      title: 'Submission Count',
+                      key: 'submissionsCount',
+                      width: 360
+                    }
+                  ]}
+                  data={data.allTime}
+                  key={Math.random()}
+                  onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
+                  tableLayout='auto'
+                  rowClassName='link'
+                />
+              </div>
+            </Tab>}
+        </Tabs>}
     </span>
   )
 }

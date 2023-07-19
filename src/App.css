@@ -288,6 +288,22 @@ form > span > .row > label {
   padding: 8px;
 }
 
+.submission-image-small {
+  display: inline-block;
+  vertical-align: -40px;
+  width: 60px;
+  height: auto;
+  max-width: 120px;
+  max-height: 120px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.submission-heading-small {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 .submission-detail-image {
   display: inline-block;
   vertical-align: -128px;
