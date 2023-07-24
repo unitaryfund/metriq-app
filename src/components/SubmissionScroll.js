@@ -132,8 +132,6 @@ class SubmissionScroll extends React.Component {
               key={index}
               isLoggedIn={this.props.isLoggedIn}
               isEditView={this.props.isEditView}
-              isUnderReview={!(item.approvedAt)}
-              isDraft={!(item.publishedAt)}
             />)}
           {!this.props.isSmall && this.state.items.length && (
             <Suspense fallback={<div>Loading...</div>}>

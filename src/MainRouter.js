@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import axios from 'axios'
 import React, { useState } from 'react'
 import config from './config'
+import Home from './views/Home'
 import Submissions from './views/Submissions'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
@@ -60,7 +61,7 @@ const MainRouter = (props) => {
           exact
           path='/'
         >
-          <Tasks isLoggedIn={isLoggedIn} isHomepage />
+          <Home isLoggedIn={isLoggedIn} isHomepage />
         </Route>
         <Route
           exact

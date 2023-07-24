@@ -238,15 +238,18 @@ form > span > .row > label {
 }
 
 .submission {
-  border-radius: 16px;
   padding: 8px;
   margin: 6px;
   background-color: #FFFFFF;
-  box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
 .submission:hover {
   box-shadow: 0 3px 16px rgba(33,33,33,.2);
+}
+
+.submission-large {
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
 .category-item-box {
