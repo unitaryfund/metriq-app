@@ -77,7 +77,7 @@ class Platforms extends React.Component {
 
   render () {
     return (
-      <div id='metriq-main-content' className='container'>
+      <div id='metriq-main-content'>
         <ViewHeader>Platforms</ViewHeader>
         <ViewSubHeader>Platforms are the hardware devices used for a submission.</ViewSubHeader>
         <br />

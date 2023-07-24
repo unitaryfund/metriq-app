@@ -50,8 +50,8 @@ class SimpleReactFooter extends React.Component {
             <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title row'>
               <div className='col-sm-1' />
               <div className='col-sm-7'>
-                Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a> made with <div id='heart' /> by <a href='https://unitary.fund'><img width='64px' src={logo} alt='Unitary Fund logo' /></a><br/>
-                <span className='stay-connected-shim'/><br/>
+                Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a> made with <div id='heart' /> by <a href='https://unitary.fund'><img width='64px' src={logo} alt='Unitary Fund logo' /></a><br />
+                <span className='stay-connected-shim' /><br />
                 Stay up to date on metriq.info! Subscribe now to our newsletter:&nbsp;
                 <div className='email-subscribe'>
                   <MailchimpSubscribe
@@ -67,8 +67,8 @@ class SimpleReactFooter extends React.Component {
                 </div>
               </div>
               <div className='col-sm-4 text-center'>
-                Follow us on social media<br/>
-                <span className='stay-connected-shim'/><br/>
+                Follow us on social media<br />
+                <span className='stay-connected-shim' /><br />
                 {(this.props.facebook !== undefined || this.props.linkedin !== undefined || this.props.instagram !== undefined || this.props.twitter !== undefined || this.props.pinterest !== undefined || this.props.youtube !== undefined) &&
                   <div className='social-media' style={{ color: this.props.fontColor }}>
                     {this.props.facebook !== undefined ? <a aria-label='Facebook' href={`https://www.facebook.com/${this.props.facebook}`} target='_blank' rel='noreferrer' className='socialMediaLogo'><ImFacebook2 color={`${this.props.iconColor || 'black'}`} size={25} /> </a> : ''}

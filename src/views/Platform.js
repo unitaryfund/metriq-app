@@ -73,7 +73,6 @@ class Platform extends React.Component {
     }
 
     this.fetchData = this.fetchData.bind(this)
-    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleAccordionToggle = this.handleAccordionToggle.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
@@ -96,20 +95,6 @@ class Platform extends React.Component {
 
   handleLoginRedirect () {
     this.props.history.push('/Login/' + encodeURIComponent('Platform/' + this.props.match.params.id))
-  }
-
-  handleSubscribe () {
-    if (this.props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id + '/subscribe', {})
-        .then(res => {
-          this.setState({ item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.handleLoginRedirect()
-    }
   }
 
   handleAccordionToggle () {
@@ -440,7 +425,7 @@ class Platform extends React.Component {
             <TooltipTrigger message='Edit platform'>
               <Button className='submission-button' variant='secondary' aria-label='Edit platform' onClick={this.handleShowEditModal}><FontAwesomeIcon icon='edit' /></Button>
             </TooltipTrigger>
-            <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
+            <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
             <SocialShareIcons url={config.web.getUriPrefix() + '/platform/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />

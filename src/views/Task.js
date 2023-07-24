@@ -43,7 +43,6 @@ class Task extends React.Component {
     }
 
     this.fetchData = this.fetchData.bind(this)
-    this.handleSubscribe = this.handleSubscribe.bind(this)
     this.handleShowEditModal = this.handleShowEditModal.bind(this)
     this.handleHideEditModal = this.handleHideEditModal.bind(this)
     this.handleEditModalDone = this.handleEditModalDone.bind(this)
@@ -56,20 +55,6 @@ class Task extends React.Component {
 
   handleLoginRedirect () {
     this.props.history.push('/Login/' + encodeURIComponent('Task/' + this.props.match.params.id))
-  }
-
-  handleSubscribe () {
-    if (this.props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/task/' + this.props.match.params.id + '/subscribe', {})
-        .then(res => {
-          this.setState({ item: res.data.data })
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      this.handleLoginRedirect()
-    }
   }
 
   handleShowEditModal () {
@@ -243,7 +228,7 @@ class Task extends React.Component {
                 <FontAwesomeIcon icon='edit' />
               </Button>
             </TooltipTrigger>
-            <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='task' onSubscribe={this.handleSubscribe} />
+            <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
             <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
           </FormFieldWideRow>
           <br />

@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React from 'react'
 import CategoryItemIcon from './CategoryItemIcon'
 import SubscribeButton from './SubscribeButton'
-import { useHistory, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
-import config from '../config'
-import ErrorHandler from './ErrorHandler'
 import { renderLatex } from '../components/RenderLatex'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
@@ -26,67 +23,38 @@ const pickDetailUrl = (type, item) => {
 }
 
 const CategoryItemBox = (props) => {
-  const history = useHistory()
-  const [isSubscribed, setIsSubscribed] = useState(props.item.isSubscribed)
-
-  const handleLoginRedirect = (type) => {
-    if (type === 'tag') {
-      history.push('/Login/Tags')
-    } else if (type === 'task') {
-      history.push('/Login/Tasks')
-    } else if (type === 'method') {
-      history.push('/Login/Methods')
-    } else if (type === 'platform') {
-      history.push('/Login/Platforms')
-    }
-  }
-
-  const handleSubscribe = () => {
-    if (props.isLoggedIn) {
-      axios.post(config.api.getUriPrefix() + '/' + props.type + '/' + (props.type === 'tag' ? encodeURIComponent(props.item.name) : props.item.id) + '/subscribe', {})
-        .then(res => {
-          if (props.type === 'tag') {
-            setIsSubscribed(res.data.data)
-          } else {
-            setIsSubscribed(!!res.data.data.isSubscribed)
-          }
-        })
-        .catch(err => {
-          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
-        })
-    } else {
-      handleLoginRedirect(props.type)
-    }
-  }
-
   return (
-    <tr>
-      <td>
-        <div className='row submission'>
-          <div className='col-12 col-md-7'>
-            <Link to={pickDetailUrl(props.type, props.item)}>
-              {props.type !== 'tag' && props.item.description &&
-                <div>
-                  <div className='submission-heading'>
-                    {props.item.name}
-                    {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
-                      <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                  </div>
-                  <div className='submission-description'>{renderLatex(props.item.description)}</div>
-                </div>}
-              {(props.type === 'tag' || !props.item.description) &&
-                <div className='submission-heading-only'>{props.item.name}</div>}
-            </Link>
-          </div>
-          <div className='col-12 col-md-2 text-center'>
-            <SubscribeButton isSubscribed={isSubscribed} typeLabel={props.type} onSubscribe={handleSubscribe} />
-          </div>
-          <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
-          <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
-          <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
-        </div>
-      </td>
-    </tr>
+    <div className={'col-lg-4 col ' + (props.isPreview ? '' : 'submission-cell')}>
+      <div className='submission submission-large'>
+        <Link to={pickDetailUrl(props.type, props.item)} className='category-item-box'>
+          {props.type !== 'tag' && props.item.description &&
+            <div>
+              <div className='submission-heading'>
+                {props.item.name}
+                {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
+                  <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
+              </div>
+              <div className='submission-description'>{renderLatex(
+                !props.item.description
+                  ? ''
+                  : ((!props.isPreview && (props.item.description.length > 128))
+                      ? (props.item.description.substring(0, 125) + '...')
+                      : props.item.description))}
+              </div>
+            </div>}
+          {(props.type === 'tag' || !props.item.description) &&
+            <div className='submission-heading-only'>{props.item.name}</div>}
+        </Link>
+        <br />
+        <SubscribeButton item={props.item} type={props.type} isLoggedIn={props.isLoggedIn} />
+        {!props.isPreview &&
+          <span>
+            <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
+            <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
+            <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
+          </span>}
+      </div>
+    </div>
   )
 }
 

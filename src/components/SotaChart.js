@@ -81,6 +81,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: type,
+      logBase,
       log
     })
   }
@@ -95,6 +96,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
+      logBase: this.state.logBase,
       log: this.state.log
     })
   }
@@ -109,6 +111,7 @@ class SotaChart extends React.Component {
       chartData: this.state.chartData,
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
+      logBase: this.state.logBase,
       log: this.state.log
     })
   }
@@ -318,7 +321,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? (((state.isLog > 1) ? 'Log Log ' : 'Log ') + state.logBase.toString() + ' ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear',
             suggestedMin: lowest,
@@ -354,8 +357,8 @@ class SotaChart extends React.Component {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            left: this.state.windowWidth >= 820 ? 40 : 8,
-            right: this.state.windowWidth >= 820 ? 100 : 16
+            left: this.props.isPreview ? 0 : ((this.state.windowWidth >= 820) ? 40 : 8),
+            right: this.props.isPreview ? 0 : ((this.state.windowWidth >= 820) ? 100 : 16)
           }
         },
         scales: {
@@ -386,7 +389,7 @@ class SotaChart extends React.Component {
           y: {
             title: {
               display: true,
-              text: ((state.isLog && canLog) ? ((state.isLog > 1) ? 'Log Log ' : 'Log ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
+              text: ((state.isLog && canLog) ? (((state.isLog > 1) ? 'Log Log ' : 'Log ') + state.logBase.toString() + ' ') : '') + (state.chartKey ? state.chartKey : 'Metric value')
             },
             type: (state.isLog && !canLog) ? 'logarithmic' : 'linear'
           }
@@ -415,7 +418,7 @@ class SotaChart extends React.Component {
               return (type === 'scatter')
             }
           },
-          datalabels: this.state.windowWidth < 820
+          datalabels: (this.props.isPreview || (this.state.windowWidth < 820))
             ? { display: false }
             : {
                 font: { weight: '600', color: '#000000' },
@@ -425,6 +428,7 @@ class SotaChart extends React.Component {
                 }
               },
           legend: {
+            display: !this.props.isPreview,
             labels: {
               filter: function (item, chart) {
               // Logic to remove a particular legend item goes here
@@ -550,7 +554,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, log: this.state.log })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log })
   }
 
   componentDidMount () {
@@ -630,32 +634,34 @@ class SotaChart extends React.Component {
     return (
       <span className={!this.state.metricNames.length ? 'hide' : undefined}>
         <div className='container'>
-          <FormFieldSelectRow
-            inputName='chartKey'
-            value={this.state.chartKey}
-            label='Chart Metric:'
-            labelClass='metric-chart-label'
-            options={this.state.metricNames.map(name =>
-              ({
-                id: name,
-                name
-              }))}
-            onChange={(field, value) => {
-              this.setState({ chartKey: value })
-              this.loadChartFromState({
-                subset: this.state.subset,
-                label: this.state.label,
-                metricNames: this.state.metricNames,
-                chartKey: value,
-                chartData: this.state.chartData,
-                isLowerBetterDict: this.state.isLowerBetterDict,
-                isLog: this.state.isLog,
-                log: this.state.log
-              })
-            }}
-            tooltip='A metric performance measure of any "method" on this "task"'
-          />
-          {this.state.isSubset &&
+          {!this.props.isPreview &&
+            <FormFieldSelectRow
+              inputName='chartKey'
+              value={this.state.chartKey}
+              label='Chart Metric:'
+              labelClass='metric-chart-label'
+              options={this.state.metricNames.map(name =>
+                ({
+                  id: name,
+                  name
+                }))}
+              onChange={(field, value) => {
+                this.setState({ chartKey: value })
+                this.loadChartFromState({
+                  subset: this.state.subset,
+                  label: this.state.label,
+                  metricNames: this.state.metricNames,
+                  chartKey: value,
+                  chartData: this.state.chartData,
+                  isLowerBetterDict: this.state.isLowerBetterDict,
+                  isLog: this.state.isLog,
+                  logBase: this.state.logBase,
+                  log: this.state.log
+                })
+              }}
+              tooltip='A metric performance measure of any "method" on this "task"'
+            />}
+          {!this.props.isPreview && this.state.isSubset &&
             <div className='row' style={{ marginTop: '5px' }}>
               <span
                 htmlFor='subsetPicker'
@@ -675,63 +681,64 @@ class SotaChart extends React.Component {
                 </select>
               </div>
             </div>}
-          <div className='row' style={{ marginTop: '5px' }}>
-            <span
-              htmlFor='logOption'
-              className='col col-md-2 form-field-label metric-chart-label'
-              dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
-            />
-            <div className='col col-md-1'>
-              <select
-                id='subsetPicker'
-                name='subsetPicker'
-                className='form-control'
-                onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
-                value={this.state.isLog}
-              >
-                <option value='0'>Linear</option>
-                <option value='1'>Log</option>
-                <option value='2'>LogLog</option>
-              </select>
-            </div>
-            <span
-              htmlFor='logdropdown'
-              className='col col-md-2 form-field-label metric-chart-label'
-              dangerouslySetInnerHTML={{ __html: 'Log base:' }}
-            />
-            <div className='col col-md-2'>
-              <select
-                id='logdropdown'
-                name='logdropdown'
-                className='form-control'
-                onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
-                value={this.state.logBase}
-              >
-                <option value='2'>2</option>
-                <option value='10'>10</option>
-                <option value='e'>e</option>
-              </select>
-            </div>
-            <span
-              htmlFor='labeldropdown'
-              className='col col-md-2 form-field-label metric-chart-label'
-              dangerouslySetInnerHTML={{ __html: 'Label:' }}
-            />
-            <div className='col col-md-2'>
-              <select
-                id='labeldropdown'
-                name='labeldropdown'
-                className='form-control'
-                onChange={this.handleOnChangeLabel}
-                value={this.state.label}
-              >
-                <option value='arXiv'>arXiv ID</option>
-                <option value='method'>Method and platform</option>
-              </select>
-            </div>
-          </div>
+          {!this.props.isPreview &&
+            <div className='row' style={{ marginTop: '5px' }}>
+              <span
+                htmlFor='logOption'
+                className='col col-md-2 form-field-label metric-chart-label'
+                dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
+              />
+              <div className='col col-md-1'>
+                <select
+                  id='subsetPicker'
+                  name='subsetPicker'
+                  className='form-control'
+                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                  value={this.state.isLog}
+                >
+                  <option value='0'>Linear</option>
+                  <option value='1'>Log</option>
+                  <option value='2'>LogLog</option>
+                </select>
+              </div>
+              <span
+                htmlFor='logdropdown'
+                className='col col-md-2 form-field-label metric-chart-label'
+                dangerouslySetInnerHTML={{ __html: 'Log base:' }}
+              />
+              <div className='col col-md-2'>
+                <select
+                  id='logdropdown'
+                  name='logdropdown'
+                  className='form-control'
+                  onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
+                  value={this.state.logBase}
+                >
+                  <option value='2'>2</option>
+                  <option value='10'>10</option>
+                  <option value='e'>e</option>
+                </select>
+              </div>
+              <span
+                htmlFor='labeldropdown'
+                className='col col-md-2 form-field-label metric-chart-label'
+                dangerouslySetInnerHTML={{ __html: 'Label:' }}
+              />
+              <div className='col col-md-2'>
+                <select
+                  id='labeldropdown'
+                  name='labeldropdown'
+                  className='form-control'
+                  onChange={this.handleOnChangeLabel}
+                  value={this.state.label}
+                >
+                  <option value='arXiv'>arXiv ID</option>
+                  <option value='method'>Method and platform</option>
+                </select>
+              </div>
+            </div>}
         </div>
-        <div className='chart-container sota-chart'>
+        <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
           <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
         </div>
       </span>
