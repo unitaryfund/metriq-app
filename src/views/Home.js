@@ -221,7 +221,7 @@ class Home extends React.Component {
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow className='centered-tabs'>
-          <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading={<span>Platforms <Link to='/Tasks'><Button variant='outline-light' className='platforms-more-button'>Explore tasks</Button></Link></span>} />
+          <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading={<span>Tasks <Link to='/Tasks'><Button variant='outline-light' className='platforms-more-button'>Explore tasks</Button></Link></span>} />
         </FormFieldWideRow>
         <br />
         {(this.state.platforms.length > 0) &&
