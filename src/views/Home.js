@@ -129,7 +129,7 @@ class Home extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <p className='text-left'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to="/Submissions">submissions</Link> that show the performance of different <Link to="/Methods">methods</Link> on <Link to="/Platforms">platforms</Link> against <Link to="/Tasks">tasks</Link>.</p>
+        <p className='text-left'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to='/Submissions'>submissions</Link> that show the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</p>
         <p className='text-left'>We have highlighted tasks here and you can search for more:</p>
         <br />
         <FormFieldTypeaheadRow

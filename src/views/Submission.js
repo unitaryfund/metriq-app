@@ -47,7 +47,7 @@ class Submission extends React.Component {
       supplementUrl: '',
       evaluatedAt: '',
       authors: [],
-      item: { isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
+      item: { id: this.props.params.id, isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
       allNames: [],
       filteredNames: [],
       metricNames: [],
@@ -710,7 +710,7 @@ class Submission extends React.Component {
           <TooltipTrigger message='Edit submission'>
             <Button className='submission-button' variant='secondary' aria-label='Edit submission' onClick={this.handleEditSubmissionDetails}><FontAwesomeIcon icon='edit' /></Button>
           </TooltipTrigger>
-          <SubscribeButton isSubscribed={this.state.item.isSubscribed} typeLabel='submission' onSubscribe={this.handleSubscribe} />
+          <SubscribeButton isSubscribed={this.state.item.isSubscribed} type='submission' item={this.state.item} isLoggedIn={this.props.isLoggedIn} />
           {!this.state.item.publishedAt &&
             <TooltipTrigger message='Publish submission'>
               <Button className='submission-button' variant='danger' aria-label='Publish submission' onClick={this.handlePublishOnClick}>Publish</Button>

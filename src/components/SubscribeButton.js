@@ -19,6 +19,10 @@ const SubscribeButton = (props) => {
       history.push('/Login/Methods')
     } else if (type === 'platform') {
       history.push('/Login/Platforms')
+    } else if (type === 'submissions') {
+      history.push('/Login/Submissions')
+    } else {
+      history.push('/Login')
     }
   }
   const handleSubscribe = () => {
@@ -43,11 +47,11 @@ const SubscribeButton = (props) => {
     <span>
       {!isSubscribed &&
         <TooltipTrigger message={'Subscribe to ' + props.type}>
-          <Button className='submission-button metriq-follow-button' variant='outline-dark' aria-label={'Subscribe to ' + props.type} onClick={handleSubscribe}>Follow</Button>
+          <Button className='submission-button metriq-follow-button' variant='outline-dark' aria-label={'Subscribe to ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe}>Follow</Button>
         </TooltipTrigger>}
       {isSubscribed &&
         <TooltipTrigger message={'Unsubscribe from ' + props.type}>
-          <Button className='submission-button metriq-follow-button' variant='primary' aria-label={'Unsubscribe from ' + props.type} onClick={handleSubscribe}>Unfollow</Button>
+          <Button className='submission-button metriq-follow-button' variant='primary' aria-label={'Unsubscribe from ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe}>Unfollow</Button>
         </TooltipTrigger>}
     </span>
   )
