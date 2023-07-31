@@ -38,11 +38,29 @@ class Home extends React.Component {
       topSubmitters: [],
       activeTab: 'Trending',
       filterId: null,
-      requestFailedMessage: ''
+      requestFailedMessage: '',
+      isLinkBlocked: false
     }
 
     this.handleOnFilter = this.handleOnFilter.bind(this)
     this.handleOnSelect = this.handleOnSelect.bind(this)
+    this.handleOnLinkClick = this.handleOnLinkClick.bind(this)
+    this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this)
+    this.handleOnMouseLeave = this.handleOnMouseLeave.bind(this)
+  }
+
+  handleOnLinkClick (event) {
+    if (this.state.isLinkBlocked) {
+      event.preventDefault()
+    }
+  }
+
+  handleOnMouseEnter () {
+    this.setState({ isLinkBlocked: true })
+  }
+
+  handleOnMouseLeave () {
+    this.setState({ isLinkBlocked: false })
   }
 
   handleOnFilter (value) {
@@ -155,10 +173,10 @@ class Home extends React.Component {
             <div className='col-md-9'>
               {this.state.featured.map((item, index) =>
                 <span key={index}>
-                  <div className='task card'>
-                    <div className='row h-100 text-left'>
-                      <div className='col-lg-3 col-md-5 col'>
-                        <Link to={'/Task/' + item.id} className='active-navlink'>
+                  <Link to={'/Task/' + item.id} className='active-navlink' onClick={this.handleOnLinkClick}>
+                    <div className='task card'>
+                      <div className='row h-100 text-left'>
+                        <div className='col-lg-3 col-md-5 col'>
                           <SotaChart
                             isPreview
                             chartId={index}
@@ -167,32 +185,32 @@ class Home extends React.Component {
                             key={index}
                             isLog
                             logBase={(index === 0) ? '2' : '10'}
+                            onMouseEnter={this.handleOnMouseEnter}
+                            onMouseLeave={this.handleOnMouseLeave}
                           />
-                        </Link>
+                        </div>
+                        <div className='col-lg-9 col-md-7 col'>
+                          <h5>
+                            {item.name}
+                            {qedcIds.includes(parseInt(item.id)) &&
+                              <span> <Link to='/QEDC' onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}><span className='link'>(QED-C)</span></Link></span>}
+                            <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} /></span>
+                          </h5>
+                          {item.description}
+                        </div>
                       </div>
-                      <div className='col-lg-9 col-md-7 col'>
-                        <h5>
-                          <Link to={'/Task/' + item.id} className='active-navlink'>{item.name}</Link>
-                          {qedcIds.includes(parseInt(item.id)) &&
-                            <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
-                          <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} /></span>
-                        </h5>
-                        <Link to={'/Task/' + item.id} className='active-navlink'>{item.description}</Link>
-                      </div>
-                    </div>
-                    <div className='row h-100'>
-                      <div className='col-lg-4 col text-left'>
-                        <Link to={'/Task/' + item.parentTask.id}>{item.parentTask.name}</Link>
-                      </div>
-                      <div className='col-lg-8 col'>
-                        <Link to={'/Task/' + item.id} className='active-navlink' style={{ width: 'auto' }}>
+                      <div className='row h-100'>
+                        <div className='col-lg-4 col text-left'>
+                          <Link to={'/Task/' + item.parentTask.id} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>{item.parentTask.name}</Link>
+                        </div>
+                        <div className='col-lg-8 col'>
                           <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
                           <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
                           <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                        </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                   <br />
                 </span>
               )}

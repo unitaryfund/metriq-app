@@ -47,11 +47,11 @@ const SubscribeButton = (props) => {
     <span>
       {!isSubscribed &&
         <TooltipTrigger message={'Subscribe to ' + props.type}>
-          <Button className='submission-button metriq-follow-button' variant='outline-dark' aria-label={'Subscribe to ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe}>Follow</Button>
+          <Button className='submission-button metriq-follow-button' variant='outline-dark' aria-label={'Subscribe to ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe} onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>Follow</Button>
         </TooltipTrigger>}
       {isSubscribed &&
         <TooltipTrigger message={'Unsubscribe from ' + props.type}>
-          <Button className='submission-button metriq-follow-button' variant='primary' aria-label={'Unsubscribe from ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe}>Unfollow</Button>
+          <Button className='submission-button metriq-follow-button' variant='primary' aria-label={'Unsubscribe from ' + props.type} onClick={props.handleSubscribe ? props.handleSubscribe : handleSubscribe} onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>Unfollow</Button>
         </TooltipTrigger>}
     </span>
   )

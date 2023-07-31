@@ -220,12 +220,12 @@ class Tasks extends React.Component {
           <h5>QED-C Benchmark Tasks</h5>
           {this.state.featured.map((item, index) => {
             return (
-              <div className='task card' key={index}>
+              <div className='task' key={index}>
                 <div className='row h-100'>
                   <div className='col-md col h-100'>
                     <table className='task-method-item'>
                       <tbody>
-                        <CategoryItemBox item={item} isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
+                        <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
                         <SotaChart
                           chartId={index}
                           xLabel='Time'
