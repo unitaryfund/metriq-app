@@ -58,11 +58,11 @@ const FormFieldTypeaheadRow = (props) => {
       {props.label && props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={coalescedId} className={'col' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
+            <span htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
       {(props.isRow || (props.label && !props.tooltip)) &&
-        <label htmlFor={coalescedId} className={'col' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
         id={coalescedId}
@@ -71,7 +71,7 @@ const FormFieldTypeaheadRow = (props) => {
           name: coalescedId
         }}
         labelKey={props.labelKey ? props.labelKey : undefined}
-        className={'col' + (props.isWide ? (props.label ? ' col-md-8' : ' col-md-12') : ' col-md-6') + (props.innerClassName ? (' ' + props.innerClassName) : '')}
+        className={'col-12' + (props.isWide ? (props.label ? ' col-md-8' : ' col-md-12') : ' col-md-6') + (props.innerClassName ? (' ' + props.innerClassName) : '')}
         options={props.options}
         placeholder={props.placeholder}
         defaultSelected={[props.value ? props.value : '']}
@@ -93,7 +93,7 @@ const FormFieldTypeaheadRow = (props) => {
       />
       {(!!props.onClickAdd && !props.onClickNew) && <Button variant='primary' className='submission-ref-button' onClick={handleOnButtonClick} disabled={props.disabled || !value}>{props.buttonLabel ? props.buttonLabel : 'Add'}</Button>}
       {!!props.onClickNew && <Button variant='primary' className='submission-ref-button' onClick={() => props.onClickNew(value)} disabled={props.disabled}>New</Button>}
-      {(!props.onClickAdd && !props.onClickNew) && <div className='col col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid || props.isError} message={props.validatorMessage} /></Suspense></div>}
+      {(!props.onClickAdd && !props.onClickNew) && <div className='col-12 col-md-3'><Suspense fallback={<div>Loading...</div>}><FormFieldValidator invalid={!isValid || props.isError} message={props.validatorMessage} /></Suspense></div>}
     </div>
   )
 }
