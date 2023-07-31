@@ -224,13 +224,13 @@ class Home extends React.Component {
                 <h5>Top Submissions</h5>
                 <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
                   <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
-                    <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                    <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} />
                   </Tab>
                   <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
-                    <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                    <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} />
                   </Tab>
                   <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
-                    <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} key={Math.random()} />
+                    <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} />
                   </Tab>
                 </Tabs>
               </div>
