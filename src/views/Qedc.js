@@ -210,7 +210,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <ViewHeader>QED-C  Benchmarks</ViewHeader>
+        <ViewHeader align="center">QED-C  Benchmarks</ViewHeader>
         <h5>Metriq is the open platform to share application-oriented benchmarks of quantum cloud providers.</h5>
         <p>Here you can find and contribute to application-oriented benchmarks as defined in the <Link to='Submission/14'>QED-C repository</Link>. The Quantum Economic Development Consortium (<a href='https://quantumconsortium.org/'>QED-C</a>) is a consortium of stakeholders that aims to enable and grow the quantum industry. Metriq enables independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted these open source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like <Link to='Task/34'>quantum volume</Link>, Grover's search, and quantum Fourier transform.</p>
         <p>The Metriq Python client (metriq-client) and API (metriq-api) are compatible with the QED-C repository and enable addition of new data points on metriq.info. You can read more about automatically running QED-C benchmarks on Metriq in <a href='https://unitary.fund/posts/2023_metriq_qedc.html'>this blog post</a> on the Unitary Fund website.</p>
