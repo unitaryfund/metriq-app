@@ -176,7 +176,7 @@ class Home extends React.Component {
                   <Link to={'/Task/' + item.id} className='active-navlink' onClick={this.handleOnLinkClick}>
                     <div className='task card'>
                       <div className='row h-100 text-left'>
-                        <div className='col-lg-3 col-md-5 col'>
+                        <div className='col-xl-4 col-lg-5 col'>
                           <SotaChart
                             isPreview
                             chartId={index}
@@ -189,7 +189,7 @@ class Home extends React.Component {
                             onMouseLeave={this.handleOnMouseLeave}
                           />
                         </div>
-                        <div className='col-lg-9 col-md-7 col'>
+                        <div className='col-xl-8 col-lg-7 col'>
                           <h5>
                             {item.name}
                             {qedcIds.includes(parseInt(item.id)) &&
