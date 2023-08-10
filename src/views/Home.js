@@ -174,7 +174,7 @@ class Home extends React.Component {
               {this.state.featured.map((item, index) =>
                 <span key={index}>
                   <Link to={'/Task/' + item.id} className='active-navlink' onClick={this.handleOnLinkClick}>
-                    <div className='task card'>
+                    <div className='task card task-card-link'>
                       <div className='row h-100 text-left'>
                         <div className='col-xl-4 col-lg-5 col'>
                           <SotaChart

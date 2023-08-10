@@ -195,6 +195,14 @@ form > span > .row > label {
   color: #000000 !important;
 }
 
+.active-navlink:hover {
+  text-decoration: none;
+}
+
+.task-card-link:hover {
+  box-shadow: 0 6px 32px rgba(33,33,33,.2);
+}
+
 .active-dropdown-navlink {
   color: #0000EE !important;
 }
@@ -255,6 +263,7 @@ form > span > .row > label {
 .category-item-box {
   display: inline-block;
   height: 128px;
+  width: 100%;
   padding: 12px;
 }
 
@@ -279,11 +288,13 @@ form > span > .row > label {
 
 .submission-heading {
   font-weight: bold;
-  padding: 0 8px 8px 8px
+  padding: 0 8px 8px 8px;
+  text-align: left;
 }
 
 .submission-heading-only {
   font-weight: bold;
+  text-align: left;
 }
 
 .submission-subheading {
