@@ -232,7 +232,8 @@ form > span > .row > label {
 }
 
 .view-header {
-  color: #04165D
+  color: #04165D;
+  display: inline-block;
 }
 
 .task {
@@ -292,6 +293,17 @@ form > span > .row > label {
   text-align: left;
 }
 
+.submission-edit {
+  color: #04165D;
+  font-size: xx-large;
+  padding-left: 6px;
+  padding-bottom: 6px;
+}
+
+.submission-edit:hover {
+  cursor: pointer;
+}
+
 .submission-heading-only {
   font-weight: bold;
   text-align: left;
@@ -342,6 +354,7 @@ form > span > .row > label {
 }
 
 .submission-description {
+  color: #04165D;
   white-space: pre-line;
   text-align: left;
   padding: 0 8px 8px 8px

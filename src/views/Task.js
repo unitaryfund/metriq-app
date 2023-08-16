@@ -5,7 +5,7 @@ import ErrorHandler from './../components/ErrorHandler'
 import FormFieldRow from '../components/FormFieldRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import FormFieldSelectRow from '../components/FormFieldSelectRow'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Modal, Tab, Tabs } from 'react-bootstrap'
 import { useParams, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
@@ -13,12 +13,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CategoryScroll from '../components/CategoryScroll'
 import { parse } from 'json2csv'
 import Commento from '../components/Commento'
-import TooltipTrigger from '../components/TooltipTrigger'
 import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
 import SortingTable from '../components/SortingTable'
 import { sortByCounts } from '../components/SortFunctions'
 import { renderLatex } from '../components/RenderLatex'
+import TopSubmitters from '../components/TopSubmitters'
+import SubmissionScroll from '../components/SubmissionScroll'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -205,7 +206,18 @@ class Task extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <div className='container submission-detail-container'>
+        <div className='submission-detail-container'>
+          <FormFieldWideRow>
+            <h1 className='view-header'>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1> <FontAwesomeIcon icon='edit' className='submission-edit' onClick={this.handleShowEditModal} />
+            <div className='float-right'>
+              <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
+              <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
+            </div>
+            <div className='submission-description'>
+              {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
+            </div>
+          </FormFieldWideRow>
+          <br />
           {!this.state.item.isHideChart &&
             <Suspense fallback={<div>Loading...</div>}>
               <SotaChart
@@ -216,22 +228,6 @@ class Task extends React.Component {
                 logBase='2'
               />
             </Suspense>}
-          <FormFieldWideRow>
-            <div><h1>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1></div>
-            <div className='submission-description'>
-              {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
-            </div>
-          </FormFieldWideRow>
-          <FormFieldWideRow>
-            <TooltipTrigger message='Edit task'>
-              <Button aria-label='Edit task' className='submission-button' variant='secondary' onClick={this.handleShowEditModal}>
-                <FontAwesomeIcon icon='edit' />
-              </Button>
-            </TooltipTrigger>
-            <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
-            <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
-          </FormFieldWideRow>
-          <br />
           {this.state.item.parentTask &&
             <div className='row'>
               <div className='col-md-12'>
@@ -247,82 +243,102 @@ class Task extends React.Component {
               <CategoryScroll type='task' items={this.state.item.childTasks} isLoggedIn={this.props.isLoggedIn} />
               <br />
             </div>}
-          {(this.state.results.length > 0) &&
-            <h2>Results <Button variant='primary' onClick={this.handleCsvExport}>Export to CSV</Button></h2>}
-          {(this.state.results.length > 0) &&
-            <FormFieldWideRow>
-              <SortingTable
-                className='detail-table'
-                columns={[{
-                  title: 'Submission',
-                  key: 'name',
-                  width: 250
-                },
-                {
-                  title: 'Method',
-                  key: 'methodName',
-                  width: 250
-                },
-                {
-                  title: 'Platform',
-                  key: 'platformName',
-                  width: 250
-                },
-                {
-                  title: 'Date',
-                  key: 'tableDate',
-                  width: 250
-                },
-                {
-                  title: 'Metric',
-                  key: 'metricName',
-                  width: 250
-                },
-                {
-                  title: 'Value',
-                  key: 'metricValue',
-                  width: 250
-                }]}
-                data={this.state.resultsJson}
-                onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
-                tableLayout='auto'
-                rowClassName='link'
-              />
-            </FormFieldWideRow>}
-          {(this.state.item.submissions.length > 0) &&
-            <div>
-              <h2>Submissions</h2>
-              <FormFieldWideRow>
-                <SortingTable
-                  className='detail-table'
-                  columns={[{
-                    title: 'Name',
-                    key: 'name',
-                    width: 700
-                  },
-                  {
-                    title: 'Submitted',
-                    key: 'createdAt',
-                    width: 200
-                  },
-                  {
-                    title: 'Up-votes',
-                    key: 'upvoteCount',
-                    width: 200
-                  }]}
-                  data={this.state.item.submissions.map(row => ({
-                    key: row.id,
-                    name: row.name,
-                    createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
-                    upvoteCount: row.upvoteCount || 0
-                  }))}
-                  onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
-                  tableLayout='auto'
-                  rowClassName='link'
-                />
-              </FormFieldWideRow>
+          <h2>Results <Button variant='primary' onClick={this.handleCsvExport}>Export to CSV</Button></h2>
+          <div className='row'>
+            <div className='col-md-9'>
+              {(this.state.results.length > 0) &&
+                <div>
+                  <SortingTable
+                    className='detail-table'
+                    columns={[{
+                      title: 'Submission',
+                      key: 'name',
+                      width: 250
+                    },
+                    {
+                      title: 'Method',
+                      key: 'methodName',
+                      width: 250
+                    },
+                    {
+                      title: 'Platform',
+                      key: 'platformName',
+                      width: 250
+                    },
+                    {
+                      title: 'Date',
+                      key: 'tableDate',
+                      width: 250
+                    },
+                    {
+                      title: 'Metric',
+                      key: 'metricName',
+                      width: 250
+                    },
+                    {
+                      title: 'Value',
+                      key: 'metricValue',
+                      width: 250
+                    }]}
+                    data={this.state.resultsJson}
+                    onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>}
+              {(this.state.item.submissions.length > 0) &&
+                <div>
+                  <h2>Submissions</h2>
+                  <SortingTable
+                    className='detail-table'
+                    columns={[{
+                      title: 'Name',
+                      key: 'name',
+                      width: 700
+                    },
+                    {
+                      title: 'Submitted',
+                      key: 'createdAt',
+                      width: 200
+                    },
+                    {
+                      title: 'Up-votes',
+                      key: 'upvoteCount',
+                      width: 200
+                    }]}
+                    data={this.state.item.submissions.map(row => ({
+                      key: row.id,
+                      name: row.name,
+                      createdAt: new Date(row.createdAt).toLocaleDateString('en-US'),
+                      upvoteCount: row.upvoteCount || 0
+                    }))}
+                    onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
+                    tableLayout='auto'
+                    rowClassName='link'
+                  />
+                </div>}
+            </div>
+            <div className='col-md-3'>
+              <div className='card top-submitters-card'>
+                <TopSubmitters isOnlyAllTime />
+              </div>
               <br />
-            </div>}
+              <div className='card top-submitters-card'>
+                <h5>Top Submissions</h5>
+                <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
+                  <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} />
+                  </Tab>
+                  <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} />
+                  </Tab>
+                  <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
+                    <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} />
+                  </Tab>
+                </Tabs>
+              </div>
+            </div>
+          </div>
           <div />
           <FormFieldWideRow>
             <hr />
