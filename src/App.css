@@ -246,6 +246,7 @@ form > span > .row > label {
 }
 
 .submission {
+  min-height: 256px;
   padding: 8px;
   margin: 6px;
   background-color: #FFFFFF;
@@ -262,7 +263,7 @@ form > span > .row > label {
 
 .category-item-box {
   display: inline-block;
-  height: 128px;
+  height: 192px;
   width: 100%;
   padding: 12px;
 }
@@ -325,6 +326,10 @@ form > span > .row > label {
 .submission-heading-small {
   padding-top: 16px;
   padding-bottom: 16px;
+}
+
+.category-item-box-stats {
+  white-space: nowrap;
 }
 
 .top-submitters-card {
