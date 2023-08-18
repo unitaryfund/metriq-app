@@ -219,15 +219,17 @@ class Task extends React.Component {
           </FormFieldWideRow>
           <br />
           {!this.state.item.isHideChart &&
-            <Suspense fallback={<div>Loading...</div>}>
-              <SotaChart
-                chartId='task-detail'
-                xLabel='Time'
-                taskId={this.props.match.params.id}
-                onLoadData={this.handleOnLoadData}
-                logBase='2'
-              />
-            </Suspense>}
+            <div className='task card'>
+              <Suspense fallback={<div>Loading...</div>}>
+                <SotaChart
+                  chartId='task-detail'
+                  xLabel='Time'
+                  taskId={this.props.match.params.id}
+                  onLoadData={this.handleOnLoadData}
+                  logBase='2'
+                />
+              </Suspense>
+            </div>}
           {this.state.item.parentTask &&
             <div className='row'>
               <div className='col-md-12'>

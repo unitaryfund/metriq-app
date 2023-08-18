@@ -414,6 +414,7 @@ form > span > .row > label {
 }
 
 .link {
+  background-color: white !important;
   color: #007bff;
 }
 
@@ -442,8 +443,7 @@ form > span > .row > label {
   padding-left: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #34bce4;
-  color: white;
+  background-color: #eee;
 }
 
 .submission a {
