@@ -241,6 +241,16 @@ form > span > .row > label {
   box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
+.sota-card {
+  width: 100%;
+}
+
+.sota-button {
+  width: 48%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
 .submission-cell {
   padding: 8px;
   min-width: 256px;
