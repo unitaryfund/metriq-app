@@ -489,6 +489,12 @@ form > span > .row > label {
   width: 256px;
 }
 
+.sota-control-row {
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 32px;
+}
+
 iframe {
   display: block;
   border-style:none;
