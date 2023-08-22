@@ -20,7 +20,6 @@ import { sortByCounts } from '../components/SortFunctions'
 import { renderLatex } from '../components/RenderLatex'
 import TopSubmitters from '../components/TopSubmitters'
 import SubmissionScroll from '../components/SubmissionScroll'
-import SotaControlRow from '../components/SotaControlRow'
 const SotaChart = React.lazy(() => import('../components/SotaChart'))
 
 library.add(faEdit)
@@ -220,72 +219,15 @@ class Task extends React.Component {
           </FormFieldWideRow>
           <br />
           {!this.state.item.isHideChart &&
-            <div className='task card sota-card'>
-              <div className='row'>
-                <div className='col-md-9'>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SotaChart
-                      chartId='task-detail'
-                      xLabel='Time'
-                      taskId={this.props.match.params.id}
-                      onLoadData={this.handleOnLoadData}
-                      logBase='2'
-                    />
-                  </Suspense>
-                </div>
-                <div className='col-md-3 text-center'>
-                  <div className='row'>
-                    <div className='col'>
-                      <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.handleCsvExport}>Export to CSV</Button>
-                      <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handleCsvExport}>Download to PNG</Button>
-                    </div>
-                  </div>
-                  <SotaControlRow
-                    name='logBaseOption'
-                    label='Log base:'
-                    options={{
-                      2: '2',
-                      10: '10',
-                      e: 'e'
-                    }}
-                  />
-                  <SotaControlRow
-                    name='logOption'
-                    label='Logarithmic:'
-                    options={{
-                      0: 'Linear',
-                      1: 'Log',
-                      2: 'LogLog'
-                    }}
-                  />
-                  <SotaControlRow
-                    name='metricOption'
-                    label='Chart metric:'
-                    options={{
-                      0: 'Dummy',
-                      1: 'Dummy 2',
-                      2: 'Dummy 3'
-                    }}
-                  />
-                  <SotaControlRow
-                    name='subsetOption'
-                    label='Subset option:'
-                    options={{
-                      qubits: 'Qubit count',
-                      depth: 'Circuit depth'
-                    }}
-                  />
-                  <SotaControlRow
-                    name='labelOption'
-                    label='Label:'
-                    options={{
-                      arXiv: 'arXiv ID',
-                      method: 'Method and platform'
-                    }}
-                  />
-                </div>
-              </div>
-            </div>}
+            <Suspense fallback={<div>Loading...</div>}>
+              <SotaChart
+                chartId='task-detail'
+                xLabel='Time'
+                taskId={this.props.match.params.id}
+                onLoadData={this.handleOnLoadData}
+                logBase='2'
+              />
+            </Suspense>}
           <br />
           {this.state.item.parentTask &&
             <div className='row'>

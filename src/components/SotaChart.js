@@ -8,11 +8,12 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { BarWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
 import 'chartjs-adapter-moment'
-import FormFieldSelectRow from './FormFieldSelectRow'
 import axios from 'axios'
 import config from '../config'
 import { sortByCounts } from './SortFunctions'
 import ErrorHandler from './ErrorHandler'
+import SotaControlRow from './SotaControlRow'
+import { Button } from 'react-bootstrap'
 
 // See https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score#answer-36577594
 const percentileZ = (p) => {
@@ -633,114 +634,92 @@ class SotaChart extends React.Component {
   render () {
     return (
       <span className={!this.state.metricNames.length ? 'hide' : undefined}>
-        <div className='container'>
-          {!this.props.isPreview &&
-            <FormFieldSelectRow
-              inputName='chartKey'
-              value={this.state.chartKey}
-              label='Chart Metric:'
-              labelClass='metric-chart-label'
-              options={this.state.metricNames.map(name =>
-                ({
-                  id: name,
-                  name
-                }))}
-              onChange={(field, value) => {
-                this.setState({ chartKey: value })
-                this.loadChartFromState({
-                  subset: this.state.subset,
-                  label: this.state.label,
-                  metricNames: this.state.metricNames,
-                  chartKey: value,
-                  chartData: this.state.chartData,
-                  isLowerBetterDict: this.state.isLowerBetterDict,
-                  isLog: this.state.isLog,
-                  logBase: this.state.logBase,
-                  log: this.state.log
-                })
-              }}
-              tooltip='A metric performance measure of any "method" on this "task"'
-            />}
-          {!this.props.isPreview && this.state.isSubset &&
-            <div className='row' style={{ marginTop: '5px' }}>
-              <span
-                htmlFor='subsetPicker'
-                className='col col-md-3 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Series subset:' }}
-              />
-              <div className='col col-md-6'>
-                <select
-                  id='subsetPicker'
-                  name='subsetPicker'
-                  className='form-control'
-                  onChange={this.handleOnChangeSubset}
+        <div className='container' />
+        {this.props.isPreview &&
+          <div className='chart-container sota-preview'>
+            <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+          </div>}
+        {!this.props.isPreview &&
+          <div className='task card sota-card'>
+            <div className='row'>
+              <div className='col-md-9'>
+                <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
+                  <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+                </div>
+              </div>
+              <div className='col-md-3 text-center'>
+                <div>
+                  <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.handleCsvExport}>Export to CSV</Button>
+                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handleCsvExport}>Download to PNG</Button>
+                </div>
+                <SotaControlRow
+                  name='chartKeyOption'
+                  label='Chart Metric:'
+                  value={this.state.chartKey}
+                  options={this.state.metricNames.map(name => name)}
+                  onChange={event => {
+                    const value = event.target.value
+                    this.setState({ chartKey: this.state.metricNames[parseInt(value)] })
+                    this.loadChartFromState({
+                      subset: this.state.subset,
+                      label: this.state.label,
+                      metricNames: this.state.metricNames,
+                      chartKey: this.state.metricNames[parseInt(value)],
+                      chartData: this.state.chartData,
+                      isLowerBetterDict: this.state.isLowerBetterDict,
+                      isLog: this.state.isLog,
+                      logBase: this.state.logBase,
+                      log: this.state.log
+                    })
+                  }}
+                  tooltip='A metric performance measure of any "method" on this "task"'
+                />
+                <SotaControlRow
+                  name='subsetOption'
+                  label='Subset option:'
                   value={this.state.subset}
-                >
-                  <option value='qubits'>Qubit Count</option>
-                  <option value='depth'>Circuit depth</option>
-                </select>
-              </div>
-            </div>}
-          {!this.props.isPreview &&
-            <div className='row' style={{ marginTop: '5px' }}>
-              <span
-                htmlFor='logOption'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
-              />
-              <div className='col col-md-1'>
-                <select
-                  id='subsetPicker'
-                  name='subsetPicker'
-                  className='form-control'
-                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                  options={{
+                    qubits: 'Qubit count',
+                    depth: 'Circuit depth'
+                  }}
+                  onChange={this.handleOnChangeSubset}
+                  disabled={this.state.isSubset}
+                />
+                <SotaControlRow
+                  name='logOption'
+                  label='Log option:'
                   value={this.state.isLog}
-                >
-                  <option value='0'>Linear</option>
-                  <option value='1'>Log</option>
-                  <option value='2'>LogLog</option>
-                </select>
-              </div>
-              <span
-                htmlFor='logdropdown'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Log base:' }}
-              />
-              <div className='col col-md-2'>
-                <select
-                  id='logdropdown'
-                  name='logdropdown'
-                  className='form-control'
-                  onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
+                  options={{
+                    0: 'Linear',
+                    1: 'Log',
+                    2: 'LogLog'
+                  }}
+                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                />
+                <SotaControlRow
+                  name='logBaseOption'
+                  label='Log base:'
                   value={this.state.logBase}
-                >
-                  <option value='2'>2</option>
-                  <option value='10'>10</option>
-                  <option value='e'>e</option>
-                </select>
-              </div>
-              <span
-                htmlFor='labeldropdown'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Label:' }}
-              />
-              <div className='col col-md-2'>
-                <select
-                  id='labeldropdown'
-                  name='labeldropdown'
-                  className='form-control'
-                  onChange={this.handleOnChangeLabel}
+                  options={{
+                    2: '2',
+                    10: '10',
+                    e: 'e'
+                  }}
+                  onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
+                />
+                <SotaControlRow
+                  name='labelOption'
+                  label='Label:'
                   value={this.state.label}
-                >
-                  <option value='arXiv'>arXiv ID</option>
-                  <option value='method'>Method and platform</option>
-                </select>
+                  options={{
+                    arXiv: 'arXiv ID',
+                    method: 'Method and platform'
+                  }}
+                  onChange={this.handleOnChangeLabel}
+                />
               </div>
-            </div>}
-        </div>
-        <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
-          <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
-        </div>
+            </div>
+          </div>}
       </span>
     )
   }
