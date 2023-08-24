@@ -56,7 +56,9 @@ class SotaChart extends React.Component {
       isSubset: true,
       label: 'arXiv',
       isSotaLineVisible: true,
-      isSotaLabelVisible: true
+      isSotaLabelVisible: true,
+      isErrorVisible: true,
+      isErrorEnabled: true
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
@@ -134,7 +136,8 @@ class SotaChart extends React.Component {
       logBase: this.state.logBase,
       log: this.state.log,
       isSotaLineVisible: this.state.isSotaLineVisible,
-      isSotaLabelVisible
+      isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible
     })
   }
 
@@ -152,7 +155,8 @@ class SotaChart extends React.Component {
       logBase: this.state.logBase,
       log: this.state.log,
       isSotaLineVisible,
-      isSotaLabelVisible: this.state.isSotaLabelVisible
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible
     })
   }
 
@@ -171,7 +175,8 @@ class SotaChart extends React.Component {
       logBase,
       log,
       isSotaLineVisible: this.state.isSotaLineVisible,
-      isSotaLabelVisible: this.state.isSotaLabelVisible
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible
     })
   }
 
@@ -188,7 +193,8 @@ class SotaChart extends React.Component {
       logBase: this.state.logBase,
       log: this.state.log,
       isSotaLineVisible: this.state.isSotaLineVisible,
-      isSotaLabelVisible: this.state.isSotaLabelVisible
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible
     })
   }
 
@@ -205,7 +211,8 @@ class SotaChart extends React.Component {
       logBase: this.state.logBase,
       log: this.state.log,
       isSotaLineVisible: this.state.isSotaLineVisible,
-      isSotaLabelVisible: this.state.isSotaLabelVisible
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible
     })
   }
 
@@ -304,10 +311,12 @@ class SotaChart extends React.Component {
       data = { datasets }
     }
 
-    if (!isSameDate && isErrorBars) {
+    if (isSameDate || !isErrorBars) {
+      this.setState({ isErrorEnabled: false })
+    } else if (this.state.isErrorVisible) {
       data.datasets.push({
         type: 'scatterWithErrorBars',
-        label: 'Error bars',
+        label: '[HIDE LABEL]',
         backgroundColor: 'rgb(128, 128, 128)',
         borderColor: 'rgb(128, 128, 128)',
         data: d.map((obj, index) => {
@@ -655,7 +664,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible, isErrorVisible: this.state.isErrorVisible })
   }
 
   componentDidMount () {
@@ -746,6 +755,7 @@ class SotaChart extends React.Component {
                 <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
                   <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
                 </div>
+                <br />
               </div>
               <div className='col-xl-3 col-12 text-center'>
                 <div>
@@ -771,7 +781,8 @@ class SotaChart extends React.Component {
                       logBase: this.state.logBase,
                       log: this.state.log,
                       isSotaLineVisible: this.state.isSotaLineVisible,
-                      isSotaLabelVisible: this.state.isSotaLabelVisible
+                      isSotaLabelVisible: this.state.isSotaLabelVisible,
+                      isErrorVisible: this.state.isErrorVisible
                     })
                   }}
                   tooltip='A metric performance measure of any "method" on this "task"'
@@ -833,6 +844,14 @@ class SotaChart extends React.Component {
                   </div>
                   <div className='col-2 text-right'>
                     <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLineVisible} onChange={this.handleOnChangeShowLine} />
+                  </div>
+                </div>
+                <div className='row sota-checkbox-row'>
+                  <div className='col-10 text-left' style={this.state.isErrorEnabled ? undefined : { color: 'gray' }}>
+                    Show confidence intervals
+                  </div>
+                  <div className='col-2 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' disabled={!this.state.isErrorEnabled} checked={this.state.isErrorEnabled && this.state.isErrorVisible} onChange={this.handleOnChangeShowLine} />
                   </div>
                 </div>
                 <div className='row sota-checkbox-row'>
