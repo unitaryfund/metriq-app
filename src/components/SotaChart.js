@@ -820,18 +820,18 @@ class SotaChart extends React.Component {
                   onChange={this.handleOnChangeLabel}
                 />
                 <div className='row sota-checkbox-row' style={{ paddingTop: '32px' }}>
-                  <div className='col-6 text-left sota-label'>
+                  <div className='col-10 text-left sota-label'>
                     Show all labels
                   </div>
-                  <div className='col-6 text-right'>
+                  <div className='col-2 text-right'>
                     <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLabelVisible} onChange={this.handleOnChangeShowLabels} />
                   </div>
                 </div>
                 <div className='row sota-checkbox-row'>
-                  <div className='col-6 text-left'>
-                    Trace state of the art (SOTA) entries
+                  <div className='col-10 text-left'>
+                    <span style={{ color: 'rgb(60, 210, 249)', fontWeight: 'bold' }}>―</span> Trace state of the art (SOTA) entries
                   </div>
-                  <div className='col-6 text-right'>
+                  <div className='col-2 text-right'>
                     <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLineVisible} onChange={this.handleOnChangeShowLine} />
                   </div>
                 </div>
