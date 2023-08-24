@@ -790,6 +790,11 @@ class SotaChart extends React.Component {
                     <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLineVisible} onChange={this.handleOnChangeShowLine} />
                   </div>
                 </div>
+                <div className='row sota-checkbox-row'>
+                  <div className='col-12 text-left'>
+                    (Click legend entries to toggle series visbility)
+                  </div>
+                </div>
               </div>
             </div>
           </div>}
