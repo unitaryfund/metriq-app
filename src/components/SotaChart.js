@@ -66,12 +66,58 @@ class SotaChart extends React.Component {
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
     this.handleOnChangeShowLabels = this.handleOnChangeShowLabels.bind(this)
     this.handleOnChangeShowLine = this.handleOnChangeShowLine.bind(this)
+    this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
+    this.handlePngExport = this.handlePngExport.bind(this)
   }
 
   pickLog (type, value) {
     return (type < 2)
       ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log)))
       : ((value === '10') ? x => Math.log10(Math.log10(x)) : ((value === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x))))
+  }
+
+  // See https://stackoverflow.com/questions/50104437/set-background-color-to-save-canvas-chart#answer-50126796
+  fillCanvasBackgroundWithColor (canvas, color) {
+    // Get the 2D drawing context from the provided canvas.
+    const context = canvas.getContext('2d')
+
+    // We're going to modify the context state, so it's
+    // good practice to save the current state first.
+    context.save()
+
+    // Normally when you draw on a canvas, the new drawing
+    // covers up any previous drawing it overlaps. This is
+    // because the default `globalCompositeOperation` is
+    // 'source-over'. By changing this to 'destination-over',
+    // our new drawing goes behind the existing drawing. This
+    // is desirable so we can fill the background, while leaving
+    // the chart and any other existing drawing intact.
+    // Learn more about `globalCompositeOperation` here:
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+    context.globalCompositeOperation = 'destination-over'
+
+    // Fill in the background. We do this by drawing a rectangle
+    // filling the entire canvas, using the provided color.
+    context.fillStyle = color
+    context.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Restore the original context state from `context.save()`
+    context.restore()
+  }
+
+  handlePngExport () {
+    this.fillCanvasBackgroundWithColor(document.getElementById('sota-chart-canvas-' + this.props.chartId), 'white')
+
+    const element = document.createElement('a')
+    element.setAttribute('href', this.state.chart.toBase64Image())
+    element.setAttribute('download', this.state.item.name + '.png')
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
   }
 
   handleOnChangeShowLabels (event) {
@@ -404,7 +450,6 @@ class SotaChart extends React.Component {
               size: 16
             }
           }
-
         }
       }
     } else {
@@ -705,7 +750,7 @@ class SotaChart extends React.Component {
               <div className='col-xl-4 col-12 text-center'>
                 <div>
                   <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
-                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.props.onPngExport}>Download to PNG</Button>
+                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
                 </div>
                 <SotaControlRow
                   name='chartKeyOption'
