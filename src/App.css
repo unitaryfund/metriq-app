@@ -243,7 +243,7 @@ form > span > .row > label {
 
 .sota-card {
   width: 100%;
-  padding: 24px 0 24px 0;
+  padding: 24px 15px 24px 15px;
   box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
@@ -487,8 +487,8 @@ form > span > .row > label {
 }
 
 .sota-chart {
-  min-height: 500px;
-  max-height: 600px;
+  min-height: 520px;
+  max-height: 620px;
   width: 100%;
 }
 
