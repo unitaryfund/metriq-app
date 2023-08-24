@@ -479,6 +479,11 @@ form > span > .row > label {
   padding-top: 8px;
 }
 
+.sota-label {
+  text-align: right;
+  font-weight: bold;
+}
+
 .sota-chart {
   min-height: 500px;
   max-height: 600px;
@@ -495,6 +500,13 @@ form > span > .row > label {
   padding-left: 2%;
   padding-right: 2%;
   padding-top: 32px;
+}
+
+.sota-checkbox-row {
+  padding-left: 2%;
+  padding-right: 8%;
+  padding-top: 8px;
+  font-size: 0.8em;
 }
 
 iframe {

@@ -54,7 +54,9 @@ class SotaChart extends React.Component {
       logBase: props.logBase ? props.logBase : 10,
       subset: '',
       isSubset: true,
-      label: 'arXiv'
+      label: 'arXiv',
+      isSotaLineVisible: true,
+      isSotaLabelVisible: true
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
@@ -62,12 +64,50 @@ class SotaChart extends React.Component {
     this.handleOnChangeLog = this.handleOnChangeLog.bind(this)
     this.handleOnChangeSubset = this.handleOnChangeSubset.bind(this)
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
+    this.handleOnChangeShowLabels = this.handleOnChangeShowLabels.bind(this)
+    this.handleOnChangeShowLine = this.handleOnChangeShowLine.bind(this)
   }
 
   pickLog (type, value) {
     return (type < 2)
       ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log)))
       : ((value === '10') ? x => Math.log10(Math.log10(x)) : ((value === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x))))
+  }
+
+  handleOnChangeShowLabels (event) {
+    const isSotaLabelVisible = event.target.checked
+    this.setState({ isSotaLabelVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible
+    })
+  }
+
+  handleOnChangeShowLine (event) {
+    const isSotaLineVisible = event.target.checked
+    this.setState({ isSotaLineVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible
+    })
   }
 
   handleOnChangeLog (type, logBase) {
@@ -83,7 +123,9 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: type,
       logBase,
-      log
+      log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible
     })
   }
 
@@ -98,7 +140,9 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
       logBase: this.state.logBase,
-      log: this.state.log
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible
     })
   }
 
@@ -113,7 +157,9 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
       logBase: this.state.logBase,
-      log: this.state.log
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible
     })
   }
 
@@ -164,11 +210,10 @@ class SotaChart extends React.Component {
       }
     }
     if (!isSameDate) {
-      data = {
-        datasets: [
-          {
+      const dataSotaLine = state.isSotaLineVisible
+        ? {
             type: 'line',
-            label: 'State-of-the-art',
+            label: '[HIDE LABEL]',
             labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
             backgroundColor: 'rgb(60, 210, 249)',
             borderColor: 'rgb(60, 210, 249)',
@@ -182,10 +227,12 @@ class SotaChart extends React.Component {
             }),
             pointRadius: 0,
             pointHoverRadius: 0
-          },
-          {
+          }
+        : {}
+      const dataSotaLabels = state.isSotaLabelVisible
+        ? {
             type: 'scatter',
-            label: 'Historical state-of-the-art labels',
+            label: '[HIDE LABEL]',
             labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
             backgroundColor: 'rgb(60, 210, 249)',
             borderColor: 'rgb(60, 210, 249)',
@@ -199,8 +246,16 @@ class SotaChart extends React.Component {
             }),
             pointRadius: 0,
             pointHoverRadius: 0
-          }]
+          }
+        : {}
+      const datasets = []
+      if (state.isSotaLineVisible) {
+        datasets.push(dataSotaLine)
       }
+      if (state.isSotaLabelVisible) {
+        datasets.push(dataSotaLabels)
+      }
+      data = { datasets }
     }
 
     if (!isSameDate && isErrorBars) {
@@ -555,7 +610,7 @@ class SotaChart extends React.Component {
       }
     }
     this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible })
   }
 
   componentDidMount () {
@@ -669,7 +724,9 @@ class SotaChart extends React.Component {
                       isLowerBetterDict: this.state.isLowerBetterDict,
                       isLog: this.state.isLog,
                       logBase: this.state.logBase,
-                      log: this.state.log
+                      log: this.state.log,
+                      isSotaLineVisible: this.state.isSotaLineVisible,
+                      isSotaLabelVisible: this.state.isSotaLabelVisible
                     })
                   }}
                   tooltip='A metric performance measure of any "method" on this "task"'
@@ -717,6 +774,22 @@ class SotaChart extends React.Component {
                   }}
                   onChange={this.handleOnChangeLabel}
                 />
+                <div className='row sota-checkbox-row' style={{ paddingTop: '32px' }}>
+                  <div className='col-6 text-left sota-label'>
+                    Show all labels
+                  </div>
+                  <div className='col-6 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLabelVisible} onChange={this.handleOnChangeShowLabels} />
+                  </div>
+                </div>
+                <div className='row sota-checkbox-row'>
+                  <div className='col-6 text-left'>
+                    Trace state of the art (SOTA) entries
+                  </div>
+                  <div className='col-6 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLineVisible} onChange={this.handleOnChangeShowLine} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>}
