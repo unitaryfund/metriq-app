@@ -243,6 +243,8 @@ form > span > .row > label {
 
 .sota-card {
   width: 100%;
+  padding: 24px 0 24px 0;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
 .sota-button {

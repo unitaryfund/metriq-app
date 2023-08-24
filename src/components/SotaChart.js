@@ -314,8 +314,8 @@ class SotaChart extends React.Component {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            left: this.state.windowWidth >= 820 ? 40 : 8,
-            right: this.state.windowWidth >= 820 ? 100 : 16
+            left: this.state.windowWidth >= 820 ? 16 : 8,
+            right: this.state.windowWidth >= 820 ? 24 : 12
           }
         },
         scales: {
@@ -640,7 +640,7 @@ class SotaChart extends React.Component {
             <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
           </div>}
         {!this.props.isPreview &&
-          <div className='task card sota-card'>
+          <div className='card sota-card'>
             <div className='row'>
               <div className='col-xl-8 col-12'>
                 <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
