@@ -649,8 +649,8 @@ class SotaChart extends React.Component {
               </div>
               <div className='col-md-3 text-center'>
                 <div>
-                  <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.handleCsvExport}>Export to CSV</Button>
-                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handleCsvExport}>Download to PNG</Button>
+                  <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
+                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.props.onPngExport}>Download to PNG</Button>
                 </div>
                 <SotaControlRow
                   name='chartKeyOption'

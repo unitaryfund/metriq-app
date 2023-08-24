@@ -226,6 +226,7 @@ class Task extends React.Component {
                 taskId={this.props.match.params.id}
                 onLoadData={this.handleOnLoadData}
                 logBase='2'
+                onCsvExport={this.handleCsvExport}
               />
             </Suspense>}
           <br />
@@ -244,7 +245,7 @@ class Task extends React.Component {
               <CategoryScroll type='task' items={this.state.item.childTasks} isLoggedIn={this.props.isLoggedIn} />
               <br />
             </div>}
-          <h2>Results <Button variant='primary' onClick={this.handleCsvExport}>Export to CSV</Button></h2>
+          <h2>Results</h2>
           <div className='row'>
             <div className='col-md-9'>
               {(this.state.results.length > 0) &&
@@ -285,8 +286,11 @@ class Task extends React.Component {
                     onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
                     tableLayout='auto'
                     rowClassName='link'
+                    isCollapsible={true}
+                    collapseLabelNoun='results'
                   />
                 </div>}
+              <br />
               {(this.state.item.submissions.length > 0) &&
                 <div>
                   <h2>Submissions</h2>
@@ -316,9 +320,12 @@ class Task extends React.Component {
                     onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
+                    isCollapsible={true}
+                    collapseLabelNoun='submissions'
                   />
                 </div>}
             </div>
+            <br/>
             <div className='col-md-3'>
               <div className='card top-submitters-card'>
                 <TopSubmitters isOnlyAllTime />
@@ -340,7 +347,6 @@ class Task extends React.Component {
               </div>
             </div>
           </div>
-          <div />
           <br />
           <FormFieldWideRow>
             <h4 align='left'>Comments</h4>

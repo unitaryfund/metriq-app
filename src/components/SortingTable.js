@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Table from 'react-bootstrap/Table'
+import { Button } from 'react-bootstrap'
 
 const SortingTable = (props) => {
   const [data, setData] = useState(props.data)
   const [trigger, setTrigger] = useState(Math.random())
   const [sortKey, setSortKey] = useState('')
   const [sortDescending, setSortDescending] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(props.isCollapsible)
 
   useEffect(() => {
     if (props.data !== data) {
@@ -43,15 +45,19 @@ const SortingTable = (props) => {
   const style = props.scrollX ? { 'overflow-x': true } : undefined
 
   return (
-    <Table striped bordered hover responsive className={props.className} style={style}>
-      {((props.showHeader === undefined) || (props.showHeader !== false)) &&
-        <thead>
-          <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title}</th>)}</tr>
-        </thead>}
-      <tbody key={trigger}>
-        {data.map((row, id) => <tr key={id} className={props.rowClassName} onClick={props.onRowClick ? () => props.onRowClick(row) : undefined}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}
-      </tbody>
-    </Table>
+    <span>
+      <Table striped bordered hover responsive className={props.className} style={style}>
+        {((props.showHeader === undefined) || (props.showHeader !== false)) &&
+          <thead>
+            <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title}</th>)}</tr>
+          </thead>}
+        <tbody key={trigger}>
+          {(isCollapsed ? data.slice(0, 10) : data).map((row, id) => <tr key={id} className={props.rowClassName} onClick={props.onRowClick ? () => props.onRowClick(row) : undefined}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}
+        </tbody>
+      </Table>
+      {props.isCollapsible && isCollapsed && <Button variant='primary' aria-label='See all results' onClick={() => setIsCollapsed(false)}>See all {props.collapseLabelNoun}</Button>}
+      {props.isCollapsible && !isCollapsed && <Button variant='primary' aria-label='See fewer results' onClick={() => setIsCollapsed(true)}>See fewer {props.collapseLabelNoun}</Button>}
+    </span>
   )
 }
 
