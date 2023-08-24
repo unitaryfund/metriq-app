@@ -207,16 +207,18 @@ class Task extends React.Component {
     return (
       <div id='metriq-main-content'>
         <div className='submission-detail-container'>
-          <FormFieldWideRow>
-            <h1 className='view-header'>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1> <FontAwesomeIcon icon='edit' className='submission-edit' onClick={this.handleShowEditModal} />
-            <div className='float-right'>
-              <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
-              <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
+          <div className='row'>
+            <div className='col-xl-9 col-12'>
+              <h1 className='view-header'>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1> <FontAwesomeIcon icon='edit' className='submission-edit' onClick={this.handleShowEditModal} />
+              <div className='float-right'>
+                <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
+                <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
+              </div>
+              <div className='submission-description'>
+                {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
+              </div>
             </div>
-            <div className='submission-description'>
-              {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
-            </div>
-          </FormFieldWideRow>
+          </div>
           <br />
           {this.state.item.parentTask &&
             <span>
