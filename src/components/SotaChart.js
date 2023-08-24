@@ -68,6 +68,7 @@ class SotaChart extends React.Component {
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
     this.handleOnChangeShowLabels = this.handleOnChangeShowLabels.bind(this)
     this.handleOnChangeShowLine = this.handleOnChangeShowLine.bind(this)
+    this.handleOnChangeShowError = this.handleOnChangeShowError.bind(this)
     this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
     this.handlePngExport = this.handlePngExport.bind(this)
   }
@@ -157,6 +158,25 @@ class SotaChart extends React.Component {
       isSotaLineVisible,
       isSotaLabelVisible: this.state.isSotaLabelVisible,
       isErrorVisible: this.state.isErrorVisible
+    })
+  }
+
+  handleOnChangeShowError (event) {
+    const isErrorVisible = event.target.checked
+    this.setState({ isErrorVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible
     })
   }
 
@@ -312,8 +332,8 @@ class SotaChart extends React.Component {
     }
 
     if (isSameDate || !isErrorBars) {
-      this.setState({ isErrorEnabled: false })
-    } else if (this.state.isErrorVisible) {
+      this.setState({ isErrorEnabled: false, isErrorVisible: false })
+    } else if (state.isErrorVisible) {
       data.datasets.push({
         type: 'scatterWithErrorBars',
         label: '[HIDE LABEL]',
@@ -851,7 +871,7 @@ class SotaChart extends React.Component {
                     Show confidence intervals
                   </div>
                   <div className='col-2 text-right'>
-                    <input type='checkbox' className='sota-checkbox-control' disabled={!this.state.isErrorEnabled} checked={this.state.isErrorEnabled && this.state.isErrorVisible} onChange={this.handleOnChangeShowLine} />
+                    <input type='checkbox' className='sota-checkbox-control' disabled={!this.state.isErrorEnabled} checked={this.state.isErrorVisible} onChange={this.handleOnChangeShowError} />
                   </div>
                 </div>
                 <div className='row sota-checkbox-row'>
