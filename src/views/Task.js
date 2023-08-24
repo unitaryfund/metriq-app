@@ -218,6 +218,17 @@ class Task extends React.Component {
             </div>
           </FormFieldWideRow>
           <br />
+          {this.state.item.parentTask &&
+            <span>
+              <div className='row'>
+                <div className='col-12'>
+                  <div className='submission-description'>
+                    <b>Parent task</b>&nbsp;&nbsp;&nbsp;&nbsp;<Link to={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</Link>
+                  </div>
+                </div>
+              </div>
+              <br />
+            </span>}
           {!this.state.item.isHideChart &&
             <Suspense fallback={<div>Loading...</div>}>
               <SotaChart
@@ -230,15 +241,6 @@ class Task extends React.Component {
               />
             </Suspense>}
           <br />
-          {this.state.item.parentTask &&
-            <div className='row'>
-              <div className='col-md-12'>
-                <div className='submission-description'>
-                  <b>Parent task:</b><Link to={'/Task/' + this.state.item.parentTask.id}>{this.state.item.parentTask.name}</Link>
-                </div>
-              </div>
-              <br />
-            </div>}
           {(this.state.item.childTasks && (this.state.item.childTasks.length > 0)) &&
             <div>
               <h2>Child Tasks</h2>
@@ -286,7 +288,7 @@ class Task extends React.Component {
                     onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
                     tableLayout='auto'
                     rowClassName='link'
-                    isCollapsible={true}
+                    isCollapsible
                     collapseLabelNoun='results'
                   />
                 </div>}
@@ -320,12 +322,12 @@ class Task extends React.Component {
                     onRowClick={(record) => this.props.history.push('/Submission/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
-                    isCollapsible={true}
+                    isCollapsible
                     collapseLabelNoun='submissions'
                   />
                 </div>}
             </div>
-            <br/>
+            <br />
             <div className='col-md-3'>
               <div className='card top-submitters-card'>
                 <TopSubmitters isOnlyAllTime />
