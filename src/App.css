@@ -251,6 +251,8 @@ form > span > .row > label {
   width: 48%;
   margin-left: 1%;
   margin-right: 1%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .submission-cell {
