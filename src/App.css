@@ -511,6 +511,10 @@ form > span > .row > label {
   font-size: 0.8em;
 }
 
+.sota-checkbox-control {
+  accent-color: #1763E8;
+}
+
 iframe {
   display: block;
   border-style:none;
