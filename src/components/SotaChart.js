@@ -817,16 +817,18 @@ class SotaChart extends React.Component {
                 <div className='chart-container sota-chart'>
                   <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
                 </div>
-                <span className='metric-chart-label'>Subset Entry</span>
-                <table>
-                  {this.state.subsetDataSets.map((row, key1) =>
-                    <tr key={key1}>
-                      {row.map((series, key2) =>
-                        <td key={key2} style={{ width: '20%' }}>
-                          <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} /> <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
-                        </td>)}
-                    </tr>)}
-                </table>
+                <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
+                  <span className='metric-chart-label'>Subset Entry</span>
+                  <table style={{ width: '100%' }}>
+                    {this.state.subsetDataSets.map((row, key1) =>
+                      <tr key={key1}>
+                        {row.map((series, key2) =>
+                          <td key={key2} style={{ width: '20%' }}>
+                            <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} /> <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
+                          </td>)}
+                      </tr>)}
+                  </table>
+                </div>
                 <br />
               </div>
               <div className='col-xl-3 col-12 text-center'>
