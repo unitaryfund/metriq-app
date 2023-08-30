@@ -545,6 +545,15 @@ iframe {
   word-wrap: break-word;      /* IE */
 }
 
+/** Pure CSS dot colors */
+
+.dot {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 /** Pure CSS heart icon */
 
 #heart {
