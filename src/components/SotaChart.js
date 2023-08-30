@@ -44,6 +44,7 @@ class SotaChart extends React.Component {
       task: {},
       isLog: props.isLog ? 1 : 0,
       chartKey: '',
+      chartKeyInt: 0,
       chartData: [],
       metricNames: [],
       isLowerBetterDict: {},
@@ -706,12 +707,14 @@ class SotaChart extends React.Component {
     }
     const metricNames = Object.keys(chartData)
     let chartKey = metricNames[0]
+    let chartKeyInt = 0
     let m = 0
     const isLowerBetterDict = {}
     for (let i = 0; i < metricNames.length; i++) {
       const length = chartData[metricNames[i]].length
       isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
       if (length > m) {
+        chartKeyInt = i
         chartKey = metricNames[i]
         m = length
       }
@@ -725,7 +728,7 @@ class SotaChart extends React.Component {
         i++
       }
     }
-    this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
+    this.setState({ metricNames, chartKey, chartKeyInt, chartData, isLowerBetterDict, key: Math.random() })
     this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible, isErrorVisible: this.state.isErrorVisible, subsetDataSetsActive: this.state.subsetDataSetsActive })
   }
 
@@ -839,11 +842,11 @@ class SotaChart extends React.Component {
                 <SotaControlRow
                   name='chartKeyOption'
                   label='Chart Metric:'
-                  value={this.state.chartKey}
+                  value={this.state.chartKeyInt}
                   options={this.state.metricNames.map(name => name)}
                   onChange={event => {
-                    const value = event.target.value
-                    this.setState({ chartKey: this.state.metricNames[parseInt(value)] })
+                    const value = parseInt(event.target.value)
+                    this.setState({ chartKeyInt: value, chartKey: this.state.metricNames[value] })
                     this.loadChartFromState({
                       subset: this.state.subset,
                       label: this.state.label,
