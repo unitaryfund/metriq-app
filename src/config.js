@@ -1,6 +1,6 @@
 const config = {}
 
-config.isDebug = false
+config.isDebug = true
 
 config.api = {}
 config.api.url = config.isDebug ? 'localhost:3000' : 'metriq.info'
