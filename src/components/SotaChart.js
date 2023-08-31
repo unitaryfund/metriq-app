@@ -522,6 +522,15 @@ class SotaChart extends React.Component {
               weight: 'bold',
               size: 16
             }
+          },
+          legend: {
+            display: false,
+            labels: {
+              filter: function (item, chart) {
+              // Logic to remove a particular legend item goes here
+                return !item.text.includes('[HIDE LABEL]')
+              }
+            }
           }
         }
       }
