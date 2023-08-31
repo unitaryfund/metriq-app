@@ -374,6 +374,7 @@ class SotaChart extends React.Component {
           return {
             x: obj.label,
             y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+            isShowLabel: false,
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
             yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
@@ -596,8 +597,9 @@ class SotaChart extends React.Component {
             : {
                 font: { weight: '600', color: '#000000' },
                 align: 'center',
+                display: 'auto',
                 formatter: function (value, context) {
-                  return value.isShowLabel ? value.label : ''
+                  return value.isShowLabel ? value.label : null
                 }
               },
           legend: {
