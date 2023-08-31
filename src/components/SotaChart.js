@@ -3,7 +3,7 @@
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React from 'react'
-import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
+import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { BarWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
@@ -31,7 +31,7 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels]
+const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
 
@@ -522,15 +522,6 @@ class SotaChart extends React.Component {
               weight: 'bold',
               size: 16
             }
-          },
-          legend: {
-            display: false,
-            labels: {
-              filter: function (item, chart) {
-              // Logic to remove a particular legend item goes here
-                return !item.text.includes('[HIDE LABEL]')
-              }
-            }
           }
         }
       }
@@ -610,16 +601,7 @@ class SotaChart extends React.Component {
                 formatter: function (value, context) {
                   return value.isShowLabel ? value.label : null
                 }
-              },
-          legend: {
-            display: false,
-            labels: {
-              filter: function (item, chart) {
-              // Logic to remove a particular legend item goes here
-                return !item.text.includes('[HIDE LABEL]')
               }
-            }
-          }
         }
       }
     }
