@@ -599,7 +599,7 @@ class SotaChart extends React.Component {
                 align: 'center',
                 display: 'auto',
                 formatter: function (value, context) {
-                  return value.isShowLabel ? value.label : null
+                  return value.isShowLabel ? value.label : ''
                 }
               },
           legend: {
