@@ -42,16 +42,27 @@ class Platform extends React.Component {
       isValidated: false,
       modalMode: '',
       modalEditMode: '',
-      platform: { description: '', parentPlatform: 0 },
+      platform: {
+        description: '',
+        parentPlatform: 0,
+        provider: 0,
+        architecure: 0,
+        device: 0
+      },
       item: {
         id: 0,
         description: '',
         parentPlatform: null,
+        provider: null,
+        architecure: null,
+        device: null,
         childPlatforms: [],
         properties: [],
         submissions: []
       },
       allPlatformNames: [],
+      allProviderNames: [],
+      allArchitectureNames: [],
       allPropertyNames: [],
       allDataTypeNames: [],
       propertyNames: [],
@@ -109,7 +120,10 @@ class Platform extends React.Component {
     const platform = {
       properties: this.state.item.properties,
       description: this.state.item.description,
-      parentPlatform: this.state.item.parentPlatform
+      parentPlatform: this.state.item.parentPlatform,
+      provider: this.state.item.provider,
+      architecure: this.state.item.architecure,
+      device: this.state.item.device
     }
     this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform })
   }
@@ -126,7 +140,10 @@ class Platform extends React.Component {
 
     const reqBody = {
       description: this.state.platform.description,
-      parentPlatform: this.state.platform.parentPlatform
+      parentPlatform: this.state.platform.parentPlatform,
+      provider: this.state.platform.provider,
+      architecure: this.state.platform.architecure,
+      device: this.state.platform.device
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -383,6 +400,24 @@ class Platform extends React.Component {
                   .catch(err => {
                     this.setState({ requestFailedMessage: ErrorHandler(err) })
                   })
+
+                const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
+                axios.get(providerNamesRoute)
+                  .then(res => {
+                    this.setState({ requestFailedMessage: '', allProviderNames: res.data.data })
+                  })
+                  .catch(err => {
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
+                  })
+
+                const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
+                axios.get(architectureNamesRoute)
+                  .then(res => {
+                    this.setState({ requestFailedMessage: '', allArchitectureNames: res.data.data })
+                  })
+                  .catch(err => {
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
+                  })
               })
               .catch(err => {
                 this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -451,6 +486,33 @@ class Platform extends React.Component {
                     rowClassName='link'
                     key={this.state.key}
                   />
+                </div>
+              </div>
+              <br />
+            </div>}
+          {this.state.item.provider &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Provider:</b> {this.state.item.provider.name}
+                </div>
+              </div>
+              <br />
+            </div>}
+          {this.state.item.architecure &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Architecture:</b> {this.state.item.architecure.name}
+                </div>
+              </div>
+              <br />
+            </div>}
+          {this.state.item.device &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Device:</b> <Link to={'/Platform/' + this.state.item.architecture.id}>{this.state.item.device.name}</Link>
                 </div>
               </div>
               <br />
@@ -627,6 +689,30 @@ class Platform extends React.Component {
                     value={this.state.platform.parentPlatform}
                     onChange={(field, value) => this.handleOnChange('platform', field, value)}
                     tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
+                  /><br />
+                  <FormFieldSelectRow
+                    inputName='provider'
+                    label='Provider'
+                    options={this.state.allProviderNames}
+                    value={this.state.platform.provider}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='The new platform provider (entity).'
+                  /><br />
+                  <FormFieldSelectRow
+                    inputName='architecture'
+                    label='Architecture'
+                    options={this.state.allArchitectureNames}
+                    value={this.state.platform.architecure}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='The new platform architecture (basic type).'
+                  /><br />
+                  <FormFieldSelectRow
+                    inputName='device'
+                    label='Device'
+                    options={this.state.allPlatformNames}
+                    value={this.state.platform.allPlatformNames}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='This is the base device, if the new platform type is a specific configuration.'
                   /><br />
                   <FormFieldRow
                     inputName='description' inputType='textarea' label='Description' rows='12'
