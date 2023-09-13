@@ -46,8 +46,7 @@ class Platform extends React.Component {
         description: '',
         parentPlatform: 0,
         provider: 0,
-        architecure: 0,
-        device: 0
+        architecure: 0
       },
       item: {
         id: 0,
@@ -55,7 +54,6 @@ class Platform extends React.Component {
         parentPlatform: null,
         provider: null,
         architecure: null,
-        device: null,
         childPlatforms: [],
         properties: [],
         submissions: []
@@ -122,8 +120,7 @@ class Platform extends React.Component {
       description: this.state.item.description,
       parentPlatform: this.state.item.parentPlatform,
       provider: this.state.item.provider,
-      architecure: this.state.item.architecure,
-      device: this.state.item.device
+      architecure: this.state.item.architecure
     }
     this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform })
   }
@@ -142,8 +139,7 @@ class Platform extends React.Component {
       description: this.state.platform.description,
       parentPlatform: this.state.platform.parentPlatform,
       provider: this.state.platform.provider,
-      architecure: this.state.platform.architecure,
-      device: this.state.platform.device
+      architecure: this.state.platform.architecure
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -508,20 +504,11 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
-          {this.state.item.device &&
-            <div className='row'>
-              <div className='col-md-12'>
-                <div className='submission-description'>
-                  <b>Device:</b> <Link to={'/Platform/' + this.state.item.architecture.id}>{this.state.item.device.name}</Link>
-                </div>
-              </div>
-              <br />
-            </div>}
           {this.state.item.parentPlatform &&
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent platform:</b> <Link to={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</Link>
+                  <b>Device:</b> <Link to={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</Link>
                 </div>
               </div>
               <br />
@@ -684,11 +671,11 @@ class Platform extends React.Component {
                 <Suspense fallback={<div>Loading...</div>}>
                   <FormFieldSelectRow
                     inputName='parentPlatform'
-                    label='Parent platform<br/>(if any)'
+                    label='Device'
                     options={this.state.allPlatformNames}
                     value={this.state.platform.parentPlatform}
                     onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
+                    tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'
                   /><br />
                   <FormFieldSelectRow
                     inputName='provider'
@@ -705,14 +692,6 @@ class Platform extends React.Component {
                     value={this.state.platform.architecure}
                     onChange={(field, value) => this.handleOnChange('platform', field, value)}
                     tooltip='The new platform architecture (basic type).'
-                  /><br />
-                  <FormFieldSelectRow
-                    inputName='device'
-                    label='Device'
-                    options={this.state.allPlatformNames}
-                    value={this.state.platform.allPlatformNames}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='This is the base device, if the new platform type is a specific configuration.'
                   /><br />
                   <FormFieldRow
                     inputName='description' inputType='textarea' label='Description' rows='12'
