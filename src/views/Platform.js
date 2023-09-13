@@ -515,7 +515,7 @@ class Platform extends React.Component {
             </div>}
           {(this.state.parentProperties.length > 0) &&
             <div>
-              <h2>Parent Properties</h2>
+              <h2>Device Properties</h2>
               <div className='row'>
                 <div className='col-md-12'>
                   <SortingTable
@@ -670,14 +670,6 @@ class Platform extends React.Component {
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
                   <FormFieldSelectRow
-                    inputName='parentPlatform'
-                    label='Device'
-                    options={this.state.allPlatformNames}
-                    value={this.state.platform.parentPlatform}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'
-                  /><br />
-                  <FormFieldSelectRow
                     inputName='provider'
                     label='Provider'
                     options={this.state.allProviderNames}
@@ -692,6 +684,14 @@ class Platform extends React.Component {
                     value={this.state.platform.architecure}
                     onChange={(field, value) => this.handleOnChange('platform', field, value)}
                     tooltip='The new platform architecture (basic type).'
+                  /><br />
+                  <FormFieldSelectRow
+                    inputName='parentPlatform'
+                    label='Device'
+                    options={this.state.allPlatformNames}
+                    value={this.state.platform.parentPlatform}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'
                   /><br />
                   <FormFieldRow
                     inputName='description' inputType='textarea' label='Description' rows='12'
