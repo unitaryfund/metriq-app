@@ -232,12 +232,27 @@ form > span > .row > label {
 }
 
 .view-header {
-  color: #04165D
+  color: #04165D;
+  display: inline-block;
 }
 
 .task {
   padding: 32px;
   box-shadow: 0 3px 12px rgba(33,33,33,.2);
+}
+
+.sota-card {
+  width: 100%;
+  padding: 24px 15px 24px 15px;
+  box-shadow: 0 3px 12px rgba(33,33,33,.2);
+}
+
+.sota-button {
+  width: 48%;
+  margin-left: 1%;
+  margin-right: 1%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .submission-cell {
@@ -278,7 +293,7 @@ form > span > .row > label {
 }
 
 .submission-button {
-  width: 80px;
+  width: 90px;
   height: 38px;
   margin: 4px;
 }
@@ -291,6 +306,17 @@ form > span > .row > label {
   font-weight: bold;
   padding: 0 8px 8px 8px;
   text-align: left;
+}
+
+.submission-edit {
+  color: #04165D;
+  font-size: xx-large;
+  padding-left: 6px;
+  padding-bottom: 6px;
+}
+
+.submission-edit:hover {
+  cursor: pointer;
 }
 
 .submission-heading-only {
@@ -347,6 +373,7 @@ form > span > .row > label {
 }
 
 .submission-description {
+  color: #04165D;
   white-space: pre-line;
   text-align: left;
   padding: 0 8px 8px 8px
@@ -401,6 +428,7 @@ form > span > .row > label {
 }
 
 .link {
+  background-color: white !important;
   color: #007bff;
 }
 
@@ -429,8 +457,7 @@ form > span > .row > label {
   padding-left: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #34bce4;
-  color: white;
+  background-color: #eee;
 }
 
 .submission a {
@@ -454,9 +481,14 @@ form > span > .row > label {
   padding-top: 8px;
 }
 
+.sota-label {
+  text-align: right;
+  font-weight: bold;
+}
+
 .sota-chart {
-  min-height: 500px;
-  max-height: 600px;
+  min-height: 520px;
+  max-height: 620px;
   width: 100%;
 }
 
@@ -464,6 +496,23 @@ form > span > .row > label {
   display: inline-block;
   height: 256px;
   width: 256px;
+}
+
+.sota-control-row {
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-top: 32px;
+}
+
+.sota-checkbox-row {
+  padding-left: 2%;
+  padding-right: 8%;
+  padding-top: 8px;
+  font-size: 0.8em;
+}
+
+.sota-checkbox-control {
+  accent-color: #1763E8;
 }
 
 iframe {
@@ -498,6 +547,15 @@ iframe {
   white-space: -pre-wrap;     /* Opera <7 */
   white-space: -o-pre-wrap;   /* Opera 7 */
   word-wrap: break-word;      /* IE */
+}
+
+/** Pure CSS dot colors */
+
+.dot {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 /** Pure CSS heart icon */

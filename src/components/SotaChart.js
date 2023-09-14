@@ -3,16 +3,17 @@
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React from 'react'
-import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend } from 'chart.js'
+import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { BarWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
 import 'chartjs-adapter-moment'
-import FormFieldSelectRow from './FormFieldSelectRow'
 import axios from 'axios'
 import config from '../config'
 import { sortByCounts } from './SortFunctions'
 import ErrorHandler from './ErrorHandler'
+import SotaControlRow from './SotaControlRow'
+import { Button } from 'react-bootstrap'
 
 // See https://stackoverflow.com/questions/36575743/how-do-i-convert-probability-into-z-score#answer-36577594
 const percentileZ = (p) => {
@@ -30,7 +31,7 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, Legend, ChartDataLabels]
+const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
 
@@ -43,6 +44,7 @@ class SotaChart extends React.Component {
       task: {},
       isLog: props.isLog ? 1 : 0,
       chartKey: '',
+      chartKeyInt: 0,
       chartData: [],
       metricNames: [],
       isLowerBetterDict: {},
@@ -52,8 +54,14 @@ class SotaChart extends React.Component {
         : ((props.logBase === '10') ? x => Math.log10(Math.log10(x)) : ((props.logBase === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x)))),
       logBase: props.logBase ? props.logBase : 10,
       subset: '',
+      subsetDataSets: [],
+      subsetDataSetsActive: new Map(),
       isSubset: true,
-      label: 'arXiv'
+      label: 'arXiv',
+      isSotaLineVisible: true,
+      isSotaLabelVisible: true,
+      isErrorVisible: true,
+      isErrorEnabled: true
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
@@ -61,12 +69,143 @@ class SotaChart extends React.Component {
     this.handleOnChangeLog = this.handleOnChangeLog.bind(this)
     this.handleOnChangeSubset = this.handleOnChangeSubset.bind(this)
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
+    this.handleOnChangeShowLabels = this.handleOnChangeShowLabels.bind(this)
+    this.handleOnChangeShowLine = this.handleOnChangeShowLine.bind(this)
+    this.handleOnChangeShowError = this.handleOnChangeShowError.bind(this)
+    this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
+    this.handlePngExport = this.handlePngExport.bind(this)
+    this.handleSeriesToggle = this.handleSeriesToggle.bind(this)
   }
 
   pickLog (type, value) {
     return (type < 2)
       ? (((value === '10') ? Math.log10 : ((value === '2') ? Math.log2 : Math.log)))
       : ((value === '10') ? x => Math.log10(Math.log10(x)) : ((value === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x))))
+  }
+
+  // See https://stackoverflow.com/questions/50104437/set-background-color-to-save-canvas-chart#answer-50126796
+  fillCanvasBackgroundWithColor (canvas, color) {
+    // Get the 2D drawing context from the provided canvas.
+    const context = canvas.getContext('2d')
+
+    // We're going to modify the context state, so it's
+    // good practice to save the current state first.
+    context.save()
+
+    // Normally when you draw on a canvas, the new drawing
+    // covers up any previous drawing it overlaps. This is
+    // because the default `globalCompositeOperation` is
+    // 'source-over'. By changing this to 'destination-over',
+    // our new drawing goes behind the existing drawing. This
+    // is desirable so we can fill the background, while leaving
+    // the chart and any other existing drawing intact.
+    // Learn more about `globalCompositeOperation` here:
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+    context.globalCompositeOperation = 'destination-over'
+
+    // Fill in the background. We do this by drawing a rectangle
+    // filling the entire canvas, using the provided color.
+    context.fillStyle = color
+    context.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Restore the original context state from `context.save()`
+    context.restore()
+  }
+
+  handleSeriesToggle (label) {
+    const m = this.state.subsetDataSetsActive
+    m.set(label, !(m.get(label) ?? true))
+    this.setState({ subsetDataSetsActive: m })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: m
+    })
+  }
+
+  handlePngExport () {
+    this.fillCanvasBackgroundWithColor(document.getElementById('sota-chart-canvas-' + this.props.chartId), 'white')
+
+    const element = document.createElement('a')
+    element.setAttribute('href', this.state.chart.toBase64Image())
+    element.setAttribute('download', this.state.item.name + '.png')
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
+  }
+
+  handleOnChangeShowLabels (event) {
+    const isSotaLabelVisible = event.target.checked
+    this.setState({ isSotaLabelVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
+    })
+  }
+
+  handleOnChangeShowLine (event) {
+    const isSotaLineVisible = event.target.checked
+    this.setState({ isSotaLineVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
+    })
+  }
+
+  handleOnChangeShowError (event) {
+    const isErrorVisible = event.target.checked
+    this.setState({ isErrorVisible })
+    this.loadChartFromState({
+      subset: this.state.subset,
+      label: this.state.label,
+      metricNames: this.state.metricNames,
+      chartKey: this.state.chartKey,
+      chartData: this.state.chartData,
+      isLowerBetterDict: this.state.isLowerBetterDict,
+      isLog: this.state.isLog,
+      logBase: this.state.logBase,
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
+    })
   }
 
   handleOnChangeLog (type, logBase) {
@@ -82,7 +221,11 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: type,
       logBase,
-      log
+      log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
     })
   }
 
@@ -97,7 +240,11 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
       logBase: this.state.logBase,
-      log: this.state.log
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
     })
   }
 
@@ -112,7 +259,11 @@ class SotaChart extends React.Component {
       isLowerBetterDict: this.state.isLowerBetterDict,
       isLog: this.state.isLog,
       logBase: this.state.logBase,
-      log: this.state.log
+      log: this.state.log,
+      isSotaLineVisible: this.state.isSotaLineVisible,
+      isSotaLabelVisible: this.state.isSotaLabelVisible,
+      isErrorVisible: this.state.isErrorVisible,
+      subsetDataSetsActive: this.state.subsetDataSetsActive
     })
   }
 
@@ -163,11 +314,10 @@ class SotaChart extends React.Component {
       }
     }
     if (!isSameDate) {
-      data = {
-        datasets: [
-          {
+      const dataSotaLine = state.isSotaLineVisible
+        ? {
             type: 'line',
-            label: 'State-of-the-art',
+            label: '[HIDE LABEL]',
             labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
             backgroundColor: 'rgb(60, 210, 249)',
             borderColor: 'rgb(60, 210, 249)',
@@ -181,10 +331,12 @@ class SotaChart extends React.Component {
             }),
             pointRadius: 0,
             pointHoverRadius: 0
-          },
-          {
+          }
+        : {}
+      const dataSotaLabels = state.isSotaLabelVisible
+        ? {
             type: 'scatter',
-            label: 'Historical state-of-the-art labels',
+            label: '[HIDE LABEL]',
             labels: sotaData.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
             backgroundColor: 'rgb(60, 210, 249)',
             borderColor: 'rgb(60, 210, 249)',
@@ -198,20 +350,31 @@ class SotaChart extends React.Component {
             }),
             pointRadius: 0,
             pointHoverRadius: 0
-          }]
+          }
+        : {}
+      const datasets = []
+      if (state.isSotaLineVisible) {
+        datasets.push(dataSotaLine)
       }
+      if (state.isSotaLabelVisible) {
+        datasets.push(dataSotaLabels)
+      }
+      data = { datasets }
     }
 
-    if (!isSameDate && isErrorBars) {
+    if (isSameDate || !isErrorBars) {
+      this.setState({ isErrorEnabled: false, isErrorVisible: false })
+    } else if (state.isErrorVisible) {
       data.datasets.push({
         type: 'scatterWithErrorBars',
-        label: 'Error bars',
+        label: '[HIDE LABEL]',
         backgroundColor: 'rgb(128, 128, 128)',
         borderColor: 'rgb(128, 128, 128)',
         data: d.map((obj, index) => {
           return {
             x: obj.label,
             y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+            isShowLabel: false,
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
             yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
@@ -241,6 +404,8 @@ class SotaChart extends React.Component {
       }
     }
 
+    const subsetDataSets = []
+    let subsetDataSetGroup = []
     let color = 0
     for (const key in subsets) {
       let rgb = '#000000'
@@ -266,44 +431,54 @@ class SotaChart extends React.Component {
         default:
           break
       }
-      if (isSameDate) {
-        data.datasets.push({
-          labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-          data: subsets[key].map(obj => (state.isLog && canLog)
-            ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
-                ? parseFloat(state.log(obj.value).toPrecision(3))
-                : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
-            : (((obj.value < 1000) && (obj.value >= 0.01))
-                ? parseFloat(obj.value.toPrecision(3))
-                : parseFloat(obj.value.toPrecision(3)).toExponential())),
-          backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
-          borderColor: rgb,
-          pointRadius: 4,
-          pointHitRadius: 4
-        })
-      } else {
-        data.datasets.push({
-          type: 'scatter',
-          label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
-          labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
-          backgroundColor: rgb,
-          borderColor: rgb,
-          data: subsets[key].map(obj => {
-            return {
-              label: obj.arXivId + '\n',
-              isShowLabel: false,
-              x: obj.label,
-              y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
-              yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
-              yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
-            }
-          }),
-          pointRadius: 4,
-          pointHitRadius: 4
-        })
+      if (state.subsetDataSetsActive.get(key) ?? true) {
+        if (isSameDate) {
+          data.datasets.push({
+            labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+            data: subsets[key].map(obj => (state.isLog && canLog)
+              ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
+                  ? parseFloat(state.log(obj.value).toPrecision(3))
+                  : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
+              : (((obj.value < 1000) && (obj.value >= 0.01))
+                  ? parseFloat(obj.value.toPrecision(3))
+                  : parseFloat(obj.value.toPrecision(3)).toExponential())),
+            backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
+            borderColor: rgb,
+            pointRadius: 4,
+            pointHitRadius: 4
+          })
+        } else {
+          data.datasets.push({
+            type: 'scatter',
+            label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
+            labels: subsets[key].map(obj => obj.method + (obj.platform ? ' | ' + obj.platform : '')),
+            backgroundColor: rgb,
+            borderColor: rgb,
+            data: subsets[key].map(obj => {
+              return {
+                label: obj.arXivId + '\n',
+                isShowLabel: false,
+                x: obj.label,
+                y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
+                yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
+                yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
+              }
+            }),
+            pointRadius: 4,
+            pointHitRadius: 4
+          })
+        }
+      }
+      subsetDataSetGroup.push({ label: key, color: rgb })
+      if (subsetDataSetGroup.length >= 5) {
+        subsetDataSets.push(subsetDataSetGroup)
+        subsetDataSetGroup = []
       }
       ++color
       color = color % 6
+    }
+    if (subsetDataSetGroup.length) {
+      subsetDataSets.push(subsetDataSetGroup)
     }
 
     let options = {}
@@ -313,8 +488,8 @@ class SotaChart extends React.Component {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            left: this.state.windowWidth >= 820 ? 40 : 8,
-            right: this.state.windowWidth >= 820 ? 100 : 16
+            left: this.state.windowWidth >= 820 ? 16 : 8,
+            right: this.state.windowWidth >= 820 ? 24 : 12
           }
         },
         scales: {
@@ -348,7 +523,6 @@ class SotaChart extends React.Component {
               size: 16
             }
           }
-
         }
       }
     } else {
@@ -423,19 +597,11 @@ class SotaChart extends React.Component {
             : {
                 font: { weight: '600', color: '#000000' },
                 align: 'center',
+                display: 'auto',
                 formatter: function (value, context) {
-                  return value.isShowLabel ? value.label : ''
+                  return value.isShowLabel ? value.label : null
                 }
-              },
-          legend: {
-            display: !this.props.isPreview,
-            labels: {
-              filter: function (item, chart) {
-              // Logic to remove a particular legend item goes here
-                return !item.text.includes('[HIDE LABEL]')
               }
-            }
-          }
         }
       }
     }
@@ -444,7 +610,7 @@ class SotaChart extends React.Component {
       if (this.state.chart) {
         this.state.chart.destroy()
       }
-      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options }) })
+      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options }), subsetDataSets })
     }
     chartFunc()
   }
@@ -534,12 +700,14 @@ class SotaChart extends React.Component {
     }
     const metricNames = Object.keys(chartData)
     let chartKey = metricNames[0]
+    let chartKeyInt = 0
     let m = 0
     const isLowerBetterDict = {}
     for (let i = 0; i < metricNames.length; i++) {
       const length = chartData[metricNames[i]].length
       isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
       if (length > m) {
+        chartKeyInt = i
         chartKey = metricNames[i]
         m = length
       }
@@ -553,8 +721,8 @@ class SotaChart extends React.Component {
         i++
       }
     }
-    this.setState({ metricNames, chartKey, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log })
+    this.setState({ metricNames, chartKey, chartKeyInt, chartData, isLowerBetterDict, key: Math.random() })
+    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible, isErrorVisible: this.state.isErrorVisible, subsetDataSetsActive: this.state.subsetDataSetsActive })
   }
 
   componentDidMount () {
@@ -633,114 +801,133 @@ class SotaChart extends React.Component {
   render () {
     return (
       <span className={!this.state.metricNames.length ? 'hide' : undefined}>
-        <div className='container'>
-          {!this.props.isPreview &&
-            <FormFieldSelectRow
-              inputName='chartKey'
-              value={this.state.chartKey}
-              label='Chart Metric:'
-              labelClass='metric-chart-label'
-              options={this.state.metricNames.map(name =>
-                ({
-                  id: name,
-                  name
-                }))}
-              onChange={(field, value) => {
-                this.setState({ chartKey: value })
-                this.loadChartFromState({
-                  subset: this.state.subset,
-                  label: this.state.label,
-                  metricNames: this.state.metricNames,
-                  chartKey: value,
-                  chartData: this.state.chartData,
-                  isLowerBetterDict: this.state.isLowerBetterDict,
-                  isLog: this.state.isLog,
-                  logBase: this.state.logBase,
-                  log: this.state.log
-                })
-              }}
-              tooltip='A metric performance measure of any "method" on this "task"'
-            />}
-          {!this.props.isPreview && this.state.isSubset &&
-            <div className='row' style={{ marginTop: '5px' }}>
-              <span
-                htmlFor='subsetPicker'
-                className='col col-md-3 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Series subset:' }}
-              />
-              <div className='col col-md-6'>
-                <select
-                  id='subsetPicker'
-                  name='subsetPicker'
-                  className='form-control'
-                  onChange={this.handleOnChangeSubset}
+        <div className='container' />
+        {this.props.isPreview &&
+          <div className='chart-container sota-preview'>
+            <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+          </div>}
+        {!this.props.isPreview &&
+          <div className='card sota-card'>
+            <div className='row'>
+              <div className='col-xl-9 col-12'>
+                <div className='chart-container sota-chart'>
+                  <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+                </div>
+                <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
+                  <span className='metric-chart-label'>Subset Entry</span>
+                  <table style={{ width: '100%' }}>
+                    {this.state.subsetDataSets.map((row, key1) =>
+                      <tr key={key1}>
+                        {row.map((series, key2) =>
+                          <td key={key2} style={{ width: '20%' }}>
+                            <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} /> <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
+                          </td>)}
+                      </tr>)}
+                  </table>
+                </div>
+                <br />
+              </div>
+              <div className='col-xl-3 col-12 text-center'>
+                <div>
+                  <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
+                  <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
+                </div>
+                <SotaControlRow
+                  name='chartKeyOption'
+                  label='Chart Metric:'
+                  value={this.state.chartKeyInt}
+                  options={this.state.metricNames.map(name => name)}
+                  onChange={event => {
+                    const value = parseInt(event.target.value)
+                    this.setState({ chartKeyInt: value, chartKey: this.state.metricNames[value] })
+                    this.loadChartFromState({
+                      subset: this.state.subset,
+                      label: this.state.label,
+                      metricNames: this.state.metricNames,
+                      chartKey: this.state.metricNames[parseInt(value)],
+                      chartData: this.state.chartData,
+                      isLowerBetterDict: this.state.isLowerBetterDict,
+                      isLog: this.state.isLog,
+                      logBase: this.state.logBase,
+                      log: this.state.log,
+                      isSotaLineVisible: this.state.isSotaLineVisible,
+                      isSotaLabelVisible: this.state.isSotaLabelVisible,
+                      isErrorVisible: this.state.isErrorVisible,
+                      subsetDataSetsActive: this.state.subsetDataSetsActive
+                    })
+                  }}
+                  tooltip='A metric performance measure of any "method" on this "task"'
+                />
+                <SotaControlRow
+                  name='subsetOption'
+                  label='Subset option:'
                   value={this.state.subset}
-                >
-                  <option value='qubits'>Qubit Count</option>
-                  <option value='depth'>Circuit depth</option>
-                </select>
-              </div>
-            </div>}
-          {!this.props.isPreview &&
-            <div className='row' style={{ marginTop: '5px' }}>
-              <span
-                htmlFor='logOption'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Logarithmic:' }}
-              />
-              <div className='col col-md-1'>
-                <select
-                  id='subsetPicker'
-                  name='subsetPicker'
-                  className='form-control'
-                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                  options={{
+                    qubits: 'Qubit count',
+                    depth: 'Circuit depth'
+                  }}
+                  onChange={this.handleOnChangeSubset}
+                  disabled={this.state.isSubset}
+                />
+                <SotaControlRow
+                  name='logOption'
+                  label='Log option:'
                   value={this.state.isLog}
-                >
-                  <option value='0'>Linear</option>
-                  <option value='1'>Log</option>
-                  <option value='2'>LogLog</option>
-                </select>
-              </div>
-              <span
-                htmlFor='logdropdown'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Log base:' }}
-              />
-              <div className='col col-md-2'>
-                <select
-                  id='logdropdown'
-                  name='logdropdown'
-                  className='form-control'
-                  onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
+                  options={{
+                    0: 'Linear',
+                    1: 'Log',
+                    2: 'LogLog'
+                  }}
+                  onChange={e => this.handleOnChangeLog(parseInt(e.target.value), this.state.logBase)}
+                />
+                <SotaControlRow
+                  name='logBaseOption'
+                  label='Log base:'
                   value={this.state.logBase}
-                >
-                  <option value='2'>2</option>
-                  <option value='10'>10</option>
-                  <option value='e'>e</option>
-                </select>
-              </div>
-              <span
-                htmlFor='labeldropdown'
-                className='col col-md-2 form-field-label metric-chart-label'
-                dangerouslySetInnerHTML={{ __html: 'Label:' }}
-              />
-              <div className='col col-md-2'>
-                <select
-                  id='labeldropdown'
-                  name='labeldropdown'
-                  className='form-control'
-                  onChange={this.handleOnChangeLabel}
+                  options={{
+                    2: '2',
+                    10: '10',
+                    e: 'e'
+                  }}
+                  onChange={e => this.handleOnChangeLog(this.state.isLog, e.target.value)}
+                />
+                <SotaControlRow
+                  name='labelOption'
+                  label='Label:'
                   value={this.state.label}
-                >
-                  <option value='arXiv'>arXiv ID</option>
-                  <option value='method'>Method and platform</option>
-                </select>
+                  options={{
+                    arXiv: 'arXiv ID',
+                    method: 'Method and platform'
+                  }}
+                  onChange={this.handleOnChangeLabel}
+                />
+                <div className='row sota-checkbox-row' style={{ paddingTop: '32px' }}>
+                  <div className='col-10 text-left sota-label'>
+                    Show all labels
+                  </div>
+                  <div className='col-2 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLabelVisible} onChange={this.handleOnChangeShowLabels} />
+                  </div>
+                </div>
+                <div className='row sota-checkbox-row'>
+                  <div className='col-10 text-left'>
+                    <span style={{ color: 'rgb(60, 210, 249)', fontWeight: 'bold' }}>―</span> Trace state of the art (SOTA) entries
+                  </div>
+                  <div className='col-2 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' checked={this.state.isSotaLineVisible} onChange={this.handleOnChangeShowLine} />
+                  </div>
+                </div>
+                <div className='row sota-checkbox-row'>
+                  <div className='col-10 text-left' style={this.state.isErrorEnabled ? undefined : { color: 'gray' }}>
+                    Show confidence intervals
+                  </div>
+                  <div className='col-2 text-right'>
+                    <input type='checkbox' className='sota-checkbox-control' disabled={!this.state.isErrorEnabled} checked={this.state.isErrorVisible} onChange={this.handleOnChangeShowError} />
+                  </div>
+                </div>
               </div>
-            </div>}
-        </div>
-        <div className={this.props.isPreview ? 'chart-container sota-preview' : 'chart-container sota-chart'}>
-          <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
-        </div>
+            </div>
+          </div>}
       </span>
     )
   }

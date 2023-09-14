@@ -65,7 +65,7 @@ const TopSubmitters = (props) => {
           key={Math.random()}
           onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
           tableLayout='auto'
-          rowClassName='link'
+          rowClassName='link text-center'
         />}
       {!props.isOnlyAllTime &&
         <Tabs id='top-submissions-tabs'>
@@ -93,7 +93,7 @@ const TopSubmitters = (props) => {
                 key={Math.random()}
                 onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
                 tableLayout='auto'
-                rowClassName='link'
+                rowClassName='link text-center'
               />
             </Tab>}
           {(data.monthly.length > 0) &&
@@ -120,7 +120,7 @@ const TopSubmitters = (props) => {
                 key={Math.random()}
                 onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
                 tableLayout='auto'
-                rowClassName='link'
+                rowClassName='link text-center'
               />
             </Tab>}
           {(data.allTime.length > 0) &&
@@ -147,7 +147,7 @@ const TopSubmitters = (props) => {
                 key={Math.random()}
                 onRowClick={(record) => this.props.history.push('/User/' + record.id + '/Submissions')}
                 tableLayout='auto'
-                rowClassName='link'
+                rowClassName='link text-center'
               />
             </Tab>}
         </Tabs>}
