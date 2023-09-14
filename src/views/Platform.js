@@ -17,6 +17,7 @@ import SortingTable from '../components/SortingTable'
 import { renderLatex } from '../components/RenderLatex'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
+const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 
 const defaultRegex = /.+/
 // bool is handled by checkbox FormFieldRow
@@ -42,16 +43,25 @@ class Platform extends React.Component {
       isValidated: false,
       modalMode: '',
       modalEditMode: '',
-      platform: { description: '', parentPlatform: 0 },
+      platform: {
+        description: '',
+        parentPlatform: 0,
+        provider: 0,
+        architecture: 0
+      },
       item: {
         id: 0,
         description: '',
         parentPlatform: null,
+        provider: null,
+        architecture: null,
         childPlatforms: [],
         properties: [],
         submissions: []
       },
       allPlatformNames: [],
+      allProviderNames: [],
+      allArchitectureNames: [],
       allPropertyNames: [],
       allDataTypeNames: [],
       propertyNames: [],
@@ -109,7 +119,9 @@ class Platform extends React.Component {
     const platform = {
       properties: this.state.item.properties,
       description: this.state.item.description,
-      parentPlatform: this.state.item.parentPlatform
+      parentPlatform: this.state.item.parentPlatform,
+      provider: this.state.item.provider.id,
+      architecture: this.state.item.architecture.id
     }
     this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform })
   }
@@ -126,7 +138,9 @@ class Platform extends React.Component {
 
     const reqBody = {
       description: this.state.platform.description,
-      parentPlatform: this.state.platform.parentPlatform
+      parentPlatform: this.state.platform.parentPlatform,
+      provider: this.state.platform.provider,
+      architecture: this.state.platform.architecture
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -383,6 +397,24 @@ class Platform extends React.Component {
                   .catch(err => {
                     this.setState({ requestFailedMessage: ErrorHandler(err) })
                   })
+
+                const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
+                axios.get(providerNamesRoute)
+                  .then(res => {
+                    this.setState({ requestFailedMessage: '', allProviderNames: res.data.data })
+                  })
+                  .catch(err => {
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
+                  })
+
+                const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
+                axios.get(architectureNamesRoute)
+                  .then(res => {
+                    this.setState({ requestFailedMessage: '', allArchitectureNames: res.data.data })
+                  })
+                  .catch(err => {
+                    this.setState({ requestFailedMessage: ErrorHandler(err) })
+                  })
               })
               .catch(err => {
                 this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -401,14 +433,6 @@ class Platform extends React.Component {
     const { id } = this.props.params
     this.setState({ platformId: id })
     this.fetchData(id)
-  }
-
-  componentDidUpdate (prevProps) {
-    const { id } = this.props.params
-    if (this.state.platformId !== id) {
-      this.setState({ platformId: id })
-      this.fetchData(id)
-    }
   }
 
   render () {
@@ -455,18 +479,36 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
+          {this.state.item.architecture &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Architecture:</b> {this.state.item.architecture.name}
+                </div>
+              </div>
+              <br />
+            </div>}
+          {this.state.item.provider &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Provider:</b> {this.state.item.provider.name}
+                </div>
+              </div>
+              <br />
+            </div>}
           {this.state.item.parentPlatform &&
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
-                  <b>Parent platform:</b> <Link to={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</Link>
+                  <b>Device:</b> <Link to={'/Platform/' + this.state.item.parentPlatform.id}>{this.state.item.parentPlatform.name}</Link>
                 </div>
               </div>
               <br />
             </div>}
           {(this.state.parentProperties.length > 0) &&
             <div>
-              <h2>Parent Properties</h2>
+              <h2>Device Properties</h2>
               <div className='row'>
                 <div className='col-md-12'>
                   <SortingTable
@@ -620,13 +662,41 @@ class Platform extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
+                <FormFieldSelectRow
+                    inputName='architecture'
+                    label='Architecture'
+                    options={this.state.allArchitectureNames}
+                    value={this.state.platform.architecture}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='The new platform architecture (basic type).'
+                  /><br />
                   <FormFieldSelectRow
+                    inputName='provider'
+                    label='Provider'
+                    options={this.state.allProviderNames}
+                    value={this.state.platform.provider}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='The new platform provider (entity).'
+                  /><br />
+                  <FormFieldTypeaheadRow
                     inputName='parentPlatform'
-                    label='Parent platform<br/>(if any)'
+                    labelKey='name'
+                    label='Device'
                     options={this.state.allPlatformNames}
                     value={this.state.platform.parentPlatform}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='Optionally, the new platform is a sub-platform of a "parent" platform.'
+                    onChange={(field, value) => {
+                      const entry = this.state.allPlatformNames.find(p => p.name === value)
+                      if (entry) {
+                          this.handleOnChange('platform', field, entry.id)
+                      }
+                    }}
+                    onSelect={(field, value) => {
+                      const entry = this.state.allPlatformNames.find(p => p.name === value)
+                      if (entry) {
+                          this.handleOnChange('platform', field, entry.id)
+                      }
+                    }}
+                    tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'
                   /><br />
                   <FormFieldRow
                     inputName='description' inputType='textarea' label='Description' rows='12'

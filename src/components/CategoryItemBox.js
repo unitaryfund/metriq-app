@@ -19,6 +19,10 @@ const pickDetailUrl = (type, item) => {
     return ('/Method/' + item.id)
   } else if (type === 'platform') {
     return ('/Platform/' + item.id)
+  } else if (type === 'architecture') {
+    return ('/Architecture/' + item.id)
+  } else if (type === 'provider') {
+    return ('/Provider/' + item.id)
   }
 }
 
