@@ -17,6 +17,7 @@ import SortingTable from '../components/SortingTable'
 import { renderLatex } from '../components/RenderLatex'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
+const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
 
 const defaultRegex = /.+/
 // bool is handled by checkbox FormFieldRow
@@ -46,14 +47,14 @@ class Platform extends React.Component {
         description: '',
         parentPlatform: 0,
         provider: 0,
-        architecure: 0
+        architecture: 0
       },
       item: {
         id: 0,
         description: '',
         parentPlatform: null,
         provider: null,
-        architecure: null,
+        architecture: null,
         childPlatforms: [],
         properties: [],
         submissions: []
@@ -119,8 +120,8 @@ class Platform extends React.Component {
       properties: this.state.item.properties,
       description: this.state.item.description,
       parentPlatform: this.state.item.parentPlatform,
-      provider: this.state.item.provider,
-      architecure: this.state.item.architecure
+      provider: this.state.item.provider.id,
+      architecture: this.state.item.architecture.id
     }
     this.setState({ showEditModal: true, modalMode: mode, modalEditMode: 'Edit', platform })
   }
@@ -139,7 +140,7 @@ class Platform extends React.Component {
       description: this.state.platform.description,
       parentPlatform: this.state.platform.parentPlatform,
       provider: this.state.platform.provider,
-      architecure: this.state.platform.architecure
+      architecture: this.state.platform.architecture
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -434,14 +435,6 @@ class Platform extends React.Component {
     this.fetchData(id)
   }
 
-  componentDidUpdate (prevProps) {
-    const { id } = this.props.params
-    if (this.state.platformId !== id) {
-      this.setState({ platformId: id })
-      this.fetchData(id)
-    }
-  }
-
   render () {
     return (
       <div id='metriq-main-content'>
@@ -486,20 +479,20 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
+          {this.state.item.architecture &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>Architecture:</b> {this.state.item.architecture.name}
+                </div>
+              </div>
+              <br />
+            </div>}
           {this.state.item.provider &&
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
                   <b>Provider:</b> {this.state.item.provider.name}
-                </div>
-              </div>
-              <br />
-            </div>}
-          {this.state.item.architecure &&
-            <div className='row'>
-              <div className='col-md-12'>
-                <div className='submission-description'>
-                  <b>Architecture:</b> {this.state.item.architecure.name}
                 </div>
               </div>
               <br />
@@ -669,6 +662,14 @@ class Platform extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
+                <FormFieldSelectRow
+                    inputName='architecture'
+                    label='Architecture'
+                    options={this.state.allArchitectureNames}
+                    value={this.state.platform.architecture}
+                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    tooltip='The new platform architecture (basic type).'
+                  /><br />
                   <FormFieldSelectRow
                     inputName='provider'
                     label='Provider'
@@ -677,20 +678,24 @@ class Platform extends React.Component {
                     onChange={(field, value) => this.handleOnChange('platform', field, value)}
                     tooltip='The new platform provider (entity).'
                   /><br />
-                  <FormFieldSelectRow
-                    inputName='architecture'
-                    label='Architecture'
-                    options={this.state.allArchitectureNames}
-                    value={this.state.platform.architecure}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='The new platform architecture (basic type).'
-                  /><br />
-                  <FormFieldSelectRow
+                  <FormFieldTypeaheadRow
                     inputName='parentPlatform'
+                    labelKey='name'
                     label='Device'
                     options={this.state.allPlatformNames}
                     value={this.state.platform.parentPlatform}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    onChange={(field, value) => {
+                      const entry = this.state.allPlatformNames.find(p => p.name === value)
+                      if (entry) {
+                          this.handleOnChange('platform', field, entry.id)
+                      }
+                    }}
+                    onSelect={(field, value) => {
+                      const entry = this.state.allPlatformNames.find(p => p.name === value)
+                      if (entry) {
+                          this.handleOnChange('platform', field, entry.id)
+                      }
+                    }}
                     tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'
                   /><br />
                   <FormFieldRow

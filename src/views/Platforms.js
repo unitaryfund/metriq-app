@@ -11,6 +11,7 @@ import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter } from 'react-router-dom'
 import ViewSubHeader from '../components/ViewSubHeader'
+import FormFieldWideRow from '../components/FormFieldWideRow'
 
 class Platforms extends React.Component {
   constructor (props) {
@@ -21,6 +22,8 @@ class Platforms extends React.Component {
       popular: [],
       common: [],
       allNames: [],
+      allArchitectureNames: [],
+      allProviderNames: [],
       filterId: null,
       requestFailedMessage: ''
     }
@@ -63,6 +66,28 @@ class Platforms extends React.Component {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
+    axios.get(config.api.getUriPrefix() + '/architecture/names')
+      .then(res => {
+        this.setState({
+          requestFailedMessage: '',
+          allArchitectureNames: res.data.data
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+
+    axios.get(config.api.getUriPrefix() + '/provider/names')
+      .then(res => {
+        this.setState({
+          requestFailedMessage: '',
+          allProviderNames: res.data.data
+        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+
     axios.get(config.api.getUriPrefix() + '/platform/names')
       .then(res => {
         this.setState({
@@ -93,7 +118,7 @@ class Platforms extends React.Component {
           alignLabelRight
         />
         <br />
-        <div className='centered-tabs'>
+        <FormFieldWideRow className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>
             <Tab eventKey='common' title='Common'>
               <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
@@ -105,7 +130,7 @@ class Platforms extends React.Component {
               <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
             </Tab>
           </Tabs>
-        </div>
+        </FormFieldWideRow>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
