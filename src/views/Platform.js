@@ -662,7 +662,7 @@ class Platform extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
-                <FormFieldSelectRow
+                  <FormFieldSelectRow
                     inputName='architecture'
                     label='Architecture'
                     options={this.state.allArchitectureNames}
@@ -687,13 +687,13 @@ class Platform extends React.Component {
                     onChange={(field, value) => {
                       const entry = this.state.allPlatformNames.find(p => p.name === value)
                       if (entry) {
-                          this.handleOnChange('platform', field, entry.id)
+                        this.handleOnChange('platform', field, entry.id)
                       }
                     }}
                     onSelect={(field, value) => {
                       const entry = this.state.allPlatformNames.find(p => p.name === value)
                       if (entry) {
-                          this.handleOnChange('platform', field, entry.id)
+                        this.handleOnChange('platform', field, entry.id)
                       }
                     }}
                     tooltip='Optionally, the new platform is a sub-configuration of a specific hardware device.'

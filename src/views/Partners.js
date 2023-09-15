@@ -9,6 +9,7 @@ import quantonationLogo from './../images/quantonation_logo.png'
 import sqmsLogo from './../images/sqms_logo.png'
 import supertechLogo from './../images/supertech_logo.png'
 import quantumcomputingreportLogo from './../images/quantumcomputingreport_logo.png'
+import bluequbitLogo from './../images/bluequbit_logo.png'
 
 const Partners = () => {
   return (
@@ -27,7 +28,8 @@ const Partners = () => {
             <div className='text-center'>
               <a href='https://www.iqt.org/'><img src={iqtLogo} alt='IQT Labs partner logo' className='logo-image' /></a>
               <a href='https://unitary.fund/'><img src={ufLogo} alt='UF partner logo' className='logo-image' /></a>
-              <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a><br />
+              <a href='https://riacs.usra.edu/quantum/nisqc-nl'><img src={usraLogo} alt='USRA partner logo' className='logo-image' /></a>
+              <a href='https://www.bluequbit.io/'><img src={bluequbitLogo} alt='BlueQubit logo' className='logo-image' /></a><br />
               <a href='https://cambridgequantum.com/'><img src={cqcLogo} alt='Cambridge Quantum Computing partner logo' className='logo-image' /></a>
               <a href='https://www.riken.jp/en/'><img src={rikenLogo} alt='Riken University logo' className='logo-image' /></a>
               <a href='https://strangeworks.com/'><img src={strangeworksLogo} alt='Strangeworks logo' className='logo-image' /></a>
