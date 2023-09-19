@@ -15,6 +15,7 @@ import { intRegex, nonblankRegex, numberRegex } from '../components/ValidationRe
 import SubscribeButton from '../components/SubscribeButton'
 import SortingTable from '../components/SortingTable'
 import { renderLatex } from '../components/RenderLatex'
+import { sortAlphabetical } from '../components/SortFunctions'
 const FormFieldRow = React.lazy(() => import('../components/FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('../components/FormFieldSelectRow'))
 const FormFieldTypeaheadRow = React.lazy(() => import('../components/FormFieldTypeaheadRow'))
@@ -401,7 +402,17 @@ class Platform extends React.Component {
                 const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
                 axios.get(providerNamesRoute)
                   .then(res => {
-                    this.setState({ requestFailedMessage: '', allProviderNames: res.data.data })
+                    const apn = res.data.data
+                    // Sort alphabetically and put "Other" at end of array.
+                    apn.sort(sortAlphabetical)
+                    const otherIndex = apn.findIndex(x => x.name === 'Other')
+                    const allProviderNames = apn.toSpliced(otherIndex, 1)
+                    allProviderNames.push(apn[otherIndex])
+                    allProviderNames.splice(otherIndex, 1)
+                    this.setState({
+                      requestFailedMessage: '',
+                      allProviderNames
+                    })
                   })
                   .catch(err => {
                     this.setState({ requestFailedMessage: ErrorHandler(err) })

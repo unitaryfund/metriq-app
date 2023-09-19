@@ -79,9 +79,16 @@ class Platforms extends React.Component {
 
     axios.get(config.api.getUriPrefix() + '/provider/names')
       .then(res => {
+        const apn = res.data.data
+        // Sort alphabetically and put "Other" at end of array.
+        apn.sort(sortAlphabetical)
+        const otherIndex = apn.findIndex(x => x.name === 'Other')
+        const allProviderNames = apn.toSpliced(otherIndex, 1)
+        allProviderNames.push(apn[otherIndex])
+        allProviderNames.splice(otherIndex, 1)
         this.setState({
           requestFailedMessage: '',
-          allProviderNames: res.data.data
+          allProviderNames
         })
       })
       .catch(err => {
