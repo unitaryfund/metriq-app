@@ -253,12 +253,12 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Architecture/:id'
-          render={(p) => <Platforms {...p} isLoggedIn={isLoggedIn} isArchitecture />}
+          render={(p) => <Platforms {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isArchitecture key={Math.random()} />}
         />
         <Route
           exact
           path='/Provider/:id'
-          render={(p) => <Platforms {...p} isLoggedIn={isLoggedIn} isProvider />}
+          render={(p) => <Platforms {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} isProvider key={Math.random()} />}
         />
         <Route component={NotFound} />
       </Switch>

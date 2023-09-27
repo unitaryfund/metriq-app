@@ -9,9 +9,13 @@ import CategoryScroll from '../components/CategoryScroll'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import ViewHeader from '../components/ViewHeader'
 import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFunctions'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ViewSubHeader from '../components/ViewSubHeader'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+
+function withParams (Component) {
+  return props => <Component {...props} params={useParams()} />
+}
 
 class Platforms extends React.Component {
   constructor (props) {
@@ -256,4 +260,4 @@ class Platforms extends React.Component {
   }
 }
 
-export default withRouter(Platforms)
+export default withParams(Platforms)
