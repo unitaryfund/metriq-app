@@ -21,6 +21,14 @@ class Platforms extends React.Component {
       alphabetical: [],
       popular: [],
       common: [],
+      isLoadingArchitectures: true,
+      alphabeticalArchitectures: [],
+      popularArchitectures: [],
+      commonArchitectures: [],
+      isLoadingProviders: true,
+      alphabeticalProviders: [],
+      popularProviders: [],
+      commonProviders: [],
       allNames: [],
       allArchitectureNames: [],
       allProviderNames: [],
@@ -45,6 +53,48 @@ class Platforms extends React.Component {
   }
 
   componentDidMount () {
+    axios.get(config.api.getUriPrefix() + '/architecture/submissionCount')
+      .then(res => {
+        const commonArchitectures = [...res.data.data]
+        commonArchitectures.sort(sortCommon)
+        this.setState({
+          requestFailedMessage: '',
+          commonArchitectures
+        })
+
+        const popularArchitectures = [...res.data.data]
+        popularArchitectures.sort(sortPopular)
+        this.setState({ popularArchitectures })
+
+        const alphabeticalArchitectures = res.data.data
+        alphabeticalArchitectures.sort(sortAlphabetical)
+        this.setState({ alphabeticalArchitectures, isLoadingArchitectures: false })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+
+    axios.get(config.api.getUriPrefix() + '/provider/submissionCount')
+      .then(res => {
+        const commonProviders = [...res.data.data]
+        commonProviders.sort(sortCommon)
+        this.setState({
+          requestFailedMessage: '',
+          commonProviders
+        })
+
+        const popularProviders = [...res.data.data]
+        popularProviders.sort(sortPopular)
+        this.setState({ popularProviders })
+
+        const alphabeticalProviders = res.data.data
+        alphabeticalProviders.sort(sortAlphabetical)
+        this.setState({ alphabeticalProviders, isLoadingProviders: false })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
+
     axios.get(config.api.getUriPrefix() + '/platform/submissionCount')
       .then(res => {
         const common = [...res.data.data]
@@ -125,6 +175,51 @@ class Platforms extends React.Component {
           alignLabelRight
         />
         <br />
+        <FormFieldWideRow>
+          <div className='row'>
+            <div className='col'>
+              <h4 align='left'>Architectures</h4>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-9 centered-tabs'>
+              <Tabs defaultActiveKey='common' id='categories-tabs'>
+                <Tab eventKey='common' title='Common'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                </Tab>
+                <Tab eventKey='popular' title='Popular'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                </Tab>
+                <Tab eventKey='alphabetical' title='Alphabetical'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                </Tab>
+              </Tabs>
+            </div>
+          </div>
+        </FormFieldWideRow>
+        <br />
+        <FormFieldWideRow>
+          <div className='row'>
+            <div className='col'>
+              <h4 align='left'>Providers</h4>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-9 centered-tabs'>
+              <Tabs defaultActiveKey='common' id='categories-tabs'>
+                <Tab eventKey='common' title='Common'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingProviders} items={this.state.commonProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                </Tab>
+                <Tab eventKey='popular' title='Popular'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingProviders} items={this.state.popularProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                </Tab>
+                <Tab eventKey='alphabetical' title='Alphabetical'>
+                  <CategoryScroll type='platform' isLoading={this.state.isLoadingProviders} items={this.state.alphabeticalProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                </Tab>
+              </Tabs>
+            </div>
+          </div>
+        </FormFieldWideRow>
         <FormFieldWideRow className='centered-tabs'>
           <Tabs defaultActiveKey='common' id='categories-tabs'>
             <Tab eventKey='common' title='Common'>
