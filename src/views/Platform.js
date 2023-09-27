@@ -239,11 +239,14 @@ class Platform extends React.Component {
   }
 
   handleOnChangePropertyId (value) {
+    if (!value) {
+      return
+    }
     const property = this.state.property
     for (let i = 0; i < this.state.allPropertyNames.length; i++) {
       const propName = this.state.allPropertyNames[i]
       if (property.id === propName.id) {
-        this.handleOnTypeChange(propName.dataTypeId, propName.typeId, propName.id, propName.name, propName.fullName)
+        this.handleOnTypeChange(propName.dataTypeId, value, propName.id, propName.name, propName.fullName)
         break
       }
     }
