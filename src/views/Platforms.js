@@ -37,6 +37,8 @@ class Platforms extends React.Component {
       allArchitectureNames: [],
       allProviderNames: [],
       filterId: null,
+      architecture: { name: '' },
+      provider: { name: '' },
       requestFailedMessage: ''
     }
 
@@ -57,6 +59,32 @@ class Platforms extends React.Component {
   }
 
   componentDidMount () {
+    if (this.props.isArchitecture) {
+      axios.get(config.api.getUriPrefix() + '/architecture/' + this.props.params.id)
+        .then(res => {
+          this.setState({
+            requestFailedMessage: '',
+            architecture: res.data.data
+          })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    }
+
+    if (this.props.isProvider) {
+      axios.get(config.api.getUriPrefix() + '/provider/' + this.props.params.id)
+        .then(res => {
+          this.setState({
+            requestFailedMessage: '',
+            provider: res.data.data
+          })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    }
+
     if (!this.props.isArchitecture && !this.props.isProvider) {
       axios.get(config.api.getUriPrefix() + '/architecture/submissionCount')
         .then(res => {
@@ -189,7 +217,7 @@ class Platforms extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <ViewHeader>Platforms</ViewHeader>
+        <ViewHeader>Platforms{this.props.isArchitecture ? ': ' + this.state.architecture.name + ' architecture' : (this.props.isProvider ? ': ' + this.state.provider.name + ' provider' : '')} </ViewHeader>
         <ViewSubHeader>Platforms are the hardware devices used for a submission.</ViewSubHeader>
         <br />
         <FormFieldTypeaheadRow
