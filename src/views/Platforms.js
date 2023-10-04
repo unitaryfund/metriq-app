@@ -101,6 +101,29 @@ class Platforms extends React.Component {
         })
     }
 
+    if (!this.props.isProvider) {
+      axios.get(config.api.getUriPrefix() + '/provider/submissionCount/architecture/' + this.props.params.id)
+        .then(res => {
+          const commonProviders = [...res.data.data]
+          commonProviders.sort(sortCommon)
+          this.setState({
+            requestFailedMessage: '',
+            commonProviders
+          })
+
+          const popularProviders = [...res.data.data]
+          popularProviders.sort(sortPopular)
+          this.setState({ popularProviders })
+
+          const alphabeticalProviders = res.data.data
+          alphabeticalProviders.sort(sortAlphabetical)
+          this.setState({ alphabeticalProviders, isLoadingProviders: false })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    }
+
     axios.get(config.api.getUriPrefix() + '/platform/submissionCount' + (this.props.isArchitecture ? '/architecture/' + this.props.params.id : (this.props.isProvider ? '/provider/' + this.props.params.id : '')))
       .then(res => {
         const common = [...res.data.data]
@@ -206,6 +229,9 @@ class Platforms extends React.Component {
               </div>
             </FormFieldWideRow>
             <br />
+          </span>}
+        {!this.props.isProvider &&
+          <span>
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
