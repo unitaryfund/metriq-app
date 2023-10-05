@@ -129,7 +129,7 @@ class Platforms extends React.Component {
         })
     }
 
-    if (!this.props.isProvider) {
+    if (this.props.isArchitecture) {
       axios.get(config.api.getUriPrefix() + '/provider/submissionCount/architecture/' + this.props.params.id)
         .then(res => {
           const commonProviders = [...res.data.data]
