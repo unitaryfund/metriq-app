@@ -43,6 +43,14 @@ class QuantumLandscapeChart extends React.Component {
           num_gates: 1590
         },
         {
+          title: 'Evidence for the utility of quantum computing before fault tolerance',
+          reference: 'Nature volume 618, pages 500–505 (2023)',
+          task_name: '2D transverse-field Ising model',
+          task_id: 195,
+          num_qubits: 127,
+          num_gates: 14400
+        },
+        {
           title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
           reference: 'arXiv:2306.08585',
           task_name: 'factoring',
