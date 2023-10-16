@@ -27,6 +27,22 @@ class QuantumLandscapeChart extends React.Component {
              'num_gates': 2.4e21 //'0.3 num_qubits^3 + 0.0005^ num_qubits^3 lg num_qubits',
           }, */
         {
+          title: 'Quantum supremacy using a programmable superconducting processor',
+          reference: 'Nature volume 574, pages 505–510 (2019)',
+          task_name: 'random circuit sampling',
+          task_id: 47,
+          num_qubits: 53,
+          num_gates: 1543
+        },
+        {
+          title: 'Strong quantum computational advantage using a superconducting quantum processor',
+          reference: 'Phys. Rev. Lett. 127, 180501 (2021-10-25)',
+          task_name: 'random circuit sampling',
+          task_id: 47,
+          num_qubits: 56,
+          num_gates: 1590
+        },
+        {
           title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
           reference: 'arXiv:2306.08585',
           task_name: 'factoring',
@@ -239,7 +255,7 @@ class QuantumLandscapeChart extends React.Component {
       <span>
         <div className='row'>
           <div className='col'>
-            <h4 align='left'>Quantum Technology Landscape</h4>
+            <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
           </div>
         </div>
         <div className='card sota-card'>
