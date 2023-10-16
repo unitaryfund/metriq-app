@@ -18,7 +18,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import TopSubmitters from '../components/TopSubmitters'
 import SubmissionScroll from '../components/SubmissionScroll'
-import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -257,11 +256,6 @@ class Home extends React.Component {
             </FormFieldWideRow>
             <br />
           </span>}
-        <div className='row'>
-          <div className='col-md-9'>
-            <QuantumLandscapeChart />
-          </div>
-        </div>
         <FormFieldAlertRow>
           <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
         </FormFieldAlertRow>
