@@ -18,14 +18,6 @@ class QuantumLandscapeChart extends React.Component {
       windowWidth: 0,
       chart: null,
       chartData: [
-        /* {
-             'title': 'How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits',
-             'reference': 'arXiv:1905.09749',
-             'task_name': 'factoring',
-             'task_id': 4,
-             'num_qubits': 20000000,
-             'num_gates': 2.4e21 //'0.3 num_qubits^3 + 0.0005^ num_qubits^3 lg num_qubits',
-          }, */
         {
           title: 'Quantum supremacy using a programmable superconducting processor',
           reference: 'Nature volume 574, pages 505–510 (2019)',
@@ -50,6 +42,22 @@ class QuantumLandscapeChart extends React.Component {
           num_qubits: 127,
           num_gates: 14400
         },
+        {
+          title: 'Quantinuum H-Series quantum computer accelerates through 3 more performance records for quantum volume: 2^17, 2^18, and 2^19',
+          reference: 'https://www.quantinuum.com/news/quantinuum-h-series-quantum-computer-accelerates-through-3-more-performance-records-for-quantum-volume-217-218-and-219',
+          task_name: 'quantum volume',
+          task_id: 34,
+          num_qubits: 19,
+          num_gates: 532
+        },
+        /* {
+             'title': 'How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits',
+             'reference': 'arXiv:1905.09749',
+             'task_name': 'factoring',
+             'task_id': 4,
+             'num_qubits': 20000000,
+             'num_gates': 2.4e21 //'0.3 num_qubits^3 + 0.0005^ num_qubits^3 lg num_qubits',
+          }, */
         {
           title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
           reference: 'arXiv:2306.08585',
