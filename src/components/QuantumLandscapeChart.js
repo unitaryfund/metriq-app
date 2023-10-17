@@ -22,8 +22,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Quantum supremacy using a programmable superconducting processor',
           reference: 'Nature volume 574, pages 505–510 (2019)',
           year: 2019,
-          domain: 'quantum supremacy',
-          task_name: 'random circuit sampling',
+          domain: 'Quantum supremacy',
+          task_name: 'Random circuit sampling',
           task_id: 47,
           num_qubits: 53,
           num_gates: 1543
@@ -32,8 +32,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Strong quantum computational advantage using a superconducting quantum processor',
           reference: 'Phys. Rev. Lett. 127, 180501 (2021-10-25)',
           year: 2021,
-          domain: 'quantum supremacy',
-          task_name: 'random circuit sampling',
+          domain: 'Quantum supremacy',
+          task_name: 'Random circuit sampling',
           task_id: 47,
           num_qubits: 56,
           num_gates: 1590
@@ -42,7 +42,7 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Evidence for the utility of quantum computing before fault tolerance',
           reference: 'Nature volume 618, pages 500–505 (2023)',
           year: 2023,
-          domain: 'quantum supremacy',
+          domain: 'Quantum supremacy',
           task_name: '2D transverse-field Ising model',
           task_id: 195,
           num_qubits: 127,
@@ -50,10 +50,10 @@ class QuantumLandscapeChart extends React.Component {
         },
         {
           title: 'Quantinuum H-Series quantum computer accelerates through 3 more performance records for quantum volume: 2^17, 2^18, and 2^19',
-          reference: 'https://www.quantinuum.com/news/quantinuum-h-series-quantum-computer-accelerates-through-3-more-performance-records-for-quantum-volume-217-218-and-219',
+          reference: 'Quantinuum blog post',
           year: 2023,
-          domain: 'quantum supremacy',
-          task_name: 'quantum volume',
+          domain: 'Quantum supremacy',
+          task_name: 'Quantum volume',
           task_id: 34,
           num_qubits: 19,
           num_gates: 532
@@ -70,8 +70,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
           reference: 'arXiv:2306.08585',
           year: 2023,
-          domain: 'cryptography',
-          task_name: 'factoring',
+          domain: 'Cryptography',
+          task_name: 'Factoring',
           task_id: 4,
           num_qubits: 1152,
           num_gates: 50000000
@@ -80,8 +80,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'A Threshold for Quantum Advantage in Derivative Pricing',
           reference: 'arXiv:2012.03819',
           year: 2020,
-          domain: 'finance',
-          task_name: 'derivative pricing',
+          domain: 'Finance',
+          task_name: 'Derivative pricing',
           task_id: 0,
           num_qubits: 8000, // logical
           num_gates: 54000000 // T-gates
@@ -90,8 +90,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Towards Quantum Advantage in Financial Market Risk using Quantum Gradient Algorithms',
           reference: 'arXiv:2111.12509',
           year: 2021,
-          domain: 'finance',
-          task_name: 'derivative pricing',
+          domain: 'Finance',
+          task_name: 'Derivative pricing',
           task_id: 0,
           num_qubits: 12000, // logical
           num_gates: 12000000000
@@ -100,8 +100,8 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Using Q# to estimate resources needed for quantum advantage in derivative pricing',
           reference: 'https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/',
           year: 2022,
-          domain: 'finance',
-          task_name: 'derivative pricing',
+          domain: 'Finance',
+          task_name: 'Derivative pricing',
           task_id: 0,
           num_qubits: '',
           num_gates: ''
@@ -110,14 +110,13 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Derivative Pricing using Quantum Signal Processing',
           reference: 'arXiv:2307.14310',
           year: 2023,
-          domain: 'finance',
-          task_name: 'derivative pricing',
+          domain: 'Finance',
+          task_name: 'Derivative pricing',
           task_id: 0,
           num_qubits: 4700, // logical
           num_gates: 1000000000 // T-gates
         }
       ],
-      key: Math.random(),
       label: 'arXiv'
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -175,7 +174,8 @@ class QuantumLandscapeChart extends React.Component {
     this.setState({ label: event.target.value })
     this.loadChartFromState({
       metricNames: this.state.metricNames,
-      chartData: this.state.chartData
+      chartData: this.state.chartData,
+      windowWidth: this.state.windowWidth
     })
   }
 
@@ -189,7 +189,7 @@ class QuantumLandscapeChart extends React.Component {
         return {
           x: obj.num_gates,
           y: obj.num_qubits,
-          label: obj.task_name + '/n' + obj.reference,
+          label: obj.task_name + '\n' + obj.reference,
           title: obj.task_name,
           value: 'Circuit depth ' + obj.num_qubits + '\n Qubits ' + obj.num_gates
         }
@@ -200,8 +200,8 @@ class QuantumLandscapeChart extends React.Component {
       maintainAspectRatio: false,
       layout: {
         padding: {
-          left: (this.state.windowWidth >= 820) ? 40 : 8,
-          right: (this.state.windowWidth >= 820) ? 100 : 16
+          left: (state.windowWidth >= 820) ? 40 : 8,
+          right: (state.windowWidth >= 820) ? 100 : 16
         }
       },
       scales: {
@@ -289,7 +289,7 @@ class QuantumLandscapeChart extends React.Component {
             }
           }
         },
-        datalabels: (this.state.windowWidth < 820)
+        datalabels: (state.windowWidth < 820)
           ? { display: false }
           : {
               font: { weight: '600', color: '#000000' },
@@ -312,12 +312,13 @@ class QuantumLandscapeChart extends React.Component {
   }
 
   componentDidMount () {
-    this.updateWindowDimensions()
+    this.setState({ windowWidth: window.innerWidth })
     window.addEventListener('resize', this.updateWindowDimensions)
 
     this.loadChartFromState({
       metricNames: this.state.metricNames,
-      chartData: this.state.chartData
+      chartData: this.state.chartData,
+      windowWidth: window.innerWidth
     })
   }
 
@@ -327,10 +328,13 @@ class QuantumLandscapeChart extends React.Component {
 
   updateWindowDimensions () {
     this.setState({ windowWidth: window.innerWidth })
+    this.loadChartFromState({
+      metricNames: this.state.metricNames,
+      chartData: this.state.chartData,
+      windowWidth: window.innerWidth
+    })
   }
 
-  // TODO: "key={Math.random()}" is a work-around to make the chart update on input properties change,
-  // See https://github.com/reactchartjs/react-chartjs-2/issues/90#issuecomment-409105108
   render () {
     return (
       <span>
@@ -343,7 +347,7 @@ class QuantumLandscapeChart extends React.Component {
           <div className='row'>
             <div className='col-xl-9 col-12'>
               <div className='chart-container sota-chart'>
-                <canvas id='quantum-landscape-chart-canvas' key={this.state.key} />
+                <canvas id='quantum-landscape-chart-canvas' />
               </div>
               <br />
             </div>
