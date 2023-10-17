@@ -82,16 +82,14 @@ class QuantumLandscapeChart extends React.Component {
           num_qubits: 12000, // logical
           num_gates: 12000000000
         },
-        /*
-          {
-             'title': 'Using Q# to estimate resources needed for quantum advantage in derivative pricing',
-             'reference': 'https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/',
-             'task_name': 'derivative pricing',
-             'task_id': 0,
-             'num_qubits': '',
-             'num_gates': '',
-          },
-          */
+        {
+          title: 'Using Q# to estimate resources needed for quantum advantage in derivative pricing',
+          reference: 'https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/',
+          task_name: 'derivative pricing',
+          task_id: 0,
+          num_qubits: '',
+          num_gates: ''
+        },
         {
           title: 'Derivative Pricing using Quantum Signal Processing',
           reference: 'arXiv:2307.14310',
@@ -194,14 +192,14 @@ class QuantumLandscapeChart extends React.Component {
             display: true,
             text: 'Circuit depth'
           },
-          type: 'linear'
+          type: 'logarithmic'
         },
         y: {
           title: {
             display: true,
             text: 'Qubits'
           },
-          type: 'linear'
+          type: 'logarithmic'
         }
       },
       onClick (event, elements) {
