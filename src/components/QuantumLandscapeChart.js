@@ -21,6 +21,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Quantum supremacy using a programmable superconducting processor',
           reference: 'Nature volume 574, pages 505–510 (2019)',
+          year: 2019,
           task_name: 'random circuit sampling',
           task_id: 47,
           num_qubits: 53,
@@ -29,6 +30,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Strong quantum computational advantage using a superconducting quantum processor',
           reference: 'Phys. Rev. Lett. 127, 180501 (2021-10-25)',
+          year: 2021,
           task_name: 'random circuit sampling',
           task_id: 47,
           num_qubits: 56,
@@ -37,6 +39,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Evidence for the utility of quantum computing before fault tolerance',
           reference: 'Nature volume 618, pages 500–505 (2023)',
+          year: 2023,
           task_name: '2D transverse-field Ising model',
           task_id: 195,
           num_qubits: 127,
@@ -45,6 +48,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Quantinuum H-Series quantum computer accelerates through 3 more performance records for quantum volume: 2^17, 2^18, and 2^19',
           reference: 'https://www.quantinuum.com/news/quantinuum-h-series-quantum-computer-accelerates-through-3-more-performance-records-for-quantum-volume-217-218-and-219',
+          year: 2023,
           task_name: 'quantum volume',
           task_id: 34,
           num_qubits: 19,
@@ -61,6 +65,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
           reference: 'arXiv:2306.08585',
+          year: 2023,
           task_name: 'factoring',
           task_id: 4,
           num_qubits: 1152,
@@ -69,6 +74,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'A Threshold for Quantum Advantage in Derivative Pricing',
           reference: 'arXiv:2012.03819',
+          year: 2020,
           task_name: 'derivative pricing',
           task_id: 0,
           num_qubits: 8000, // logical
@@ -77,6 +83,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Towards Quantum Advantage in Financial Market Risk using Quantum Gradient Algorithms',
           reference: 'arXiv:2111.12509',
+          year: 2021,
           task_name: 'derivative pricing',
           task_id: 0,
           num_qubits: 12000, // logical
@@ -85,6 +92,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Using Q# to estimate resources needed for quantum advantage in derivative pricing',
           reference: 'https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/',
+          year: 2022,
           task_name: 'derivative pricing',
           task_id: 0,
           num_qubits: '',
@@ -93,6 +101,7 @@ class QuantumLandscapeChart extends React.Component {
         {
           title: 'Derivative Pricing using Quantum Signal Processing',
           reference: 'arXiv:2307.14310',
+          year: 2023,
           task_name: 'derivative pricing',
           task_id: 0,
           num_qubits: 4700, // logical
