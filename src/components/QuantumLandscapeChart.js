@@ -223,8 +223,7 @@ class QuantumLandscapeChart extends React.Component {
             },
             {
               value: 10000000000
-            }
-            ]
+            }]
           }
         },
         y: {
@@ -248,8 +247,7 @@ class QuantumLandscapeChart extends React.Component {
             },
             {
               value: 10000
-            }
-            ]
+            }]
           }
         }
       },
@@ -269,7 +267,7 @@ class QuantumLandscapeChart extends React.Component {
               return data.datasets[0].data[ctx[0].dataIndex].title
             },
             label: function (ctx) {
-              return 'Circuit depth ' + ctx.parsed.x + '\n Qubits ' + ctx.parsed.y
+              return 'Circuit depth ' + ctx.parsed.x.toExponential() + '\n Qubits ' + ctx.parsed.y.toExponential()
             }
           }
         },
