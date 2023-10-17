@@ -192,14 +192,65 @@ class QuantumLandscapeChart extends React.Component {
             display: true,
             text: 'Circuit depth'
           },
-          type: 'logarithmic'
+          type: 'logarithmic',
+          ticks: {
+            callback: (val) => (val.toExponential())
+          },
+          afterBuildTicks: scale => {
+            scale.ticks = [{
+              value: 100
+            },
+            {
+              value: 1000
+            },
+            {
+              value: 10000
+            },
+            {
+              value: 100000
+            },
+            {
+              value: 1000000
+            },
+            {
+              value: 10000000
+            },
+            {
+              value: 100000000
+            },
+            {
+              value: 1000000000
+            },
+            {
+              value: 10000000000
+            }
+            ]
+          }
         },
         y: {
           title: {
             display: true,
             text: 'Qubits'
           },
-          type: 'logarithmic'
+          type: 'logarithmic',
+          ticks: {
+            callback: (val) => (val.toExponential())
+          },
+          afterBuildTicks: scale => {
+            scale.ticks = [{
+              value: 10
+            },
+            {
+              value: 100
+            },
+            {
+              value: 1000
+            },
+            {
+              value: 10000
+            }
+            ]
+          }
         }
       },
       onClick (event, elements) {
