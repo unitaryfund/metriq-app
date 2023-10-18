@@ -4,10 +4,11 @@ import React from 'react'
 import config from './../config'
 import { Chart, LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import { Button } from 'react-bootstrap'
 import SotaControlRow from './SotaControlRow'
 
-const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels]
+const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels, annotationPlugin]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
 
@@ -463,7 +464,19 @@ class QuantumLandscapeChart extends React.Component {
               formatter: function (value, context) {
                 return value.label
               }
+            },
+        annotation: {
+          annotations: {
+            box1: {
+              type: 'box',
+              xMin: 0,
+              xMax: 100000000000,
+              yMin: 0,
+              yMax: 50,
+              backgroundColor: '#007bff40'
             }
+          }
+        }
       }
     }
 
