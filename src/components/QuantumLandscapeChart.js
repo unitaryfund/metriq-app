@@ -182,7 +182,8 @@ class QuantumLandscapeChart extends React.Component {
       chartData: this.state.chartData,
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth
+      windowWidth: this.state.windowWidth,
+      label: event.target.value
     })
   }
 
@@ -194,7 +195,8 @@ class QuantumLandscapeChart extends React.Component {
       chartData: this.state.chartData,
       achievedSubset: nVal,
       estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth
+      windowWidth: this.state.windowWidth,
+      label: this.state.label
     })
   }
 
@@ -206,7 +208,8 @@ class QuantumLandscapeChart extends React.Component {
       chartData: this.state.chartData,
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: nVal,
-      windowWidth: this.state.windowWidth
+      windowWidth: this.state.windowWidth,
+      label: this.state.label
     })
   }
 
@@ -225,7 +228,7 @@ class QuantumLandscapeChart extends React.Component {
           return {
             x: obj.num_gates,
             y: obj.num_qubits,
-            label: obj.task_name + '\n' + obj.reference,
+            label: obj.task_name + '\n' + ((state.label === 'arXiv') ? obj.reference : obj.domain),
             title: obj.task_name,
             value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates
           }
@@ -377,7 +380,8 @@ class QuantumLandscapeChart extends React.Component {
       chartData: this.state.chartData,
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      label: this.state.label
     })
   }
 
@@ -392,7 +396,8 @@ class QuantumLandscapeChart extends React.Component {
       chartData: this.state.chartData,
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
+      label: this.state.label
     })
   }
 
@@ -423,7 +428,7 @@ class QuantumLandscapeChart extends React.Component {
                 value={this.state.label}
                 options={{
                   arXiv: 'arXiv ID',
-                  method: 'Method and platform'
+                  domain: 'Domain'
                 }}
                 onChange={this.handleOnChangeLabel}
               />
