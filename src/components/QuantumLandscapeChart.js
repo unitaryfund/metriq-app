@@ -6,6 +6,7 @@ import { Chart, LinearScale, LogarithmicScale, PointElement, ScatterController, 
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { Button } from 'react-bootstrap'
+import FormFieldWideRow from './FormFieldWideRow'
 import SotaControlRow from './SotaControlRow'
 
 const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels, annotationPlugin]
@@ -118,6 +119,36 @@ class QuantumLandscapeChart extends React.Component {
           task_id: 0,
           num_qubits: 4700, // logical
           num_gates: 1000000000 // T-gates
+        },
+        {
+          title: 'Quantum dynamics',
+          reference: 'arXiv:2211.07629',
+          year: 2022,
+          domain: 'Physics simulation',
+          task_name: 'Quantum dynamics',
+          task_id: 0,
+          num_qubits: 230, // logical
+          num_gates: 1.03e11 // T-gates
+        },
+        {
+          title: 'Quantum chemistry',
+          reference: 'arXiv:2211.07629',
+          year: 2022,
+          domain: 'Physics simulation',
+          task_name: 'Quantum chemistry',
+          task_id: 0,
+          num_qubits: 2740, // logical
+          num_gates: 3.33e16 // T-gates
+        },
+        {
+          title: 'Factoring',
+          reference: 'arXiv:2211.07629',
+          year: 2022,
+          domain: 'Factoring',
+          task_name: 'Quantum chemistry',
+          task_id: 0,
+          num_qubits: 25481, // logical
+          num_gates: 2.86e16 // T-gates
         }]
       ],
       label: 'arXiv'
@@ -241,10 +272,10 @@ class QuantumLandscapeChart extends React.Component {
       scales: {
         x: {
           min: 1,
-          max: 100000000000,
+          max: 1000000000000000000,
           title: {
             display: true,
-            text: 'Gates'
+            text: 'Number of operations'
           },
           type: 'logarithmic',
           ticks: {
@@ -281,6 +312,27 @@ class QuantumLandscapeChart extends React.Component {
               },
               {
                 value: 10000000000
+              },
+              {
+                value: 100000000000
+              },
+              {
+                value: 1000000000000
+              },
+              {
+                value: 10000000000000
+              },
+              {
+                value: 100000000000000
+              },
+              {
+                value: 1000000000000000
+              },
+              {
+                value: 10000000000000000
+              },
+              {
+                value: 100000000000000000
               }]
           }
         },
@@ -324,7 +376,7 @@ class QuantumLandscapeChart extends React.Component {
         tooltip: {
           callbacks: {
             title: function (ctx) {
-              return data.datasets[0].data[ctx[0].dataIndex].title
+              return data.datasets[(ctx[0].dataIndex < data.datasets[0].length) ? 0 : 1].data[ctx[0].dataIndex].title
             },
             label: function (ctx) {
               return 'Circuit depth ' + ctx.parsed.x.toExponential() + '\n Qubits ' + ctx.parsed.y.toExponential()
@@ -346,10 +398,11 @@ class QuantumLandscapeChart extends React.Component {
             box1: {
               type: 'box',
               xMin: 0,
-              xMax: 100000000000,
+              xMax: 1000000000000000000,
               yMin: 0,
               yMax: 50,
-              backgroundColor: '#007bff20'
+              backgroundColor: '#007bff10',
+              borderColor: '#00000000'
             }
           }
         }
@@ -427,6 +480,9 @@ class QuantumLandscapeChart extends React.Component {
                 }}
                 onChange={this.handleOnChangeLabel}
               />
+              <FormFieldWideRow>
+                <input type='range' min='2018' max='2023' value='2023' />
+              </FormFieldWideRow>
             </div>
           </div>
           <div className='row'>
