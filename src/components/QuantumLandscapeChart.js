@@ -161,11 +161,11 @@ class QuantumLandscapeChart extends React.Component {
   }
 
   handlePngExport () {
-    this.fillCanvasBackgroundWithColor(document.getElementById('sota-chart-canvas-' + this.props.chartId), 'white')
+    this.fillCanvasBackgroundWithColor(document.getElementById('quantum-landscape-chart-canvas'), 'white')
 
     const element = document.createElement('a')
     element.setAttribute('href', this.state.chart.toBase64Image())
-    element.setAttribute('download', this.state.item.name + '.png')
+    element.setAttribute('download', 'quantum_landscape.png')
 
     element.style.display = 'none'
     document.body.appendChild(element)
@@ -238,12 +238,6 @@ class QuantumLandscapeChart extends React.Component {
     const options = {
       responsive: true,
       maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: (state.windowWidth >= 820) ? 40 : 8,
-          right: (state.windowWidth >= 820) ? 100 : 16
-        }
-      },
       scales: {
         x: {
           min: 1,
@@ -412,6 +406,7 @@ class QuantumLandscapeChart extends React.Component {
         <div className='card sota-card'>
           <div className='row'>
             <div className='col-xl-9 col-12'>
+              <br />
               <div className='chart-container sota-chart'>
                 <canvas id='quantum-landscape-chart-canvas' />
               </div>
