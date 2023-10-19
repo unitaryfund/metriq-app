@@ -227,7 +227,7 @@ class QuantumLandscapeChart extends React.Component {
             y: obj.num_qubits,
             label: obj.task_name + '\n' + obj.reference,
             title: obj.task_name,
-            value: 'Circuit depth ' + obj.num_qubits + '\n Qubits ' + obj.num_gates
+            value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates
           }
         })
       })
@@ -247,7 +247,7 @@ class QuantumLandscapeChart extends React.Component {
           max: 100000000000,
           title: {
             display: true,
-            text: 'Circuit depth'
+            text: 'Gates'
           },
           type: 'logarithmic',
           ticks: {
@@ -352,7 +352,7 @@ class QuantumLandscapeChart extends React.Component {
               xMax: 100000000000,
               yMin: 0,
               yMax: 50,
-              backgroundColor: '#007bff40'
+              backgroundColor: '#007bff20'
             }
           }
         }
