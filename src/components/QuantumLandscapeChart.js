@@ -19,6 +19,10 @@ class QuantumLandscapeChart extends React.Component {
       windowWidth: 0,
       chart: null,
       yearSlider: 2023,
+      isQuantumSupremacyVisible: true,
+      isFinanceVisible: true,
+      isPhysicsSimulationVisible: true,
+      isCryptographyVisible: true,
       achievedSubset: true,
       estimatedSubset: true,
       chartData: [
@@ -157,6 +161,7 @@ class QuantumLandscapeChart extends React.Component {
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
     this.handleOnChangeYear = this.handleOnChangeYear.bind(this)
+    this.handleOnChangeDomain = this.handleOnChangeDomain.bind(this)
     this.handleOnClickAchieved = this.handleOnClickAchieved.bind(this)
     this.handleOnClickEstimated = this.handleOnClickEstimated.bind(this)
     this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
@@ -216,7 +221,11 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: this.state.windowWidth,
       label: event.target.value,
-      yearSlider: this.state.yearSlider
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
     })
   }
 
@@ -230,7 +239,29 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: this.state.windowWidth,
       label: this.state.label,
-      yearSlider: nVal
+      yearSlider: nVal,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
+    })
+  }
+
+  handleOnChangeDomain (domain, event) {
+    const val = event.target.checked
+    this.setState({ [domain]: val })
+    this.loadChartFromState({
+      metricNames: this.state.metricNames,
+      chartData: this.state.chartData,
+      achievedSubset: this.state.achievedSubset,
+      estimatedSubset: this.state.estimatedSubset,
+      windowWidth: this.state.windowWidth,
+      label: this.state.label,
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: (domain === 'isQuantumSupremacyVisible') ? val : this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: (domain === 'isPhysicsSimulationVisible') ? val : this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: (domain === 'isFinanceVisible') ? val : this.state.isFinanceVisible,
+      isCryptographyVisible: (domain === 'isCryptographyVisible') ? val : this.state.isCryptographyVisible
     })
   }
 
@@ -244,7 +275,11 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: this.state.windowWidth,
       label: this.state.label,
-      yearSlider: this.state.yearSlider
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
     })
   }
 
@@ -258,7 +293,11 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: nVal,
       windowWidth: this.state.windowWidth,
       label: this.state.label,
-      yearSlider: this.state.yearSlider
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
     })
   }
 
@@ -273,15 +312,17 @@ class QuantumLandscapeChart extends React.Component {
         label: (id === 0) ? 'Achieved' : 'Estimated',
         backgroundColor: (id === 0) ? '#007bff' : '#ff0000',
         borderColor: (id === 0) ? '#007bff' : '#ff0000',
-        data: subset.filter(obj => obj.year <= state.yearSlider).map((obj, index) => {
-          return {
-            x: obj.num_gates,
-            y: obj.num_qubits,
-            label: obj.task_name + '\n' + ((state.label === 'arXiv') ? obj.reference : obj.domain),
-            title: obj.task_name,
-            value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates
-          }
-        })
+        data: subset
+          .filter(obj => (obj.year <= state.yearSlider) && (state.isQuantumSupremacyVisible || (obj.domain !== 'Quantum supremacy')) && (state.isFinanceVisible || (obj.domain !== 'Finance')) && (state.isPhysicsSimulationVisible || (obj.domain !== 'Physics simulation')) && (state.isCryptographyVisible || (obj.domain !== 'Cryptography')))
+          .map((obj, index) => {
+            return {
+              x: obj.num_gates,
+              y: obj.num_qubits,
+              label: obj.task_name + '\n' + ((state.label === 'arXiv') ? obj.reference : obj.domain),
+              title: obj.task_name,
+              value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates
+            }
+          })
       })
     })
     const options = {
@@ -447,7 +488,11 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: window.innerWidth,
       label: this.state.label,
-      yearSlider: this.state.yearSlider
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
     })
   }
 
@@ -464,7 +509,11 @@ class QuantumLandscapeChart extends React.Component {
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: window.innerWidth,
       label: this.state.label,
-      yearSlider: this.state.yearSlider
+      yearSlider: this.state.yearSlider,
+      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
+      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
+      isFinanceVisible: this.state.isFinanceVisible,
+      isCryptographyVisible: this.state.isCryptographyVisible
     })
   }
 
@@ -522,6 +571,38 @@ class QuantumLandscapeChart extends React.Component {
                     <option value='2022' label='2022' />
                     <option value='2023' label='2023' />
                   </datalist>
+                </div>
+              </div>
+              <div className='row sota-checkbox-row' style={{ paddingTop: '32px' }}>
+                <div className='col-10 text-left sota-label'>
+                  Quantum supremacy
+                </div>
+                <div className='col-2 text-right'>
+                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isQuantumSupremacyVisible} onChange={event => this.handleOnChangeDomain('isQuantumSupremacyVisible', event)} />
+                </div>
+              </div>
+              <div className='row sota-checkbox-row'>
+                <div className='col-10 text-left sota-label'>
+                  Finance
+                </div>
+                <div className='col-2 text-right'>
+                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isFinanceVisible} onChange={event => this.handleOnChangeDomain('isFinanceVisible', event)} />
+                </div>
+              </div>
+              <div className='row sota-checkbox-row'>
+                <div className='col-10 text-left sota-label'>
+                  Physics simulation
+                </div>
+                <div className='col-2 text-right'>
+                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isPhysicsSimulationVisible} onChange={event => this.handleOnChangeDomain('isPhysicsSimulationVisible', event)} />
+                </div>
+              </div>
+              <div className='row sota-checkbox-row'>
+                <div className='col-10 text-left sota-label'>
+                  Cryptography
+                </div>
+                <div className='col-2 text-right'>
+                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isCryptographyVisible} onChange={event => this.handleOnChangeDomain('isCryptographyVisible', event)} />
                 </div>
               </div>
             </div>
