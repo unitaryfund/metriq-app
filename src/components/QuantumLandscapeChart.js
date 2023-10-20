@@ -145,7 +145,7 @@ class QuantumLandscapeChart extends React.Component {
           reference: 'arXiv:2211.07629',
           year: 2022,
           domain: 'Factoring',
-          task_name: 'Quantum chemistry',
+          task_name: 'Factoring',
           task_id: 0,
           num_qubits: 25481, // logical
           num_gates: 2.86e16 // T-gates
