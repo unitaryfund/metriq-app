@@ -144,7 +144,7 @@ class QuantumLandscapeChart extends React.Component {
           title: 'Factoring',
           reference: 'arXiv:2211.07629',
           year: 2022,
-          domain: 'Factoring',
+          domain: 'Cryptography',
           task_name: 'Factoring',
           task_id: 0,
           num_qubits: 25481, // logical
@@ -472,7 +472,7 @@ class QuantumLandscapeChart extends React.Component {
     return (
       <span>
         <div className='row'>
-          <div className='col'>
+          <div className='col text-left'>
             <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
             <br />
             <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
