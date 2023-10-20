@@ -6,7 +6,6 @@ import { Chart, LinearScale, LogarithmicScale, PointElement, ScatterController, 
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { Button } from 'react-bootstrap'
-import FormFieldWideRow from './FormFieldWideRow'
 import SotaControlRow from './SotaControlRow'
 
 const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels, annotationPlugin]
@@ -19,6 +18,7 @@ class QuantumLandscapeChart extends React.Component {
     this.state = {
       windowWidth: 0,
       chart: null,
+      yearSlider: 2023,
       achievedSubset: true,
       estimatedSubset: true,
       chartData: [
@@ -156,6 +156,7 @@ class QuantumLandscapeChart extends React.Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     this.loadChartFromState = this.loadChartFromState.bind(this)
     this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
+    this.handleOnChangeYear = this.handleOnChangeYear.bind(this)
     this.handleOnClickAchieved = this.handleOnClickAchieved.bind(this)
     this.handleOnClickEstimated = this.handleOnClickEstimated.bind(this)
     this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
@@ -214,7 +215,22 @@ class QuantumLandscapeChart extends React.Component {
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: this.state.windowWidth,
-      label: event.target.value
+      label: event.target.value,
+      yearSlider: this.state.yearSlider
+    })
+  }
+
+  handleOnChangeYear (event) {
+    const nVal = event.target.value
+    this.setState({ yearSlider: nVal })
+    this.loadChartFromState({
+      metricNames: this.state.metricNames,
+      chartData: this.state.chartData,
+      achievedSubset: this.state.achievedSubset,
+      estimatedSubset: this.state.estimatedSubset,
+      windowWidth: this.state.windowWidth,
+      label: this.state.label,
+      yearSlider: nVal
     })
   }
 
@@ -227,7 +243,8 @@ class QuantumLandscapeChart extends React.Component {
       achievedSubset: nVal,
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: this.state.windowWidth,
-      label: this.state.label
+      label: this.state.label,
+      yearSlider: this.state.yearSlider
     })
   }
 
@@ -240,7 +257,8 @@ class QuantumLandscapeChart extends React.Component {
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: nVal,
       windowWidth: this.state.windowWidth,
-      label: this.state.label
+      label: this.state.label,
+      yearSlider: this.state.yearSlider
     })
   }
 
@@ -255,7 +273,7 @@ class QuantumLandscapeChart extends React.Component {
         label: (id === 0) ? 'Achieved' : 'Estimated',
         backgroundColor: (id === 0) ? '#007bff' : '#ff0000',
         borderColor: (id === 0) ? '#007bff' : '#ff0000',
-        data: subset.map((obj, index) => {
+        data: subset.filter(obj => obj.year <= state.yearSlider).map((obj, index) => {
           return {
             x: obj.num_gates,
             y: obj.num_qubits,
@@ -369,7 +387,7 @@ class QuantumLandscapeChart extends React.Component {
         }
         const selected = state.chartData[elements[0].index]
         if (selected.submissionId) {
-          window.location.href = config.web.getUriPrefix() + '/Task/' + selected.task_id
+          window.location.href = config.web.getUriPrefix() + '/Task/' + selected.submissionId
         }
       },
       plugins: {
@@ -428,7 +446,8 @@ class QuantumLandscapeChart extends React.Component {
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: window.innerWidth,
-      label: this.state.label
+      label: this.state.label,
+      yearSlider: this.state.yearSlider
     })
   }
 
@@ -444,7 +463,8 @@ class QuantumLandscapeChart extends React.Component {
       achievedSubset: this.state.achievedSubset,
       estimatedSubset: this.state.estimatedSubset,
       windowWidth: window.innerWidth,
-      label: this.state.label
+      label: this.state.label,
+      yearSlider: this.state.yearSlider
     })
   }
 
@@ -480,9 +500,27 @@ class QuantumLandscapeChart extends React.Component {
                 }}
                 onChange={this.handleOnChangeLabel}
               />
-              <FormFieldWideRow>
-                <input type='range' min='2018' max='2023' value='2023' />
-              </FormFieldWideRow>
+              <br />
+              <div className='row sota-control-row'>
+                <span htmlFor='year-slider' className='col col-md-5 form-field-label metric-chart-label text-left'>Published</span>
+                <div className='col col-md-7'>
+                  <input
+                    style={{ width: '100%' }} type='range' min='2019' max='2023' list='markers'
+                    className='form-control'
+                    id='year-slider'
+                    name='year-slider'
+                    value={this.state.yearSlider}
+                    onChange={this.handleOnChangeYear}
+                  />
+                  <datalist style={{ width: '100%' }} id='markers'>
+                    <option value='2019' label='2019' />
+                    <option value='2020' label='2020' />
+                    <option value='2021' label='2021' />
+                    <option value='2022' label='2022' />
+                    <option value='2023' label='2023' />
+                  </datalist>
+                </div>
+              </div>
             </div>
           </div>
           <div className='row'>
