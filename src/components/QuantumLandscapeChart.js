@@ -186,7 +186,7 @@ class QuantumLandscapeChart extends React.Component {
     // Fill in the background. We do this by drawing a rectangle
     // filling the entire canvas, using the provided color.
     context.fillStyle = color
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
 
     // Restore the original context state from `context.save()`
     context.restore()
@@ -474,13 +474,16 @@ class QuantumLandscapeChart extends React.Component {
         <div className='row'>
           <div className='col'>
             <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
+            <br />
+            <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
+            <p>This plot does not include clock speed which is another important parameter to consider.</p>
           </div>
         </div>
         <div className='card sota-card'>
           <div className='row'>
             <div className='col-xl-9 col-12'>
               <br />
-              <div className='chart-container sota-chart'>
+              <div className='sota-chart'>
                 <canvas id='quantum-landscape-chart-canvas' />
               </div>
               <br />
