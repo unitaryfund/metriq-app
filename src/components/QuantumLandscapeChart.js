@@ -339,6 +339,11 @@ class QuantumLandscapeChart extends React.Component {
       })
     })
     const options = {
+      animation: this.state.chart
+        ? {
+            duration: 0
+          }
+        : undefined,
       responsive: true,
       maintainAspectRatio: false,
       scales: {
