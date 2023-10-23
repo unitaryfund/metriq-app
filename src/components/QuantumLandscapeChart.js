@@ -33,6 +33,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Quantum supremacy',
           task_name: 'Random circuit sampling',
           task_id: 47,
+          submission_id: 695,
           num_qubits: 53,
           num_gates: 1543
         },
@@ -43,6 +44,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Quantum supremacy',
           task_name: 'Random circuit sampling',
           task_id: 47,
+          submission_id: 69,
           num_qubits: 56,
           num_gates: 1590
         },
@@ -53,6 +55,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Quantum supremacy',
           task_name: '2D transverse-field Ising model',
           task_id: 195,
+          submission_id: 653,
           num_qubits: 127,
           num_gates: 14400
         },
@@ -63,6 +66,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Quantum supremacy',
           task_name: 'Quantum volume',
           task_id: 34,
+          submission_id: 642,
           num_qubits: 19,
           num_gates: 532
         }],
@@ -81,6 +85,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Cryptography',
           task_name: 'Factoring',
           task_id: 4,
+          submission_id: 696,
           num_qubits: 1152,
           num_gates: 50000000
         },
@@ -91,6 +96,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Finance',
           task_name: 'Derivative pricing',
           task_id: 0,
+          submission_id: 697,
           num_qubits: 8000, // logical
           num_gates: 54000000 // T-gates
         },
@@ -101,6 +107,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Finance',
           task_name: 'Derivative pricing',
           task_id: 0,
+          submission_id: 698,
           num_qubits: 12000, // logical
           num_gates: 12000000000
         },
@@ -111,6 +118,7 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Finance',
           task_name: 'Derivative pricing',
           task_id: 0,
+          submission_id: 699,
           num_qubits: '',
           num_gates: ''
         },
@@ -121,36 +129,40 @@ class QuantumLandscapeChart extends React.Component {
           domain: 'Finance',
           task_name: 'Derivative pricing',
           task_id: 0,
+          submission_id: 700,
           num_qubits: 4700, // logical
           num_gates: 1000000000 // T-gates
         },
         {
-          title: 'Quantum dynamics',
+          title: 'Assessing requirements to scale to practical quantum advantage',
           reference: 'arXiv:2211.07629',
           year: 2022,
           domain: 'Physics simulation',
           task_name: 'Quantum dynamics',
           task_id: 0,
+          submission_id: 701,
           num_qubits: 230, // logical
           num_gates: 1.03e11 // T-gates
         },
         {
-          title: 'Quantum chemistry',
+          title: 'Assessing requirements to scale to practical quantum advantage',
           reference: 'arXiv:2211.07629',
           year: 2022,
           domain: 'Physics simulation',
           task_name: 'Quantum chemistry',
           task_id: 0,
+          submission_id: 701,
           num_qubits: 2740, // logical
           num_gates: 3.33e16 // T-gates
         },
         {
-          title: 'Factoring',
+          title: 'Assessing requirements to scale to practical quantum advantage',
           reference: 'arXiv:2211.07629',
           year: 2022,
           domain: 'Cryptography',
           task_name: 'Factoring',
           task_id: 0,
+          submission_id: 701,
           num_qubits: 25481, // logical
           num_gates: 2.86e16 // T-gates
         }]
@@ -320,7 +332,8 @@ class QuantumLandscapeChart extends React.Component {
               y: obj.num_qubits,
               label: obj.task_name + '\n' + ((state.label === 'arXiv') ? obj.reference : obj.domain),
               title: obj.task_name,
-              value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates
+              value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates,
+              submission_id: obj.submission_id
             }
           })
       })
@@ -426,9 +439,10 @@ class QuantumLandscapeChart extends React.Component {
         if (!elements.length) {
           return
         }
-        const selected = state.chartData[elements[0].index]
-        if (selected.submissionId) {
-          window.location.href = config.web.getUriPrefix() + '/Task/' + selected.submissionId
+        const id = elements[0].index
+        const selected = data.datasets[(id < data.datasets[0].length) ? 0 : 1].data[id]
+        if (selected.submission_id) {
+          window.location.href = config.web.getUriPrefix() + '/Submission/' + selected.submission_id
         }
       },
       plugins: {
