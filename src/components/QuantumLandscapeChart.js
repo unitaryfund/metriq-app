@@ -549,14 +549,14 @@ class QuantumLandscapeChart extends React.Component {
         </div>
         <div className='card sota-card'>
           <div className='row'>
-            <div className='col-xl-9 col-12'>
+            <div className='col-xl-8 col-12'>
               <br />
               <div className='sota-chart'>
                 <canvas id='quantum-landscape-chart-canvas' />
               </div>
               <br />
             </div>
-            <div className='col-xl-3 col-12 text-center'>
+            <div className='col-xl-4 col-12 text-center'>
               <div>
                 <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
                 <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
