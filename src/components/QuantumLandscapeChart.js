@@ -545,7 +545,7 @@ class QuantumLandscapeChart extends React.Component {
             <br />
             <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
             <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider.</p>
-            <p>If you have other data you would like to see added to this chart, please email <a href="mailto:metriq@unitary.fund">metriq@unitary.fund</a></p>
+            <p>If you have other data you would like to see added to this chart, please email <a href="mailto:metriq@unitary.fund">metriq@unitary.fund</a>.</p>
           </div>
         </div>
         <div className='card sota-card'>
