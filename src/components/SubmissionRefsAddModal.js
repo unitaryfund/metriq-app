@@ -8,7 +8,9 @@ import axios from 'axios'
 import config from './../config'
 import { nonblankRegex } from './ValidationRegex'
 import ErrorHandler from './ErrorHandler'
+import { sortAlphabetical } from '../components/SortFunctions'
 import FormFieldTypeaheadRow from './FormFieldTypeaheadRow'
+const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 
 library.add(faPlus)
@@ -16,13 +18,17 @@ library.add(faPlus)
 const SubmissionRefsAddModal = (props) => {
   const [isValid, setIsValid] = useState(false)
   const [showAccordion, setShowAccordion] = useState(!!props.isNewOnly)
+  const [allProviderNames, setAllProviderNames] = useState([])
+  const [allArchitectureNames, setAllArchitectureNames] = useState([])
   const [item, setItem] = useState({
     id: 0,
     name: props.refName ? props.refName : '',
     fullName: '',
     parent: 0,
     description: '',
-    submissions: props.submissionId
+    submissions: props.submissionId,
+    architecture: 0,
+    provider: 0
   })
 
   const key = props.modalMode === 'Task'
@@ -51,7 +57,36 @@ const SubmissionRefsAddModal = (props) => {
     if (isChanged) {
       setItem(nItem)
     }
-  }, [props.submissionId, props.refName, item, handleValidation])
+
+    if (allProviderNames.length === 0) {
+      const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
+      axios.get(providerNamesRoute)
+        .then(res => {
+          const apn = res.data.data
+          // Sort alphabetically and put "Other" at end of array.
+          apn.sort(sortAlphabetical)
+          const otherIndex = apn.findIndex(x => x.name === 'Other')
+          const apn2 = apn.toSpliced(otherIndex, 1)
+          apn2.push(apn[otherIndex])
+          apn2.splice(otherIndex, 1)
+          setAllProviderNames(apn2)
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    }
+
+    if (allArchitectureNames.length === 0) {
+      const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
+      axios.get(architectureNamesRoute)
+        .then(res => {
+          setAllArchitectureNames(res.data.data)
+        })
+        .catch(err => {
+          window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
+        })
+    }
+  }, [props.submissionId, props.refName, item, allArchitectureNames, allProviderNames, handleValidation])
 
   const handleAccordionToggle = () => {
     setIsValid((!!item.id && showAccordion) || (!showAccordion && !!item.name && (item.parent || (key !== 'task'))))
@@ -133,6 +168,7 @@ const SubmissionRefsAddModal = (props) => {
     if (!showAccordion) {
       return
     }
+    console.log('Field: ' + field + ', value: ' + value)
 
     item[field] = value
     setItem(item)
@@ -248,9 +284,28 @@ const SubmissionRefsAddModal = (props) => {
                       onChange={handleOnChange}
                       tooltip={`Long name of new ${key}`}
                     /><br />
+                    {props.modalMode === 'Platform' &&
+                      <span>
+                        <FormFieldSelectRow
+                          inputName='architecture'
+                          label='Architecture'
+                          options={allArchitectureNames}
+                          value={item.architecture}
+                          onChange={handleOnChange}
+                          tooltip='The new platform architecture (basic type).'
+                        /><br />
+                        <FormFieldSelectRow
+                          inputName='provider'
+                          label='Provider'
+                          options={allProviderNames}
+                          value={item.provider}
+                          onChange={handleOnChange}
+                          tooltip='The new platform provider (entity).'
+                        /><br />
+                      </span>}
                     <FormFieldTypeaheadRow
                       inputName={`parent${props.modalMode}`}
-                      label={`Parent ${key}` + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
+                      label={(props.modalMode === 'Platform' ? 'Device' : `Parent ${key}`) + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
                       options={props.allNames}
                       onSelect={handleOnSelectParent}
                       onChange={handleOnChangeParent}

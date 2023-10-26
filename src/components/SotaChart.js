@@ -485,10 +485,10 @@ class SotaChart extends React.Component {
     if (isSameDate) {
       options = {
         animation: this.state.chart
-        ? {
-            duration: 0
-          }
-        : undefined,
+          ? {
+              duration: 0
+            }
+          : undefined,
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -533,10 +533,10 @@ class SotaChart extends React.Component {
     } else {
       options = {
         animation: this.state.chart
-        ? {
-            duration: 0
-          }
-        : undefined,
+          ? {
+              duration: 0
+            }
+          : undefined,
         responsive: true,
         maintainAspectRatio: false,
         layout: {
