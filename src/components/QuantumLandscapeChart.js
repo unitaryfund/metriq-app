@@ -165,6 +165,17 @@ class QuantumLandscapeChart extends React.Component {
           submission_id: 701,
           num_qubits: 25481, // logical
           num_gates: 2.86e16 // T-gates
+        },
+        {
+          title: 'Reliably assessing the electronic structure of cytochrome P450 on today\'s classical computers and tomorrow\'s quantum computers',
+          reference: 'arXiv:2202.01244',
+          year: 2022,
+          domain: 'Physics simulation',
+          task_name: 'Quantum chemistry',
+          task_id: 0,
+          submission_id: 726,
+          num_qubits: 1434, // logical
+          num_gates: 7.8e9 // Toffoli gates
         }]
       ],
       label: 'arXiv'
