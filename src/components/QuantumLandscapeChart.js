@@ -456,7 +456,7 @@ class QuantumLandscapeChart extends React.Component {
           return
         }
         const id = elements[0].index
-        const selected = data.datasets[(id < data.datasets[0].length) ? 0 : 1].data[id]
+        const selected = data.datasets[(id < data.datasets[0].data.length) ? 0 : 1].data[id]
         if (selected.submission_id) {
           window.location.href = config.web.getUriPrefix() + '/Submission/' + selected.submission_id
         }
@@ -465,7 +465,7 @@ class QuantumLandscapeChart extends React.Component {
         tooltip: {
           callbacks: {
             title: function (ctx) {
-              return data.datasets[(ctx[0].dataIndex < data.datasets[0].length) ? 0 : 1].data[ctx[0].dataIndex].title
+              return data.datasets[(ctx[0].dataIndex < data.datasets[0].data.length) ? 0 : 1].data[ctx[0].dataIndex].title
             },
             label: function (ctx) {
               return 'Circuit depth ' + ctx.parsed.x.toExponential() + '\n Qubits ' + ctx.parsed.y.toExponential()
