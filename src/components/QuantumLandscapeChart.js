@@ -6,6 +6,7 @@ import { Chart, LinearScale, LogarithmicScale, PointElement, ScatterController, 
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { Button } from 'react-bootstrap'
+import { parse } from 'json2csv'
 import SotaControlRow from './SotaControlRow'
 
 const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels, annotationPlugin]
@@ -188,6 +189,7 @@ class QuantumLandscapeChart extends React.Component {
     this.handleOnClickAchieved = this.handleOnClickAchieved.bind(this)
     this.handleOnClickEstimated = this.handleOnClickEstimated.bind(this)
     this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
+    this.handleCsvExport = this.handleCsvExport.bind(this)
     this.handlePngExport = this.handlePngExport.bind(this)
   }
 
@@ -218,6 +220,23 @@ class QuantumLandscapeChart extends React.Component {
 
     // Restore the original context state from `context.save()`
     context.restore()
+  }
+
+  handleCsvExport () {
+    const fields = Object.keys(this.state.chartData[0][0])
+    const opts = { fields }
+    const csv = parse(this.state.chartData[0].concat(this.state.chartData[1]), opts)
+
+    const element = document.createElement('a')
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
+    element.setAttribute('download', 'quantum_landscape')
+
+    element.style.display = 'none'
+    document.body.appendChild(element)
+
+    element.click()
+
+    document.body.removeChild(element)
   }
 
   handlePngExport () {
@@ -570,7 +589,7 @@ class QuantumLandscapeChart extends React.Component {
             </div>
             <div className='col-xl-4 col-12 text-center'>
               <div>
-                <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
+                <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.handleCsvExport}>Export to CSV</Button>
                 <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
               </div>
               <SotaControlRow
