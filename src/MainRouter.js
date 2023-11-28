@@ -32,6 +32,7 @@ import UserGuidelines from './views/UserGuidelines'
 import MainNavbar from './components/MainNavbar'
 import Qedc from './views/Qedc'
 import Progress from './views/Progress'
+import Sota from './views/Sota'
 
 const MainRouter = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -210,6 +211,11 @@ const MainRouter = (props) => {
           exact
           path='/Progress'
           component={Progress}
+        />
+        <Route
+          exact
+          path='/Sota'
+          component={Sota}
         />
         <Route
           exact
