@@ -1,6 +1,6 @@
 import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
 
-const Progress = () => {
+const Sota = () => {
   return (
     <div id='metriq-main-content'>
       <div className='row'>
@@ -12,4 +12,4 @@ const Progress = () => {
   )
 }
 
-export default Progress
+export default Sota
