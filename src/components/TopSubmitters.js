@@ -14,36 +14,20 @@ const TopSubmitters = (props) => {
       .then(res => {
         const tSubmitters = res.data.data
 
+        const medalSeries = ['🥇', '🥈', '🥉']
+
         const ts = { weekly: [], monthly: [], allTime: [] }
         for (let i = 0; i < 3; ++i) {
           if ((tSubmitters.weekly.length > i) && (tSubmitters.weekly[i].submissionsCount > 0)) {
-            if (i === 0) {
-              tSubmitters.weekly[0].rank = '🥇'
-            } else if (i === 1) {
-              tSubmitters.weekly[1].rank = '🥈'
-            } else {
-              tSubmitters.weekly[2].rank = '🥉'
-            }
+            tSubmitters.weekly[i].rank = medalSeries[i]
             ts.weekly.push(tSubmitters.weekly[i])
           }
           if ((tSubmitters.monthly.length > i) && (tSubmitters.monthly[i].submissionsCount > 0)) {
-            if (i === 0) {
-              tSubmitters.monthly[0].rank = '🥇'
-            } else if (i === 1) {
-              tSubmitters.monthly[1].rank = '🥈'
-            } else {
-              tSubmitters.monthly[2].rank = '🥉'
-            }
+            tSubmitters.monthly[i].rank = medalSeries[i]
             ts.monthly.push(tSubmitters.monthly[i])
           }
           if ((tSubmitters.allTime.length > i) && (tSubmitters.allTime[i].submissionsCount > 0)) {
-            if (i === 0) {
-              tSubmitters.allTime[0].rank = '🥇'
-            } else if (i === 1) {
-              tSubmitters.allTime[1].rank = '🥈'
-            } else {
-              tSubmitters.allTime[2].rank = '🥉'
-            }
+            tSubmitters.allTime[i].rank = medalSeries[i]
             ts.allTime.push(tSubmitters.allTime[i])
           }
         }
