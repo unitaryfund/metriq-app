@@ -70,7 +70,7 @@ const FeaturedTask = (props) => {
               xLabel='Time'
               taskId={props.taskId}
               key={props.index}
-              isLog
+              isLog={props.isLog}
               logBase={props.logBase}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}

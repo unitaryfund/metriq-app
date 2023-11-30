@@ -19,6 +19,7 @@ const Sota = (props) => {
           <FeaturedTask
             taskId={34}
             index={0}
+            isLog
             logBase={2}
             isLoggedIn={props.isLoggedIn}
           />
@@ -35,6 +36,7 @@ const Sota = (props) => {
           <FeaturedTask
             taskId={50}
             index={1}
+            isLog
             isLoggedIn={props.isLoggedIn}
           />
           <br />

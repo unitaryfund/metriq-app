@@ -130,6 +130,7 @@ class Home extends React.Component {
                   <FeaturedTask
                     taskId={taskId}
                     index={index}
+                    isLog={index < 2}
                     logBase={(index === 0) ? '2' : '10'}
                     isLoggedIn={this.props.isLoggedIn}
                   />
