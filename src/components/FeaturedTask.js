@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom/cjs/react-router-dom'
+import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
