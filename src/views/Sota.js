@@ -1,11 +1,16 @@
-import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
+import FeaturedTask from '../components/FeaturedTask'
 
-const Sota = () => {
+const Sota = (props) => {
   return (
     <div id='metriq-main-content'>
       <div className='row'>
         <div className='col-md-9'>
-          <QuantumLandscapeChart />
+          <FeaturedTask
+            taskId={34}
+            index={0}
+            isLoggedIn={props.isLoggedIn}
+          />
+          <br />
         </div>
       </div>
     </div>

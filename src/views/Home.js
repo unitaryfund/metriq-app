@@ -27,7 +27,7 @@ class Home extends React.Component {
       alphabetical: [],
       allNames: [],
       platforms: [],
-      featured: [],
+      featured: [1, 2, 3],
       trending: [],
       popular: [],
       latest: [],
@@ -40,23 +40,6 @@ class Home extends React.Component {
 
     this.handleOnFilter = this.handleOnFilter.bind(this)
     this.handleOnSelect = this.handleOnSelect.bind(this)
-    this.handleOnLinkClick = this.handleOnLinkClick.bind(this)
-    this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this)
-    this.handleOnMouseLeave = this.handleOnMouseLeave.bind(this)
-  }
-
-  handleOnLinkClick (event) {
-    if (this.state.isLinkBlocked) {
-      event.preventDefault()
-    }
-  }
-
-  handleOnMouseEnter () {
-    this.setState({ isLinkBlocked: true })
-  }
-
-  handleOnMouseLeave () {
-    this.setState({ isLinkBlocked: false })
   }
 
   handleOnFilter (value) {
@@ -113,31 +96,6 @@ class Home extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
-
-    axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
-      .then(res => {
-        const featured = [res.data.data]
-
-        axios.get(config.api.getUriPrefix() + '/task/submissionCount/50')
-          .then(res => {
-            featured.push(res.data.data)
-
-            axios.get(config.api.getUriPrefix() + '/task/submissionCount/164')
-              .then(res => {
-                featured.push(res.data.data)
-                this.setState({ featured })
-              })
-              .catch(err => {
-                this.setState({ requestFailedMessage: ErrorHandler(err) })
-              })
-          })
-          .catch(err => {
-            this.setState({ requestFailedMessage: ErrorHandler(err) })
-          })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
   }
 
   render () {
@@ -167,10 +125,10 @@ class Home extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-9'>
-              {this.state.featured.map((item, index) =>
+              {this.state.featured.map((taskId, index) =>
                 <span key={index}>
                   <FeaturedTask
-                    item={item}
+                    taskId={taskId}
                     index={index}
                     logBase={(index === 0) ? '2' : '10'}
                     isLoggedIn={this.props.isLoggedIn}
