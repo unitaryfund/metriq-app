@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import FormFieldWideRow from './FormFieldWideRow'
+import ArchitectureItemBox from './ArchitectureItemBox'
 const CategoryItemBox = React.lazy(() => import('./CategoryItemBox'))
 
 const CategoryScroll = (props) => {
@@ -36,7 +37,7 @@ const CategoryScroll = (props) => {
           <Suspense fallback={<div>Loading...</div>}>
             <div className='row h-100'>
               <div className={'h-100' + (props.className ? (' ' + props.className) : ' col-lg-9 col')}>
-                {rows.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</div>)}
+                {rows.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => (props.type === 'architecture') ? <ArchitectureItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} /> : <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={props.isLoggedIn} type={props.type} />)}</div>)}
               </div>
             </div>
           </Suspense>}
