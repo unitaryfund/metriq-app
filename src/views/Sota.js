@@ -11,7 +11,7 @@ const Sota = (props) => {
       </div>
       <div className='row'>
         <div className='col-md-9 text-left'>
-          The current highest quantum volume across the industry is <b>2^19</b>.
+          The current highest quantum volume across the industry is <Link to='/Submission/642'><b>2^19</b></Link> by <Link to='/Platform/80'><b>Quantinuum System Model H1-1</b></Link>.
         </div>
       </div>
       <div className='row'>
@@ -28,7 +28,7 @@ const Sota = (props) => {
       </div>
       <div className='row'>
         <div className='col-md-9 text-left'>
-          The current highest T2 coherence time across the industry is <b>21 seconds</b>.
+          The current highest T2 coherence time across the industry is <Link to='/Submission/589'><b>21 seconds</b></Link> with <Link to='/Architecture/4'><b>spin qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>neutral atom qubits</b></Link>.
         </div>
       </div>
       <div className='row'>
@@ -44,7 +44,7 @@ const Sota = (props) => {
       </div>
       <div className='row'>
         <div className='col-md-9 text-left'>
-          The current highest coherence gain across the industry is <b>5.1</b>.
+          The current highest coherence gain across the industry is <Link to='/Submission/463'><b>5.1 with the Star Code</b></Link>.
         </div>
       </div>
       <div className='row'>
