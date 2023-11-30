@@ -1,27 +1,23 @@
 import axios from 'axios'
 import React from 'react'
 import { Button, Tab, Tabs } from 'react-bootstrap'
+import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
+import { withRouter, Link } from 'react-router-dom'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
 import CategoryScroll from '../components/CategoryScroll'
-import CategoryItemIcon from '../components/CategoryItemIcon'
 import CategoryItemBox from '../components/CategoryItemBox'
-import SubscribeButton from '../components/SubscribeButton'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
-import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
-import SotaChart from '../components/SotaChart'
-import { withRouter, Link } from 'react-router-dom'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import TopSubmitters from '../components/TopSubmitters'
 import SubmissionScroll from '../components/SubmissionScroll'
+import FeaturedTask from '../components/FeaturedTask'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
-
-const qedcIds = [34, 2, 97, 142, 150, 172, 173, 174, 175, 176, 177, 178, 179]
 
 class Home extends React.Component {
   constructor (props) {
@@ -31,7 +27,7 @@ class Home extends React.Component {
       alphabetical: [],
       allNames: [],
       platforms: [],
-      featured: [],
+      featured: [34, 50, 164],
       trending: [],
       popular: [],
       latest: [],
@@ -44,23 +40,6 @@ class Home extends React.Component {
 
     this.handleOnFilter = this.handleOnFilter.bind(this)
     this.handleOnSelect = this.handleOnSelect.bind(this)
-    this.handleOnLinkClick = this.handleOnLinkClick.bind(this)
-    this.handleOnMouseEnter = this.handleOnMouseEnter.bind(this)
-    this.handleOnMouseLeave = this.handleOnMouseLeave.bind(this)
-  }
-
-  handleOnLinkClick (event) {
-    if (this.state.isLinkBlocked) {
-      event.preventDefault()
-    }
-  }
-
-  handleOnMouseEnter () {
-    this.setState({ isLinkBlocked: true })
-  }
-
-  handleOnMouseLeave () {
-    this.setState({ isLinkBlocked: false })
   }
 
   handleOnFilter (value) {
@@ -117,31 +96,6 @@ class Home extends React.Component {
       .catch(err => {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
-
-    axios.get(config.api.getUriPrefix() + '/task/submissionCount/34')
-      .then(res => {
-        const featured = [res.data.data]
-
-        axios.get(config.api.getUriPrefix() + '/task/submissionCount/50')
-          .then(res => {
-            featured.push(res.data.data)
-
-            axios.get(config.api.getUriPrefix() + '/task/submissionCount/164')
-              .then(res => {
-                featured.push(res.data.data)
-                this.setState({ featured })
-              })
-              .catch(err => {
-                this.setState({ requestFailedMessage: ErrorHandler(err) })
-              })
-          })
-          .catch(err => {
-            this.setState({ requestFailedMessage: ErrorHandler(err) })
-          })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
   }
 
   render () {
@@ -171,46 +125,15 @@ class Home extends React.Component {
           </div>
           <div className='row'>
             <div className='col-md-9'>
-              {this.state.featured.map((item, index) =>
+              {this.state.featured.map((taskId, index) =>
                 <span key={index}>
-                  <Link to={'/Task/' + item.id} className='active-navlink' onClick={this.handleOnLinkClick}>
-                    <div className='task card task-card-link'>
-                      <div className='row h-100 text-left'>
-                        <div className='col-xl-4 col-lg-5 col'>
-                          <SotaChart
-                            isPreview
-                            chartId={index}
-                            xLabel='Time'
-                            taskId={item.id}
-                            key={index}
-                            isLog
-                            logBase={(index === 0) ? '2' : '10'}
-                            onMouseEnter={this.handleOnMouseEnter}
-                            onMouseLeave={this.handleOnMouseLeave}
-                          />
-                        </div>
-                        <div className='col-xl-8 col-lg-7 col'>
-                          <h5>
-                            {item.name}
-                            {qedcIds.includes(parseInt(item.id)) &&
-                              <span> <Link to='/QEDC' onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}><span className='link'>(QED-C)</span></Link></span>}
-                            <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={this.props.isLoggedIn} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} /></span>
-                          </h5>
-                          {item.description}
-                        </div>
-                      </div>
-                      <div className='row h-100'>
-                        <div className='col-lg-4 col text-left'>
-                          <Link to={'/Task/' + item.parentTask.id} onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>{item.parentTask.name}</Link>
-                        </div>
-                        <div className='col-lg-8 col'>
-                          <CategoryItemIcon count={item.resultCount} type='task' word='results' icon={faChartLine} />
-                          <CategoryItemIcon count={item.submissionCount} type='task' word='submissions' icon={faExternalLinkAlt} />
-                          <CategoryItemIcon count={item.upvoteTotal} type='task' word='up-votes' icon={faHeart} />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
+                  <FeaturedTask
+                    taskId={taskId}
+                    index={index}
+                    isLog={index < 2}
+                    logBase={(index === 0) ? '2' : '10'}
+                    isLoggedIn={this.props.isLoggedIn}
+                  />
                   <br />
                 </span>
               )}

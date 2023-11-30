@@ -13,25 +13,21 @@ const TopSubmitters = (props) => {
     axios.get(config.api.getUriPrefix() + '/user/topSubmitters')
       .then(res => {
         const tSubmitters = res.data.data
-        tSubmitters.weekly[0].rank = '🥇'
-        tSubmitters.weekly[1].rank = '🥈'
-        tSubmitters.weekly[2].rank = '🥉'
-        tSubmitters.monthly[0].rank = '🥇'
-        tSubmitters.monthly[1].rank = '🥈'
-        tSubmitters.monthly[2].rank = '🥉'
-        tSubmitters.allTime[0].rank = '🥇'
-        tSubmitters.allTime[1].rank = '🥈'
-        tSubmitters.allTime[2].rank = '🥉'
+
+        const medalSeries = ['🥇', '🥈', '🥉']
 
         const ts = { weekly: [], monthly: [], allTime: [] }
         for (let i = 0; i < 3; ++i) {
-          if (tSubmitters.weekly[i].submissionsCount > 0) {
+          if ((tSubmitters.weekly.length > i) && (tSubmitters.weekly[i].submissionsCount > 0)) {
+            tSubmitters.weekly[i].rank = medalSeries[i]
             ts.weekly.push(tSubmitters.weekly[i])
           }
-          if (tSubmitters.monthly[i].submissionsCount > 0) {
+          if ((tSubmitters.monthly.length > i) && (tSubmitters.monthly[i].submissionsCount > 0)) {
+            tSubmitters.monthly[i].rank = medalSeries[i]
             ts.monthly.push(tSubmitters.monthly[i])
           }
-          if (tSubmitters.allTime[i].submissionsCount > 0) {
+          if ((tSubmitters.allTime.length > i) && (tSubmitters.allTime[i].submissionsCount > 0)) {
+            tSubmitters.allTime[i].rank = medalSeries[i]
             ts.allTime.push(tSubmitters.allTime[i])
           }
         }
