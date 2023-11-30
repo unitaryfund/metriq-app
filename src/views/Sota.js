@@ -28,7 +28,7 @@ const Sota = (props) => {
       <br />
       <div className='row'>
         <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest <Link to='/Task/50'><b>T2 Coherence Time</b></Link> across the industry is <Link to='/Submission/589'><b>21 seconds</b></Link> with <Link to='/Architecture/4'><b>spin qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>neutral atom qubits</b></Link>.
+          The current highest <Link to='/Task/50'><b>T2 Coherence Time</b></Link> across the industry is <Link to='/Submission/589'><b>21 seconds</b></Link> with <Link to='/Architecture/4'><b>Spin Qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link>.
         </div>
       </div>
       <div className='row'>
@@ -45,7 +45,7 @@ const Sota = (props) => {
       <br />
       <div className='row'>
         <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest  <Link to='/Task/164'><b>Coherence Gain</b></Link> across the industry is <Link to='/Submission/463'><b>5.1 with the Star Code</b></Link>.
+          The current highest  <Link to='/Task/164'><b>Coherence Gain</b></Link> across the industry is <Link to='/Submission/463'><b>5.1 with the Star Code</b></Link> on <Link to='/Platform/59'><b>Superconducting Circuit Qubits</b></Link>.
         </div>
       </div>
       <div className='row'>
