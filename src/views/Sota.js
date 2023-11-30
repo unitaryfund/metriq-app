@@ -47,6 +47,7 @@ const Sota = (props) => {
           <br />
         </div>
       </div>
+      <br />
       <div className='row'>
         <div className='col-md-9 text-left'>
           The current highest T2 coherence time across the industry is <Link to='/Submission/589'><b>21 seconds</b></Link> with <Link to='/Architecture/4'><b>spin qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>neutral atom qubits</b></Link>.
@@ -63,6 +64,7 @@ const Sota = (props) => {
           <br />
         </div>
       </div>
+      <br />
       <div className='row'>
         <div className='col-md-9 text-left'>
           The current highest coherence gain across the industry is <Link to='/Submission/463'><b>5.1 with the Star Code</b></Link>.
