@@ -27,7 +27,7 @@ class Home extends React.Component {
       alphabetical: [],
       allNames: [],
       platforms: [],
-      featured: [1, 2, 3],
+      featured: [34, 50, 164],
       trending: [],
       popular: [],
       latest: [],
