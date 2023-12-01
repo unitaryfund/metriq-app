@@ -17,7 +17,7 @@ const Sota = (props) => {
       <br />
       <div className='row'>
         <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest <Link to='/Task/34'><b>Quantum Volume</b></Link> across the industry is <Link to='/Submission/642'><b>2^19</b></Link> by <Link to='/Platform/80'><b>Quantinuum System Model H1-1</b></Link>.
+          The current highest <Link to='/Task/34'><b>Quantum Volume</b></Link> across the industry is <Link to='/Submission/642'><b>2^19</b></Link> by <Link to='/Platform/80'><b>Quantinuum System Model H1-1</b></Link>, which is based on an <Link to='/Architecture/2'>Ion</Link> architecture.
         </div>
       </div>
       <div className='row'>
@@ -51,6 +51,12 @@ const Sota = (props) => {
       <div className='row'>
         <div className='col-md-9 text-left' style={{ fontSize: '0.9em' }}>
           Coherence Gain is the multiplicative factor by which the error-corrected coherence time is improved vs. hardware qubits without error correction.
+        </div>
+      </div>
+      <br />
+      <div className='row'>
+        <div className='col-md-9 text-left'>
+          Make a new <Link to='/AddSubmission'>submission</Link> to report the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.
         </div>
       </div>
     </div>
