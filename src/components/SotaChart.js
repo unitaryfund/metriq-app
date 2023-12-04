@@ -34,6 +34,7 @@ const percentileZ = (p) => {
 const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
+let chart = null
 
 class SotaChart extends React.Component {
   constructor (props) {
@@ -325,6 +326,7 @@ class SotaChart extends React.Component {
               return {
                 label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
                 isShowLabel: index === (sotaData.length - 1),
+                submissionId: obj.submissionId,
                 x: obj.label,
                 y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
               }
@@ -344,6 +346,7 @@ class SotaChart extends React.Component {
               return {
                 label: ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')),
                 isShowLabel: index !== (sotaData.length - 1),
+                submissionId: obj.submissionId,
                 x: obj.label,
                 y: (state.isLog && canLog) ? state.log(obj.value) : obj.value
               }
@@ -375,6 +378,7 @@ class SotaChart extends React.Component {
             x: obj.label,
             y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
             isShowLabel: false,
+            submissionId: obj.submissionId,
             yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
             yMax: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value + obj.standardError * z95) : (obj.value + obj.standardError * z95)) : undefined
           }
@@ -458,6 +462,7 @@ class SotaChart extends React.Component {
               return {
                 label: obj.arXivId + '\n',
                 isShowLabel: false,
+                submissionId: obj.submissionId,
                 x: obj.label,
                 y: (state.isLog && canLog) ? state.log(obj.value) : obj.value,
                 yMin: obj.standardError ? ((state.isLog && canLog) ? state.log(obj.value - obj.standardError * z95) : (obj.value - obj.standardError * z95)) : undefined,
@@ -579,11 +584,12 @@ class SotaChart extends React.Component {
           }
         },
         onClick (event, elements) {
-          if (!elements.length) {
-            return
+          const points = chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true)
+          if (points.length) {
+            const firstPoint = points[0]
+            const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index]
+            window.location.href = config.web.getUriPrefix() + '/Submission/' + value.submissionId
           }
-          const selected = d[elements[0].index]
-          window.location.href = config.web.getUriPrefix() + '/Submission/' + selected.submissionId
         },
         plugins: {
           tooltip: {
@@ -620,7 +626,8 @@ class SotaChart extends React.Component {
       if (this.state.chart) {
         this.state.chart.destroy()
       }
-      this.setState({ chart: new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options }), subsetDataSets })
+      chart = new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options })
+      this.setState({ chart, subsetDataSets })
     }
     chartFunc()
   }
