@@ -31,7 +31,7 @@ const ArchitectureItemBox = (props) => {
   return (
     <div className={(props.isWide ? '' : 'col-xl-4 col-12 ') + (props.isPreview ? '' : 'submission-cell')}>
       <div className={'submission' + (props.isWide ? '' : ' submission-large')}>
-        <Link to={'/Platform/' + props.item.id} className='category-item-box'>
+        <Link to={'/Architecture/' + props.item.id} className='category-item-box'>
           <div>
             <div className='submission-heading'>
               {props.item.name}
