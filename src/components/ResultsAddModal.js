@@ -3,6 +3,7 @@ import React, { useState, Suspense, useEffect } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import config from '../config'
 import ErrorHandler from './ErrorHandler'
+import EditButton from './EditButton'
 import { nonblankRegex, metricValueRegex, dateRegex, standardErrorRegex, numeralRegex } from './ValidationRegex'
 const FormFieldRow = React.lazy(() => import('./FormFieldRow'))
 const FormFieldSelectRow = React.lazy(() => import('./FormFieldSelectRow'))
@@ -29,9 +30,10 @@ const ResultsAddModal = (props) => {
   }
 
   const handleOnChange = (field, value) => {
-    result[field] = value
-    setResult(result)
-    setIsValidated(false)
+    setResult(prevResult => {
+      return {...prevResult, [field]: value}
+    });
+    setIsValidated(false);
   }
 
   const onHide = () => {
@@ -203,6 +205,10 @@ const ResultsAddModal = (props) => {
               onChange={handleOnChange}
               tooltip='The quantum computer platform used by the method for this result'
             /><br />
+            <EditButton
+              className='float-right edit-button btn'
+              onClickAdd={props.onClickAddRef}
+            />
             <FormFieldTypeaheadRow
               inputName='metricName' label='Metric name'
               value={result.metricName}

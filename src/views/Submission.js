@@ -902,6 +902,7 @@ class Submission extends React.Component {
             evaluatedAt={this.state.evaluatedAt}
             metricNames={this.state.metricNames}
             onAddOrEdit={this.handleModalResultAddNew}
+            onClickAddRef={() => this.handleOnClickAddRef('Platform')}
           />
         </Suspense>
         <Modal
