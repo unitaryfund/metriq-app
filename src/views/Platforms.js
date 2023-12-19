@@ -244,13 +244,13 @@ class Platforms extends React.Component {
                 <div className='col-md-12 centered-tabs'>
                   <Tabs defaultActiveKey='common' id='categories-tabs'>
                     <Tab eventKey='common' title='Common'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='popular' title='Popular'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='alphabetical' title='Alphabetical'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -270,13 +270,13 @@ class Platforms extends React.Component {
                 <div className='col-md-12 centered-tabs'>
                   <Tabs defaultActiveKey='common' id='categories-tabs'>
                     <Tab eventKey='common' title='Common'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.commonProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.commonProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='popular' title='Popular'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.popularProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.popularProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='alphabetical' title='Alphabetical'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.alphabeticalProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.alphabeticalProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -294,13 +294,13 @@ class Platforms extends React.Component {
             <div className='col-md-12 centered-tabs'>
               <Tabs defaultActiveKey='common' id='categories-tabs'>
                 <Tab eventKey='common' title='Common'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
                 <Tab eventKey='popular' title='Popular'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
                 <Tab eventKey='alphabetical' title='Alphabetical'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
               </Tabs>
             </div>

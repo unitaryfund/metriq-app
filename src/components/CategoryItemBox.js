@@ -28,8 +28,8 @@ const pickDetailUrl = (type, item) => {
 
 const CategoryItemBox = (props) => {
   return (
-    <div className={(props.isWide ? '' : 'col-xl-4 col-12 ') + (props.isPreview ? '' : 'submission-cell')}>
-      <div className={'submission' + (props.isWide ? '' : ' submission-large')}>
+    <div className={'col-xl-4 col-12' + (props.isPreview ? '' : ' submission-cell')}>
+      <div className='submission submission-shadow submission-large'>
         <Link to={pickDetailUrl(props.type, props.item)} className='category-item-box'>
           {props.type !== 'tag' && props.item.description &&
             <div>
@@ -49,13 +49,15 @@ const CategoryItemBox = (props) => {
           {(props.type === 'tag' || !props.item.description) &&
             <div className='submission-heading-only'>{props.item.name}</div>}
         </Link>
-        <br />
-        <SubscribeButton item={props.item} type={props.type} isLoggedIn={props.isLoggedIn} />
         {!props.isPreview &&
-          <span className='category-item-box-stats'>
-            <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
-            <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
-            <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
+          <span>
+            <br />
+            <SubscribeButton item={props.item} type={props.type} isLoggedIn={props.isLoggedIn} />
+            <span className='category-item-box-stats'>
+              <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
+              <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
+              <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
+            </span>
           </span>}
       </div>
     </div>
