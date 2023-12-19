@@ -12,6 +12,9 @@ import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFun
 import { withRouter, useParams } from 'react-router-dom'
 import ViewSubHeader from '../components/ViewSubHeader'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import architecturesLogo from './../images/architectures.png'
+import providersLogo from './../images/providers.png'
+import devicesLogo from './../images/devices.png'
 
 function withParams (Component) {
   return props => <Component {...props} params={useParams()} />
@@ -237,20 +240,20 @@ class Platforms extends React.Component {
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
-                  <h4 align='left'>Architectures</h4>
+                  <h4 align='left'><img src={architecturesLogo} alt='Architectures logo' /> Architectures</h4>
                 </div>
               </div>
               <div className='row'>
                 <div className='col-md-12 centered-tabs'>
                   <Tabs defaultActiveKey='common' id='categories-tabs'>
                     <Tab eventKey='common' title='Common'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='popular' title='Popular'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='alphabetical' title='Alphabetical'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -263,20 +266,20 @@ class Platforms extends React.Component {
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
-                  <h4 align='left'>Providers</h4>
+                  <h4 align='left'><img src={providersLogo} alt='Providers logo' /> Providers</h4>
                 </div>
               </div>
               <div className='row'>
                 <div className='col-md-12 centered-tabs'>
                   <Tabs defaultActiveKey='common' id='categories-tabs'>
                     <Tab eventKey='common' title='Common'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.commonProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.commonProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='popular' title='Popular'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.popularProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.popularProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='alphabetical' title='Alphabetical'>
-                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.alphabeticalProviders} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                      <CategoryScroll type='provider' isLoading={this.state.isLoadingProviders} items={this.state.alphabeticalProviders} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                   </Tabs>
                 </div>
@@ -287,20 +290,20 @@ class Platforms extends React.Component {
         <FormFieldWideRow>
           <div className='row'>
             <div className='col'>
-              <h4 align='left'>Platforms</h4>
+              <h4 align='left'><img src={devicesLogo} alt='Devices logo' /> Devices</h4>
             </div>
           </div>
           <div className='row'>
             <div className='col-md-12 centered-tabs'>
               <Tabs defaultActiveKey='common' id='categories-tabs'>
                 <Tab eventKey='common' title='Common'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} heading='Sorted by submission count' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.common} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
                 <Tab eventKey='popular' title='Popular'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} heading='Sorted by aggregate upvote count' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.popular} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
                 <Tab eventKey='alphabetical' title='Alphabetical'>
-                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Sorted alphabetically' />
+                  <CategoryScroll type='platform' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} />
                 </Tab>
               </Tabs>
             </div>

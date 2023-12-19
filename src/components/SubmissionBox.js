@@ -96,7 +96,7 @@ const SubmissionBox = (props) => {
   }
 
   return (
-    <div className='submission  submission-large'>
+    <div className='submission submission-large submission-shadow'>
       <Link to={'/Submission/' + props.item.id}>
         <div className='row h-100'>
           <div className='col-md-2 col-sm-12 h-100'>

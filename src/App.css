@@ -278,24 +278,33 @@ input[type="range"] {
 }
 
 .submission {
-  min-height: 256px;
   padding: 8px;
   margin: 6px;
   background-color: #FFFFFF;
 }
 
 .submission-large {
+  min-height: 256px;
+}
+
+.submission-shadow {
   border-radius: 16px;
   box-shadow: 0 3px 12px rgba(33,33,33,.2);
 }
 
-.submission-large:hover {
+.submission-shadow:hover {
   box-shadow: 0 3px 16px rgba(33,33,33,.2);
 }
 
 .category-item-box {
   display: inline-block;
   height: 192px;
+  width: 100%;
+  padding: 12px;
+}
+
+.category-item-line {
+  display: inline-block;
   width: 100%;
   padding: 12px;
 }
@@ -315,13 +324,19 @@ input[type="range"] {
   margin: 4px;
 }
 
+.submission-button-align {
+  height: 38px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 .submission-ref-button {
   margin-right: 4px;
 }
 
 .submission-heading {
   font-weight: bold;
-  padding: 0 8px 8px 8px;
+  padding: 8px 8px 8px 8px;
   text-align: left;
 }
 
