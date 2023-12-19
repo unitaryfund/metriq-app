@@ -57,7 +57,7 @@ const MainRouter = (props) => {
 
   return (
     <Router>
-      <MainNavbar isLoggedIn={isLoggedIn} title={<span><b>Community-driven</b> quantum benchmarks</span>} subtitle={<span><a href='/Submissions'>Submissions</a> show performance of <a href='/Methods/'>methods</a> on <a href='/Platforms/'>platforms</a> against <a href='/Tasks/'>tasks</a></span>} />
+      <MainNavbar isLoggedIn={isLoggedIn} />
       <Switch>
         <Route
           exact

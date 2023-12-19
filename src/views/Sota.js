@@ -1,3 +1,4 @@
+import SotaItem from '../components/SotaItem'
 import { Link } from 'react-router-dom/'
 
 const Sota = (props) => {
@@ -11,49 +12,65 @@ const Sota = (props) => {
       <br />
       <div className='row'>
         <div className='col'>
-          <h5 align='left'>Hardware</h5>
+          <h5 align='left'><b>Hardware</b></h5>
         </div>
       </div>
       <br />
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest <Link to='/Task/34'><b>Quantum Volume</b></Link> across the industry is <Link to='/Submission/642'><b>2^19</b></Link> by <Link to='/Platform/80'><b>Quantinuum System Model H1-1</b></Link>, which is based on an <Link to='/Architecture/2'>Ion</Link> architecture.
-        </div>
-      </div>
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '.9em' }}>
-          The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).
-        </div>
-      </div>
-      <br />
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest <Link to='/Task/50'><b>T2 Coherence Time</b></Link> across the industry is <Link to='/Submission/589'><b>21 seconds</b></Link> with <Link to='/Architecture/4'><b>Spin Qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link>.
-        </div>
-      </div>
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '.9em' }}>
-          On the timescale of the T2 time, qubits entirely lose their original computational state to dephasing.
-        </div>
-      </div>
+      <SotaItem
+        title='Quantum Volume'
+        description={'The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).'}
+        value='2^19'
+        submissionId={642}
+        taskId={34}
+        method={<Link to={'/Platform/' + 80}>Quantinuum System Model H1-1</Link>}
+        architecture={<Link to={'/Archicture/' + 2}>Ion</Link>}
+        isPlatform
+      />
+      <SotaItem
+        title='T2 Coherence Time'
+        description='On the time scale of the T2 time, qubits entirely lose their original computational state to dephasing.'
+        value='21 seconds'
+        submissionId={589}
+        taskId={50}
+        method={<span><Link to={'/Platform/' + 146}>Spin-qubit processors</Link> and <Link to={'/Platform/' + 149}>Optical Tweezers</Link></span>}
+        architecture={<span><Link to='/Architecture/4'><b>Spin Qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link></span>}
+        isPlatform
+      />
+      <SotaItem
+        title='Error Per Layered Gate (100-qubit)'
+        description='On the time scale of the T2 time, qubits entirely lose their original computational state to dephasing.'
+        value={0.00845626}
+        submissionId={729}
+        taskId={203}
+        method={<Link to='/Platform/195'><b>IBMQ Torino</b></Link>}
+        architecture={<Link to='/Architecture/5'>Superconducting Circuit</Link>}
+        isPlatform
+      />
       <br />
       <div className='row'>
         <div className='col'>
-          <h5 align='left'>Error correction and mitigation</h5>
+          <h5 align='left'><b>Error correction and mitigation</b></h5>
         </div>
       </div>
       <br />
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '1.1em' }}>
-          The current highest  <Link to='/Task/164'><b>Coherence Gain</b></Link> across the industry is <Link to='/Submission/463'><b>5.1 with the Star Code</b></Link> on <Link to='/Platform/59'><b>Superconducting Circuit Qubits</b></Link>.
-        </div>
-      </div>
-      <div className='row'>
-        <div className='col-md-9 text-left' style={{ fontSize: '0.9em' }}>
-          Coherence Gain is the multiplicative factor by which the error-corrected coherence time is improved vs. hardware qubits without error correction.
-        </div>
-      </div>
-      <br />
+      <SotaItem
+        title='Coherence Gain'
+        description='Coherence Gain is the multiplicative factor by which the error-corrected coherence time is improved vs. hardware qubits without error correction.'
+        value={5.1}
+        submissionId={463}
+        taskId={164}
+        method={<Link to='/Method/312'><b>Star Code</b></Link>}
+        architecture={<Link to='/Architecture/5'><b>Superconducting Circuits</b></Link>}
+      />
+      <SotaItem
+        title='Error-corrected logical qubit count'
+        description='Quantum error correction (QEC) is used in quantum computing to protect quantum information from errors due to decoherence and other quantum noise. Quantum error correction is theorized as essential to achieve fault tolerant quantum computing that can reduce the effects of noise on stored quantum information, faulty quantum gates, faulty quantum preparation, and faulty measurements. This would allow algorithms of greater circuit depth. (We report the highest count of error-corrected qubits achieved in any platform.)'
+        value={48}
+        submissionId={732}
+        taskId={141}
+        method={<Link to='/Method/349'><b>3D Color Code</b></Link>}
+        architecture={<Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link>}
+      />
       <div className='row'>
         <div className='col-md-9 text-left'>
           Make a new <Link to='/AddSubmission'>submission</Link> to report the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.
