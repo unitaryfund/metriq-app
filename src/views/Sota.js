@@ -33,7 +33,7 @@ const Sota = (props) => {
         submissionId={589}
         taskId={50}
         method={<span><Link to={'/Platform/' + 146}>Spin-qubit processors</Link> and <Link to={'/Platform/' + 149}>Optical Tweezers</Link></span>}
-        architecture={<span><Link to='/Architecture/4'><b>Spin Qubits</b></Link> based on silicon and <Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link></span>}
+        architecture={<span><Link to='/Architecture/4'>Spin Qubits</Link> and <Link to='/Architrecture/1'>Neutral Atom Qubits</Link></span>}
         isPlatform
       />
       <SotaItem
@@ -42,8 +42,8 @@ const Sota = (props) => {
         value={0.00845626}
         submissionId={729}
         taskId={203}
-        method={<Link to='/Platform/195'><b>IBMQ Torino</b></Link>}
-        architecture={<Link to='/Architecture/5'>Superconducting Circuit</Link>}
+        method={<Link to='/Platform/195'>IBMQ Torino</Link>}
+        architecture={<Link to='/Architecture/5'>Superconducting Circuits</Link>}
         isPlatform
       />
       <br />
@@ -59,8 +59,8 @@ const Sota = (props) => {
         value={5.1}
         submissionId={463}
         taskId={164}
-        method={<Link to='/Method/312'><b>Star Code</b></Link>}
-        architecture={<Link to='/Architecture/5'><b>Superconducting Circuits</b></Link>}
+        method={<Link to='/Method/312'>Star Code</Link>}
+        architecture={<Link to='/Architecture/5'>Superconducting Circuits</Link>}
       />
       <SotaItem
         title='Error-corrected logical qubit count'
@@ -68,12 +68,12 @@ const Sota = (props) => {
         value={48}
         submissionId={732}
         taskId={141}
-        method={<Link to='/Method/349'><b>3D Color Code</b></Link>}
-        architecture={<Link to='/Architrecture/1'><b>Neutral Atom Qubits</b></Link>}
+        method={<Link to='/Method/349'>3D Color Code</Link>}
+        architecture={<Link to='/Architrecture/1'>Neutral Atom Qubits</Link>}
       />
       <div className='row'>
         <div className='col-md-9 text-left'>
-          Make a new <Link to='/AddSubmission'>submission</Link> to report the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.
+          <b>Make a new <Link to='/AddSubmission'>submission</Link> to report the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</b>
         </div>
       </div>
     </div>
