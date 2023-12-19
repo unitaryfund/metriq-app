@@ -63,7 +63,7 @@ const Sota = (props) => {
         architecture={<Link to='/Architecture/5'>Superconducting Circuits</Link>}
       />
       <SotaItem
-        title='Error-corrected logical qubit count'
+        title='Error-Corrected Logical Qubit Count'
         description='Quantum error correction (QEC) is used in quantum computing to protect quantum information from errors due to decoherence and other quantum noise. Quantum error correction is theorized as essential to achieve fault tolerant quantum computing that can reduce the effects of noise on stored quantum information, faulty quantum gates, faulty quantum preparation, and faulty measurements. This would allow algorithms of greater circuit depth. (We report the highest count of error-corrected qubits achieved in any platform.)'
         value={48}
         submissionId={732}
