@@ -12,6 +12,9 @@ import { sortCommon, sortPopular, sortAlphabetical } from '../components/SortFun
 import { withRouter, useParams } from 'react-router-dom'
 import ViewSubHeader from '../components/ViewSubHeader'
 import FormFieldWideRow from '../components/FormFieldWideRow'
+import architecturesLogo from './../images/architectures.png'
+import providersLogo from './../images/providers.png'
+import devicesLogo from './../images/devices.png'
 
 function withParams (Component) {
   return props => <Component {...props} params={useParams()} />
@@ -237,7 +240,7 @@ class Platforms extends React.Component {
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
-                  <h4 align='left'>Architectures</h4>
+                  <h4 align='left'><img src={architecturesLogo} alt='Architectures logo' /> Architectures</h4>
                 </div>
               </div>
               <div className='row'>
@@ -263,7 +266,7 @@ class Platforms extends React.Component {
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
-                  <h4 align='left'>Providers</h4>
+                  <h4 align='left'><img src={providersLogo} alt='Providers logo' /> Providers</h4>
                 </div>
               </div>
               <div className='row'>
@@ -287,7 +290,7 @@ class Platforms extends React.Component {
         <FormFieldWideRow>
           <div className='row'>
             <div className='col'>
-              <h4 align='left'>Platforms</h4>
+              <h4 align='left'><img src={devicesLogo} alt='Devices logo' /> Devices</h4>
             </div>
           </div>
           <div className='row'>
