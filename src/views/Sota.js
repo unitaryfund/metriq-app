@@ -38,7 +38,7 @@ const Sota = (props) => {
       />
       <SotaItem
         title='Error Per Layered Gate (100-qubit)'
-        description='On the time scale of the T2 time, qubits entirely lose their original computational state to dephasing.'
+        description='Average error for each gate in layered circuits'
         value={0.00845626}
         submissionId={729}
         taskId={203}

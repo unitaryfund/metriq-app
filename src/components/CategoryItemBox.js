@@ -28,7 +28,7 @@ const pickDetailUrl = (type, item) => {
 
 const CategoryItemBox = (props) => {
   return (
-    <div className={(props.isWide? '' : 'col-xl-4 col-12') + (props.isPreview ? '' : ' submission-cell')}>
+    <div className={(props.isWide ? '' : 'col-xl-4 col-12') + (props.isPreview ? '' : ' submission-cell')}>
       <div className='submission submission-shadow submission-large'>
         <Link to={pickDetailUrl(props.type, props.item)} className='category-item-box'>
           {props.type !== 'tag' && props.item.description &&

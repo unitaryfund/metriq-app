@@ -29,7 +29,10 @@ const FormFieldSelectRow = (props) => {
   const handleOnFieldChange = (event) => {
     // For a regular input field, read field name and value from the event.
     const fieldName = event.target.name
-    const fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    let fieldValue = (props.inputType === 'checkbox') ? event.target.checked : event.target.value
+    if (props.inputType === 'select') {
+      fieldValue = options[event.target.value]
+    }
     if (fieldValue !== value) {
       if (props.onChange) {
         props.onChange(fieldName, fieldValue)
@@ -81,7 +84,7 @@ const FormFieldSelectRow = (props) => {
             <option value=''>(None)</option>}
           {specialOptions.length &&
             <optgroup label={props.specialOptGrouplabel ? props.specialOptGrouplabel : 'Special'}>
-              {specialOptions.map(option => <option key={option.id} value={option.id} className='bold'>{option.name}</option>)}
+              {specialOptions.map((option, id) => <option key={id} value={id} className='bold'>{option.name}</option>)}
             </optgroup>}
           {commonOptions.length && commonOptions.map(option =>
             <option key={option.id} value={option.id} className='bold'>{option.name}</option>

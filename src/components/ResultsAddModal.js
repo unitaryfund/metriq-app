@@ -15,11 +15,21 @@ const ResultsAddModal = (props) => {
   const [submission, setSubmission] = useState({})
   const [key, setKey] = useState(Math.random())
 
+  const [task, setTask] = useState(props.result.task)
+  const [method, setMethod] = useState(props.result.method)
+  const [platform, setPlatform] = useState(props.result.platform)
+
+  const setterDict = { task: setTask, method: setMethod, platform: setPlatform }
+
   useEffect(() => {
     if (!result.evaluatedAt) {
       result.evaluatedAt = props.evaluatedAt
       setResult(result)
       setKey(Math.random())
+    } else {
+      setTask(result.task)
+      setMethod(result.method)
+      setPlatform(result.platform)
     }
   }, [props.evaluatedAt, result, setResult, setKey])
 
@@ -31,6 +41,9 @@ const ResultsAddModal = (props) => {
   const handleOnChange = (field, value) => {
     result[field] = value
     setResult(result)
+    if (field in setterDict) {
+      setterDict[field](result)
+    }
     setIsValidated(false)
   }
 
@@ -184,21 +197,21 @@ const ResultsAddModal = (props) => {
             <FormFieldSelectRow
               inputName='task' label='Task'
               options={props.submission.tasks}
-              value={result.task}
+              value={task}
               onChange={handleOnChange}
               tooltip='Task from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='method' label='Method'
               options={props.submission.methods}
-              value={result.method}
+              value={method}
               onChange={handleOnChange}
               tooltip='Method from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='platform' label='Platform'
               options={props.submission.platforms}
-              value={result.platform}
+              value={platform}
               isNullDefault
               onChange={handleOnChange}
               tooltip='The quantum computer platform used by the method for this result'

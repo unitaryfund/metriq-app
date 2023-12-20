@@ -756,48 +756,6 @@ class Submission extends React.Component {
                   </div>}
               </div>
             </div>
-          </div>
-          <div className='col-md-6'>
-            <div className='card taxonomy-card'>
-              <div className='card-title'>
-                <h5>Methods
-                  <EditButton
-                    className='float-right edit-button btn'
-                    onClickAdd={() => this.handleOnClickAddRef('Method')}
-                    onClickRemove={() => this.handleOnClickRemove('Method')}
-                  />
-                </h5>
-                <small><i>Methods can be techniques, protocols, or procedures</i></small>
-                <hr />
-              </div>
-              <div className='card-text'>
-                {(this.state.item.methods.length > 0) &&
-                  <SortingTable
-                    columns={[{
-                      title: 'Method',
-                      key: 'name',
-                      width: 700
-                    }]}
-                    data={this.state.item.methods.map(row =>
-                      ({
-                        key: row.id,
-                        name: row.name
-                      }))}
-                    onRowClick={(record) => this.props.history.push('/Method/' + record.key)}
-                    tableLayout='auto'
-                    rowClassName='link'
-                    showHeader={false}
-                  />}
-                {(this.state.item.methods.length === 0) &&
-                  <div className='card bg-light'>
-                    <div className='card-body'>There are no associated methods, yet.</div>
-                  </div>}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
                 <h5>Platforms
@@ -836,6 +794,42 @@ class Submission extends React.Component {
             </div>
           </div>
           <div className='col-md-6'>
+            <div className='card taxonomy-card'>
+              <div className='card-title'>
+                <h5>Methods
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddRef('Method')}
+                    onClickRemove={() => this.handleOnClickRemove('Method')}
+                  />
+                </h5>
+                <small><i>Methods can be techniques, protocols, or procedures</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.methods.length > 0) &&
+                  <SortingTable
+                    columns={[{
+                      title: 'Method',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.methods.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name
+                      }))}
+                    onRowClick={(record) => this.props.history.push('/Method/' + record.key)}
+                    tableLayout='auto'
+                    rowClassName='link'
+                    showHeader={false}
+                  />}
+                {(this.state.item.methods.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated methods, yet.</div>
+                  </div>}
+              </div>
+            </div>
             <div className='card taxonomy-card card-body'>
               <div className='card-title'>
                 <h5>Tags
