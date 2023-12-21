@@ -826,7 +826,7 @@ class SotaChart extends React.Component {
         {!this.props.isPreview &&
           <div className='card sota-card'>
             <div className='row'>
-              <div className='col-xl-9 col-12'>
+              <div className='col-xl-8 col-12'>
                 <div className='chart-container sota-chart'>
                   <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
                 </div>
@@ -844,7 +844,7 @@ class SotaChart extends React.Component {
                 </div>
                 <br />
               </div>
-              <div className='col-xl-3 col-12 text-center'>
+              <div className='col-xl-4 col-12 text-center'>
                 <div>
                   <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.props.onCsvExport}>Export to CSV</Button>
                   <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
