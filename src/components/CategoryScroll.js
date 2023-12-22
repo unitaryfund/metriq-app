@@ -47,7 +47,7 @@ const CategoryScroll = (props) => {
           </Suspense>}
         {(props.items.length > 0) && ((props.type === 'provider') || (props.type === 'platform')) &&
           <Suspense fallback={<div>Loading...</div>}>
-            {props.items.map((item, rid) => <CategoryItemBoxWide item={item} key={rid} isLoggedIn={props.isLoggedIn} type='platform' />)}
+            {props.items.map((item, rid) => <CategoryItemBoxWide item={item} key={rid} isLoggedIn={props.isLoggedIn} type={props.type} />)}
           </Suspense>}
       </FormFieldWideRow>
       <br />
