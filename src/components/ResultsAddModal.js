@@ -197,21 +197,21 @@ const ResultsAddModal = (props) => {
             <FormFieldSelectRow
               inputName='task' label='Task'
               options={props.submission.tasks}
-              value={task}
+              defaultValue={task}
               onChange={handleOnChange}
               tooltip='Task from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='method' label='Method'
               options={props.submission.methods}
-              value={method}
+              defaultValue={method}
               onChange={handleOnChange}
               tooltip='Method from submission, used in this result'
             /><br />
             <FormFieldSelectRow
               inputName='platform' label='Platform'
               options={props.submission.platforms}
-              value={platform}
+              defaultValue={platform}
               isNullDefault
               onChange={handleOnChange}
               tooltip='The quantum computer platform used by the method for this result'
