@@ -198,7 +198,9 @@ class Platform extends React.Component {
     const propertyRoute = config.api.getUriPrefix() + '/platform/' + this.state.item.id + '/property'
     axios.post(propertyRoute, property)
       .then(res => {
-        window.location.reload()
+        const item = this.state.item
+        item.properties.push(res.data.data)
+        this.setState({ item, showAddModal: false })
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -214,7 +216,11 @@ class Platform extends React.Component {
     const propertyRoute = config.api.getUriPrefix() + '/property/' + this.state.property.id
     axios.post(propertyRoute, property)
       .then(res => {
-        window.location.reload()
+        const prop = res.data.data
+        const item = { ...this.state.item }
+        item.properties = item.properties.filter(x => x.id !== prop.id)
+        item.properties.push(prop)
+        this.setState({ item, showAddModal: false })
       })
       .catch(err => {
         window.alert('Error: ' + ErrorHandler(err) + '\nSorry! Check your connection and login status, and try again.')
@@ -242,10 +248,10 @@ class Platform extends React.Component {
     if (!value) {
       return
     }
-    const property = this.state.property
+    value = parseInt(value)
     for (let i = 0; i < this.state.allPropertyNames.length; i++) {
       const propName = this.state.allPropertyNames[i]
-      if (property.id === propName.id) {
+      if (value === propName.id) {
         this.handleOnTypeChange(propName.dataTypeId, value, propName.id, propName.name, propName.fullName)
         break
       }
@@ -329,6 +335,7 @@ class Platform extends React.Component {
     axios.delete(config.api.getUriPrefix() + '/property/' + propertyId)
       .then(res => {
         const platform = res.data.data
+        console.log(platform)
         this.setState({ requestFailedMessage: '', item: platform })
         this.handleCombineParentProperties(platform)
       })
@@ -837,7 +844,7 @@ class Platform extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Modal show={this.state.showRemoveModal} onHide={this.handleHideRemoveModal}>
+        <Modal show={this.state.showRemoveModal} onHide={this.handleRemoveModalDone}>
           <Modal.Header closeButton>
             <Modal.Title>Remove</Modal.Title>
           </Modal.Header>
