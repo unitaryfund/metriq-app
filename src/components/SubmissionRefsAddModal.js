@@ -35,7 +35,25 @@ const SubmissionRefsAddModal = (props) => {
     ? 'task'
     : props.modalMode === 'Method'
       ? 'method'
-      : props.modalMode === 'Platform' ? 'platform' : 'login'
+      : props.modalMode === 'Data Set'
+        ? 'dataSet'
+        : props.modalMode === 'Platform' ? 'platform' : 'login'
+
+  const parent = props.modalMode === 'Task'
+    ? 'Task'
+    : props.modalMode === 'Method'
+      ? 'Method'
+      : props.modalMode === 'Data Set'
+        ? 'Platform'
+        : props.modalMode === 'Platform' ? 'Platform' : 'Login'
+
+  const name = props.modalMode === 'Task'
+    ? 'task'
+    : props.modalMode === 'Method'
+      ? 'method'
+      : props.modalMode === 'Data Set'
+        ? 'data set'
+        : props.modalMode === 'Platform' ? 'platform' : 'login'
 
   const handleValidation = useCallback((i) => {
     if (!i) {
@@ -203,6 +221,8 @@ const SubmissionRefsAddModal = (props) => {
       i.parentTask = i.parent
     } else if (props.modalMode === 'Method') {
       i.parentMethod = i.parent
+    } else if (props.modalMode === 'Data Set') {
+      i.parentPlatform = i.parent
     } else if (props.modalMode === 'Platform') {
       i.parentPlatform = i.parent
     }
@@ -263,7 +283,7 @@ const SubmissionRefsAddModal = (props) => {
                 {!props.isNewOnly &&
                   <Card.Header>
                     <Accordion.Toggle as={Button} variant='link' eventKey='1' onClick={handleAccordionToggle}>
-                      <FontAwesomeIcon icon='plus' /> Create a new {key}.
+                      <FontAwesomeIcon icon='plus' /> Create a new {name}.
                     </Accordion.Toggle>
                   </Card.Header>}
                 <Accordion.Collapse eventKey='1'>
@@ -275,14 +295,14 @@ const SubmissionRefsAddModal = (props) => {
                       value={item.name}
                       onChange={handleOnChangeName}
                       validRegex={nonblankRegex}
-                      tooltip={`Short name of new ${key}`}
+                      tooltip={`Short name of new ${name}`}
                     /><br />
                     <FormFieldRow
                       inputName='fullName'
                       inputType='text'
                       label='Full name (optional)'
                       onChange={handleOnChange}
-                      tooltip={`Long name of new ${key}`}
+                      tooltip={`Long name of new ${name}`}
                     /><br />
                     {props.modalMode === 'Platform' &&
                       <span>
@@ -304,20 +324,20 @@ const SubmissionRefsAddModal = (props) => {
                         /><br />
                       </span>}
                     <FormFieldTypeaheadRow
-                      inputName={`parent${props.modalMode}`}
-                      label={(props.modalMode === 'Platform' ? 'Device' : `Parent ${key}`) + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
+                      inputName={`parent${parent}`}
+                      label={(props.modalMode === 'Platform' ? 'Device' : `Parent ${name}`) + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
                       options={props.allNames}
                       onSelect={handleOnSelectParent}
                       onChange={handleOnChangeParent}
                       isError={!isValid}
-                      tooltip={`Optionally, the new ${key} is a sub-${key} of a "parent" ${key}.`}
+                      tooltip={`Optionally, the new ${name} is a sub-${name} of a "parent" ${name}.`}
                     /><br />
                     <FormFieldRow
                       inputName='description'
                       inputType='textarea'
                       label='Description (optional)'
                       onChange={handleOnChange}
-                      tooltip={`Long description of new ${key}`}
+                      tooltip={`Long description of new ${name}`}
                     />
                   </Card.Body>
                 </Accordion.Collapse>

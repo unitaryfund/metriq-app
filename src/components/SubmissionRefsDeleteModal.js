@@ -14,20 +14,41 @@ const SubmissionRefsDeleteModal = (props) => {
     ? 'tasks'
     : props.modalMode === 'Method'
       ? 'methods'
-      : props.modalMode === 'Platform'
-        ? 'platforms'
-        : props.modalMode === 'Result'
-          ? 'results'
-          : props.modalMode === 'Tag'
-            ? 'tags'
-            : 'login'
-
+      : props.modalMode === 'Data Set'
+        ? 'dataSets'
+        : props.modalMode === 'Platform'
+          ? 'platforms'
+          : props.modalMode === 'Result'
+            ? 'results'
+            : props.modalMode === 'Tag'
+              ? 'tags'
+              : 'login'
+  const route = props.modalMode === 'Task'
+    ? 'Task'
+    : props.modalMode === 'Method'
+      ? 'Method'
+      : props.modalMode === 'Data Set'
+        ? 'Platform'
+        : props.modalMode === 'Platform' ? 'Platform' : 'Login'
+  const name = props.modalMode === 'Task'
+    ? 'tasks'
+    : props.modalMode === 'Method'
+      ? 'methods'
+      : props.modalMode === 'Data Set'
+        ? 'data sets'
+        : props.modalMode === 'Platform'
+          ? 'platforms'
+          : props.modalMode === 'Result'
+            ? 'results'
+            : props.modalMode === 'Tag'
+              ? 'tags'
+              : 'login'
   const handleOnRemove = (id) => {
-    if (!window.confirm('Are you sure you want to remove this ' + key.slice(0, -1) + ' from the submission?')) {
+    if (!window.confirm('Are you sure you want to remove this ' + name.slice(0, -1) + ' from the submission?')) {
       return
     }
 
-    const url = config.api.getUriPrefix() + ((key === 'results') ? '' : ('/submission/' + props.submission.id)) + '/' + props.modalMode + '/' + id
+    const url = config.api.getUriPrefix() + ((key === 'results') ? '' : ('/submission/' + props.submission.id)) + '/' + route + '/' + id
     axios.delete(url)
       .then(res => {
         if (key !== 'results') {
@@ -60,7 +81,7 @@ const SubmissionRefsDeleteModal = (props) => {
           </span>}
         {(props.modalMode !== 'Login') &&
           <span>
-            <b>Attached {key}:</b><br />
+            <b>Attached {name}:</b><br />
             {(props.submission && props.submission[key] && (props.submission[key].length > 0)) &&
                 props.submission[key].map(ref =>
                   <div key={ref.id}>
@@ -77,7 +98,7 @@ const SubmissionRefsDeleteModal = (props) => {
                   </div>
                 )}
             {(!props.submission || !props.submission[key] || (props.submission[key].length === 0)) &&
-              <span><i>There are no attached {key}.</i></span>}
+              <span><i>There are no attached {name}.</i></span>}
           </span>}
       </Modal.Body>
       <Modal.Footer>

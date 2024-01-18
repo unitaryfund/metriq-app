@@ -8,6 +8,7 @@ const MainNavLeft = () => {
     <Nav className='metriq-navbar'>
       <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tasks' className='metriq-navbar-text' eventKey='1'>Tasks</Nav.Link>
       <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Methods' className='metriq-navbar-text' eventKey='2'>Methods</Nav.Link>
+      <Nav.Link as={NavLink} activeClassName='active-navlink' to='/DataSets' className='metriq-navbar-text' eventKey='13'>Data Sets</Nav.Link>
       <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Platforms' className='metriq-navbar-text' eventKey='3'>Platforms</Nav.Link>
       <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Tags' className='metriq-navbar-text' eventKey='4'>Tags</Nav.Link>
       <Nav.Link as={NavLink} activeClassName='active-navlink' to='/Submissions' className='metriq-navbar-text' eventKey='5'>Submissions</Nav.Link>

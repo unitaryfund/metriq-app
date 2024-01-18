@@ -155,7 +155,7 @@ class Platforms extends React.Component {
         })
     }
 
-    axios.get(config.api.getUriPrefix() + '/platform/submissionCount' + (this.props.isArchitecture ? '/architecture/' + this.props.params.id : (this.props.isProvider ? '/provider/' + this.props.params.id : '')))
+    axios.get(config.api.getUriPrefix() + (this.props.isDataSet ? '/dataSet/submissionCount' : '/platform/submissionCount') + (this.props.isArchitecture ? '/architecture/' + this.props.params.id : (this.props.isProvider ? '/provider/' + this.props.params.id : '')))
       .then(res => {
         const common = [...res.data.data]
         common.sort(sortCommon)
@@ -205,7 +205,7 @@ class Platforms extends React.Component {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
-    axios.get(config.api.getUriPrefix() + '/platform/names')
+    axios.get(config.api.getUriPrefix() + (this.props.isDataSet ? '/dataSet/names' : '/platform/names'))
       .then(res => {
         this.setState({
           requestFailedMessage: '',
@@ -220,8 +220,8 @@ class Platforms extends React.Component {
   render () {
     return (
       <div id='metriq-main-content'>
-        <ViewHeader>Platforms{this.props.isArchitecture ? ': ' + this.state.architecture.name + ' architecture' : (this.props.isProvider ? ': ' + this.state.provider.name + ' provider' : '')} </ViewHeader>
-        <ViewSubHeader>Platforms are the hardware devices used for a submission.</ViewSubHeader>
+        <ViewHeader>{this.props.isDataSet ? 'Data Sets' : ('Platforms' + (this.props.isArchitecture ? ': ' + this.state.architecture.name + ' architecture' : (this.props.isProvider ? ': ' + this.state.provider.name + ' provider' : '')))} </ViewHeader>
+        <ViewSubHeader>{this.props.isDataSet ? 'Data Sets configure the tasks used in submissions' : 'Platforms are the hardware devices used for a submission.'}</ViewSubHeader>
         <br />
         <FormFieldTypeaheadRow
           className='search-bar'
@@ -235,7 +235,7 @@ class Platforms extends React.Component {
           alignLabelRight
         />
         <br />
-        {!this.props.isArchitecture && !this.props.isProvider &&
+        {!this.props.isDataSet && !this.props.isArchitecture && !this.props.isProvider &&
           <span>
             <FormFieldWideRow>
               <div className='row'>
@@ -261,7 +261,7 @@ class Platforms extends React.Component {
             </FormFieldWideRow>
             <br />
           </span>}
-        {!this.props.isProvider &&
+        {!this.props.isDataSet && !this.props.isProvider &&
           <span>
             <FormFieldWideRow>
               <div className='row'>
@@ -290,7 +290,7 @@ class Platforms extends React.Component {
         <FormFieldWideRow>
           <div className='row'>
             <div className='col'>
-              <h4 align='left'><img src={devicesLogo} alt='Devices logo' /> Devices</h4>
+              <h4 align='left'><img src={devicesLogo} alt='Devices logo' /> {this.props.isDataSet ? 'Data Sets' : 'Devices'}</h4>
             </div>
           </div>
           <div className='row'>

@@ -17,9 +17,10 @@ const ResultsAddModal = (props) => {
 
   const [task, setTask] = useState(props.result.task)
   const [method, setMethod] = useState(props.result.method)
+  const [dataSet, setDataSet] = useState(props.result.dataSet)
   const [platform, setPlatform] = useState(props.result.platform)
 
-  const setterDict = { task: setTask, method: setMethod, platform: setPlatform }
+  const setterDict = { task: setTask, method: setMethod, dataSet: setDataSet, platform: setPlatform }
 
   useEffect(() => {
     if (!result.evaluatedAt) {
@@ -29,6 +30,7 @@ const ResultsAddModal = (props) => {
     } else {
       setTask(result.task)
       setMethod(result.method)
+      setDataSet(result.dataSet)
       setPlatform(result.platform)
     }
   }, [props.evaluatedAt, result, setResult, setKey])
@@ -134,6 +136,9 @@ const ResultsAddModal = (props) => {
     if (isNaN(result.method)) {
       result.method = result.method.id
     }
+    if (isNaN(result.dataSet)) {
+      result.dataSet = result.dataSet.id
+    }
     if (isNaN(result.platform)) {
       result.platform = result.platform.id
     }
@@ -207,6 +212,14 @@ const ResultsAddModal = (props) => {
               defaultValue={method}
               onChange={handleOnChange}
               tooltip='Method from submission, used in this result'
+            /><br />
+            <FormFieldSelectRow
+              inputName='dataSet' label='Data Set'
+              options={props.submission.dataSets}
+              defaultValue={dataSet}
+              isNullDefault
+              onChange={handleOnChange}
+              tooltip='The quantum data set used by the task for this result'
             /><br />
             <FormFieldSelectRow
               inputName='platform' label='Platform'

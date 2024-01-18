@@ -47,7 +47,7 @@ class Submission extends React.Component {
       supplementUrl: '',
       evaluatedAt: '',
       authors: [],
-      item: { id: this.props.params.id, isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], platforms: [], results: [], user: [] },
+      item: { id: this.props.params.id, isUpvoted: false, upvotesCount: 0, tags: [], tasks: [], methods: [], dataSets: [], platforms: [], results: [], user: [] },
       allNames: [],
       filteredNames: [],
       metricNames: [],
@@ -57,6 +57,7 @@ class Submission extends React.Component {
       allMethodNames: [],
       allTaskNames: [],
       allTagNames: [],
+      allDataSetNames: [],
       allPlatformNames: [],
       showAddRefsModal: false,
       showAddModal: false,
@@ -78,6 +79,7 @@ class Submission extends React.Component {
         id: '',
         task: '',
         method: '',
+        dataSet: '',
         platform: '',
         metricName: '',
         metricValue: 0,
@@ -97,6 +99,13 @@ class Submission extends React.Component {
         description: '',
         submissions: this.props.match.params.id
       },
+      dataSet: {
+        name: '',
+        fullName: '',
+        parentPlatform: '',
+        description: '',
+        submissions: this.props.match.params.id
+      },
       platform: {
         name: '',
         fullName: '',
@@ -106,6 +115,7 @@ class Submission extends React.Component {
       },
       taskId: '',
       methodId: '',
+      dataSetId: '',
       platformId: '',
       tag: ''
     }
@@ -135,6 +145,7 @@ class Submission extends React.Component {
     this.handleTrimTasks = this.handleTrimTasks.bind(this)
     this.handleTrimParentTasks = this.handleTrimParentTasks.bind(this)
     this.handleTrimMethods = this.handleTrimMethods.bind(this)
+    this.handleTrimDataSets = this.handleTrimDataSets.bind(this)
     this.handleTrimPlatforms = this.handleTrimPlatforms.bind(this)
     this.handleTrimTags = this.handleTrimTags.bind(this)
     this.isAllValid = this.isAllValid.bind(this)
@@ -273,6 +284,9 @@ class Submission extends React.Component {
     } else if (mode === 'Method') {
       allNames = this.state.allMethodNames
       filteredNames = this.state.methodNames
+    } else if (mode === 'Data Set') {
+      allNames = this.state.allDataSetNames
+      filteredNames = this.state.dataSetNames
     } else if (mode === 'Platform') {
       allNames = this.state.allPlatformNames
       filteredNames = this.state.platformNames
@@ -293,6 +307,10 @@ class Submission extends React.Component {
       allNames = this.state.allMethodNames
       allNames.push(ref)
       item.methods.push(ref)
+    } else if (mode === 'Data Set') {
+      allNames = this.state.allDataSetNames
+      allNames.push(ref)
+      item.platforms.push(ref)
     } else if (mode === 'Platform') {
       allNames = this.state.allPlatformNames
       allNames.push(ref)
@@ -310,6 +328,9 @@ class Submission extends React.Component {
     } else if (mode === 'Method') {
       this.handleTrimMethods(this.state.item, filteredNames)
       this.setState({ showAddRefsModal: false, item, allMethodNames: allNames, methodNames: filteredNames })
+    } else if (mode === 'Data Set') {
+      this.handleTrimDataSets(this.state.item, filteredNames)
+      this.setState({ showAddRefsModal: false, item, allDataSetNames: allNames, dataSetNames: filteredNames })
     } else if (mode === 'Platform') {
       this.handleTrimPlatforms(this.state.item, filteredNames)
       this.setState({ showAddRefsModal: false, item, allPlatformNames: allNames, platformNames: filteredNames })
@@ -347,6 +368,7 @@ class Submission extends React.Component {
       id: '',
       task: '',
       method: '',
+      dataSet: '',
       platform: '',
       metricName: '',
       metricValue: 0,
@@ -368,6 +390,9 @@ class Submission extends React.Component {
         result.submissionId = this.state.item.id
         result.task = result.task.id
         result.method = result.method.id
+        if (result.dataSet) {
+          result.dataSet = result.dataSet.id
+        }
         if (result.platform) {
           result.platform = result.platform.id
         }
@@ -455,6 +480,17 @@ class Submission extends React.Component {
     }
   }
 
+  handleTrimDataSets (submission, dataSets) {
+    for (let i = 0; i < submission.dataSets.length; i++) {
+      for (let j = 0; j < dataSets.length; j++) {
+        if (submission.dataSets[i].id === dataSets[j].id) {
+          dataSets.splice(j, 1)
+          break
+        }
+      }
+    }
+  }
+
   handleTrimPlatforms (submission, platforms) {
     for (let i = 0; i < submission.platforms.length; i++) {
       for (let j = 0; j < platforms.length; j++) {
@@ -498,6 +534,7 @@ class Submission extends React.Component {
       submission.tags = undefined
       submission.tasks = undefined
       submission.methods = undefined
+      submission.dataSets = undefined
       submission.platforms = undefined
       axios.post(config.api.getUriPrefix() + '/submission/' + this.state.item.id, submission)
         .then(res => {
@@ -596,6 +633,24 @@ class Submission extends React.Component {
             }
 
             this.setState({ requestFailedMessage: '', allMethodNames: res.data.data, methodNames: methods, methodId: defMethod })
+          })
+          .catch(err => {
+            this.setState({ requestFailedMessage: ErrorHandler(err) })
+          })
+
+        const dataSetNamesRoute = config.api.getUriPrefix() + '/dataSet/names'
+        axios.get(dataSetNamesRoute)
+          .then(res => {
+            this.handleSortNames(res.data.data)
+            const dataSets = [...res.data.data]
+            this.handleTrimDataSets(submission, dataSets)
+
+            let defDataSet = ''
+            if (dataSets.length) {
+              defDataSet = dataSets[0].id
+            }
+
+            this.setState({ requestFailedMessage: '', allDataSetNames: res.data.data, dataSetNames: dataSets, dataSetId: defDataSet })
           })
           .catch(err => {
             this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -722,37 +777,37 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
-                <h5>Tasks
+                <h5>Methods
                   <EditButton
                     className='float-right edit-button btn'
-                    onClickAdd={() => this.handleOnClickAddRef('Task')}
-                    onClickRemove={() => this.handleOnClickRemove('Task')}
+                    onClickAdd={() => this.handleOnClickAddRef('Method')}
+                    onClickRemove={() => this.handleOnClickRemove('Method')}
                   />
                 </h5>
-                <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
+                <small><i>Methods can be techniques, protocols, or procedures</i></small>
                 <hr />
               </div>
               <div className='card-text'>
-                {(this.state.item.tasks.length > 0) &&
+                {(this.state.item.methods.length > 0) &&
                   <SortingTable
                     columns={[{
-                      title: 'Task',
+                      title: 'Method',
                       key: 'name',
                       width: 700
                     }]}
-                    data={this.state.item.tasks.map(row =>
+                    data={this.state.item.methods.map(row =>
                       ({
                         key: row.id,
                         name: row.name
                       }))}
-                    onRowClick={(record) => this.props.history.push('/Task/' + record.key)}
+                    onRowClick={(record) => this.props.history.push('/Method/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
                   />}
-                {(this.state.item.tasks.length === 0) &&
+                {(this.state.item.methods.length === 0) &&
                   <div className='card bg-light'>
-                    <div className='card-body'>There are no associated tasks, yet.</div>
+                    <div className='card-body'>There are no associated methods, yet.</div>
                   </div>}
               </div>
             </div>
@@ -796,37 +851,73 @@ class Submission extends React.Component {
           <div className='col-md-6'>
             <div className='card taxonomy-card'>
               <div className='card-title'>
-                <h5>Methods
+                <h5>Tasks
                   <EditButton
                     className='float-right edit-button btn'
-                    onClickAdd={() => this.handleOnClickAddRef('Method')}
-                    onClickRemove={() => this.handleOnClickRemove('Method')}
+                    onClickAdd={() => this.handleOnClickAddRef('Task')}
+                    onClickRemove={() => this.handleOnClickRemove('Task')}
                   />
                 </h5>
-                <small><i>Methods can be techniques, protocols, or procedures</i></small>
+                <small><i>Tasks are the goal of a given benchmark, e.g., an end application</i></small>
                 <hr />
               </div>
               <div className='card-text'>
-                {(this.state.item.methods.length > 0) &&
+                {(this.state.item.tasks.length > 0) &&
                   <SortingTable
                     columns={[{
-                      title: 'Method',
+                      title: 'Task',
                       key: 'name',
                       width: 700
                     }]}
-                    data={this.state.item.methods.map(row =>
+                    data={this.state.item.tasks.map(row =>
                       ({
                         key: row.id,
                         name: row.name
                       }))}
-                    onRowClick={(record) => this.props.history.push('/Method/' + record.key)}
+                    onRowClick={(record) => this.props.history.push('/Task/' + record.key)}
                     tableLayout='auto'
                     rowClassName='link'
                     showHeader={false}
                   />}
-                {(this.state.item.methods.length === 0) &&
+                {(this.state.item.tasks.length === 0) &&
                   <div className='card bg-light'>
-                    <div className='card-body'>There are no associated methods, yet.</div>
+                    <div className='card-body'>There are no associated tasks, yet.</div>
+                  </div>}
+              </div>
+            </div>
+            <div className='card taxonomy-card'>
+              <div className='card-title'>
+                <h5>Data Sets
+                  <EditButton
+                    className='float-right edit-button btn'
+                    onClickAdd={() => this.handleOnClickAddRef('Data Set')}
+                    onClickRemove={() => this.handleOnClickRemove('Data Set')}
+                  />
+                </h5>
+                <small><i>Data Sets refer to specific settings or data for the task</i></small>
+                <hr />
+              </div>
+              <div className='card-text'>
+                {(this.state.item.dataSets.length > 0) &&
+                  <SortingTable
+                    columns={[{
+                      title: 'Data Set',
+                      key: 'name',
+                      width: 700
+                    }]}
+                    data={this.state.item.dataSets.map(row =>
+                      ({
+                        key: row.id,
+                        name: row.name
+                      }))}
+                    onRowClick={(record) => this.props.history.push('/DataSet/' + record.key)}
+                    tableLayout='auto'
+                    rowClassName='link'
+                    showHeader={false}
+                  />}
+                {(this.state.item.dataSets.length === 0) &&
+                  <div className='card bg-light'>
+                    <div className='card-body'>There are no associated data sets, yet.</div>
                   </div>}
               </div>
             </div>
