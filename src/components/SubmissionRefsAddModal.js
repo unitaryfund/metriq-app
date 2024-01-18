@@ -27,8 +27,8 @@ const SubmissionRefsAddModal = (props) => {
     parent: 0,
     description: '',
     submissions: props.submissionId,
-    architecture: 0,
-    provider: 0
+    architecture: 1,
+    provider: 1
   })
 
   const key = props.modalMode === 'Task'
@@ -39,7 +39,7 @@ const SubmissionRefsAddModal = (props) => {
         ? 'dataSet'
         : props.modalMode === 'Platform' ? 'platform' : 'login'
 
-  const parent = props.modalMode === 'Task'
+  const route = props.modalMode === 'Task'
     ? 'Task'
     : props.modalMode === 'Method'
       ? 'Method'
@@ -196,7 +196,7 @@ const SubmissionRefsAddModal = (props) => {
   const handleSubmit = () => {
     if (!showAccordion) {
       const refId = item.id ? item.id : props.filteredNames.length ? props.filteredNames[0].id : 0
-      axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + key + '/' + refId, {})
+      axios.post(config.api.getUriPrefix() + '/submission/' + props.submissionId + '/' + route + '/' + refId, {})
         .then(res => {
           props.onAddExisting(res.data.data)
         })
@@ -228,7 +228,13 @@ const SubmissionRefsAddModal = (props) => {
     }
     delete i.parent
 
-    axios.post(config.api.getUriPrefix() + '/' + key, i)
+    if (props.modalMode === 'Data Set') {
+      i.isDataSet = true
+    } else if (props.modalMode === 'Platform') {
+      i.isDataSet = false;
+    }
+
+    axios.post(config.api.getUriPrefix() + '/' + route, i)
       .then(res => {
         props.onAddNew(res.data.data)
       })
@@ -324,7 +330,7 @@ const SubmissionRefsAddModal = (props) => {
                         /><br />
                       </span>}
                     <FormFieldTypeaheadRow
-                      inputName={`parent${parent}`}
+                      inputName={`parent${route}`}
                       label={(props.modalMode === 'Platform' ? 'Device' : `Parent ${name}`) + (props.modalMode === 'Task' ? '' : '<br/>(if any)')} labelKey='name'
                       options={props.allNames}
                       onSelect={handleOnSelectParent}
