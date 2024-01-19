@@ -28,7 +28,8 @@ const SubmissionRefsAddModal = (props) => {
     description: '',
     submissions: props.submissionId,
     architecture: 1,
-    provider: 1
+    provider: 1,
+    url: ''
   })
 
   const key = props.modalMode === 'Task'
@@ -327,6 +328,16 @@ const SubmissionRefsAddModal = (props) => {
                           value={item.provider}
                           onChange={handleOnChange}
                           tooltip='The new platform provider (entity).'
+                        /><br />
+                      </span>}
+                    {props.modalMode === 'Data Set' &&
+                      <span>
+                        <FormFieldRow
+                          inputName='url'
+                          inputType='text'
+                          label='URL (optional)'
+                          onChange={handleOnChange}
+                          tooltip={`Reference URL for ${name}`}
                         /><br />
                       </span>}
                     <FormFieldTypeaheadRow

@@ -45,6 +45,7 @@ class Platform extends React.Component {
       modalMode: '',
       modalEditMode: '',
       platform: {
+        url: '',
         description: '',
         parentPlatform: 0,
         provider: 0,
@@ -52,6 +53,7 @@ class Platform extends React.Component {
       },
       item: {
         id: 0,
+        url: '',
         description: '',
         parentPlatform: null,
         provider: null,
@@ -119,6 +121,7 @@ class Platform extends React.Component {
     }
     const platform = {
       properties: this.state.item.properties,
+      url: this.state.item.url,
       description: this.state.item.description,
       parentPlatform: this.state.item.parentPlatform,
       provider: this.state.item.provider.id,
@@ -138,10 +141,11 @@ class Platform extends React.Component {
     }
 
     const reqBody = {
+      url: this.state.platform.url,
       description: this.state.platform.description,
       parentPlatform: this.state.platform.parentPlatform,
       provider: this.state.platform.provider,
-      architecture: this.state.platform.architecture
+      architecture: this.state.platform.architecture,
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -409,33 +413,35 @@ class Platform extends React.Component {
                     this.setState({ requestFailedMessage: ErrorHandler(err) })
                   })
 
-                const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
-                axios.get(providerNamesRoute)
-                  .then(res => {
-                    const apn = res.data.data
-                    // Sort alphabetically and put "Other" at end of array.
-                    apn.sort(sortAlphabetical)
-                    const otherIndex = apn.findIndex(x => x.name === 'Other')
-                    const allProviderNames = apn.toSpliced(otherIndex, 1)
-                    allProviderNames.push(apn[otherIndex])
-                    allProviderNames.splice(otherIndex, 1)
-                    this.setState({
-                      requestFailedMessage: '',
-                      allProviderNames
+                if (!this.props.isDataSet) {
+                  const providerNamesRoute = config.api.getUriPrefix() + '/provider/names'
+                  axios.get(providerNamesRoute)
+                    .then(res => {
+                      const apn = res.data.data
+                      // Sort alphabetically and put "Other" at end of array.
+                      apn.sort(sortAlphabetical)
+                      const otherIndex = apn.findIndex(x => x.name === 'Other')
+                      const allProviderNames = apn.toSpliced(otherIndex, 1)
+                      allProviderNames.push(apn[otherIndex])
+                      allProviderNames.splice(otherIndex, 1)
+                      this.setState({
+                        requestFailedMessage: '',
+                        allProviderNames
+                      })
                     })
-                  })
-                  .catch(err => {
-                    this.setState({ requestFailedMessage: ErrorHandler(err) })
-                  })
+                    .catch(err => {
+                      this.setState({ requestFailedMessage: ErrorHandler(err) })
+                    })
 
-                const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
-                axios.get(architectureNamesRoute)
-                  .then(res => {
-                    this.setState({ requestFailedMessage: '', allArchitectureNames: res.data.data })
-                  })
-                  .catch(err => {
-                    this.setState({ requestFailedMessage: ErrorHandler(err) })
-                  })
+                  const architectureNamesRoute = config.api.getUriPrefix() + '/architecture/names'
+                  axios.get(architectureNamesRoute)
+                    .then(res => {
+                      this.setState({ requestFailedMessage: '', allArchitectureNames: res.data.data })
+                    })
+                    .catch(err => {
+                      this.setState({ requestFailedMessage: ErrorHandler(err) })
+                    })
+                }
               })
               .catch(err => {
                 this.setState({ requestFailedMessage: ErrorHandler(err) })
@@ -500,7 +506,16 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
-          {this.state.item.architecture &&
+          {this.props.isDataSet && this.state.item.url &&
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='submission-description'>
+                  <b>URL:</b> <a href={this.state.item.url}>{this.state.item.url}</a>
+                </div>
+              </div>
+              <br />
+            </div>}
+          {!this.props.isDataSet && this.state.item.architecture &&
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
@@ -509,7 +524,7 @@ class Platform extends React.Component {
               </div>
               <br />
             </div>}
-          {this.state.item.provider &&
+          {!this.props.isDataSet && this.state.item.provider &&
             <div className='row'>
               <div className='col-md-12'>
                 <div className='submission-description'>
@@ -683,22 +698,33 @@ class Platform extends React.Component {
             {(this.state.modalMode !== 'Login') &&
               <span>
                 <Suspense fallback={<div>Loading...</div>}>
-                  <FormFieldSelectRow
-                    inputName='architecture'
-                    label='Architecture'
-                    options={this.state.allArchitectureNames}
-                    value={this.state.platform.architecture}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='The new platform architecture (basic type).'
-                  /><br />
-                  <FormFieldSelectRow
-                    inputName='provider'
-                    label='Provider'
-                    options={this.state.allProviderNames}
-                    value={this.state.platform.provider}
-                    onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    tooltip='The new platform provider (entity).'
-                  /><br />
+                  {this.props.isDataSet &&
+                    <FormFieldRow
+                      inputName='url' inputType='text' label='URL'
+                      value={this.state.platform.url}
+                      onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                    />
+                  }
+                  {!this.props.isDataSet &&
+                    <span>
+                      <FormFieldSelectRow
+                        inputName='architecture'
+                        label='Architecture'
+                        options={this.state.allArchitectureNames}
+                        value={this.state.platform.architecture}
+                        onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                        tooltip='The new platform architecture (basic type).'
+                      /><br />
+                      <FormFieldSelectRow
+                        inputName='provider'
+                        label='Provider'
+                        options={this.state.allProviderNames}
+                        value={this.state.platform.provider}
+                        onChange={(field, value) => this.handleOnChange('platform', field, value)}
+                        tooltip='The new platform provider (entity).'
+                      /><br />
+                    </span>
+                  }
                   <FormFieldTypeaheadRow
                     inputName='parentPlatform'
                     labelKey='name'

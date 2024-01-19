@@ -266,7 +266,12 @@ const MainRouter = (props) => {
         <Route
           exact
           path='/Platform/:id'
-          render={(p) => <Platform {...p} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
+          render={(p) => <Platform {...p} isDataSet={false} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
+        />
+        <Route
+          exact
+          path='/DataSet/:id'
+          render={(p) => <Platform {...p} isDataSet={true} isLoggedIn={isLoggedIn} onLogin={handleLogin} key={Math.random()} />}
         />
         <Route
           exact
