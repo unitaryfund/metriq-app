@@ -232,7 +232,7 @@ const SubmissionRefsAddModal = (props) => {
     if (props.modalMode === 'Data Set') {
       i.isDataSet = true
     } else if (props.modalMode === 'Platform') {
-      i.isDataSet = false;
+      i.isDataSet = false
     }
 
     axios.post(config.api.getUriPrefix() + '/' + route, i)
