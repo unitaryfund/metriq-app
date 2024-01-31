@@ -1,683 +1,768 @@
 // QuantumLandscapeChart.js
 
 import React from 'react'
-import config from './../config'
-import { Chart, LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-import annotationPlugin from 'chartjs-plugin-annotation'
-import { Button } from 'react-bootstrap'
-import { parse } from 'json2csv'
-import SotaControlRow from './SotaControlRow'
+import * as d3 from 'd3'
+import '../viz-style.css'
+import csv from '../progress.csv'
 
-const chartComponents = [LinearScale, LogarithmicScale, PointElement, ScatterController, Tooltip, ChartDataLabels, annotationPlugin]
-Chart.register(chartComponents)
-Chart.defaults.font.size = 13
+const fontType = 'Helvetica'
+const smallLabelSize = 12 // font size in pixel
+const chartHeight = 180 // chart height,
+const circleSize = 15
+const circleSizeFields = 8
+const strokeSize = '1.5px'
+const circleOpacity = {
+  fieldLegend: 0.7,
+  achieved: 0.5,
+  estimated: 0.1
+}
+const strokeOpacity = {
+  fieldLegend: 0,
+  achieved: 1,
+  estimated: 0.7
+}
+const strokeTexture = {
+  achieved: '',
+  estimated: '5, 2'
+}
+const colors = ['#0D99FF', '#FFB800', '#ED1010', '#56E1C8']
+const domainIndex = {
+  'Quantum supremacy': 0,
+  Cryptography: 1,
+  Finance: 2,
+  'Physics simulation': 3
+  // Match a number for each domain -> corresponding color
+}
+const breakpoint = 700
+let isMobile = window.outerWidth < breakpoint
+let svg, d
 
-class QuantumLandscapeChart extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      windowWidth: 0,
-      chart: null,
-      yearSlider: 2023,
-      isQuantumSupremacyVisible: true,
-      isFinanceVisible: true,
-      isPhysicsSimulationVisible: true,
-      isCryptographyVisible: true,
-      achievedSubset: true,
-      estimatedSubset: true,
-      chartData: [
-        [{
-          title: 'Quantum supremacy using a programmable superconducting processor',
-          reference: 'Nature volume 574, pages 505–510 (2019)',
-          year: 2019,
-          domain: 'Quantum supremacy',
-          task_name: 'Random circuit sampling',
-          task_id: 47,
-          submission_id: 695,
-          num_qubits: 53,
-          num_gates: 1543
-        },
-        {
-          title: 'Strong quantum computational advantage using a superconducting quantum processor',
-          reference: 'Phys. Rev. Lett. 127, 180501 (2021-10-25)',
-          year: 2021,
-          domain: 'Quantum supremacy',
-          task_name: 'Random circuit sampling',
-          task_id: 47,
-          submission_id: 69,
-          num_qubits: 56,
-          num_gates: 1590
-        },
-        {
-          title: 'Evidence for the utility of quantum computing before fault tolerance',
-          reference: 'Nature volume 618, pages 500–505 (2023)',
-          year: 2023,
-          domain: 'Quantum supremacy',
-          task_name: '2D transverse-field Ising model',
-          task_id: 195,
-          submission_id: 653,
-          num_qubits: 127,
-          num_gates: 14400
-        },
-        {
-          title: 'Quantinuum H-Series quantum computer accelerates through 3 more performance records for quantum volume: 2^17, 2^18, and 2^19',
-          reference: 'Quantinuum blog post (2023)',
-          year: 2023,
-          domain: 'Quantum supremacy',
-          task_name: 'Quantum volume',
-          task_id: 34,
-          submission_id: 642,
-          num_qubits: 19,
-          num_gates: 532
-        }],
-        /* {
-             'title': 'How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits',
-             'reference': 'arXiv:1905.09749',
-             'task_name': 'factoring',
-             'task_id': 4,
-             'num_qubits': 20000000,
-             'num_gates': 2.4e21 //'0.3 num_qubits^3 + 0.0005^ num_qubits^3 lg num_qubits',
-          }, */
-        [{
-          title: 'How to compute a 256-bit elliptic curve private key with only 50 million Toffoli gates',
-          reference: 'arXiv:2306.08585',
-          year: 2023,
-          domain: 'Cryptography',
-          task_name: 'Factoring',
-          task_id: 4,
-          submission_id: 696,
-          num_qubits: 1152,
-          num_gates: 50000000
-        },
-        {
-          title: 'A Threshold for Quantum Advantage in Derivative Pricing',
-          reference: 'arXiv:2012.03819',
-          year: 2020,
-          domain: 'Finance',
-          task_name: 'Derivative pricing',
-          task_id: 0,
-          submission_id: 697,
-          num_qubits: 8000, // logical
-          num_gates: 54000000 // T-gates
-        },
-        {
-          title: 'Towards Quantum Advantage in Financial Market Risk using Quantum Gradient Algorithms',
-          reference: 'arXiv:2111.12509',
-          year: 2021,
-          domain: 'Finance',
-          task_name: 'Derivative pricing',
-          task_id: 0,
-          submission_id: 698,
-          num_qubits: 12000, // logical
-          num_gates: 12000000000
-        },
-        {
-          title: 'Using Q# to estimate resources needed for quantum advantage in derivative pricing',
-          reference: 'https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/',
-          year: 2022,
-          domain: 'Finance',
-          task_name: 'Derivative pricing',
-          task_id: 0,
-          submission_id: 699,
-          num_qubits: '',
-          num_gates: ''
-        },
-        {
-          title: 'Derivative Pricing using Quantum Signal Processing',
-          reference: 'arXiv:2307.14310',
-          year: 2023,
-          domain: 'Finance',
-          task_name: 'Derivative pricing',
-          task_id: 0,
-          submission_id: 700,
-          num_qubits: 4700, // logical
-          num_gates: 1000000000 // T-gates
-        },
-        {
-          title: 'Assessing requirements to scale to practical quantum advantage',
-          reference: 'arXiv:2211.07629',
-          year: 2022,
-          domain: 'Physics simulation',
-          task_name: 'Quantum dynamics',
-          task_id: 0,
-          submission_id: 701,
-          num_qubits: 230, // logical
-          num_gates: 1.03e11 // T-gates
-        },
-        {
-          title: 'Assessing requirements to scale to practical quantum advantage',
-          reference: 'arXiv:2211.07629',
-          year: 2022,
-          domain: 'Physics simulation',
-          task_name: 'Quantum chemistry',
-          task_id: 0,
-          submission_id: 701,
-          num_qubits: 2740, // logical
-          num_gates: 3.33e16 // T-gates
-        },
-        {
-          title: 'Assessing requirements to scale to practical quantum advantage',
-          reference: 'arXiv:2211.07629',
-          year: 2022,
-          domain: 'Cryptography',
-          task_name: 'Factoring',
-          task_id: 0,
-          submission_id: 701,
-          num_qubits: 25481, // logical
-          num_gates: 2.86e16 // T-gates
-        },
-        {
-          title: 'Reliably assessing the electronic structure of cytochrome P450 on today\'s classical computers and tomorrow\'s quantum computers',
-          reference: 'arXiv:2202.01244',
-          year: 2022,
-          domain: 'Physics simulation',
-          task_name: 'Quantum chemistry',
-          task_id: 0,
-          submission_id: 726,
-          num_qubits: 1434, // logical
-          num_gates: 7.8e9 // Toffoli gates
-        }]
-      ],
-      label: 'arXiv'
-    }
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    this.loadChartFromState = this.loadChartFromState.bind(this)
-    this.handleOnChangeLabel = this.handleOnChangeLabel.bind(this)
-    this.handleOnChangeYear = this.handleOnChangeYear.bind(this)
-    this.handleOnChangeDomain = this.handleOnChangeDomain.bind(this)
-    this.handleOnClickAchieved = this.handleOnClickAchieved.bind(this)
-    this.handleOnClickEstimated = this.handleOnClickEstimated.bind(this)
-    this.fillCanvasBackgroundWithColor = this.fillCanvasBackgroundWithColor.bind(this)
-    this.handleCsvExport = this.handleCsvExport.bind(this)
-    this.handlePngExport = this.handlePngExport.bind(this)
+var areLabelsVisible = false;
+function onSwitchClick() {
+  areLabelsVisible = !areLabelsVisible;
+  if (areLabelsVisible) {
+    showLabels();
+  } else {
+    hideLabels();
   }
+}
 
-  // See https://stackoverflow.com/questions/50104437/set-background-color-to-save-canvas-chart#answer-50126796
-  fillCanvasBackgroundWithColor (canvas, color) {
-    // Get the 2D drawing context from the provided canvas.
-    const context = canvas.getContext('2d')
+function showLabels() {
+  [...document.getElementsByClassName("labeltohide")].forEach((el) => {
+    el.style.visibility = "visible";
+  });
+}
 
-    // We're going to modify the context state, so it's
-    // good practice to save the current state first.
-    context.save()
+function hideLabels() {
+  [...document.getElementsByClassName("labeltohide")].forEach((el) => {
+    el.style.visibility = "hidden";
+  });
+}
 
-    // Normally when you draw on a canvas, the new drawing
-    // covers up any previous drawing it overlaps. This is
-    // because the default `globalCompositeOperation` is
-    // 'source-over'. By changing this to 'destination-over',
-    // our new drawing goes behind the existing drawing. This
-    // is desirable so we can fill the background, while leaving
-    // the chart and any other existing drawing intact.
-    // Learn more about `globalCompositeOperation` here:
-    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-    context.globalCompositeOperation = 'destination-over'
-
-    // Fill in the background. We do this by drawing a rectangle
-    // filling the entire canvas, using the provided color.
-    context.fillStyle = color
-    context.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
-
-    // Restore the original context state from `context.save()`
-    context.restore()
-  }
-
-  handleCsvExport () {
-    const fields = Object.keys(this.state.chartData[0][0])
-    const opts = { fields }
-    const csv = parse(this.state.chartData[0].concat(this.state.chartData[1]), opts)
-
-    const element = document.createElement('a')
-    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
-    element.setAttribute('download', 'quantum_landscape')
-
-    element.style.display = 'none'
-    document.body.appendChild(element)
-
-    element.click()
-
-    document.body.removeChild(element)
-  }
-
-  handlePngExport () {
-    this.fillCanvasBackgroundWithColor(document.getElementById('quantum-landscape-chart-canvas'), 'white')
-
-    const element = document.createElement('a')
-    element.setAttribute('href', this.state.chart.toBase64Image())
-    element.setAttribute('download', 'quantum_landscape.png')
-
-    element.style.display = 'none'
-    document.body.appendChild(element)
-
-    element.click()
-
-    document.body.removeChild(element)
-  }
-
-  handleOnChangeLabel (event) {
-    this.setState({ label: event.target.value })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth,
-      label: event.target.value,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  handleOnChangeYear (event) {
-    const nVal = event.target.value
-    this.setState({ yearSlider: nVal })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth,
-      label: this.state.label,
-      yearSlider: nVal,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  handleOnChangeDomain (domain, event) {
-    const val = event.target.checked
-    this.setState({ [domain]: val })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth,
-      label: this.state.label,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: (domain === 'isQuantumSupremacyVisible') ? val : this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: (domain === 'isPhysicsSimulationVisible') ? val : this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: (domain === 'isFinanceVisible') ? val : this.state.isFinanceVisible,
-      isCryptographyVisible: (domain === 'isCryptographyVisible') ? val : this.state.isCryptographyVisible
-    })
-  }
-
-  handleOnClickAchieved (event) {
-    const nVal = !this.state.achievedSubset
-    this.setState({ achievedSubset: nVal })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: nVal,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: this.state.windowWidth,
-      label: this.state.label,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  handleOnClickEstimated (event) {
-    const nVal = !this.state.estimatedSubset
-    this.setState({ estimatedSubset: nVal })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: nVal,
-      windowWidth: this.state.windowWidth,
-      label: this.state.label,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  loadChartFromState (state) {
-    const data = { datasets: [] }
-    state.chartData.forEach((subset, id) => {
-      if (!(((id === 0) && state.achievedSubset) || ((id === 1) && state.estimatedSubset))) {
-        return
-      }
-      data.datasets.push({
-        type: 'scatter',
-        label: (id === 0) ? 'Achieved' : 'Estimated',
-        backgroundColor: (id === 0) ? '#007bff' : '#ff0000',
-        borderColor: (id === 0) ? '#007bff' : '#ff0000',
-        data: subset
-          .filter(obj => (obj.year <= state.yearSlider) && (state.isQuantumSupremacyVisible || (obj.domain !== 'Quantum supremacy')) && (state.isFinanceVisible || (obj.domain !== 'Finance')) && (state.isPhysicsSimulationVisible || (obj.domain !== 'Physics simulation')) && (state.isCryptographyVisible || (obj.domain !== 'Cryptography')))
-          .map((obj, index) => {
-            return {
-              x: obj.num_gates,
-              y: obj.num_qubits,
-              label: obj.task_name + '\n' + ((state.label === 'arXiv') ? obj.reference : obj.domain),
-              title: obj.task_name,
-              value: 'Qubits: ' + obj.num_qubits + '\n Gates: ' + obj.num_gates,
-              submission_id: obj.submission_id
-            }
-          })
-      })
-    })
-    const options = {
-      animation: this.state.chart
-        ? {
-            duration: 0
-          }
-        : undefined,
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          min: 1,
-          max: 1000000000000000000,
-          title: {
-            display: true,
-            text: 'Number of logical operations'
-          },
-          type: 'logarithmic',
-          ticks: {
-            callback: (val) => (val.toExponential())
-          },
-          afterBuildTicks: scale => {
-            scale.ticks = [
-              {
-                value: 10
-              },
-              {
-                value: 100
-              },
-              {
-                value: 1000
-              },
-              {
-                value: 10000
-              },
-              {
-                value: 100000
-              },
-              {
-                value: 1000000
-              },
-              {
-                value: 10000000
-              },
-              {
-                value: 100000000
-              },
-              {
-                value: 1000000000
-              },
-              {
-                value: 10000000000
-              },
-              {
-                value: 100000000000
-              },
-              {
-                value: 1000000000000
-              },
-              {
-                value: 10000000000000
-              },
-              {
-                value: 100000000000000
-              },
-              {
-                value: 1000000000000000
-              },
-              {
-                value: 10000000000000000
-              },
-              {
-                value: 100000000000000000
-              }]
-          }
-        },
-        y: {
-          min: 1,
-          max: 100000,
-          title: {
-            display: true,
-            text: 'Qubits'
-          },
-          type: 'logarithmic',
-          ticks: {
-            callback: (val) => (val.toExponential())
-          },
-          afterBuildTicks: scale => {
-            scale.ticks = [{
-              value: 10
-            },
-            {
-              value: 100
-            },
-            {
-              value: 1000
-            },
-            {
-              value: 10000
-            }]
-          }
-        }
-      },
-      onClick (event, elements) {
-        if (!elements.length) {
-          return
-        }
-        const id = elements[0].index
-        const selected = data.datasets[(id < data.datasets[0].data.length) ? 0 : 1].data[id]
-        if (selected.submission_id) {
-          window.location.href = config.web.getUriPrefix() + '/Submission/' + selected.submission_id
-        }
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            title: function (ctx) {
-              return data.datasets[(ctx[0].dataIndex < data.datasets[0].data.length) ? 0 : 1].data[ctx[0].dataIndex].title
-            },
-            label: function (ctx) {
-              return 'Circuit depth ' + ctx.parsed.x.toExponential() + '\n Qubits ' + ctx.parsed.y.toExponential()
-            }
-          }
-        },
-        datalabels: (state.windowWidth < 820)
-          ? { display: false }
-          : {
-              font: { weight: '600', color: '#000000' },
-              align: 'center',
-              display: 'auto',
-              formatter: function (value, context) {
-                return value.label
-              }
-            },
-        annotation: {
-          annotations: {
-            box1: {
-              type: 'box',
-              xMin: 0,
-              xMax: 1000000000000000000,
-              yMin: 0,
-              yMax: 50,
-              backgroundColor: '#007bff10',
-              borderColor: '#00000000'
-            }
-          }
-        }
-      }
-    }
-
-    const chartFunc = () => {
-      if (this.state.chart) {
-        this.state.chart.destroy()
-      }
-      this.setState({ chart: new Chart(document.getElementById('quantum-landscape-chart-canvas').getContext('2d'), { data, options, plugins: [ChartDataLabels] }) })
-    }
-    chartFunc()
-  }
-
-  componentDidMount () {
-    this.setState({ windowWidth: window.innerWidth })
-    window.addEventListener('resize', this.updateWindowDimensions)
-
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: window.innerWidth,
-      label: this.state.label,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.updateWindowDimensions)
-  }
-
-  updateWindowDimensions () {
-    this.setState({ windowWidth: window.innerWidth })
-    this.loadChartFromState({
-      metricNames: this.state.metricNames,
-      chartData: this.state.chartData,
-      achievedSubset: this.state.achievedSubset,
-      estimatedSubset: this.state.estimatedSubset,
-      windowWidth: window.innerWidth,
-      label: this.state.label,
-      yearSlider: this.state.yearSlider,
-      isQuantumSupremacyVisible: this.state.isQuantumSupremacyVisible,
-      isPhysicsSimulationVisible: this.state.isPhysicsSimulationVisible,
-      isFinanceVisible: this.state.isFinanceVisible,
-      isCryptographyVisible: this.state.isCryptographyVisible
-    })
-  }
-
-  render () {
-    return (
-      <span>
-        <div className='row'>
-          <div className='col text-left'>
-            <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
-            <br />
-            <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
-            <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider. Resource estimates are based on applications where performance can be proved. This is a high bar. Estimates may be pessimistic as many heuristics need to be developed in practice. Estimates may be optimistic as they haven't been run and so could have mistakes!</p>
-            <p>If you have other data you would like to see added to this chart, please email <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.</p>
-          </div>
-        </div>
-        <div className='card sota-card'>
-          <div className='row'>
-            <div className='col-xl-8 col-12'>
-              <br />
-              <div className='sota-chart'>
-                <canvas id='quantum-landscape-chart-canvas' />
-              </div>
-              <br />
-            </div>
-            <div className='col-xl-4 col-12 text-center'>
-              <div>
-                <Button variant='outline-dark' className='sota-button' aria-label='Export to CSV button' onClick={this.handleCsvExport}>Export to CSV</Button>
-                <Button variant='primary' className='sota-button' aria-label='Download to PNG button' onClick={this.handlePngExport}>Download to PNG</Button>
-              </div>
-              <SotaControlRow
-                name='labelOption'
-                label='Label:'
-                value={this.state.label}
-                options={{
-                  arXiv: 'arXiv ID',
-                  domain: 'Domain'
-                }}
-                onChange={this.handleOnChangeLabel}
-              />
-              <br />
-              <div className='row sota-control-row'>
-                <span htmlFor='year-slider' className='col col-md-5 form-field-label metric-chart-label text-left'>Published</span>
-                <div className='col col-md-7'>
-                  <input
-                    style={{ width: '100%' }} type='range' min='2019' max='2023' list='markers'
-                    className='form-control'
-                    id='year-slider'
-                    name='year-slider'
-                    value={this.state.yearSlider}
-                    onChange={this.handleOnChangeYear}
-                  />
-                  <datalist style={{ width: '100%' }} id='markers'>
-                    <option value='2019' label='2019' />
-                    <option value='2020' label='2020' />
-                    <option value='2021' label='2021' />
-                    <option value='2022' label='2022' />
-                    <option value='2023' label='2023' />
-                  </datalist>
-                </div>
-              </div>
-              <div className='row sota-checkbox-row' style={{ paddingTop: '32px' }}>
-                <div className='col-10 text-left sota-label'>
-                  Quantum supremacy
-                </div>
-                <div className='col-2 text-right'>
-                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isQuantumSupremacyVisible} onChange={event => this.handleOnChangeDomain('isQuantumSupremacyVisible', event)} />
-                </div>
-              </div>
-              <div className='row sota-checkbox-row'>
-                <div className='col-10 text-left sota-label'>
-                  Finance
-                </div>
-                <div className='col-2 text-right'>
-                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isFinanceVisible} onChange={event => this.handleOnChangeDomain('isFinanceVisible', event)} />
-                </div>
-              </div>
-              <div className='row sota-checkbox-row'>
-                <div className='col-10 text-left sota-label'>
-                  Physics simulation
-                </div>
-                <div className='col-2 text-right'>
-                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isPhysicsSimulationVisible} onChange={event => this.handleOnChangeDomain('isPhysicsSimulationVisible', event)} />
-                </div>
-              </div>
-              <div className='row sota-checkbox-row'>
-                <div className='col-10 text-left sota-label'>
-                  Cryptography
-                </div>
-                <div className='col-2 text-right'>
-                  <input type='checkbox' className='sota-checkbox-control' checked={this.state.isCryptographyVisible} onChange={event => this.handleOnChangeDomain('isCryptographyVisible', event)} />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col-xl-9 col-12'>
-              <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-                <span className='metric-chart-label'>Subset Entry</span>
-                <table style={{ width: '100%' }}>
-                  <tr>
-                    <td style={{ width: '20%' }}>
-                      <input type='checkbox' className='sota-checkbox-control' checked={this.state.achievedSubset} onChange={this.handleOnClickAchieved} /> <span class='dot' style={{ backgroundColor: '#007bff' }} /> Achieved
-                    </td>
-                    <td style={{ width: '20%' }}>
-                      <input type='checkbox' className='sota-checkbox-control' checked={this.state.estimatedSubset} onChange={this.handleOnClickEstimated} /> <span class='dot' style={{ backgroundColor: '#ff0000' }} /> Estimated
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </span>
+// Function to draw scatterplot
+function scatterplot (
+  data,
+  xName = 'num_gates', // the x column
+  xAxisText = 'Logical Operations [n] →',
+  yName = 'num_qubits', // the y column
+  yAxisText = 'Qubits [n]  →',
+  chartTarget = '#my_dataviz', // html target element to attach chart
+  chartHeight = 600, // chart height
+  marginTop = 40, // top margin, in pixels
+  marginRight = 100, // right margin, in pixels
+  marginBottom = 70, // bottom margin, in pixels
+  xLabelShift = marginBottom - 40,
+  marginLeft = 100, // left margin, in pixels
+  rangeMult = 0.02,
+  xScaleType = d3.scaleLog,
+  yScaleType = d3.scaleLog,
+  horizontalLineColor = 'black',
+  horizontalLineStrokeSize = '1px',
+  horizontalLineStrokeTexture = '8, 4',
+  tooltipLineStrokeTexture = '1 1',
+  tooltipLineColor = '#bbbbbb',
+  tooltipLineTextBorder = 2.5,
+  hLineIntercept = 50,
+  hLineText = '↓ Everything below this line can be simulated with a classical computer',
+  xlabelDistance = 19,
+  ylabelDistance = 23
+) {
+  data = data
+    .filter(
+      (d) =>
+        !isNaN(d[xName]) && d[xName] > 0 && !isNaN(d[yName]) && d[yName] > 0
     )
+    .map(function (obj, index) {
+      return { ...obj, id: `ID_${index + 1}` }
+    })
+
+  // define aesthetic mappings
+  const x = (d) => d[xName]
+  const y = (d) => d[yName]
+
+  // width
+  const chartWidth = document.getElementById('my_dataviz').getBoundingClientRect().width
+  if (isMobile) {
+    marginLeft = 60
+    marginRight = 60
   }
+
+  // ranges
+  const xRange = [marginLeft, chartWidth - marginRight] // [left, right]
+  const yRange = [chartHeight - marginBottom, marginTop] // [bottom, top]
+
+  // values
+  const X = d3.map(data, x)
+  const Y = d3.map(data, y)
+  const I = d3.range(data.length)
+
+  // domains
+  const xDomain = [1, d3.max(X) + d3.max(X) * rangeMult]
+  const yDomain = [1, d3.max(Y) + d3.max(Y) * rangeMult]
+
+  // scale
+  const xScale = xScaleType(xDomain, xRange)
+  const yScale = yScaleType(yDomain, yRange)
+
+  // axes
+  const xAxis = d3.axisBottom(xScale)
+  const yAxis = d3.axisLeft(yScale)
+
+  // voronoi generator
+  const dataForVoronoi = d3.map(I, (i) => [xScale(X[i]), yScale(Y[i])])
+  const voronoiRange = [xRange[0], yRange[1], xRange[1], yRange[0]]
+  const voronoi = d3.Delaunay.from(dataForVoronoi).voronoi(voronoiRange)
+
+  // generate tooltip
+  d3
+    .select('body')
+    .append('div')
+    .attr('id', 'scatter-tooltip')
+    .style('position', 'absolute')
+    // .style("font-size", `${fontSize}px`)
+    .style('transition', '0.1s')
+  // .style("border-color", accentColor);
+
+  // initiate svg
+  svg = d3
+    .select(chartTarget)
+    .append('svg')
+    .attr('viewBox', [0, 0, chartWidth, chartHeight])
+    .attr('id', 'svgscatter')
+    .attr('style', 'max-width: 100%')
+
+  // append x axis
+  svg
+    .append('g')
+    .attr('transform', `translate(0,${chartHeight - marginBottom})`)
+    .attr('class', 'xaxis')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .call(xAxis)
+    .call((g) =>
+      g
+        .append('text')
+        .attr('x', chartWidth - marginRight)
+        .attr('y', marginBottom - 4)
+        .attr('transform', `translate(0,${-xLabelShift})`)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'end')
+        .text(xAxisText)
+    )
+
+  // append y axis
+  svg
+    .append('g')
+    .attr('transform', `translate(${marginLeft},0)`)
+    .attr('class', 'yaxis')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .call(yAxis)
+    .call((g) =>
+      g
+        .append('text')
+        .attr('transform', 'rotate(270)')
+        .attr('x', -marginTop)
+        .attr('y', -40)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'end')
+        .attr('font-size', `${smallLabelSize}px`)
+        .text(yAxisText)
+    )
+
+  // horizontal line
+  svg
+    .append('g')
+    .attr('transform', `translate(${marginLeft}, ${yScale(hLineIntercept)})`)
+    .append('line')
+    .attr('x2', chartWidth - marginRight - marginLeft)
+    .style('stroke', horizontalLineColor)
+    .style('stroke-width', horizontalLineStrokeSize)
+    .style('stroke-dasharray', horizontalLineStrokeTexture)
+
+  // horizontal line text
+  svg
+    .append('text')
+    .attr('x', chartWidth - marginRight)
+    .attr('y', yScale(hLineIntercept) + smallLabelSize)
+    .attr('class', 'htext')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .attr('fill', 'currentColor')
+    .attr('text-anchor', 'end')
+    .text(hLineText)
+
+  setTimeout(() => {
+    if (isMobile) {
+      svg.selectAll('.htext').call(wrap, 150)
+    }
+  }, 0)
+
+  // tooltip vlines
+  svg
+    .append('g')
+    .selectAll('line')
+    .data(data)
+    .join('line')
+    .attr('x1', (i) => xScale(x(i)))
+    .attr('y1', (i) => yScale(y(i)) + circleSize)
+    .attr('x2', (i) => xScale(x(i)))
+    .attr('y2', yScale(1))
+    .attr('id', (i) => i.id)
+    .style('visibility', 'hidden')
+    .style('stroke', tooltipLineColor)
+    .style('stroke-width', horizontalLineStrokeSize)
+    .style('stroke-dasharray', tooltipLineStrokeTexture)
+
+  // tooltip vline text
+  svg
+    .append('g')
+    .selectAll('text')
+    .data(data)
+    .join('text')
+    .attr('x', (i) => xScale(x(i)) + tooltipLineTextBorder)
+    .attr('y', yScale(1) - tooltipLineTextBorder)
+    .attr('id', (i) => i.id)
+    .style('visibility', 'hidden')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text((i) => d3.format('.2s')(x(i)))
+
+  // tooltip hlines
+  svg
+    .append('g')
+    .selectAll('line')
+    .data(data)
+    .join('line')
+    .attr('x1', (i) => xScale(x(i)) - circleSize)
+    .attr('y1', (i) => yScale(y(i)))
+    .attr('x2', xScale(1))
+    .attr('y2', (i) => yScale(y(i)))
+    .attr('id', (i) => i.id)
+    .style('visibility', 'hidden')
+    .style('stroke', tooltipLineColor)
+    .style('stroke-width', horizontalLineStrokeSize)
+    .style('stroke-dasharray', tooltipLineStrokeTexture)
+
+  // tooltip hline text
+  svg
+    .append('g')
+    .selectAll('text')
+    .data(data)
+    .join('text')
+    .attr('x', xScale(1) + tooltipLineTextBorder)
+    .attr('y', (i) => yScale(y(i)) - tooltipLineTextBorder)
+    .attr('id', (i) => i.id)
+    .style('visibility', 'hidden')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text((i) => d3.format('.2s')(y(i)))
+
+  // voronoi grid
+  svg
+    .append('g')
+    .attr('stroke', 'none')
+    .attr('fill', 'none')
+    .selectAll('path')
+    .data(I)
+    .join('path')
+    .attr('d', (i) => voronoi.renderCell(i))
+    .style('fill', '#00000000')
+    .attr('id', function (i) {
+      return data[i].id
+    })
+    .attr('centroid_x', (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[0])
+    .attr('centroid_y', (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[1])
+    .attr('class', 'voronoi')
+    .on('mousemove touchstart', (e) =>
+      mousemove(
+        e,
+        data,
+        colors,
+        domainIndex,
+        fontType,
+        smallLabelSize
+      )
+    )
+
+  // append circles
+  svg
+    .append('g')
+    .attr('stroke-width', strokeSize)
+    .selectAll('circle')
+    .data(data)
+    .join('circle')
+    .attr('cx', (i) => xScale(x(i)))
+    .attr('cy', (i) => yScale(y(i)))
+    .attr('r', circleSize)
+    .style('stroke', (i) => colors[domainIndex[i.domain]])
+    .style('fill', (i) => colors[domainIndex[i.domain]])
+    .style('stroke-opacity', (i) =>
+      i.achieved === 'true' ? strokeOpacity.achieved : strokeOpacity.estimated
+    )
+    .style('stroke-dasharray', (i) =>
+      i.achieved === 'true' ? strokeTexture.achieved : strokeTexture.estimated
+    )
+    .style('fill-opacity', (i) =>
+      i.achieved === 'true' ? circleOpacity.achieved : circleOpacity.estimated
+    )
+    .attr('id', (i) => i.id)
+    .attr('label', (i) => i.task_name)
+    .attr('submissionId', (i) => i.submissionId)
+    .on('click', function () {
+      if (!isMobile) {
+        const submissionId = d3.select(this).attr('submissionId')
+        window.open(`https://metriq.info/Submission/${submissionId}`)
+      }
+    })
+    .on('mousemove touchstart', (e) =>
+      mousemove(
+        e,
+        data,
+        colors,
+        domainIndex,
+        fontType,
+        smallLabelSize
+      )
+    )
+    .style('cursor', 'pointer')
+
+  // label placement
+  d3.selectAll('.voronoi').each(function (d, i) {
+    const id = d3.select(this).attr('id')
+
+    const x = d3.select(`circle#${id}`).attr('cx')
+    const y = d3.select(`circle#${id}`).attr('cy')
+    const centroidX = d3.select(this).attr('centroid_x')
+    const centroidY = d3.select(this).attr('centroid_y')
+
+    // 0 up, 1 right, 2 down, 3 left
+    const direction =
+      (Math.round((Math.atan2(centroidY - y, centroidX - x) / Math.PI) * 2) +
+        4) %
+      4
+
+    const xShift =
+      direction === 0 ? xlabelDistance : direction === 2 ? -xlabelDistance : 0
+    const yShift =
+      direction === 1 ? ylabelDistance : direction === 3 ? -ylabelDistance : 0
+
+    svg
+      .append('text')
+      .attr('x', Number(x) + xShift)
+      .attr('y', Number(y) + yShift + 3)
+      .attr('class', 'labeltohide')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .style('visibility', 'hidden')
+      .attr(
+        'text-anchor',
+        direction === 2 ? 'end' : direction === 0 ? 'start' : 'middle'
+      )
+      .text(`${d3.select(`circle#${id}`).attr('label')}`)
+  })
+};
+
+function mousemove (
+  e,
+  data,
+  colors,
+  domainIndex,
+  fontType, // font size in pixel
+  smallLabelSize,
+  tooltipOffsetX = 0,
+  tooltipOffsetY = 0,
+  border = '1px',
+  borderColor = 'black',
+  padding = '5px',
+  borderRadius = '5px',
+  backgroundColor = '#fafafa',
+  arrowSize = 8
+) {
+  d3.select('circle.selected').attr('class', null).attr('stroke', 'none')
+
+  d3.selectAll('line.selectedLine')
+    .attr('class', null)
+    .style('visibility', 'hidden')
+
+  d3.selectAll('text.selectedText')
+    .attr('class', null)
+    .style('visibility', 'hidden')
+
+  const targetID = e.target.id
+
+  const selectedCircle = d3
+    .select(`circle#${targetID}`)
+    .node()
+    .getBoundingClientRect()
+  const circleX =
+    selectedCircle.x + selectedCircle.width + window.scrollX + tooltipOffsetX
+  const circleY = selectedCircle.y + window.scrollY + tooltipOffsetY
+
+  d3.selectAll(`line#${targetID}`)
+    .attr('class', 'selectedLine')
+    .style('visibility', 'visible')
+
+  d3.selectAll(`text#${targetID}`)
+    .attr('class', 'selectedText')
+    .style('visibility', 'visible')
+
+  const idData = data.filter((d) => d.id === targetID)[0]
+
+  d3.select('#scatter-tooltip')
+    // Main tooltip
+    .style('visibility', 'visible')
+    .style('top', `${circleY}px`)
+    .style('left', `${circleX + arrowSize / 2}px`)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .style('border', border)
+    .style('border-style', 'solid')
+    .style('border-color', borderColor)
+    .style('border-radius', borderRadius)
+    .style('padding', padding)
+    .style('background-color', backgroundColor)
+    .style(
+      'transform',
+      `translateY(-50%) translateY(${selectedCircle.width / 2}px)`
+    )
+    .html(
+      `
+      <div>
+        <div style="color: ${
+          colors[domainIndex[idData.domain]]
+        }; filter: brightness(0.85);">${idData.domain}</div>
+        <div style="font-size: 1.5em;">${idData.task_name}</div>
+        ${idData.reference}<br>
+        ${idData.year}<br>
+        <a href="https://metriq.info/Submission/${
+          idData.submissionId
+        }" style="color: ${
+        colors[domainIndex[idData.domain]]
+      }; filter: brightness(0.85)">→ explore submission</a>
+      </div>`
+    )
+    // triangle
+    .append('div')
+    .attr('id', 'tooltip-triangle')
+    .style('position', 'absolute  ')
+    .style('content', '         ')
+    .style('top', '50%')
+    .style('left', '0%')
+    .style('transform', 'translateX(-50%) rotate(45deg)')
+    .style('border', border)
+    .style('border-style', 'solid')
+    .style('margin-top', `-${arrowSize / 2}px`)
+    .style('width', `${arrowSize}px`)
+    .style('height', `${arrowSize}px`)
+    .style(
+      'border-color',
+      `transparent transparent ${borderColor} ${borderColor}`
+    )
+    .style('background-color', backgroundColor)
+}
+
+function wrap (text, wrapWidth) {
+  text.each(function () {
+    const text = d3.select(this)
+    const words = text.text().split(/\s+/).reverse()
+    let word
+    let line = []
+    const y = text.attr('y')
+    const x = text.attr('x')
+    const dy = 1
+    let tspan = text
+      .text(null)
+      .append('tspan')
+      .attr('x', x)
+      .attr('y', y)
+      .attr('dy', `${dy}em`)
+    let currentY = y
+    while ((word = words.pop())) {
+      line.push(word)
+      tspan.text(line.join(' '))
+      if (tspan.node().getComputedTextLength() > wrapWidth) {
+        line.pop()
+        tspan.text(line.join(' '))
+        line = [word]
+        currentY = Number(currentY) + 15
+        tspan = text
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', String(currentY))
+          .attr('dy', dy + 'em')
+          .text(word)
+      }
+    }
+  })
+  return 0
+}
+
+function buildFirstSection (multCoeff) {
+  const chartTarget = '#legend-stroke'
+  const node = document.getElementById('legend-stroke') // html target element to attach chart
+  const chartWidth = node.getBoundingClientRect().width
+
+  // initiate svg
+  svg = d3
+    .select(chartTarget)
+    .append('svg')
+    .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
+    .attr('id', 'svglegend')
+    .style('width', '100%')
+
+  let newY = circleSize + 10
+
+  // circle 1
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSize + 1)
+    .attr('cy', newY)
+    .attr('r', circleSize)
+    .style('stroke', 'gray')
+    .style('fill', 'gray')
+    .style('stroke-opacity', strokeOpacity.achieved)
+    .style('fill-opacity', circleOpacity.achieved)
+
+  // circle 1 label
+  svg
+    .append('text')
+    .attr('x', circleSize * 2 + 15)
+    .attr('y', newY + 2)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Achieved')
+
+  newY = newY + circleSize * 3
+
+  // circle 2
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSize + 1)
+    .attr('cy', newY)
+    .attr('r', circleSize)
+    .style('stroke', 'gray')
+    .style('fill', 'gray')
+    .style('stroke-opacity', strokeOpacity.estimated)
+    .style('stroke-dasharray', strokeTexture.estimated)
+    .style('fill-opacity', circleOpacity.estimated)
+
+  // circle 2 label
+  svg
+    .append('text')
+    .attr('x', circleSize * 2 + 15)
+    .attr('y', newY + 2)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Estimated')
+};
+
+function buildSecondSection (multCoeff) {
+  const chartTarget = '#legend-color'
+  const node = document.getElementById('legend-color') // html target element to attach chart
+  const chartWidth = node.getBoundingClientRect().width
+
+  // initiate svg
+  svg = d3
+    .select(chartTarget)
+    .append('svg')
+    .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
+    .attr('id', 'svglegend')
+    .style('width', '100%')
+
+  let newY = circleSizeFields + 10
+
+  // circle 1
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSizeFields)
+    .attr('cy', newY)
+    .attr('r', circleSizeFields)
+    .style('stroke', colors[domainIndex['Quantum supremacy']])
+    .style('stroke-opacity', strokeOpacity.fieldLegend)
+    .style('fill', colors[domainIndex['Quantum supremacy']])
+    .style('fill-opacity', circleOpacity.fieldLegend)
+
+  // circle 1 label
+  svg
+    .append('text')
+    .attr('x', circleSizeFields * 2 + 15)
+    .attr('y', newY + 4)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Quantum supremacy')
+
+  newY = newY + circleSizeFields + 20
+
+  // circle 2
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSizeFields)
+    .attr('cy', newY)
+    .attr('r', circleSizeFields)
+    .style('stroke', colors[domainIndex['Physics simulation']])
+    .style('stroke-opacity', strokeOpacity.fieldLegend)
+    .style('fill', colors[domainIndex['Physics simulation']])
+    .style('fill-opacity', circleOpacity.fieldLegend)
+
+  // circle 2 label
+  svg
+    .append('text')
+    .attr('x', circleSizeFields * 2 + 15)
+    .attr('y', newY + 4)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Physics simulation')
+
+  newY = newY + circleSizeFields + 20
+
+  // circle 3
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSizeFields)
+    .attr('cy', newY)
+    .attr('r', circleSizeFields)
+    .style('stroke', colors[domainIndex.Cryptography])
+    .style('stroke-opacity', strokeOpacity.fieldLegend)
+    .style('fill', colors[domainIndex.Cryptography])
+    .style('fill-opacity', circleOpacity.fieldLegend)
+
+  // circle 3 label
+  svg
+    .append('text')
+    .attr('x', circleSizeFields * 2 + 15)
+    .attr('y', newY + 4)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Cryptography')
+
+  newY = newY + circleSizeFields + 20
+
+  // circle 4
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSizeFields)
+    .attr('cy', newY)
+    .attr('r', circleSizeFields)
+    .style('stroke', colors[domainIndex.Finance])
+    .style('stroke-opacity', strokeOpacity.fieldLegend)
+    .style('fill', colors[domainIndex.Finance])
+    .style('fill-opacity', circleOpacity.fieldLegend)
+
+  // circle 4 label
+  svg
+    .append('text')
+    .attr('x', circleSizeFields * 2 + 15)
+    .attr('y', newY + 4)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Finance')
+};
+
+function redraw () {
+  isMobile = window.outerWidth < breakpoint
+  d3.select('#svgscatter').remove()
+  d3.select('#scatter-tooltip').remove()
+  d3.selectAll('#svglegend').remove()
+  scatterplot(d)
+  if (isMobile) {
+    d3.selectAll('.htext').call(wrap, 150)
+  }
+  legend()
+}
+
+// Function to build legend
+function legend (circleSizeFields = 8) {
+  let multCoeff = 1
+  if (isMobile) {
+    multCoeff = 1.5
+  } // resize svg legend on mobile
+
+  buildFirstSection(multCoeff)
+  buildSecondSection(multCoeff)
+};
+
+function QuantumLandscapeChart () {
+  React.useEffect(() => {
+  // Draw scatterplot from data
+    d3.csv(csv, (d) => ({
+      num_qubits: +d.num_qubits,
+      num_gates: +d.num_gates,
+      achieved: d.achieved,
+      domain: d.domain,
+      task_name: d.task_name,
+      reference: d.reference,
+      year: d.year
+    })).then((_d) => {
+      d = _d
+      scatterplot(_d)
+      legend()
+      window.onresize = redraw
+    })
+  })
+
+  return (
+    <span>
+      <div className='row'>
+        <div className='col text-left'>
+          <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
+          <br />
+          <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
+          <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider. Resource estimates are based on applications where performance can be proved. This is a high bar. Estimates may be pessimistic as many heuristics need to be developed in practice. Estimates may be optimistic as they haven't been run and so could have mistakes!</p>
+          <p>If you have other data you would like to see added to this chart, please email <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.</p>
+          <br />
+        </div>
+      </div>
+      <div id='cargo'>
+        <div id='my_dataviz' />
+        <div id='legend_guide'>
+          <div>
+            <span class='legendTitle'>Status</span>
+            <div id='legend-stroke' />
+          </div>
+          <div>
+            <span class='legendTitle'>Fields</span>
+            <div id='legend-color' />
+          </div>
+          <div>
+            <span class='legendTitle'>Show labels</span>
+            <div id='legend-switch'>
+              <label class='switch'>
+                <input type='checkbox' onClick={onSwitchClick} />
+                <span class='slider round' />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  )
 }
 
 export default QuantumLandscapeChart

@@ -145,7 +145,7 @@ class Platform extends React.Component {
       description: this.state.platform.description,
       parentPlatform: this.state.platform.parentPlatform,
       provider: this.state.platform.provider,
-      architecture: this.state.platform.architecture,
+      architecture: this.state.platform.architecture
     }
 
     axios.post(config.api.getUriPrefix() + '/platform/' + this.props.match.params.id, reqBody)
@@ -703,8 +703,7 @@ class Platform extends React.Component {
                       inputName='url' inputType='text' label='URL'
                       value={this.state.platform.url}
                       onChange={(field, value) => this.handleOnChange('platform', field, value)}
-                    />
-                  }
+                    />}
                   {!this.props.isDataSet &&
                     <span>
                       <FormFieldSelectRow
@@ -723,8 +722,7 @@ class Platform extends React.Component {
                         onChange={(field, value) => this.handleOnChange('platform', field, value)}
                         tooltip='The new platform provider (entity).'
                       /><br />
-                    </span>
-                  }
+                    </span>}
                   <FormFieldTypeaheadRow
                     inputName='parentPlatform'
                     labelKey='name'
