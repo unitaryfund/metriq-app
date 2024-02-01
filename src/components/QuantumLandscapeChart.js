@@ -37,26 +37,26 @@ const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
 let svg, d
 
-var areLabelsVisible = false;
-function onSwitchClick() {
-  areLabelsVisible = !areLabelsVisible;
+let areLabelsVisible = false
+function onSwitchClick () {
+  areLabelsVisible = !areLabelsVisible
   if (areLabelsVisible) {
-    showLabels();
+    showLabels()
   } else {
-    hideLabels();
+    hideLabels()
   }
 }
 
-function showLabels() {
-  [...document.getElementsByClassName("labeltohide")].forEach((el) => {
-    el.style.visibility = "visible";
-  });
+function showLabels () {
+  [...document.getElementsByClassName('labeltohide')].forEach((el) => {
+    el.style.visibility = 'visible'
+  })
 }
 
-function hideLabels() {
-  [...document.getElementsByClassName("labeltohide")].forEach((el) => {
-    el.style.visibility = "hidden";
-  });
+function hideLabels () {
+  [...document.getElementsByClassName('labeltohide')].forEach((el) => {
+    el.style.visibility = 'hidden'
+  })
 }
 
 // Function to draw scatterplot
@@ -73,7 +73,7 @@ function scatterplot (
   marginBottom = 70, // bottom margin, in pixels
   xLabelShift = marginBottom - 40,
   marginLeft = 100, // left margin, in pixels
-  rangeMult = 0.02,
+  rangeMult = 0.5,
   xScaleType = d3.scaleLog,
   yScaleType = d3.scaleLog,
   horizontalLineColor = 'black',
@@ -304,6 +304,9 @@ function scatterplot (
         smallLabelSize
       )
     )
+    .on('mouseout touchend', (e) =>
+      redraw()
+    )
 
   // append circles
   svg
@@ -328,10 +331,10 @@ function scatterplot (
     )
     .attr('id', (i) => i.id)
     .attr('label', (i) => i.task_name)
-    .attr('submissionId', (i) => i.submissionId)
+    .attr('submission_id', (i) => i.submission_id)
     .on('click', function () {
       if (!isMobile) {
-        const submissionId = d3.select(this).attr('submissionId')
+        const submissionId = d3.select(this).attr('submission_id')
         window.open(`https://metriq.info/Submission/${submissionId}`)
       }
     })
@@ -456,7 +459,7 @@ function mousemove (
         ${idData.reference}<br>
         ${idData.year}<br>
         <a href="https://metriq.info/Submission/${
-          idData.submissionId
+          idData.submission_id
         }" style="color: ${
         colors[domainIndex[idData.domain]]
       }; filter: brightness(0.85)">→ explore submission</a>
@@ -711,14 +714,15 @@ function legend (circleSizeFields = 8) {
 function QuantumLandscapeChart () {
   React.useEffect(() => {
   // Draw scatterplot from data
-    d3.csv(csv, (d) => ({
-      num_qubits: +d.num_qubits,
-      num_gates: +d.num_gates,
-      achieved: d.achieved,
-      domain: d.domain,
-      task_name: d.task_name,
-      reference: d.reference,
-      year: d.year
+    d3.csv(csv, (_d) => ({
+      num_qubits: +_d.num_qubits,
+      num_gates: +_d.num_gates,
+      achieved: _d.achieved,
+      domain: _d.domain,
+      task_name: _d.task_name,
+      reference: _d.reference,
+      year: _d.year,
+      submission_id: _d.submission_id
     })).then((_d) => {
       d = _d
       scatterplot(_d)
