@@ -9,6 +9,6 @@ Towards Quantum Advantage in Financial Market Risk using Quantum Gradient Algori
 Using Q# to estimate resources needed for quantum advantage in derivative pricing,https://cloudblogs.microsoft.com/quantum/2022/09/15/using-q-to-estimate-resources-needed-for-quantum-advantage-in-derivative-pricing/,2022,Finance,Derivative pricing,0,699,,,false
 Derivative Pricing using Quantum Signal Processing,arXiv:2307.14310,2023,Finance,Derivative pricing,0,700,4700,1000000000,false
 Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,2022,Physics simulation,Quantum dynamics,0,701,230,103000000000,false
-Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,2022,Physics simulation,Quantum chemistry,0,701,2740,"3,33E+16",false
-Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,2022,Cryptography,Factoring,0,701,25481,"2,86E+16",false
+Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,2022,Physics simulation,Quantum chemistry,0,701,2740,33300000000000000,false
+Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,2022,Cryptography,Factoring,0,701,25481,28600000000000000,false
 Reliably assessing the electronic structure of cytochrome P450 on today's classical computers and tomorrow's quantum computers,arXiv:2202.01244,2022,Physics simulation,Quantum chemistry,0,726,1434,7800000000,false
