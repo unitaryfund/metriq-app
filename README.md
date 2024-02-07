@@ -1,7 +1,7 @@
 # [![](src/images/metriq_logo_primary_blue_inverted.png)](http://metriq.info)
 
 Metriq is a community-driven platform for hosting quantum benchmarks.
-It's main focus is to help answer the following question:
+Its main focus is to help answer the following question:
 
 > How does quantum computing platform X running software stack Y perform on workload Z and how has that changed over time?
 
