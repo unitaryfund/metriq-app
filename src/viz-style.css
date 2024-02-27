@@ -111,4 +111,9 @@ input:checked + .slider:before {
   font-size: 14px;
   color: gray;
   font-family: Helvetica;
+  text-align: left;
+}
+
+#legend_guide {
+  text-align: left;
 }
