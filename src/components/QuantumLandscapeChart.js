@@ -33,7 +33,7 @@ const domainIndex = {
   'Physics simulation': 3
   // Match a number for each domain -> corresponding color
 }
-const breakpoint = 700
+const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
 
