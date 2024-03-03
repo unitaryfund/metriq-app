@@ -25,12 +25,13 @@ const strokeTexture = {
   achieved: '',
   estimated: '5, 2'
 }
-const colors = ['#0D99FF', '#FFB800', '#ED1010', '#56E1C8']
+const colors = ['#0D99FF', '#FFB800', '#ED1010', '#56E1C8', '#ED10ED']
 const domainIndex = {
   'Quantum supremacy': 0,
   Cryptography: 1,
   Finance: 2,
-  'Physics simulation': 3
+  'Physics simulation': 3,
+  'Machine learning': 4
   // Match a number for each domain -> corresponding color
 }
 const breakpoint = 1250
@@ -676,6 +677,29 @@ function buildSecondSection (multCoeff) {
     .style('stroke', colors[domainIndex.Finance])
     .style('stroke-opacity', strokeOpacity.fieldLegend)
     .style('fill', colors[domainIndex.Finance])
+    .style('fill-opacity', circleOpacity.fieldLegend)
+
+  // circle 4 label
+  svg
+    .append('text')
+    .attr('x', circleSizeFields * 2 + 15)
+    .attr('y', newY + 4)
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .text('Finance')
+
+  newY = newY + circleSizeFields + 20
+
+  // circle 4
+  svg
+    .append('circle')
+    .attr('stroke-width', strokeSize)
+    .attr('cx', circleSizeFields)
+    .attr('cy', newY)
+    .attr('r', circleSizeFields)
+    .style('stroke', colors[domainIndex['Machine learning']])
+    .style('stroke-opacity', strokeOpacity.fieldLegend)
+    .style('fill', colors[domainIndex['Machine learning']])
     .style('fill-opacity', circleOpacity.fieldLegend)
 
   // circle 4 label
