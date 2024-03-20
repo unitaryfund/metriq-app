@@ -214,9 +214,6 @@ class Task extends React.Component {
                 <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
                 <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
               </div>
-              <div className='submission-description'>
-                {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
-              </div>
             </div>
           </div>
           <br />
@@ -242,6 +239,14 @@ class Task extends React.Component {
                 onCsvExport={this.handleCsvExport}
               />
             </Suspense>}
+          <br />
+          <div className='row'>
+            <div className='col-xl-9 col-12'>
+              <div className='submission-description'>
+                {this.state.item.description ? renderLatex(this.state.item.description) : <i>No description provided.</i>}
+              </div>
+            </div>
+          </div>
           <br />
           {(this.state.item.childTasks && (this.state.item.childTasks.length > 0)) &&
             <div>
