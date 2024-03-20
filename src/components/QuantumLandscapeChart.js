@@ -709,7 +709,7 @@ function buildSecondSection (multCoeff) {
     .attr('y', newY + 4)
     .style('font-size', `${smallLabelSize}px`)
     .style('font-family', fontType)
-    .text('Finance')
+    .text('Machine Learning')
 };
 
 function redraw () {
