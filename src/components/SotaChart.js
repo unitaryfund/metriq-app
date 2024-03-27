@@ -391,15 +391,19 @@ class SotaChart extends React.Component {
     const subsets = {}
     if (state.subset === 'qubits') {
       d.sort((a, b) => (a.qubitCount > b.qubitCount) ? 1 : -1)
-    } else {
+    } else if (state.subset === 'depth') {
       d.sort((a, b) => (a.circuitDepth > b.circuitDepth) ? 1 : -1)
+    } else {
+      d.sort((a, b) => (a.platform > b.platform) ? 1 : -1)
     }
     for (let i = 0; i < d.length; ++i) {
       let key = 'Uncategorized'
       if (state.subset === 'qubits') {
         key = d[i].qubitCount ? d[i].qubitCount.toString() : 'Uncategorized'
-      } else {
+      } else if (state.subset === 'deoth') {
         key = d[i].circuitDepth ? d[i].circuitDepth.toString() : 'Uncategorized'
+      } else {
+        key = d[i].platform ? d[i].platform.toString() : 'Uncategorized'
       }
       if (subsets[key]) {
         subsets[key].push(d[i])
@@ -679,6 +683,7 @@ class SotaChart extends React.Component {
 
     let isQubits = false
     let isDepth = false
+    let isPlatform = false
     for (let i = 0; i < allData.length; ++i) {
       if (allData[i].qubitCount) {
         isQubits = true
@@ -686,20 +691,30 @@ class SotaChart extends React.Component {
       if (allData[i].circuitDepth) {
         isDepth = true
       }
+      if (allData[i].platform) {
+        isPlatform = true
+      }
     }
 
-    if (isQubits && isDepth) {
-      if (this.state.subset) {
-        this.setState({ isSubset: true })
-      } else {
-        this.setState({ isSubset: true, subset: 'qubits' })
-      }
-    } else if (isQubits) {
-      this.setState({ isSubset: false, subset: 'qubits' })
+    let subsetCount = 0
+    if (isQubits) {
+      ++subsetCount
+    }
+    if (isDepth) {
+      ++subsetCount
+    }
+    if (isPlatform) {
+      ++subsetCount
+    }
+    const isSubset = this.state.subset && (subsetCount > 1)
+    if (isQubits) {
+      this.setState({ isSubset, subset: 'qubits' })
     } else if (isDepth) {
-      this.setState({ isSubset: false, subset: 'depth' })
+      this.setState({ isSubset, subset: 'depth' })
+    } else if (isPlatform) {
+      this.setState({ isSubset, subset: 'platform' })
     } else {
-      this.setState({ isSubset: false, subset: '' })
+      this.setState({ isSubset, subset: '' })
     }
 
     const chartData = {}
@@ -881,7 +896,8 @@ class SotaChart extends React.Component {
                   value={this.state.subset}
                   options={{
                     qubits: 'Qubit count',
-                    depth: 'Circuit depth'
+                    depth: 'Circuit depth',
+                    platform: 'Platform'
                   }}
                   onChange={this.handleOnChangeSubset}
                   disabled={this.state.isSubset}
