@@ -31,6 +31,7 @@ import NotFound from './views/NotFound'
 import UserGuidelines from './views/UserGuidelines'
 import MainNavbar from './components/MainNavbar'
 import Qedc from './views/Qedc'
+import Vqa from './views/Vqa'
 import Progress from './views/Progress'
 import Sota from './views/Sota'
 
@@ -182,6 +183,12 @@ const MainRouter = (props) => {
           path='/QEDC'
         >
           <Qedc isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/VQA'
+        >
+          <Vqa isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
