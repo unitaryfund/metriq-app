@@ -101,23 +101,21 @@ class Vqa extends React.Component {
         <br />
         <FormFieldWideRow id='Tasks'>
           <h5>VQA Benchmark Tasks</h5>
-          {this.state.featured.map((item, index) => {
-            return (
-              <div key={index} className='row h-100'>
-                <div className='col-md col h-100'>
-                  <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
-                  <SotaChart
-                    chartId={index}
-                    xLabel='Time'
-                    taskId={item.id}
-                    key={index}
-                    isLog
-                  />
-                  <hr />
-                </div>
+          {this.state.featured.map((item, index) =>
+            <div key={index} className='row'>
+              <div className='col-md col'>
+                <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
+                <SotaChart
+                  chartId={index}
+                  xLabel='Time'
+                  taskId={item.id}
+                  key={index}
+                  isLog
+                />
+                <hr />
               </div>
-            )
-          })}
+            </div>
+          )}
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow id='Submissions'>
