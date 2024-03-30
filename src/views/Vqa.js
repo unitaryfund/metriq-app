@@ -62,7 +62,7 @@ class Vqa extends React.Component {
         this.setState({ requestFailedMessage: ErrorHandler(err) })
       })
 
-    axios.get(config.api.getUriPrefix() + '/task/submissionCount/179')
+    axios.get(config.api.getUriPrefix() + '/task/submissionCount/119')
       .then(res => {
         let featured = [res.data.data]
         this.setState({ featured })
@@ -72,7 +72,7 @@ class Vqa extends React.Component {
             featured = featured.concat([res.data.data])
             this.setState({ featured })
 
-            axios.get(config.api.getUriPrefix() + '/task/submissionCount/119')
+            axios.get(config.api.getUriPrefix() + '/task/submissionCount/179')
               .then(res => {
                 featured = featured.concat([res.data.data])
                 this.setState({ featured })
