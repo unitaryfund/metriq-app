@@ -54,7 +54,7 @@ class SotaChart extends React.Component {
         ? (((props.logBase === '10') ? Math.log10 : ((props.logBase === '2') ? Math.log2 : Math.log)))
         : ((props.logBase === '10') ? x => Math.log10(Math.log10(x)) : ((props.logBase === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x)))),
       logBase: props.logBase ? props.logBase : 10,
-      subset: '',
+      subset: props.subset ? props.subset : '',
       subsetDataSets: [],
       subsetDataSetsActive: new Map(),
       isSubset: true,

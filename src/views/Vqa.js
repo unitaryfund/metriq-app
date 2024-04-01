@@ -111,6 +111,7 @@ class Vqa extends React.Component {
                   taskId={item.id}
                   key={index}
                   isLog
+                  subset='method'
                 />
                 <hr />
               </div>
