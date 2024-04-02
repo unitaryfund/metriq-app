@@ -54,7 +54,7 @@ class SotaChart extends React.Component {
         ? (((props.logBase === '10') ? Math.log10 : ((props.logBase === '2') ? Math.log2 : Math.log)))
         : ((props.logBase === '10') ? x => Math.log10(Math.log10(x)) : ((props.logBase === '2') ? x => Math.log2(Math.log2(x)) : x => Math.log(Math.log(x)))),
       logBase: props.logBase ? props.logBase : 10,
-      subset: props.subset ? props.subset : '',
+      subset: '',
       subsetDataSets: [],
       subsetDataSetsActive: new Map(),
       isSubset: true,
@@ -704,30 +704,16 @@ class SotaChart extends React.Component {
       }
     }
 
-    let subsetCount = 0
-    if (isQubits) {
-      ++subsetCount
-    }
-    if (isDepth) {
-      ++subsetCount
-    }
-    if (isPlatform) {
-      ++subsetCount
-    }
     if (isMethod) {
-      ++subsetCount
-    }
-    const isSubset = this.state.subset && (subsetCount > 1)
-    if (isQubits) {
-      this.setState({ isSubset, subset: 'qubits' })
+      this.setState({ subset: 'method' })
+    } else if (isQubits) {
+      this.setState({ subset: 'qubits' })
     } else if (isDepth) {
-      this.setState({ isSubset, subset: 'depth' })
+      this.setState({ ubset: 'depth' })
     } else if (isPlatform) {
-      this.setState({ isSubset, subset: 'platform' })
-    } else if (isMethod) {
-      this.setState({ isSubset, subset: 'method' })
+      this.setState({ subset: 'platform' })
     } else {
-      this.setState({ isSubset, subset: '' })
+      this.setState({ subset: '' })
     }
 
     const chartData = {}
@@ -908,13 +894,12 @@ class SotaChart extends React.Component {
                   label='Subset option:'
                   value={this.state.subset}
                   options={{
+                    method: 'Method',
                     qubits: 'Qubit count',
                     depth: 'Circuit depth',
-                    platform: 'Platform',
-                    method: 'Method'
+                    platform: 'Platform'
                   }}
                   onChange={this.handleOnChangeSubset}
-                  disabled={this.state.isSubset}
                 />
                 <SotaControlRow
                   name='logOption'
