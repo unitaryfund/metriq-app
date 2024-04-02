@@ -129,10 +129,10 @@ class Vqa extends React.Component {
               <div className='col-md col'>
                 <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
                 <SotaChart
-                  chartId={index}
+                  chartId={index + 1}
                   xLabel='Time'
                   taskId={item.id}
-                  key={index}
+                  key={index + 1}
                 />
                 <hr />
               </div>
