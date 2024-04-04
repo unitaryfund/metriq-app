@@ -461,15 +461,21 @@ class SotaChart extends React.Component {
       if (subsetDataSetGroup.length) {
         subsetDataSets.push(subsetDataSetGroup)
       }
+      let l = []
+      let d = []
+      for (const obj of fullSet) {
+        l.push(obj.method + (obj.platform ? '\n' + obj.platform : ''))
+        d.push((state.isLog && canLog)
+        ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
+            ? parseFloat(state.log(obj.value).toPrecision(3))
+            : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
+        : (((obj.value < 1000) && (obj.value >= 0.01))
+            ? parseFloat(obj.value.toPrecision(3))
+            : parseFloat(obj.value.toPrecision(3)).toExponential()))
+      }
       data.datasets.push({
-        labels: fullSet.map(obj => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-        data: fullSet.map(obj => (state.isLog && canLog)
-          ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
-              ? parseFloat(state.log(obj.value).toPrecision(3))
-              : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
-          : (((obj.value < 1000) && (obj.value >= 0.01))
-              ? parseFloat(obj.value.toPrecision(3))
-              : parseFloat(obj.value.toPrecision(3)).toExponential())),
+        labels: l,
+        data: d,
         backgroundColor,
         borderColor: backgroundColor,
         pointRadius: 4,
