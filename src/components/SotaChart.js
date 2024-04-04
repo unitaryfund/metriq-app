@@ -420,32 +420,32 @@ class SotaChart extends React.Component {
     let subsetDataSetGroup = []
     let color = 0
     if (isSameDate) {
-      const backgroundColor = []
       let fullSet = []
       for (const key in subsets) {
+        let rgb
         switch (color) {
           case 0:
-            backgroundColor.push('#dc3545')
+            rgb = '#dc3545'
             break
           case 1:
-            backgroundColor.push('#fd7e14')
+            rgb = '#fd7e14'
             break
           case 2:
-            backgroundColor.push('#ffc107')
+            rgb = '#ffc107'
             break
           case 3:
-            backgroundColor.push('#28a745')
+            rgb = '#28a745'
             break
           case 4:
-            backgroundColor.push('#007bff')
+            rgb = '#007bff'
             break
           case 5:
-            backgroundColor.push('#6610f2')
+            rgb = '#6610f2'
             break
           default:
             break
         }
-        subsetDataSetGroup.push({ label: key, color: backgroundColor[backgroundColor.length - 1] })
+        subsetDataSetGroup.push({ label: key, color: rgb })
         if (subsetDataSetGroup.length >= 5) {
           subsetDataSets.push(subsetDataSetGroup)
           subsetDataSetGroup = []
@@ -453,9 +453,10 @@ class SotaChart extends React.Component {
         ++color
         color = color % 6
         if (state.subsetDataSetsActive.get(key) ?? true) {
+          for (let x = 0; x < subsets[key].length; ++x) {
+            subsets[key][x].rgb = rgb
+          }
           fullSet = fullSet.concat(subsets[key])
-        } else {
-          backgroundColor.pop()
         }
       }
       if (subsetDataSetGroup.length) {
@@ -466,6 +467,12 @@ class SotaChart extends React.Component {
       // The workaround is that data must be in lexigraphical order
       // by label.
       fullSet.sort((a, b) => (a.method + (a.platform ? ' ' + a.platform : '')).toUpperCase().localeCompare((b.method + (b.platform ? ' ' + b.platform : '')) ? -1 : 1))
+
+      const backgroundColor = []
+      for (let x = 0; x < fullSet.length; ++x) {
+        backgroundColor.push(fullSet[x].rgb)
+      }
+
       let l = []
       let d = []
       for (const obj of fullSet) {
