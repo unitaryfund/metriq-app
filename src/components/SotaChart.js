@@ -57,6 +57,7 @@ class SotaChart extends React.Component {
       subset: '',
       subsetDataSets: [],
       subsetDataSetsActive: new Map(),
+      isSameDate: false,
       isSubset: true,
       label: 'arXiv',
       isSotaLineVisible: true,
@@ -301,6 +302,8 @@ class SotaChart extends React.Component {
         highest = d[i].value
       }
     }
+
+    this.setState({ isSameDate })
 
     if (state.isLog && canLog) {
       lowest = state.log(lowest)
@@ -909,7 +912,7 @@ class SotaChart extends React.Component {
                       <tr key={key1}>
                         {row.map((series, key2) =>
                           <td key={key2} style={{ width: '20%' }}>
-                            <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} /> <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
+                            {!this.state.isSameDate && <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} />} <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
                           </td>)}
                       </tr>)}
                   </table>
