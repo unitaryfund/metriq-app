@@ -462,7 +462,7 @@ class SotaChart extends React.Component {
         subsetDataSets.push(subsetDataSetGroup)
       }
       data.datasets.push({
-        labels: fullSet.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+        labels: fullSet.map(obj => obj.method + (obj.platform ? '\n' + obj.platform : '')),
         data: fullSet.map(obj => (state.isLog && canLog)
           ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
               ? parseFloat(state.log(obj.value).toPrecision(3))
