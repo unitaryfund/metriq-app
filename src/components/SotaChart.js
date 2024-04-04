@@ -466,13 +466,15 @@ class SotaChart extends React.Component {
       for (const obj of fullSet) {
         l.push(obj.method + (obj.platform ? '\n' + obj.platform : ''))
         d.push((state.isLog && canLog)
-        ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
-            ? parseFloat(state.log(obj.value).toPrecision(3)).toString()
-            : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
-        : (((obj.value < 1000) && (obj.value >= 0.01))
-            ? parseFloat(obj.value.toPrecision(3)).toString()
-            : parseFloat(obj.value.toPrecision(3)).toExponential()))
+        ? (((state.log(obj.value) < 10000) && (state.log(obj.value) >= 0.01))
+            ? parseFloat(state.log(obj.value).toPrecision(4)).toString()
+            : parseFloat(state.log(obj.value).toPrecision(4)).toExponential())
+        : (((obj.value < 10000) && (obj.value >= 0.01))
+            ? parseFloat(obj.value.toPrecision(4)).toString()
+            : parseFloat(obj.value.toPrecision(4)).toExponential()))
       }
+      console.log(l)
+      console.log(d)
       data.datasets.push({
         labels: l,
         data: d,
