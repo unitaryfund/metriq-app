@@ -461,10 +461,15 @@ class SotaChart extends React.Component {
       if (subsetDataSetGroup.length) {
         subsetDataSets.push(subsetDataSetGroup)
       }
+
+      // As of 2024-04-04, there was a bug in the bar chart module.
+      // The workaround is that data must be in lexigraphical order
+      // by label.
+      fullSet.sort((a, b) => (a.method + (a.platform ? ' ' + a.platform : '')).toUpperCase().localeCompare((b.method + (b.platform ? ' ' + b.platform : '')) ? -1 : 1))
       let l = []
       let d = []
       for (const obj of fullSet) {
-        l.push(obj.method + (obj.platform ? '\n' + obj.platform : ''))
+        l.push(obj.method + (obj.platform ? ' ' + obj.platform : ''))
         d.push((state.isLog && canLog)
         ? (((state.log(obj.value) < 10000) && (state.log(obj.value) >= 0.01))
             ? parseFloat(state.log(obj.value).toPrecision(4)).toString()
@@ -473,8 +478,6 @@ class SotaChart extends React.Component {
             ? parseFloat(obj.value.toPrecision(4)).toString()
             : parseFloat(obj.value.toPrecision(4)).toExponential()))
       }
-      console.log(l)
-      console.log(d)
       data.datasets.push({
         labels: l,
         data: d,
