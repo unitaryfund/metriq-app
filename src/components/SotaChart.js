@@ -419,47 +419,88 @@ class SotaChart extends React.Component {
     const subsetDataSets = []
     let subsetDataSetGroup = []
     let color = 0
-    for (const key in subsets) {
-      let rgb = '#000000'
-      switch (color) {
-        case 0:
-          rgb = '#dc3545'
-          break
-        case 1:
-          rgb = '#fd7e14'
-          break
-        case 2:
-          rgb = '#ffc107'
-          break
-        case 3:
-          rgb = '#28a745'
-          break
-        case 4:
-          rgb = '#007bff'
-          break
-        case 5:
-          rgb = '#6610f2'
-          break
-        default:
-          break
-      }
-      if (state.subsetDataSetsActive.get(key) ?? true) {
-        if (isSameDate) {
-          data.datasets.push({
-            labels: d.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
-            data: subsets[key].map(obj => (state.isLog && canLog)
-              ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
-                  ? parseFloat(state.log(obj.value).toPrecision(3))
-                  : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
-              : (((obj.value < 1000) && (obj.value >= 0.01))
-                  ? parseFloat(obj.value.toPrecision(3))
-                  : parseFloat(obj.value.toPrecision(3)).toExponential())),
-            backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#007bff', '#6610f2'],
-            borderColor: rgb,
-            pointRadius: 4,
-            pointHitRadius: 4
-          })
+    if (isSameDate) {
+      const backgroundColor = []
+      let fullSet = []
+      for (const key in subsets) {
+        switch (color) {
+          case 0:
+            backgroundColor.push('#dc3545')
+            break
+          case 1:
+            backgroundColor.push('#fd7e14')
+            break
+          case 2:
+            backgroundColor.push('#ffc107')
+            break
+          case 3:
+            backgroundColor.push('#28a745')
+            break
+          case 4:
+            backgroundColor.push('#007bff')
+            break
+          case 5:
+            backgroundColor.push('#6610f2')
+            break
+          default:
+            break
+        }
+        subsetDataSetGroup.push({ label: key, color: backgroundColor[backgroundColor.length - 1] })
+        if (subsetDataSetGroup.length >= 5) {
+          subsetDataSets.push(subsetDataSetGroup)
+          subsetDataSetGroup = []
+        }
+        ++color
+        color = color % 6
+        if (state.subsetDataSetsActive.get(key) ?? true) {
+          fullSet = fullSet.concat(subsets[key])
         } else {
+          backgroundColor.pop()
+        }
+      }
+      if (subsetDataSetGroup.length) {
+        subsetDataSets.push(subsetDataSetGroup)
+      }
+      data.datasets.push({
+        labels: fullSet.map((obj, index) => obj.method + (obj.platform ? '\n' + obj.platform : '')),
+        data: fullSet.map(obj => (state.isLog && canLog)
+          ? (((state.log(obj.value) < 1000) && (state.log(obj.value) >= 0.01))
+              ? parseFloat(state.log(obj.value).toPrecision(3))
+              : parseFloat(state.log(obj.value).toPrecision(3)).toExponential())
+          : (((obj.value < 1000) && (obj.value >= 0.01))
+              ? parseFloat(obj.value.toPrecision(3))
+              : parseFloat(obj.value.toPrecision(3)).toExponential())),
+        backgroundColor,
+        borderColor: backgroundColor,
+        pointRadius: 4,
+        pointHitRadius: 4
+      })
+    } else {
+      for (const key in subsets) {
+        let rgb = '#000000'
+        switch (color) {
+          case 0:
+            rgb = '#dc3545'
+            break
+          case 1:
+            rgb = '#fd7e14'
+            break
+          case 2:
+            rgb = '#ffc107'
+            break
+          case 3:
+            rgb = '#28a745'
+            break
+          case 4:
+            rgb = '#007bff'
+            break
+          case 5:
+            rgb = '#6610f2'
+            break
+          default:
+            break
+        }
+        if (state.subsetDataSetsActive.get(key) ?? true) {
           data.datasets.push({
             type: 'scatter',
             label: (state.subset === '') ? 'All (±95% CI, when provided)' : (key + ' ' + state.subset),
@@ -481,17 +522,17 @@ class SotaChart extends React.Component {
             pointHitRadius: 4
           })
         }
+        subsetDataSetGroup.push({ label: key, color: rgb })
+        if (subsetDataSetGroup.length >= 5) {
+          subsetDataSets.push(subsetDataSetGroup)
+          subsetDataSetGroup = []
+        }
+        ++color
+        color = color % 6
       }
-      subsetDataSetGroup.push({ label: key, color: rgb })
-      if (subsetDataSetGroup.length >= 5) {
+      if (subsetDataSetGroup.length) {
         subsetDataSets.push(subsetDataSetGroup)
-        subsetDataSetGroup = []
       }
-      ++color
-      color = color % 6
-    }
-    if (subsetDataSetGroup.length) {
-      subsetDataSets.push(subsetDataSetGroup)
     }
 
     let options = {}
@@ -704,16 +745,15 @@ class SotaChart extends React.Component {
       }
     }
 
-    if (isMethod) {
-      this.setState({ subset: 'method' })
-    } else if (isQubits) {
-      this.setState({ subset: 'qubits' })
+    let subset = ''
+    if (isQubits) {
+      subset = 'qubits'
     } else if (isDepth) {
-      this.setState({ ubset: 'depth' })
+      subset = 'depth'
+    } else if (isMethod) {
+      subset = 'method'
     } else if (isPlatform) {
-      this.setState({ subset: 'platform' })
-    } else {
-      this.setState({ subset: '' })
+      subset = 'platform'
     }
 
     const chartData = {}
@@ -752,8 +792,8 @@ class SotaChart extends React.Component {
         i++
       }
     }
-    this.setState({ metricNames, chartKey, chartKeyInt, chartData, isLowerBetterDict, key: Math.random() })
-    this.loadChartFromState({ subset: this.state.subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible, isErrorVisible: this.state.isErrorVisible, subsetDataSetsActive: this.state.subsetDataSetsActive })
+    this.setState({ subset, metricNames, chartKey, chartKeyInt, chartData, isLowerBetterDict, key: Math.random() })
+    this.loadChartFromState({ subset, label: this.state.label, metricNames, chartKey, chartData, isLowerBetterDict, isLog: this.state.isLog, logBase: this.state.logBase, log: this.state.log, isSotaLineVisible: this.state.isSotaLineVisible, isSotaLabelVisible: this.state.isSotaLabelVisible, isErrorVisible: this.state.isErrorVisible, subsetDataSetsActive: this.state.subsetDataSetsActive })
   }
 
   componentDidMount () {
@@ -894,9 +934,9 @@ class SotaChart extends React.Component {
                   label='Subset option:'
                   value={this.state.subset}
                   options={{
-                    method: 'Method',
                     qubits: 'Qubit count',
                     depth: 'Circuit depth',
+                    method: 'Method',
                     platform: 'Platform'
                   }}
                   onChange={this.handleOnChangeSubset}

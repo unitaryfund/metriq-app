@@ -66,7 +66,7 @@ class Vqa extends React.Component {
 
     axios.get(config.api.getUriPrefix() + '/task/submissionCount/119')
       .then(res => {
-        let featured = res.data.data
+        const featured = res.data.data
         this.setState({ featured })
 
         axios.get(config.api.getUriPrefix() + '/task/submissionCount/156')
@@ -86,10 +86,10 @@ class Vqa extends React.Component {
           .catch(err => {
             this.setState({ requestFailedMessage: ErrorHandler(err) })
           })
-        })
-        .catch(err => {
-          this.setState({ requestFailedMessage: ErrorHandler(err) })
-        })
+      })
+      .catch(err => {
+        this.setState({ requestFailedMessage: ErrorHandler(err) })
+      })
   }
 
   render () {
@@ -98,9 +98,9 @@ class Vqa extends React.Component {
         <ViewHeader align='center'>VQA Benchmarks</ViewHeader>
         <h5>Metriq has the latest data on variational quantum algoritms (VQAs).</h5>
         <p>Here you can find and contribute to VQA benchmarks like those in this <Link to='https://github.com/JoanArrow/VQA-Benchmarking-Project'>GitHub repository</Link> by a member of the QED-C Standards Committee, Joan Étude Arrow, and her collaborators.</p>
-        <p>{renderLatex("Joan’s approach to benchmarking prioritizes application-based measures of performance that enable cross-comparison across all VQA applications. This project investigates the largest instance of a problem that can be solved by a VQA in various noisy environments. A VQA instance is considered solved provided the solution found by the algorithm is within $\\epsilon = 10^{-3}$ of the true solution.")}</p>
-        <p>{renderLatex("$||S_T-S_A||_{VQA}\\leq\\epsilon$")}</p>
-        <p>{renderLatex("Here the metric is determined by the output type of the VQA. If the solution output is a number, the metric $||.||_{VQA}$ is simply the difference between the true value and the algorithm output. If the solution output is a probability distribution, then we employ the Hellinger distance to be consistent with the fidelity calculations of previous QED-C benchmarks.")}</p>
+        <p>{renderLatex('Joan’s approach to benchmarking prioritizes application-based measures of performance that enable cross-comparison across all VQA applications. This project investigates the largest instance of a problem that can be solved by a VQA in various noisy environments. A VQA instance is considered solved provided the solution found by the algorithm is within $\\epsilon = 10^{-3}$ of the true solution.')}</p>
+        <p>{renderLatex('$||S_T-S_A||_{VQA}\\leq\\epsilon$')}</p>
+        <p>{renderLatex('Here the metric is determined by the output type of the VQA. If the solution output is a number, the metric $||.||_{VQA}$ is simply the difference between the true value and the algorithm output. If the solution output is a probability distribution, then we employ the Hellinger distance to be consistent with the fidelity calculations of previous QED-C benchmarks.')}</p>
         <p>The Quantum Economic Development Consortium (<a href='https://quantumconsortium.org/'>QED-C</a>) is a consortium of stakeholders that aims to enable and grow the quantum industry. Metriq enables independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted the QED-C open-source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like VQA error and iteration count.</p>
         <p>The Metriq Python client (metriq-client) and API (metriq-api) enable addition of new data points on metriq.info. You can read more about automatically running QED-C benchmarks on Metriq in <a href='https://unitary.fund/posts/2023_metriq_qedc.html'>this blog post</a> on the Unitary Fund website.</p>
         <p>Below you can find the list of <a href='#Tasks'>VQA Benchmark Tasks</a> (containing a Task surveyed in the QED-C Benchmarks repository) and <a href='#Submissions'>VQA Benchmarks Submissions</a> (containing the "vqa" tag). Consider contributing your results with novel data points related to new measurements, methods, or new quantum quantum cloud service providers.</p>
@@ -110,8 +110,7 @@ class Vqa extends React.Component {
           <div className='row'>
             <div className='col-md col'>
               {this.state.featured &&
-                <CategoryItemBox item={this.state.featured} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
-              }
+                <CategoryItemBox item={this.state.featured} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />}
               <SotaChart
                 chartId={0}
                 xLabel='Time'
@@ -121,9 +120,9 @@ class Vqa extends React.Component {
               <hr />
             </div>
           </div>
-          <br/>
+          <br />
           <p>The tasks below are other VQA results on Metriq not directly from the research by Joan's team.</p>
-          <br/>
+          <br />
           {this.state.related.map((item, index) =>
             <div key={index} className='row'>
               <div className='col-md col'>
