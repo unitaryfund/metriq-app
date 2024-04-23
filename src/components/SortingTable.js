@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import Table from 'react-bootstrap/Table'
 import { Button } from 'react-bootstrap'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSort } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+library.add(faSort)
 
 const SortingTable = (props) => {
   const [data, setData] = useState(props.data)
@@ -49,7 +54,7 @@ const SortingTable = (props) => {
       <Table striped bordered hover responsive className={props.className} style={style}>
         {((props.showHeader === undefined) || (props.showHeader !== false)) &&
           <thead>
-            <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title}</th>)}</tr>
+            <tr>{props.columns.map((item, id) => <th key={id} style={{ width: item.width }} onClick={() => handleSort(item.key)}>{item.title} <FontAwesomeIcon icon={faSort} /></th>)}</tr>
           </thead>}
         <tbody key={trigger}>
           {(isCollapsed ? data.slice(0, 10) : data).map((row, id) => <tr key={id} className={props.rowClassName} onClick={props.onRowClick ? () => props.onRowClick(row) : undefined}>{props.columns.map((col, id) => <td key={id}>{row[col.key]}</td>)}</tr>)}

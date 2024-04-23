@@ -31,22 +31,22 @@ const ResultsTable = (props) => {
                   {
                     title: 'Task',
                     key: 'taskName',
-                    width: 160
+                    width: 150
                   },
                   {
                     title: 'Method',
                     key: 'methodName',
-                    width: 160
+                    width: 150
                   },
                   {
                     title: 'Platform',
                     key: 'platformName',
-                    width: 160
+                    width: 150
                   },
                   {
                     title: 'Metric',
                     key: 'metricName',
-                    width: 160
+                    width: 150
                   },
                   {
                     title: 'Value',
@@ -71,7 +71,7 @@ const ResultsTable = (props) => {
                   {
                     title: 'Notes',
                     key: 'notes',
-                    width: 40
+                    width: 120
 
                   },
                   {
