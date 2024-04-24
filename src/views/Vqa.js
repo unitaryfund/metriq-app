@@ -116,6 +116,7 @@ class Vqa extends React.Component {
                 xLabel='Time'
                 taskId={119}
                 key={0}
+                isSubsetDisabled
               />
               <hr />
             </div>

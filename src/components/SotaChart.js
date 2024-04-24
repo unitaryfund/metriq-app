@@ -954,6 +954,7 @@ class SotaChart extends React.Component {
                   name='subsetOption'
                   label='Subset option:'
                   value={this.state.subset}
+                  disabled={this.props.isSubsetDisabled}
                   options={{
                     qubits: 'Qubit count',
                     depth: 'Circuit depth',
