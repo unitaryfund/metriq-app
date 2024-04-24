@@ -41,6 +41,9 @@ let svg, d
 let areLabelsVisible = false
 function onSwitchClick () {
   areLabelsVisible = !areLabelsVisible
+  refreshLabels()
+}
+function refreshLabels () {
   if (areLabelsVisible) {
     showLabels()
   } else {
@@ -378,7 +381,7 @@ function scatterplot (
       .attr('class', 'labeltohide')
       .style('font-size', `${smallLabelSize}px`)
       .style('font-family', fontType)
-      .style('visibility', 'hidden')
+      .style('visibility', areLabelsVisible ? 'visible' : 'hidden')
       .attr(
         'text-anchor',
         direction === 2 ? 'end' : direction === 0 ? 'start' : 'middle'
