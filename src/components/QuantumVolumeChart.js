@@ -115,6 +115,10 @@ function scatterplot (
   let maxIDs = []
   let currentMaxValue = -1
 
+  if (!isScaleLinear) {
+    data = data.slice(0, -3)
+  }
+
   data.map((d) => {
     if (!isScaleLinear) {
       d.metricValue = Math.log2(d.metricValue)

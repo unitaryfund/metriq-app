@@ -26,9 +26,6 @@ key,name,submissionId,platformName,provider,methodName,metricName,metricValue,qu
 162,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,ibmq-bogota,ibmq,Quantum volume,Quantum volume,8,,,3/8/2022
 158,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,ibmq-belem,ibmq,Quantum volume,Quantum volume,8,,,3/8/2022
 161,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,ibmq-manila,ibmq,Quantum volume,Quantum volume,4,,,3/8/2022
-176,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,oqc-lucy,oqc-lucy,Quantum volume,Quantum volume,1,,,3/8/2022
-177,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,Rigetti Aspen-11,rigetti,Quantum volume,Quantum volume,1,,,3/8/2022
-178,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,Rigetti Aspen M-1,rigetti,Quantum volume,Quantum volume,1,,,3/8/2022
 265,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,Quantinuum System Model H1-2,quantinuum,Quantum volume,Quantum volume,512,,,3/18/2022
 266,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,ionq,ionq,Quantum volume,Quantum volume,8,,,3/18/2022
 279,Pushing quantum performance forward with our highest Quantum Volume yet,163,ibmq-prague,ibmq,Heavy bit string sampling,Quantum volume,256,,,4/6/2022
@@ -41,3 +38,6 @@ key,name,submissionId,platformName,provider,methodName,metricName,metricValue,qu
 821,Quantinuum Sets Industry Record for Hardware Performance with New Quantum Volume Milestone,465,Quantinuum System Model H1-1,quantinuum,Heavy bit string sampling,Quantum volume,32768,,,2/23/2023
 1067,A Race Track Trapped-Ion Quantum Processor,561,Quantinuum H2,quantinuum,Heavy bit string sampling,Quantum volume,65536,32,,5/5/2023,2110.14808 
 1258,"Quantinuum H-Series quantum computer accelerates through 3 more performance records for quantum volume: 217, 218, and 219",642,Quantinuum System Model H1-1,quantinuum,Heavy bit string sampling,Quantum volume,524288,,,6/30/2023
+176,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,oqc-lucy,oqc-lucy,Quantum volume,Quantum volume,1,,,3/8/2022
+177,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,Rigetti Aspen-11,rigetti,Quantum volume,Quantum volume,1,,,3/8/2022
+178,Quantum Volume in Practice: What Users Can Expect from NISQ Devices,123,Rigetti Aspen M-1,rigetti,Quantum volume,Quantum volume,1,,,3/8/2022
