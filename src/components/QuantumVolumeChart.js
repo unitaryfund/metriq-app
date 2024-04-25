@@ -736,7 +736,8 @@ function QuantumVolumeChart () {
     <span>
       <div className='row'>
         <div className='col text-left'>
-          <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
+          <h4 align='left'>Quantum Volume</h4>
+          <p align='left'><b>Algorithmic qubits</b> is logarithm base 2 of <b>quantum volume</b>, with state-of-the-art being <b>19 algorithmic qubits</b> as of 2023-06-30.</p>
         </div>
       </div>
       <div id='cargo'>
