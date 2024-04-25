@@ -116,6 +116,9 @@ function scatterplot (
   let currentMaxValue = -1
 
   data.map((d) => {
+    if (!isScaleLinear) {
+      d.metricValue = Math.log2(d.metricValue)
+    }
     if (Number(d.metricValue) > currentMaxValue) {
       maxIDs = [...maxIDs, d.id]
       currentMaxValue = Number(d.metricValue)
@@ -125,6 +128,9 @@ function scatterplot (
   })
 
   const yScaleType = isScaleLinear ? d3.scaleLinear : d3.scaleLog
+  if (!isScaleLinear) {
+    yAxisText = "Algorithmic Qubits"
+  }
 
   const maxData = data.filter((d) => maxIDs.includes(d.id))
   maxData.map((d, i) => {
