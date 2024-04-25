@@ -16,12 +16,6 @@ div#legend_guide {
   margin-left: 20px
 }
 
-div#legend-stroke,
-div#legend-color {
-  grid-template-rows: 1fr 1fr 1fr;
-  margin-top: 10px
-}
-
 div#label-button {
   grid-template-rows: 1fr 1fr 1fr;
 }
@@ -107,13 +101,29 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+#legend_guide {
+  text-align: left;
+}
+
+div#legend-stroke,
+div#legend-color,
+div#label-button {
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
 .legendTitle {
   font-size: 14px;
   color: gray;
   font-family: Helvetica;
-  text-align: left;
+  position: relative;
+  bottom: 3px;
 }
 
-#legend_guide {
-  text-align: left;
+.mybutton {
+  border-radius: 20px !important;
+  font-size: 14px !important;
+  padding: 10px;
+  border: lightgray;
+  color: gray;
+  background-color: lightgray !important;
 }

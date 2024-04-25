@@ -3,7 +3,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 import '../viz-style.css'
-import csv from '../progress.csv'
+import csv from '../quantum_volume.csv'
 
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
@@ -29,6 +29,7 @@ const domainIndex = {
   other: 3
 }
 const breakpoint = 700
+const parseDate = d3.utcParse('%m/%e/%Y')
 let isMobile = window.outerWidth < breakpoint
 let svg, d
 
@@ -84,16 +85,11 @@ function scatterplot (
   marginLeft = 100, // left margin, in pixels
   rangeMult = 0.02,
   xScaleType = d3.scaleTime,
-  horizontalLineColor = 'black',
   horizontalLineStrokeSize = '1px',
-  horizontalLineStrokeTexture = '8, 4',
   tooltipLineStrokeTexture = '1 1',
   tooltipLineColor = '#bbbbbb',
   tooltipLineTextBorder = 2.5,
-  hLineIntercept = 50,
-  hLineText = '↓ Everything below this line can be simulated with a classical computer',
-  xlabelDistance = 19,
-  ylabelDistance = 23
+  xlabelDistance = 19
 ) {
   data = data
     .filter(
@@ -423,7 +419,7 @@ function scatterplot (
         .attr('class', 'labeltohide')
         .style(
           'visibility',
-          document.getElementById('labelSwitch').checked ? 'visible' : 'hidden'
+          areLabelsVisible ? 'visible' : 'hidden'
         )
         .style(
           'font-size',
@@ -575,71 +571,16 @@ function mousemove (
   }
 }
 
-function wrap (text, wrapWidth) {
-  text.each(function () {
-    const text = d3.select(this)
-    const words = text.text().split(/\s+/).reverse()
-    let word
-    let line = []
-    const y = text.attr('y')
-    const x = text.attr('x')
-    const dy = 1
-    let tspan = text
-      .text(null)
-      .append('tspan')
-      .attr('x', x)
-      .attr('y', y)
-      .attr('dy', `${dy}em`)
-    let currentY = y
-    while ((word = words.pop())) {
-      line.push(word)
-      tspan.text(line.join(' '))
-      if (tspan.node().getComputedTextLength() > wrapWidth) {
-        line.pop()
-        tspan.text(line.join(' '))
-        line = [word]
-        currentY = Number(currentY) + 15
-        tspan = text
-          .append('tspan')
-          .attr('x', x)
-          .attr('y', String(currentY))
-          .attr('dy', dy + 'em')
-          .text(word)
-      }
-    }
-  })
-  return 0
-}
-
 function redraw () {
+  const scroll = window.scrollY
   isMobile = window.outerWidth < breakpoint
   d3.select('#svgscatter').remove()
   d3.select('#scatter-tooltip').remove()
   d3.selectAll('#svglegend').remove()
-  scatterplot(d)
-  if (isMobile) {
-    d3.selectAll('.htext').call(wrap, 150)
-  }
+  scatterplot(d, isScaleLinear)
   legend()
+  window.scrollTo(0, scroll)
 }
-
-document
-  .getElementById('isScaleLinearSwitch')
-  .addEventListener('input', function () {
-    redraw()
-  })
-
-document
-  .getElementById('labelSwitch')
-  .addEventListener('input', function () {
-    redraw()
-  })
-
-document
-  .getElementById('arXivSwitch')
-  .addEventListener('input', function () {
-    redraw()
-  })
 
 // Function to build legend
 function legend (circleSizeFields = 8) {
@@ -759,22 +700,25 @@ function makeClass (x, y) {
   return `c${x - y}`
 }
 
-function QuantumLandscapeChart () {
+function QuantumVolumeChart () {
   React.useEffect(() => {
   // Draw scatterplot from data
-    d3.csv(csv, (_d) => ({
-      num_qubits: +_d.num_qubits,
-      num_gates: +_d.num_gates,
-      achieved: _d.achieved,
-      domain: _d.domain,
-      task_name: _d.task_name,
-      reference: _d.reference,
-      year: _d.year,
-      submission_id: _d.submission_id
+    d3.csv(csv, (d) => ({
+      key: +d.key,
+      name: d.name,
+      submissionId: d.submissionId,
+      platformName: d.platformName,
+      methodName: d.methodName,
+      metricName: d.metricName,
+      metricValue: +d.metricValue,
+      qubitCount: +d.qubitCount,
+      circuitDepth: +d.circuitDepth,
+      provider: d.provider,
+      tableDate: parseDate(d.tableDate),
+      arXiv: d.arXiv
     })).then((_d) => {
       d = _d
-      scatterplot(_d)
-      legend()
+      scatterplot(d)
       window.onresize = redraw
     })
   })
@@ -790,48 +734,41 @@ function QuantumLandscapeChart () {
         <div id='my_dataviz' />
         <div id='legend_guide'>
           <div>
-            <div id='legend-switch' style='margin-top: 10px'>
-              <label class='switch'>
+            <div id='legend-switch' style={{ marginTop: '10px' }}>
+              <label className='switch'>
                 <input id='labelSwitch' type='checkbox' onClick={onLabelSwitchClick} />
-                <span class='slider round' />
+                <span className='slider round' />
               </label>
-              <span class='legendTitle'>Show labels</span>
+              <span className='legendTitle'>Show labels</span>
             </div>
-            <div id='legend-switch' style='margin-top: 10px'>
-              <label class='switch'>
+            <div id='legend-switch' style={{ marginTop: '10px' }}>
+              <label className='switch'>
                 <input id='arXivSwitch' type='checkbox' onClick={onArxivSwitchClick} />
-                <span class='slider round' />
+                <span className='slider round' />
               </label>
-              <span class='legendTitle'>Labels | ID</span>
+              <span className='legendTitle'>Labels | ID</span>
             </div>
-            <div id='legend-switch' style='margin-top: 10px'>
-              <label class='switch'>
+            <div id='legend-switch' style={{ marginTop: '10px' }}>
+              <label className='switch'>
                 <input id='isScaleLinearSwitch' type='checkbox' onClick={onScaleSwitchClick} />
-                <span class='slider round' />
+                <span className='slider round' />
               </label>
-              <span class='legendTitle'>Log | Linear</span>
+              <span className='legendTitle'>Log | Linear</span>
             </div>
           </div>
           <div>
-            <span class='legendTitle'>Providers</span>
-            <div id='legend-color' style='margin-top: 10px' />
+            <span className='legendTitle'>Providers</span>
+            <div id='legend-color' style={{ marginTop: '10px' }} />
           </div>
           <div>
-            <div id='legend-stroke' style='margin-top: 10px'>
-              <button id='downloadButton' class='mybutton'>Download chart</button>
+            <div id='legend-stroke' style={{ marginTop: '10px' }}>
+              <button id='downloadButton' className='mybutton'>Download chart</button>
             </div>
           </div>
-        </div>
-      </div>
-      <div className='row'>
-        <div className='col text-left'>
-          <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
-          <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider. Resource estimates are based on applications where performance can be proved. This is a high bar. Estimates may be pessimistic as many heuristics need to be developed in practice. Estimates may be optimistic as they haven't been run and so could have mistakes!</p>
-          <p>If you have other data you would like to see added to this chart, please email <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.</p>
         </div>
       </div>
     </span>
   )
 }
 
-export default QuantumLandscapeChart
+export default QuantumVolumeChart
