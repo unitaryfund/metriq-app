@@ -129,7 +129,7 @@ function scatterplot (
 
   const yScaleType = isScaleLinear ? d3.scaleLinear : d3.scaleLog
   if (!isScaleLinear) {
-    yAxisText = "Algorithmic Qubits"
+    yAxisText = "Algorithmic Qubits  →"
   }
 
   const maxData = data.filter((d) => maxIDs.includes(d.id))
