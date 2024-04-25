@@ -92,7 +92,7 @@ function scatterplot (
   marginBottom = 70, // bottom margin, in pixels
   xLabelShift = marginBottom - 40,
   marginLeft = 100, // left margin, in pixels
-  rangeMult = 0.02,
+  rangeMult = 0.11,
   xScaleType = d3.scaleTime,
   horizontalLineStrokeSize = '1px',
   tooltipLineStrokeTexture = '1 1',
@@ -743,7 +743,6 @@ function QuantumVolumeChart () {
       <div className='row'>
         <div className='col text-left'>
           <h4 align='left'>Quantum Volume</h4>
-          <p align='left'><b>Algorithmic qubits</b> is logarithm base 2 of <b>quantum volume</b>, with state-of-the-art being <b>19 algorithmic qubits</b> as of 2023-06-30.</p>
         </div>
       </div>
       <div id='cargo'>
