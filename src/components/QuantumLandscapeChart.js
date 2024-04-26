@@ -769,19 +769,19 @@ function QuantumLandscapeChart () {
         <div id='my_dataviz' />
         <div id='legend_guide'>
           <div>
-            <span class='legendTitle'>Status</span>
+            <span className='legendTitle'>Status</span>
             <div id='legend-stroke' />
           </div>
           <div>
-            <span class='legendTitle'>Fields</span>
+            <span className='legendTitle'>Fields</span>
             <div id='legend-color' />
           </div>
           <div>
-            <span class='legendTitle'>Show labels</span>
+            <span className='legendTitle'>Show labels</span>
             <div id='legend-switch'>
-              <label class='switch'>
+              <label className='switch'>
                 <input type='checkbox' onClick={onSwitchClick} />
-                <span class='slider round' />
+                <span className='slider round' />
               </label>
             </div>
           </div>

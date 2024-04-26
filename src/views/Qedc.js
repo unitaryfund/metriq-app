@@ -12,7 +12,7 @@ import SotaChart from '../components/SotaChart'
 import SubmissionScroll from '../components/SubmissionScroll'
 import { withRouter, Link } from 'react-router-dom'
 
-class Tasks extends React.Component {
+class Qedc extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -20,9 +20,6 @@ class Tasks extends React.Component {
       alphabetical: [],
       allNames: [],
       featured: [],
-      trending: [],
-      popular: [],
-      latest: [],
       filterId: null,
       requestFailedMessage: ''
     }
@@ -44,30 +41,6 @@ class Tasks extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(config.api.getUriPrefix() + '/submission/trending/0')
-      .then(res => {
-        this.setState({ trending: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
-    axios.get(config.api.getUriPrefix() + '/submission/popular/0')
-      .then(res => {
-        this.setState({ popular: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
-    axios.get(config.api.getUriPrefix() + '/submission/latest/0')
-      .then(res => {
-        this.setState({ latest: res.data.data.slice(0, 3) })
-      })
-      .catch(err => {
-        this.setState({ requestFailedMessage: ErrorHandler(err) })
-      })
-
     axios.get(config.api.getUriPrefix() + '/task/submissionCount')
       .then(res => {
         const alphabetical = res.data.data
@@ -210,7 +183,7 @@ class Tasks extends React.Component {
   render () {
     return (
       <div id='metriq-main-content' className='container'>
-        <ViewHeader align='center'>QED-C  Benchmarks</ViewHeader>
+        <ViewHeader align='center'>QED-C Benchmarks</ViewHeader>
         <h5>Metriq is the open platform to share application-oriented benchmarks of quantum cloud providers.</h5>
         <p>Here you can find and contribute to application-oriented benchmarks as defined in the <Link to='Submission/14'>QED-C repository</Link>. The Quantum Economic Development Consortium (<a href='https://quantumconsortium.org/'>QED-C</a>) is a consortium of stakeholders that aims to enable and grow the quantum industry. Metriq enables independent testing of quantum cloud service performance on many standard applications and algorithms. Metriq has adopted these open source benchmarks into an automated benchmark pipeline. From these results, we extract metrics like <Link to='Task/34'>quantum volume</Link>, Grover's search, and quantum Fourier transform.</p>
         <p>The Metriq Python client (metriq-client) and API (metriq-api) are compatible with the QED-C repository and enable addition of new data points on metriq.info. You can read more about automatically running QED-C benchmarks on Metriq in <a href='https://unitary.fund/posts/2023_metriq_qedc.html'>this blog post</a> on the Unitary Fund website.</p>
@@ -218,28 +191,21 @@ class Tasks extends React.Component {
         <br />
         <FormFieldWideRow id='Tasks'>
           <h5>QED-C Benchmark Tasks</h5>
-          {this.state.featured.map((item, index) => {
-            return (
-              <div className='task' key={index}>
-                <div className='row h-100'>
-                  <div className='col-md col h-100'>
-                    <table className='task-method-item'>
-                      <tbody>
-                        <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
-                        <SotaChart
-                          chartId={index}
-                          xLabel='Time'
-                          taskId={item.id}
-                          key={index}
-                          isLog
-                        />
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+          {this.state.featured.map((item, index) =>
+            <div key={index} className='row'>
+              <div className='col-md col'>
+                <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
+                <SotaChart
+                  chartId={index}
+                  xLabel='Time'
+                  taskId={item.id}
+                  key={index}
+                  isLog
+                />
+                <hr />
               </div>
-            )
-          })}
+            </div>
+          )}
         </FormFieldWideRow>
         <br />
         <FormFieldWideRow id='Submissions'>
@@ -255,4 +221,4 @@ class Tasks extends React.Component {
   }
 }
 
-export default withRouter(Tasks)
+export default withRouter(Qedc)

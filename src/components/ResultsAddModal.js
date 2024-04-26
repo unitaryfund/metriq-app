@@ -136,10 +136,10 @@ const ResultsAddModal = (props) => {
     if (isNaN(result.method)) {
       result.method = result.method.id
     }
-    if (isNaN(result.dataSet)) {
+    if (result.dataSet && isNaN(result.dataSet)) {
       result.dataSet = result.dataSet.id
     }
-    if (isNaN(result.platform)) {
+    if (result.platform && isNaN(result.platform)) {
       result.platform = result.platform.id
     }
     const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + props.submission.id + '/result'))
