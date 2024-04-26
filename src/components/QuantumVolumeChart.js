@@ -2,7 +2,8 @@
 
 import React from 'react'
 import * as d3 from 'd3'
-import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver'
+import XMLSerializer from 'xmlserializer'
 import '../viz-style.css'
 import csv from '../quantum_volume.csv'
 
@@ -50,12 +51,12 @@ function onScaleSwitchClick () {
   redraw()
 }
 function onDownloadClick () {
-  const svgElement = d3.select("#my_dataviz").node();
-  const svgString = new XMLSerializer().serializeToString(svgElement);
+  const svgElement = d3.select('#my_dataviz').node()
+  const svgString = new XMLSerializer().serializeToString(svgElement)
   const blob = new Blob([svgString], {
-    type: "image/svg+xml;charset=utf-8",
-  });
-  saveAs(blob, "chart.svg");
+    type: 'image/svg+xml;charset=utf-8'
+  })
+  saveAs(blob, 'chart.svg')
 }
 function refreshLabels () {
   if (areLabelsVisible) {
@@ -133,7 +134,7 @@ function scatterplot (
 
   const yScaleType = isScaleLinear ? d3.scaleLinear : d3.scaleLog
   if (!isScaleLinear) {
-    yAxisText = "Algorithmic Qubits  →"
+    yAxisText = 'Algorithmic Qubits  →'
   }
 
   const maxData = data.filter((d) => maxIDs.includes(d.id))
