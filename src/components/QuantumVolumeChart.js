@@ -5,7 +5,9 @@ import * as d3 from 'd3'
 import { saveAs } from 'file-saver'
 import XMLSerializer from 'xmlserializer'
 import '../viz-style.css'
-import csv from '../quantum_volume.csv'
+import axios from 'axios'
+import config from '../config'
+import { sortByCounts } from './SortFunctions'
 
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
@@ -31,7 +33,6 @@ const domainIndex = {
   other: 3
 }
 const breakpoint = 700
-const parseDate = d3.utcParse('%m/%e/%Y')
 let isMobile = window.outerWidth < breakpoint
 let svg, d
 
@@ -117,7 +118,7 @@ function scatterplot (
   let currentMaxValue = -1
 
   if (!isScaleLinear) {
-    data = data.slice(0, -3)
+    data = data.filter((x) => x.metricValue !== 0)
   }
 
   data.map((d) => {
@@ -373,13 +374,9 @@ function scatterplot (
     .style('cursor', 'pointer')
     .style('stroke', (i) =>
       colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
-        : colors[3]
     )
     .style('fill', (i) =>
       colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
-        : colors[3]
     )
     .style('fill-opacity', (i) => circleOpacity.achieved)
     .attr('id', (i) => i.id)
@@ -720,27 +717,37 @@ function makeClass (x, y) {
   return `c${x - y}`
 }
 
-function QuantumVolumeChart () {
+function QuantumVolumeChart (props) {
   React.useEffect(() => {
-  // Draw scatterplot from data
-    d3.csv(csv, (d) => ({
-      key: +d.key,
-      name: d.name,
-      submissionId: d.submissionId,
-      platformName: d.platformName,
-      methodName: d.methodName,
-      metricName: d.metricName,
-      metricValue: +d.metricValue,
-      qubitCount: +d.qubitCount,
-      circuitDepth: +d.circuitDepth,
-      provider: d.provider,
-      tableDate: parseDate(d.tableDate),
-      arXiv: d.arXiv
-    })).then((_d) => {
-      d = _d
-      redraw()
-      window.onresize = redraw
-    })
+    // Draw scatterplot from data
+    const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
+    axios.get(taskRoute)
+      .then(res => {
+        const task = res.data.data
+        task.childTasks.sort(sortByCounts)
+        d = task.results
+          .filter((_d) => _d.metricName.toLowerCase() === 'quantum volume')
+          .map((_d) => ({
+            key: +_d.id,
+            submissionId: +_d.submissionId,
+            platformName: _d.platformName,
+            methodName: _d.methodName,
+            metricName: _d.metricName,
+            metricValue: +_d.metricValue,
+            qubitCount: _d.qubitCount ? +_d.qubitCount : '',
+            circuitDepth: _d.circuitDepth ? +_d.circuitDepth : '',
+            provider: _d.providerName ? _d.providerName.toLowerCase() : 'Other',
+            tableDate: new Date(_d.evaluatedAt),
+            arXiv: 'dummy'
+          }))
+          .sort((a, b) => a.tableDate > b.tableDate)
+        console.log(d)
+        redraw()
+        window.onresize = redraw
+      })
+      .catch(err => {
+        window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
+      })
   })
 
   return (
