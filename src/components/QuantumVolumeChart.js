@@ -737,7 +737,7 @@ function QuantumVolumeChart (props) {
             platformName: _d.platformName,
             methodName: _d.methodName,
             metricName: _d.metricName,
-            metricValue: +_d.metricValue,
+            metricValue: Math.pow(2, _d.metricValue),
             qubitCount: _d.qubitCount ? +_d.qubitCount : '',
             circuitDepth: _d.circuitDepth ? +_d.circuitDepth : '',
             provider: _d.providerName ? _d.providerName.toLowerCase() : 'Other',
