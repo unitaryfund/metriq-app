@@ -741,7 +741,6 @@ function QuantumVolumeChart (props) {
             arXiv: 'dummy'
           }))
           .sort((a, b) => a.tableDate > b.tableDate)
-        console.log(d)
         redraw()
         window.onresize = redraw
       })
