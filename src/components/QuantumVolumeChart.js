@@ -374,9 +374,13 @@ function scatterplot (
     .style('cursor', 'pointer')
     .style('stroke', (i) =>
       colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
     )
     .style('fill', (i) =>
       colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
     )
     .style('fill-opacity', (i) => circleOpacity.achieved)
     .attr('id', (i) => i.id)
