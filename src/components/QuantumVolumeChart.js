@@ -728,6 +728,14 @@ function QuantumVolumeChart (props) {
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
+        for (let i = 0; i < task.results.length; ++i) {
+          if (task.results[i].submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
+            const parts = task.results[i].submissionUrl.split('/')
+            task.results[i].arXiv = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
+          } else {
+            task.results[i].arXiv = task.results[i].methodName
+          }
+        }
         task.childTasks.sort(sortByCounts)
         d = task.results
           .filter((_d) => _d.metricName.toLowerCase() === 'quantum volume')
@@ -737,12 +745,12 @@ function QuantumVolumeChart (props) {
             platformName: _d.platformName,
             methodName: _d.methodName,
             metricName: _d.metricName,
-            metricValue: Math.pow(2, _d.metricValue),
+            metricValue: _d.metricValue,
             qubitCount: _d.qubitCount ? +_d.qubitCount : '',
             circuitDepth: _d.circuitDepth ? +_d.circuitDepth : '',
             provider: _d.providerName ? _d.providerName.toLowerCase() : 'Other',
             tableDate: new Date(_d.evaluatedAt),
-            arXiv: 'dummy'
+            arXiv: _d.arXiv
           }))
           .sort((a, b) => a.tableDate > b.tableDate)
         redraw()
