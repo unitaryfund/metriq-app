@@ -118,7 +118,7 @@ function scatterplot (
   let currentMaxValue = -1
 
   if (!isScaleLinear) {
-    data = data.filter((x) => x.metricValue !== 0)
+    data = data.filter((x) => x.metricValue > 1)
   }
 
   data.map((d) => {
