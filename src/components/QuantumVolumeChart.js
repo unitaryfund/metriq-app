@@ -728,6 +728,9 @@ function QuantumVolumeChart (props) {
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
+        if (this.props.onLoadData) {
+          this.props.onLoadData(task)
+        }
         for (let i = 0; i < task.results.length; ++i) {
           if (task.results[i].submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
             const parts = task.results[i].submissionUrl.split('/')
