@@ -11,7 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CategoryScroll from '../components/CategoryScroll'
-import { parse } from 'json2csv'
+import { Parser } from '@json2csv/plainjs'
 import Commento from '../components/Commento'
 import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
@@ -190,7 +190,8 @@ class Task extends React.Component {
   handleCsvExport () {
     const fields = Object.keys(this.state.resultsJson[0])
     const opts = { fields }
-    const csv = parse(this.state.resultsJson, opts)
+    const parser = new Parser(opts)
+    const csv = parser.parse(this.state.resultsJson)
 
     const element = document.createElement('a')
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
