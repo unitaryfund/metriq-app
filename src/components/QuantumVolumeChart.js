@@ -6,8 +6,8 @@ import { saveAs } from 'file-saver'
 import XMLSerializer from 'xmlserializer'
 import '../viz-style.css'
 import axios from 'axios'
-import config from '../config'
 import { sortByCounts } from './SortFunctions'
+import config from '../config'
 
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
@@ -34,7 +34,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d
+let svg, d, metricNames, metricName
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -104,8 +104,7 @@ function scatterplot (
 ) {
   data = data
     .filter(
-      (d) =>
-        !isNaN(d[xName]) && d[xName] > 0 && !isNaN(d[yName]) && d[yName] > 0
+      (x) =>  (!isNaN(x[xName]) && x[xName] > 0 && !isNaN(x[yName]) && x[yName] > 0)
     )
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
@@ -117,6 +116,7 @@ function scatterplot (
   let maxIDs = []
   let currentMaxValue = -1
 
+  data = data.filter((x) => x.metricName.toLowerCase() === metricName.toLowerCase())
   if (!isScaleLinear) {
     data = data.filter((x) => x.metricValue > 1)
   }
@@ -728,20 +728,43 @@ function QuantumVolumeChart (props) {
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
+        task.childTasks.sort(sortByCounts)
         if (props.onLoadData) {
           props.onLoadData(task)
         }
-        for (let i = 0; i < task.results.length; ++i) {
-          if (task.results[i].submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
-            const parts = task.results[i].submissionUrl.split('/')
-            task.results[i].arXiv = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
+        const results = task.results
+        metricNames = []
+        metricName = ''
+        const metricNameCounts = []
+        for (let i = 0; i < results.length; ++i) {
+          if (results[i].submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
+            const parts = results[i].submissionUrl.split('/')
+            results[i].arXiv = (parts[parts.length - 1] === '') ? parts[parts.length - 2] : parts[parts.length - 1]
           } else {
-            task.results[i].arXiv = task.results[i].methodName
+            results[i].arXiv = results[i].methodName
+          }
+
+          if (metricNames.includes(results[i].metricName)) {
+            ++metricNameCounts[metricNames.indexOf(results[i].metricName)]
+          } else {
+            metricNames.push(results[i].metricName)
+            metricNameCounts.push(1)
+            if (results[i].metricName.toLowerCase() === 'quantum volume') {
+              metricName = 'quantum volume'
+            }
           }
         }
-        task.childTasks.sort(sortByCounts)
-        d = task.results
-          .filter((_d) => _d.metricName.toLowerCase() === 'quantum volume')
+        if (metricName === '') {
+          let maxCount = metricNameCounts[0]
+          let maxCountIndex = 0
+          for (let i = 1; i < metricNames.length; ++i) {
+            if (metricNameCounts[i] > maxCount) {
+              maxCountIndex = i
+            }
+          }
+          metricName = metricNames[maxCountIndex]
+        }
+        d = results
           .map((_d) => ({
             key: +_d.id,
             submissionId: +_d.submissionId,
