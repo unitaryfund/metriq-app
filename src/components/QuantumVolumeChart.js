@@ -85,7 +85,7 @@ function scatterplot (
   xName = 'tableDate', // the x column
   xAxisText = 'Date →',
   yName = 'metricValue', // the y column
-  yAxisText = 'Quantum Volume  →',
+  yAxisText = 'log2(quantum volume)  →',
   chartTarget = '#my_dataviz', // html target element to attach chart
   chartHeight = 600, // chart height
   marginTop = 40, // top margin, in pixels
@@ -134,7 +134,7 @@ function scatterplot (
 
   const yScaleType = isScaleLinear ? d3.scaleLinear : d3.scaleLog
   if (!isScaleLinear) {
-    yAxisText = 'Algorithmic Qubits  →'
+    yAxisText = 'log2(quantum volume)  →'
   }
 
   const maxData = data.filter((d) => maxIDs.includes(d.id))
