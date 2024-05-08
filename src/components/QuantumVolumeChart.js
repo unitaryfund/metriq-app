@@ -34,7 +34,8 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricNames, metricName
+let svg, d, metricName
+let metricNames = []
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -49,6 +50,10 @@ function onArxivSwitchClick () {
 let isScaleLinear = false
 function onScaleSwitchClick () {
   isScaleLinear = !isScaleLinear
+  redraw()
+}
+function onMetricSelectChange (e) {
+  metricName = metricNames[parseInt(e.target.value)]
   redraw()
 }
 function onDownloadClick () {
@@ -115,6 +120,8 @@ function scatterplot (
 
   let maxIDs = []
   let currentMaxValue = -1
+
+  console.log(metricName)
 
   data = data.filter((x) => x.metricName.toLowerCase() === metricName.toLowerCase())
   if (!isScaleLinear) {
@@ -818,6 +825,14 @@ function QuantumVolumeChart (props) {
                 <span className='slider round' />
               </label>
               <span className='legendTitle'>Log | Linear</span>
+            </div>
+            <div id='legend-switch' style={{ marginTop: '10px' }}>
+              <label className='switch' style={{ width: '50%' }}>
+                <select id='metricSelect' style={{ width: '100%' }} onChange={onMetricSelectChange}>
+                  {metricNames.map((option, index) => <option key={index} value={index}>{option}</option>)}
+                </select>
+              </label>
+              <span className='legendTitle' style={{ width: '50%', marginTop: '10px' }}> Metric</span>
             </div>
           </div>
           <div>
