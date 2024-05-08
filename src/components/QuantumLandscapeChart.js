@@ -466,7 +466,7 @@ function mousemove (
           idData.submission_id
         }" style="color: ${
         colors[domainIndex[idData.domain]]
-      }; filter: brightness(0.85)">→ explore submission</a>
+      }; filter: brightness(0.85)"></a>
       </div>`
     )
     // triangle
