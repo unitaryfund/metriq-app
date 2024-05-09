@@ -34,7 +34,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricName
+let svg, d, metricName, taskName
 let metricNames = []
 
 let areLabelsVisible = false
@@ -89,10 +89,10 @@ function hideLabels () {
 function scatterplot (
   data,
   isScaleLinear = false,
-  xName = 'tableDate', // the x column
-  xAxisText = 'Date →',
-  yName = 'metricValue', // the y column
   yAxisText = 'Quantum Volume  →',
+  yName = 'metricValue', // the y column
+  xAxisText = 'Date →',
+  xName = 'tableDate', // the x column
   chartTarget = '#my_dataviz', // html target element to attach chart
   chartHeight = 600, // chart height
   marginTop = 40, // top margin, in pixels
@@ -398,7 +398,7 @@ function scatterplot (
     .attr('class', (i) => makeClass(x(i), y(i)))
     .attr('submissionId', (i) => i.submissionId)
     .attr('label', (i) => {
-      if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else return i.platformName
+      if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else return I.platformName ? i.platformName : i.methodName
     })
     .on('click', function () {
       if (!isMobile) {
@@ -606,7 +606,7 @@ function redraw () {
   d3.select('#svgscatter').remove()
   d3.select('#scatter-tooltip').remove()
   d3.selectAll('#svglegend').remove()
-  scatterplot(d, isScaleLinear)
+  scatterplot(d, isScaleLinear, metricName)
   legend()
   window.scrollTo(0, scroll)
 }
@@ -734,11 +734,15 @@ function QuantumVolumeChart (props) {
     if (metricNames.length > 0) {
       return
     }
+    if (props.taskId !== 34) {
+      isScaleLinear = true
+    }
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
+        taskName = task.fullName
         task.childTasks.sort(sortByCounts)
         if (props.onLoadData) {
           props.onLoadData(task)
@@ -811,7 +815,7 @@ function QuantumVolumeChart (props) {
     <span>
       <div className='row'>
         <div className='col text-left'>
-          <h4 align='left'>Quantum Volume</h4>
+          <h4 align='left'>{taskName}</h4>
         </div>
       </div>
       <div id='cargo'>

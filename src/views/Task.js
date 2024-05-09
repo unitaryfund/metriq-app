@@ -20,7 +20,6 @@ import { sortByCounts } from '../components/SortFunctions'
 import { renderLatex } from '../components/RenderLatex'
 import TopSubmitters from '../components/TopSubmitters'
 import SubmissionScroll from '../components/SubmissionScroll'
-const SotaChart = React.lazy(() => import('../components/SotaChart'))
 const QuantumVolumeChart = React.lazy(() => import('../components/QuantumVolumeChart'))
 
 library.add(faEdit)
@@ -230,18 +229,7 @@ class Task extends React.Component {
               </div>
               <br />
             </span>}
-          {!this.state.item.isHideChart && this.props.match.params.id !== '34' &&
-            <Suspense fallback={<div>Loading...</div>}>
-              <SotaChart
-                chartId='task-detail'
-                xLabel='Time'
-                taskId={this.props.match.params.id}
-                onLoadData={this.handleOnLoadData}
-                logBase='2'
-                onCsvExport={this.handleCsvExport}
-              />
-            </Suspense>}
-          {!this.state.item.isHideChart && this.props.match.params.id === '34' &&
+          {!this.state.item.isHideChart &&
             <Suspense fallback={<div>Loading...</div>}>
               <QuantumVolumeChart
                 chartId='task-detail'
