@@ -34,7 +34,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricName, taskName
+let svg, d, metricName, taskName, taskId
 let metricNames = []
 
 let areLabelsVisible = false
@@ -731,10 +731,11 @@ function makeClass (x, y) {
 
 function QuantumVolumeChart (props) {
   React.useEffect(() => {
-    if (metricNames.length > 0) {
+    if (taskId === props.taskId) {
       return
     }
-    if (props.taskId !== 34) {
+    taskId = props.taskId
+    if (parseInt(taskId) !== 34) {
       isScaleLinear = true
     }
     // Draw scatterplot from data
@@ -841,7 +842,7 @@ function QuantumVolumeChart (props) {
                 <input id='isScaleLinearSwitch' type='checkbox' onClick={onScaleSwitchClick} />
                 <span className='slider round' />
               </label>
-              <span className='legendTitle'>Log | Linear</span>
+              <span className='legendTitle'>{isScaleLinear ? 'Linear | Log' : 'Log | Linear'}</span>
             </div>
             <div id='legend-switch' style={{ marginTop: '10px' }}>
               <label className='switch' style={{ width: '50%' }}>
