@@ -143,7 +143,7 @@ function scatterplot (
 
   const yScaleType = (isScaleLinear || isQv) ? d3.scaleLinear : d3.scaleLog
   if (isQv && !isScaleLinear) {
-    yAxisText = 'Algorithmic Qubits  →'
+    yAxisText = 'Log-2 Quantum Volume  →'
   }
 
   const maxData = data.filter((d) => maxIDs.includes(d.id))
@@ -773,6 +773,17 @@ function QuantumVolumeChart (props) {
             }
           }
           metricName = metricNames[maxCountIndex]
+          if (maxCountIndex > 0) {
+            const tmp = metricNames[0]
+            metricNames[0] = metricNames[maxCountIndex]
+            metricNames[maxCountIndex] = tmp
+          }
+        } else {
+          const tmp = metricNames.indexOf(metricName)
+          if (tmp > 0) {
+            metricNames[tmp] = metricNames[0]
+            metricNames[0] = metricName
+          }
         }
         d = results
           .map((_d) => ({
