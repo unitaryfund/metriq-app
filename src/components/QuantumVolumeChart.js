@@ -53,7 +53,8 @@ function onScaleSwitchClick () {
   redraw()
 }
 function onMetricSelectChange (e) {
-  metricName = metricNames[parseInt(e.target.value)]
+  console.log(e.target.value)
+  metricName = e.target.value
   redraw()
 }
 function onDownloadClick () {
@@ -730,6 +731,9 @@ function makeClass (x, y) {
 
 function QuantumVolumeChart (props) {
   React.useEffect(() => {
+    if (metricNames.length > 0) {
+      return
+    }
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
@@ -740,7 +744,6 @@ function QuantumVolumeChart (props) {
           props.onLoadData(task)
         }
         const results = task.results
-        metricNames = []
         metricName = ''
         const metricNameCounts = []
         for (let i = 0; i < results.length; ++i) {
@@ -787,12 +790,11 @@ function QuantumVolumeChart (props) {
           }))
           .sort((a, b) => a.tableDate > b.tableDate)
         redraw()
-        window.onresize = redraw
       })
       .catch(err => {
         window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
       })
-  })
+  });
 
   return (
     <span>
@@ -829,7 +831,7 @@ function QuantumVolumeChart (props) {
             <div id='legend-switch' style={{ marginTop: '10px' }}>
               <label className='switch' style={{ width: '50%' }}>
                 <select id='metricSelect' style={{ width: '100%' }} onChange={onMetricSelectChange}>
-                  {metricNames.map((option, index) => <option key={index} value={index}>{option}</option>)}
+                  {metricNames.map((option, index) => <option key={index} value={option}>{option}</option>)}
                 </select>
               </label>
               <span className='legendTitle' style={{ width: '50%', marginTop: '10px' }}> Metric</span>
