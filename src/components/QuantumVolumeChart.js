@@ -122,15 +122,15 @@ function scatterplot (
   let maxIDs = []
   let currentMaxValue = -1
 
-  console.log(metricName)
-
   data = data.filter((x) => x.metricName.toLowerCase() === metricName.toLowerCase())
   if (!isScaleLinear) {
     data = data.filter((x) => x.metricValue > 1)
   }
 
+  const isQv = (metricName.toLowerCase() === 'quantum volume')
+
   data.map((d) => {
-    if (!isScaleLinear) {
+    if (isQv && !isScaleLinear) {
       d.metricValue = Math.log2(d.metricValue)
     }
     if (Number(d.metricValue) > currentMaxValue) {
@@ -141,8 +141,8 @@ function scatterplot (
     return 0
   })
 
-  const yScaleType = isScaleLinear ? d3.scaleLinear : d3.scaleLog
-  if (!isScaleLinear) {
+  const yScaleType = (isScaleLinear || isQv) ? d3.scaleLinear : d3.scaleLog
+  if (isQv && !isScaleLinear) {
     yAxisText = 'Algorithmic Qubits  →'
   }
 
