@@ -1,9 +1,10 @@
 // QuantumLandscapeChart.js
 
 import React from 'react'
+import SortingTable from './SortingTable.js'
 import * as d3 from 'd3'
 import '../viz-style.css'
-import csv from '../progress.csv'
+import progressCsv from '../progress.csv'
 
 const fontType = 'Helvetica'
 const smallLabelSize = 12 // font size in pixel
@@ -37,6 +38,7 @@ const domainIndex = {
 const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
+let tableJson = []
 
 let areLabelsVisible = false
 function onSwitchClick () {
@@ -739,9 +741,9 @@ function legend (circleSizeFields = 8) {
 };
 
 function QuantumLandscapeChart () {
-  React.useEffect(() => {
+  React.useEffect(async () => {
   // Draw scatterplot from data
-    d3.csv(csv, (_d) => ({
+    d3.csv(progressCsv, (_d) => ({
       num_qubits: +_d.num_qubits,
       num_gates: +_d.num_gates,
       achieved: _d.achieved,
@@ -755,6 +757,18 @@ function QuantumLandscapeChart () {
       scatterplot(_d)
       legend()
       window.onresize = redraw
+    })
+    d3.csv(progressCsv, (_d) => ({
+      num_qubits: +_d.num_qubits,
+      num_gates: +_d.num_gates,
+      achieved: _d.achieved,
+      domain: _d.domain,
+      task_name: _d.task_name,
+      reference: _d.reference,
+      year: _d.year,
+      submission_id: _d.submission_id
+    })).then((_d) => {
+      tableJson = _d
     })
   })
 
@@ -792,6 +806,49 @@ function QuantumLandscapeChart () {
           <p>This chart shows two things: (1) the Achieved series in blue gives what size quantum programs have been successfully run and (2) the Estimated series shows what size programs would be needed for advantage across different domains. Here we plot the size of a quantum program by the number of qubits and number of quantum operations.</p>
           <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider. Resource estimates are based on applications where performance can be proved. This is a high bar. Estimates may be pessimistic as many heuristics need to be developed in practice. Estimates may be optimistic as they haven't been run and so could have mistakes!</p>
           <p>If you have other data you would like to see added to this chart, please email <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.</p>
+        </div>
+      </div>
+      <div className='row'>
+        <div className='col text-left'>
+          <SortingTable
+            className='detail-table'
+            columns={[{
+              title: 'Submission',
+              key: 'name',
+              width: 250
+            },
+            {
+              title: 'Method',
+              key: 'methodName',
+              width: 250
+            },
+            {
+              title: 'Platform',
+              key: 'platformName',
+              width: 250
+            },
+            {
+              title: 'Date',
+              key: 'tableDate',
+              width: 250
+            },
+            {
+              title: 'Metric',
+              key: 'metricName',
+              width: 250
+            },
+            {
+              title: 'Value',
+              key: 'metricValue',
+              width: 250
+            }]}
+            data={tableJson}
+            onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
+            tableLayout='auto'
+            rowClassName='link'
+            isCollapsible
+            collapseLabelNoun='results'
+          />
         </div>
       </div>
     </span>
