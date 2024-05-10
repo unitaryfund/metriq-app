@@ -5,6 +5,7 @@ import SortingTable from './SortingTable.js'
 import * as d3 from 'd3'
 import '../viz-style.css'
 import progressCsv from '../progress.csv'
+import progressTable from '../progressTable.csv'
 
 const fontType = 'Helvetica'
 const smallLabelSize = 12 // font size in pixel
@@ -742,7 +743,7 @@ function legend (circleSizeFields = 8) {
 
 function QuantumLandscapeChart () {
   React.useEffect(async () => {
-  // Draw scatterplot from data
+    // Draw scatterplot from data
     d3.csv(progressCsv, (_d) => ({
       num_qubits: +_d.num_qubits,
       num_gates: +_d.num_gates,
@@ -758,16 +759,7 @@ function QuantumLandscapeChart () {
       legend()
       window.onresize = redraw
     })
-    d3.csv(progressCsv, (_d) => ({
-      num_qubits: +_d.num_qubits,
-      num_gates: +_d.num_gates,
-      achieved: _d.achieved,
-      domain: _d.domain,
-      task_name: _d.task_name,
-      reference: _d.reference,
-      year: _d.year,
-      submission_id: _d.submission_id
-    })).then((_d) => {
+    d3.csv(progressTable, (_d) => _d).then((_d) => {
       tableJson = _d
     })
   })
@@ -813,23 +805,8 @@ function QuantumLandscapeChart () {
           <SortingTable
             className='detail-table'
             columns={[{
-              title: 'Submission',
-              key: 'name',
-              width: 250
-            },
-            {
-              title: 'Method',
-              key: 'methodName',
-              width: 250
-            },
-            {
-              title: 'Platform',
-              key: 'platformName',
-              width: 250
-            },
-            {
               title: 'Date',
-              key: 'tableDate',
+              key: 'evaluatedAt',
               width: 250
             },
             {

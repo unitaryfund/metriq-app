@@ -35,7 +35,7 @@ const domainIndex = {
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
 let svg, d, metricName, taskName, taskId
-let metricNames = []
+const metricNames = []
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -110,7 +110,7 @@ function scatterplot (
 ) {
   data = data
     .filter(
-      (x) =>  (!isNaN(x[xName]) && x[xName] > 0 && !isNaN(x[yName]) && x[yName] > 0)
+      (x) => (!isNaN(x[xName]) && x[xName] > 0 && !isNaN(x[yName]) && x[yName] > 0)
     )
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
@@ -770,7 +770,7 @@ function QuantumVolumeChart (props) {
           }
         }
         if (metricName === '') {
-          let maxCount = metricNameCounts[0]
+          const maxCount = metricNameCounts[0]
           let maxCountIndex = 0
           for (let i = 1; i < metricNames.length; ++i) {
             if (metricNameCounts[i] > maxCount) {
@@ -810,7 +810,7 @@ function QuantumVolumeChart (props) {
       .catch(err => {
         window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
       })
-  });
+  })
 
   return (
     <span>

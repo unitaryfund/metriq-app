@@ -33,7 +33,7 @@ const percentileZ = (p) => {
 const chartComponents = [LinearScale, LogarithmicScale, TimeScale, CategoryScale, PointElement, LineElement, BarElement, ScatterController, BarController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
-let chart = null
+const chart = null
 
 class SotaChart extends React.Component {
   constructor (props) {
