@@ -23,7 +23,7 @@ const Sota = (props) => {
         submissionId={642}
         taskId={34}
         method={<Link to={'/Platform/' + 80}>Quantinuum System Model H1-1</Link>}
-        architecture={<Link to={'/Archicture/' + 2}>Ion</Link>}
+        architecture={<Link to={'/Architecture/' + 2}>Ion</Link>}
         isPlatform
       />
       <SotaItem
