@@ -152,9 +152,9 @@ function scatterplot (
   // initiate svg
   svg = d3
     .select(chartTarget)
-    .on('mouseout touchend', (e) =>
-      redraw()
-    )
+    //.on('mouseout touchend', (e) =>
+    //  redraw()
+    //)
     .append('svg')
     .attr('viewBox', [0, 0, chartWidth, chartHeight])
     .attr('id', 'svgscatter')
