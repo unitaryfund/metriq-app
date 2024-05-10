@@ -39,7 +39,6 @@ const domainIndex = {
 const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
-let tableJson = []
 
 let areLabelsVisible = false
 function onSwitchClick () {
@@ -742,7 +741,8 @@ function legend (circleSizeFields = 8) {
 };
 
 function QuantumLandscapeChart () {
-  React.useEffect(async () => {
+  const [tableJson, setTableJson] = React.useState([])
+  React.useEffect(() => {
     // Draw scatterplot from data
     d3.csv(progressCsv, (_d) => ({
       num_qubits: +_d.num_qubits,
@@ -759,10 +759,14 @@ function QuantumLandscapeChart () {
       legend()
       window.onresize = redraw
     })
-    d3.csv(progressTable, (_d) => _d).then((_d) => {
-      tableJson = _d
+    d3.csv(progressTable, (_d) => ({
+      metricName: _d.metricName,
+      metricValue: _d.metricValue,
+      evaluatedAt: _d.evaluatedAt
+    })).then((_d) => {
+      setTableJson(_d)
     })
-  })
+  },[])
 
   return (
     <span>
