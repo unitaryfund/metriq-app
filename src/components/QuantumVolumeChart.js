@@ -35,7 +35,6 @@ const domainIndex = {
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
 let svg, d, metricName, taskName, taskId
-const metricNames = []
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -730,14 +729,13 @@ function makeClass (x, y) {
 }
 
 function QuantumVolumeChart (props) {
+  const [metricNames, setMetricNames] = React.useState([])
   React.useEffect(() => {
+    isScaleLinear = (parseInt(props.taskId) !== 34)
     if (taskId === props.taskId) {
       return
     }
     taskId = props.taskId
-    if (parseInt(taskId) !== 34) {
-      isScaleLinear = true
-    }
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
@@ -790,6 +788,7 @@ function QuantumVolumeChart (props) {
             metricNames[0] = metricName
           }
         }
+        setMetricNames(metricNames)
         d = results
           .map((_d) => ({
             key: +_d.id,
