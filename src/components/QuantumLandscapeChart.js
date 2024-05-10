@@ -762,7 +762,10 @@ function QuantumLandscapeChart () {
     d3.csv(progressTable, (_d) => ({
       metricName: _d.metricName,
       metricValue: _d.metricValue,
-      evaluatedAt: _d.evaluatedAt
+      evaluatedAt: _d.evaluatedAt,
+      submissionName: _d.submissionName,
+      taskName: _d.taskName,
+      submissionId: _d.submissionId
     })).then((_d) => {
       setTableJson(_d)
     })
@@ -809,6 +812,16 @@ function QuantumLandscapeChart () {
           <SortingTable
             className='detail-table'
             columns={[{
+              title: 'Task',
+              key: 'taskName',
+              width: 250
+            },
+            {
+              title: 'Submission',
+              key: 'submissionName',
+              width: 250
+            },
+            {
               title: 'Date',
               key: 'evaluatedAt',
               width: 250
@@ -824,7 +837,7 @@ function QuantumLandscapeChart () {
               width: 250
             }]}
             data={tableJson}
-            onRowClick={(record) => this.props.history.push('/Submission/' + record.submissionId)}
+            onRowClick={(record) => window.location.href = ('/Submission/' + record.submissionId)}
             tableLayout='auto'
             rowClassName='link'
             isCollapsible
