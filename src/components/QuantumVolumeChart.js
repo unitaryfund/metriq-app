@@ -52,7 +52,6 @@ function onScaleSwitchClick () {
   redraw()
 }
 function onMetricSelectChange (e) {
-  console.log(e.target.value)
   metricName = e.target.value
   redraw()
 }
@@ -84,8 +83,238 @@ function hideLabels () {
   })
 }
 
-// Function to draw scatterplot
+function barplot (
+  data,
+  xRange,
+  yRange,
+  yDomain
+) {
+  const width = xRange[1] - xRange[0]
+  const height = yRange[1] - yRange[0]
+  const x = d3.scaleBand()
+    .range([0, width])
+    .domain(data.map((i) => { if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
+    .padding(0.2)
+  svg.append('g')
+    .attr('transform', 'translate(0,' + height + ')')
+    .call(d3.axisBottom(x))
+    .selectAll('text')
+    .attr('transform', 'translate(-10,0)rotate(-45)')
+    .style('text-anchor', 'end')
+
+  // Add Y axis
+  const y = (isScaleLinear ? d3.scaleLinear() : d3.scaleLog())
+    .domain([yDomain[0], yDomain[1]])
+    .range([height, 0])
+
+  // Bars
+  svg.selectAll('bar')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('x', (i) => { if (i.arXiv && areLabelsArxiv) { return x(`arXiv:${i.arXiv}`) } else { return x(i.platformName ? i.platformName : i.methodName) } })
+    .attr('y', (i) => y(i.metricValue))
+    .attr('width', x.bandwidth())
+    .attr('height', (i) => (height - y(i.metricValue)))
+    .attr('fill', '#69b3a2')
+}
+
 function scatterplot (
+  data,
+  yName, // the y column
+  xName, // the x column
+  marginRight, // right margin, in pixels
+  xlabelDistance,
+  I,
+  voronoi,
+  xRange,
+  xScale,
+  x,
+  yScale,
+  y,
+  maxIDs,
+  maxData,
+  tooltipLineColor,
+  tooltipLineStrokeTexture,
+  horizontalLineStrokeSize,
+  tickInterval,
+  marginBottom,
+  chartHeight,
+  chartWidth,
+  xLabelShift,
+  xAxisText
+) {
+  const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
+  // append x axis
+  svg
+    .append('g')
+    .attr('transform', `translate(0,${chartHeight - marginBottom})`)
+    .attr('class', 'xaxis')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .call(xAxis)
+    .call((g) =>
+      g
+        .append('text')
+        .attr('x', chartWidth - marginRight)
+        .attr('y', marginBottom - 4)
+        .attr('transform', `translate(0,${-xLabelShift})`)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'end')
+        .text(xAxisText)
+    )
+
+  // max lines (h + v)
+  svg
+    .append('g')
+    .selectAll('line')
+    .data(maxData.slice(0, maxData.length - 1))
+    .join('line')
+    .attr('x1', (i) => xScale(x(i)) + circleSize)
+    .attr('y1', (i) => yScale(y(i)))
+    .attr('x2', (i) => xScale(i.nextX))
+    .attr('y2', (i) => yScale(y(i)))
+    .style('stroke', tooltipLineColor)
+    .style('stroke-width', horizontalLineStrokeSize)
+    .style('stroke-dasharray', tooltipLineStrokeTexture)
+  svg
+    .append('g')
+    .selectAll('line')
+    .data(maxData.slice(0, maxData.length - 1))
+    .join('line')
+    .attr('x1', (i) => xScale(i.nextX))
+    .attr('y1', (i) => yScale(y(i)))
+    .attr('x2', (i) => xScale(i.nextX))
+    .attr('y2', (i) => yScale(i.nextY) + circleSize)
+    .style('stroke', tooltipLineColor)
+    .style('stroke-width', horizontalLineStrokeSize)
+    .style('stroke-dasharray', tooltipLineStrokeTexture)
+
+  // voronoi grid
+  svg
+    .append('g')
+    .attr('stroke', 'none')
+    .attr('fill', '#00000000')
+    .selectAll('path')
+    .data(I)
+    .join('path')
+    .attr('d', (i) => voronoi.renderCell(i))
+    .attr('id', function (i) {
+      return data[i].id
+    })
+    .attr('class', function (i) {
+      return makeClass(data[i][xName], data[i][yName])
+    })
+  // .attr("centroid_x", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[0])
+  // .attr("centroid_y", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[1])
+  // .classed("voronoi", true)
+    .on('mousemove touchstart', (e) =>
+      mousemove(
+        e,
+        marginRight,
+        xRange,
+        data,
+        colors,
+        domainIndex,
+        fontType,
+        smallLabelSize
+      )
+    )
+
+  // append circles
+  svg
+    .append('g')
+    .attr('stroke-width', strokeSize)
+    .selectAll('circle')
+    .data(data)
+    .join('circle')
+    .attr('cx', (i) => xScale(x(i)))
+    .attr('cy', (i) => yScale(y(i)))
+    .attr('r', circleSize)
+    .style('cursor', 'pointer')
+    .style('stroke', (i) =>
+      colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
+    )
+    .style('fill', (i) =>
+      colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
+    )
+    .style('fill-opacity', (i) => circleOpacity.achieved)
+    .attr('id', (i) => i.id)
+    .attr('class', (i) => {
+      return maxIDs.includes(i.id) ? 'haslabel' : null
+    })
+    .attr('class', (i) => makeClass(x(i), y(i)))
+    .attr('submissionId', (i) => i.submissionId)
+    .attr('label', (i) => {
+      if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else return i.platformName ? i.platformName : i.methodName
+    })
+    .on('click', function () {
+      if (!isMobile) {
+        const submissionId = d3.select(this).attr('submissionId')
+        window.open(`https://metriq.info/Submission/${submissionId}`)
+      }
+    })
+    .on('mousemove touchstart', (e) =>
+      mousemove(
+        e,
+        marginRight,
+        xRange,
+        data,
+        colors,
+        domainIndex,
+        fontType,
+        smallLabelSize
+      )
+    )
+
+  // label
+  d3.selectAll('circle').each(function (d, i) {
+    const id = d3.select(this).attr('id')
+
+    if (maxIDs.includes(id)) {
+      const x = d3.select(`circle#${id}`).attr('cx')
+      const y = d3.select(`circle#${id}`).attr('cy')
+
+      const svgWidth = d3
+        .select('#svgscatter')
+        .node()
+        .getBoundingClientRect().width
+
+      const turnLabelBreakpoint = isMobile
+        ? (svgWidth / 3) * 1.5
+        : svgWidth / 3
+
+      svg
+        .append('text')
+        .attr(
+          'x',
+          x > turnLabelBreakpoint
+            ? Number(x) - xlabelDistance
+            : Number(x) + xlabelDistance
+        )
+        .attr('y', Number(y))
+        .attr('class', 'labeltohide')
+        .style(
+          'visibility',
+          areLabelsVisible ? 'visible' : 'hidden'
+        )
+        .style(
+          'font-size',
+          isMobile ? `${mobileLabelSize}px` : `${smallLabelSize}px`
+        )
+        .style('font-family', fontType)
+        .attr('text-anchor', x > turnLabelBreakpoint ? 'end' : 'start')
+        .text(`${d3.select(`circle#${id}`).attr('label')}`)
+    }
+  })
+}
+
+// Function to draw scatterplot
+function plot (
   data,
   isScaleLinear = false,
   yAxisText = 'Quantum Volume  →',
@@ -187,9 +416,7 @@ function scatterplot (
   // For a less crowded x axis, especially if we increase fontsize for labels
   const tickInterval = d3.timeMonth.every(12)
 
-  // axes
-  const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
-  // Otherwise ticks label position in log scale must be declared manually
+  // y axis
   const yAxis = isScaleLinear ? d3.axisLeft(yScale).tickFormat(d3.format('~s')) : d3.axisLeft(yScale)
 
   // voronoi generator
@@ -212,25 +439,6 @@ function scatterplot (
     .attr('id', 'svgscatter')
     .attr('style', 'max-width: 100%')
 
-  // append x axis
-  svg
-    .append('g')
-    .attr('transform', `translate(0,${chartHeight - marginBottom})`)
-    .attr('class', 'xaxis')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .call(xAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('x', chartWidth - marginRight)
-        .attr('y', marginBottom - 4)
-        .attr('transform', `translate(0,${-xLabelShift})`)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .text(xAxisText)
-    )
-
   // append y axis
   svg
     .append('g')
@@ -250,32 +458,6 @@ function scatterplot (
         .attr('font-size', `${smallLabelSize}px`)
         .text(yAxisText)
     )
-
-  // max lines (h + v)
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(maxData.slice(0, maxData.length - 1))
-    .join('line')
-    .attr('x1', (i) => xScale(x(i)) + circleSize)
-    .attr('y1', (i) => yScale(y(i)))
-    .attr('x2', (i) => xScale(i.nextX))
-    .attr('y2', (i) => yScale(y(i)))
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(maxData.slice(0, maxData.length - 1))
-    .join('line')
-    .attr('x1', (i) => xScale(i.nextX))
-    .attr('y1', (i) => yScale(y(i)))
-    .attr('x2', (i) => xScale(i.nextX))
-    .attr('y2', (i) => yScale(i.nextY) + circleSize)
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
 
   // tooltip vlines
   svg
@@ -337,127 +519,48 @@ function scatterplot (
     .style('font-family', fontType)
     .text((i) => d3.format('.2s')(y(i)))
 
-  // voronoi grid
-  svg
-    .append('g')
-    .attr('stroke', 'none')
-    .attr('fill', '#00000000')
-    .selectAll('path')
-    .data(I)
-    .join('path')
-    .attr('d', (i) => voronoi.renderCell(i))
-    .attr('id', function (i) {
-      return data[i].id
-    })
-    .attr('class', function (i) {
-      return makeClass(data[i][xName], data[i][yName])
-    })
-  // .attr("centroid_x", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[0])
-  // .attr("centroid_y", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[1])
-  // .classed("voronoi", true)
-    .on('mousemove touchstart', (e) =>
-      mousemove(
-        e,
-        marginRight,
-        xRange,
-        data,
-        colors,
-        domainIndex,
-        fontType,
-        smallLabelSize
-      )
-    )
-
-  // append circles
-  svg
-    .append('g')
-    .attr('stroke-width', strokeSize)
-    .selectAll('circle')
-    .data(data)
-    .join('circle')
-    .attr('cx', (i) => xScale(x(i)))
-    .attr('cy', (i) => yScale(y(i)))
-    .attr('r', circleSize)
-    .style('cursor', 'pointer')
-    .style('stroke', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
-        : colors[3]
-    )
-    .style('fill', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
-        : colors[3]
-    )
-    .style('fill-opacity', (i) => circleOpacity.achieved)
-    .attr('id', (i) => i.id)
-    .attr('class', (i) => {
-      return maxIDs.includes(i.id) ? 'haslabel' : null
-    })
-    .attr('class', (i) => makeClass(x(i), y(i)))
-    .attr('submissionId', (i) => i.submissionId)
-    .attr('label', (i) => {
-      if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else return I.platformName ? i.platformName : i.methodName
-    })
-    .on('click', function () {
-      if (!isMobile) {
-        const submissionId = d3.select(this).attr('submissionId')
-        window.open(`https://metriq.info/Submission/${submissionId}`)
-      }
-    })
-    .on('mousemove touchstart', (e) =>
-      mousemove(
-        e,
-        marginRight,
-        xRange,
-        data,
-        colors,
-        domainIndex,
-        fontType,
-        smallLabelSize
-      )
-    )
-
-  // label
-  d3.selectAll('circle').each(function (d, i) {
-    const id = d3.select(this).attr('id')
-
-    if (maxIDs.includes(id)) {
-      const x = d3.select(`circle#${id}`).attr('cx')
-      const y = d3.select(`circle#${id}`).attr('cy')
-
-      const svgWidth = d3
-        .select('#svgscatter')
-        .node()
-        .getBoundingClientRect().width
-
-      const turnLabelBreakpoint = isMobile
-        ? (svgWidth / 3) * 1.5
-        : svgWidth / 3
-
-      svg
-        .append('text')
-        .attr(
-          'x',
-          x > turnLabelBreakpoint
-            ? Number(x) - xlabelDistance
-            : Number(x) + xlabelDistance
-        )
-        .attr('y', Number(y))
-        .attr('class', 'labeltohide')
-        .style(
-          'visibility',
-          areLabelsVisible ? 'visible' : 'hidden'
-        )
-        .style(
-          'font-size',
-          isMobile ? `${mobileLabelSize}px` : `${smallLabelSize}px`
-        )
-        .style('font-family', fontType)
-        .attr('text-anchor', x > turnLabelBreakpoint ? 'end' : 'start')
-        .text(`${d3.select(`circle#${id}`).attr('label')}`)
+  let isSameDate = true
+  for (let i = 1; i < data.length; ++i) {
+    if (data[0].tableDate !== data[i].tableDate) {
+      isSameDate = false
+      break
     }
-  })
+  }
+
+  if (isSameDate) {
+    barplot(
+      data,
+      xRange,
+      yRange,
+      yDomain
+    )
+  } else {
+    scatterplot(
+      data,
+      yName, // the y column
+      xName, // the x column
+      marginRight, // right margin, in pixels
+      xlabelDistance,
+      I,
+      voronoi,
+      xRange,
+      xScale,
+      x,
+      yScale,
+      y,
+      maxIDs,
+      maxData,
+      tooltipLineColor,
+      tooltipLineStrokeTexture,
+      horizontalLineStrokeSize,
+      tickInterval,
+      marginBottom,
+      chartHeight,
+      chartWidth,
+      xLabelShift,
+      xAxisText
+    )
+  }
 }
 
 function mousemove (
@@ -605,7 +708,7 @@ function redraw () {
   d3.select('#svgscatter').remove()
   d3.select('#scatter-tooltip').remove()
   d3.selectAll('#svglegend').remove()
-  scatterplot(d, isScaleLinear, metricName)
+  plot(d, isScaleLinear, metricName)
   legend()
   window.scrollTo(0, scroll)
 }
@@ -800,7 +903,7 @@ function QuantumVolumeChart (props) {
             qubitCount: _d.qubitCount ? +_d.qubitCount : '',
             circuitDepth: _d.circuitDepth ? +_d.circuitDepth : '',
             provider: _d.providerName ? _d.providerName.toLowerCase() : 'Other',
-            tableDate: new Date(_d.evaluatedAt),
+            tableDate: Date.parse(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
           .sort((a, b) => a.tableDate > b.tableDate)

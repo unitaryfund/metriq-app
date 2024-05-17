@@ -152,9 +152,9 @@ function scatterplot (
   // initiate svg
   svg = d3
     .select(chartTarget)
-    //.on('mouseout touchend', (e) =>
+    // .on('mouseout touchend', (e) =>
     //  redraw()
-    //)
+    // )
     .append('svg')
     .attr('viewBox', [0, 0, chartWidth, chartHeight])
     .attr('id', 'svgscatter')
@@ -769,7 +769,7 @@ function QuantumLandscapeChart () {
     })).then((_d) => {
       setTableJson(_d)
     })
-  },[])
+  }, [])
 
   return (
     <span>
@@ -837,7 +837,7 @@ function QuantumLandscapeChart () {
               width: 250
             }]}
             data={tableJson}
-            onRowClick={(record) => window.location.href = ('/Submission/' + record.submissionId)}
+            onRowClick={(record) => { window.location.href = ('/Submission/' + record.submissionId) }}
             tableLayout='auto'
             rowClassName='link'
             isCollapsible
