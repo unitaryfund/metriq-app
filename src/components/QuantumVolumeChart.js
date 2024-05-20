@@ -34,7 +34,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricName, taskName, taskId
+let svg, d, metricName, taskName
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -83,6 +83,7 @@ function hideLabels () {
   })
 }
 
+/*
 function barplot (
   data,
   xRange,
@@ -118,6 +119,7 @@ function barplot (
     .attr('height', (i) => (height - y(i.metricValue)))
     .attr('fill', '#69b3a2')
 }
+*/
 
 function scatterplot (
   data,
@@ -519,22 +521,22 @@ function plot (
     .style('font-family', fontType)
     .text((i) => d3.format('.2s')(y(i)))
 
-  let isSameDate = true
-  for (let i = 1; i < data.length; ++i) {
-    if (data[0].tableDate !== data[i].tableDate) {
-      isSameDate = false
-      break
-    }
-  }
+  // let isSameDate = true
+  // for (let i = 1; i < data.length; ++i) {
+  //   if (data[0].tableDate !== data[i].tableDate) {
+  //     isSameDate = false
+  //     break
+  //   }
+  // }
 
-  if (isSameDate) {
-    barplot(
-      data,
-      xRange,
-      yRange,
-      yDomain
-    )
-  } else {
+  // if (isSameDate) {
+  //   barplot(
+  //     data,
+  //     xRange,
+  //     yRange,
+  //     yDomain
+  //   )
+  // } else {
     scatterplot(
       data,
       yName, // the y column
@@ -560,7 +562,7 @@ function plot (
       xLabelShift,
       xAxisText
     )
-  }
+  // }
 }
 
 function mousemove (
@@ -833,12 +835,13 @@ function makeClass (x, y) {
 
 function QuantumVolumeChart (props) {
   const [metricNames, setMetricNames] = React.useState([])
+  const [taskId, setTaskId] = React.useState(0)
   React.useEffect(() => {
     isScaleLinear = (parseInt(props.taskId) !== 34)
     if (taskId === props.taskId) {
       return
     }
-    taskId = props.taskId
+    setTaskId(props.taskId)
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
@@ -912,7 +915,7 @@ function QuantumVolumeChart (props) {
       .catch(err => {
         window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
       })
-  })
+  }, [props, metricNames, taskId, setTaskId])
 
   return (
     <span>
