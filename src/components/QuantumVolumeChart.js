@@ -87,11 +87,16 @@ function barplot (
   data,
   xRange,
   yRange,
-  Y
+  Y,
+  marginLeft,
+  marginTop,
+  yAxisText
 ) {
   const height = yRange[0] - yRange[1]
   const yMin = d3.min(Y)
   const yDomain = [yMin < 1 ? yMin : 1, d3.max(Y)]
+  console.log(yDomain)
+  console.log(yRange)
   const x = d3.scaleBand()
     .range([xRange[0], xRange[1]])
     .domain(data.map((i) => { if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
@@ -105,8 +110,29 @@ function barplot (
 
   // Add Y axis
   const y = (isScaleLinear ? d3.scaleLinear() : d3.scaleLog())
+    .range([0, yRange[0] - yRange[1]])
     .domain([yDomain[1], yDomain[0]])
-    .range([yRange[1], yRange[0]])
+
+  const yAxis = d3.axisLeft(y)
+  // append y axis
+  svg
+    .append('g')
+    .attr('transform', `translate(${marginLeft},0)`)
+    .attr('class', 'yaxis')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .call(yAxis)
+    .call((g) =>
+      g
+        .append('text')
+        .attr('transform', 'rotate(270)')
+        .attr('x', -marginTop)
+        .attr('y', -50)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'end')
+        .attr('font-size', `${smallLabelSize}px`)
+        .text(yAxisText)
+    )
 
   // Bars
   svg.selectAll('bar')
@@ -133,6 +159,7 @@ function scatterplot (
   data,
   yName, // the y column
   xName, // the x column
+  marginLeft,
   marginRight, // right margin, in pixels
   xlabelDistance,
   I,
@@ -148,11 +175,13 @@ function scatterplot (
   tooltipLineStrokeTexture,
   horizontalLineStrokeSize,
   tickInterval,
+  marginTop,
   marginBottom,
   chartHeight,
   chartWidth,
   xLabelShift,
-  xAxisText
+  xAxisText,
+  yAxisText
 ) {
   const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
   // append x axis
@@ -172,6 +201,26 @@ function scatterplot (
         .attr('fill', 'currentColor')
         .attr('text-anchor', 'end')
         .text(xAxisText)
+    )
+  const yAxis = isScaleLinear ? d3.axisLeft(yScale).tickFormat(d3.format('~s')) : d3.axisLeft(yScale)
+  // append y axis
+  svg
+    .append('g')
+    .attr('transform', `translate(${marginLeft},0)`)
+    .attr('class', 'yaxis')
+    .style('font-size', `${smallLabelSize}px`)
+    .style('font-family', fontType)
+    .call(yAxis)
+    .call((g) =>
+      g
+        .append('text')
+        .attr('transform', 'rotate(270)')
+        .attr('x', -marginTop)
+        .attr('y', -50)
+        .attr('fill', 'currentColor')
+        .attr('text-anchor', 'end')
+        .attr('font-size', `${smallLabelSize}px`)
+        .text(yAxisText)
     )
 
   // max lines (h + v)
@@ -323,7 +372,7 @@ function scatterplot (
   })
 }
 
-// Function to draw scatterplot
+// Function to draw plot
 function plot (
   data,
   isScaleLinear = false,
@@ -426,9 +475,6 @@ function plot (
   // For a less crowded x axis, especially if we increase fontsize for labels
   const tickInterval = d3.timeMonth.every(12)
 
-  // y axis
-  const yAxis = isScaleLinear ? d3.axisLeft(yScale).tickFormat(d3.format('~s')) : d3.axisLeft(yScale)
-
   // voronoi generator
   const dataForVoronoi = d3.map(I, (i) => [xScale(X[i]), yScale(Y[i])])
   const voronoiRange = [xRange[0], yRange[1], xRange[1], yRange[0]]
@@ -448,26 +494,6 @@ function plot (
     .attr('viewBox', [0, 0, chartWidth, chartHeight])
     .attr('id', 'svgscatter')
     .attr('style', 'max-width: 100%')
-
-  // append y axis
-  svg
-    .append('g')
-    .attr('transform', `translate(${marginLeft},0)`)
-    .attr('class', 'yaxis')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .call(yAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('transform', 'rotate(270)')
-        .attr('x', -marginTop)
-        .attr('y', -50)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .attr('font-size', `${smallLabelSize}px`)
-        .text(yAxisText)
-    )
 
   // tooltip vlines
   svg
@@ -542,13 +568,17 @@ function plot (
       data,
       xRange,
       [chartHeight - marginBottom / 2, marginTop],
-      Y
+      Y,
+      marginLeft,
+      marginTop,
+      yAxisText
     )
   } else {
     scatterplot(
       data,
       yName, // the y column
       xName, // the x column
+      marginLeft,
       marginRight, // right margin, in pixels
       xlabelDistance,
       I,
@@ -564,11 +594,13 @@ function plot (
       tooltipLineStrokeTexture,
       horizontalLineStrokeSize,
       tickInterval,
+      marginTop,
       marginBottom,
       chartHeight,
       chartWidth,
       xLabelShift,
-      xAxisText
+      xAxisText,
+      yAxisText
     )
   }
 }
