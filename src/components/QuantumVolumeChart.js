@@ -117,7 +117,16 @@ function barplot (
     .attr('y', (i) => y(i.metricValue))
     .attr('width', x.bandwidth())
     .attr('height', (i) => (height - y(i.metricValue)))
-    .attr('fill', '#69b3a2')
+    .style('stroke', (i) =>
+      colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
+    )
+    .style('fill', (i) =>
+      colors[domainIndex[i.provider]]
+        ? colors[domainIndex[i.provider]]
+        : colors[3]
+    )
 }
 
 function scatterplot (
