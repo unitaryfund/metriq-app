@@ -83,17 +83,17 @@ function hideLabels () {
   })
 }
 
-/*
 function barplot (
   data,
   xRange,
   yRange,
-  yDomain
+  Y
 ) {
-  const width = xRange[1] - xRange[0]
-  const height = yRange[1] - yRange[0]
+  const height = yRange[0] - yRange[1]
+  const yMin = d3.min(Y)
+  const yDomain = [yMin < 1 ? yMin : 1, d3.max(Y)]
   const x = d3.scaleBand()
-    .range([0, width])
+    .range([xRange[0], xRange[1]])
     .domain(data.map((i) => { if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
     .padding(0.2)
   svg.append('g')
@@ -105,8 +105,8 @@ function barplot (
 
   // Add Y axis
   const y = (isScaleLinear ? d3.scaleLinear() : d3.scaleLog())
-    .domain([yDomain[0], yDomain[1]])
-    .range([height, 0])
+    .domain([yDomain[1], yDomain[0]])
+    .range([yRange[1], yRange[0]])
 
   // Bars
   svg.selectAll('bar')
@@ -119,7 +119,6 @@ function barplot (
     .attr('height', (i) => (height - y(i.metricValue)))
     .attr('fill', '#69b3a2')
 }
-*/
 
 function scatterplot (
   data,
@@ -352,12 +351,12 @@ function plot (
   let maxIDs = []
   let currentMaxValue = -1
 
+  const isQv = (metricName.toLowerCase() === 'quantum volume')
+
   data = data.filter((x) => x.metricName.toLowerCase() === metricName.toLowerCase())
-  if (!isScaleLinear) {
+  if (isQv && !isScaleLinear) {
     data = data.filter((x) => x.metricValue > 1)
   }
-
-  const isQv = (metricName.toLowerCase() === 'quantum volume')
 
   data.map((d) => {
     if (isQv && !isScaleLinear) {
@@ -521,22 +520,22 @@ function plot (
     .style('font-family', fontType)
     .text((i) => d3.format('.2s')(y(i)))
 
-  // let isSameDate = true
-  // for (let i = 1; i < data.length; ++i) {
-  //   if (data[0].tableDate !== data[i].tableDate) {
-  //     isSameDate = false
-  //     break
-  //   }
-  // }
+  let isSameDate = true
+  for (let i = 1; i < data.length; ++i) {
+    if (data[0].tableDate !== data[i].tableDate) {
+      isSameDate = false
+      break
+    }
+  }
 
-  // if (isSameDate) {
-  //   barplot(
-  //     data,
-  //     xRange,
-  //     yRange,
-  //     yDomain
-  //   )
-  // } else {
+  if (isSameDate) {
+    barplot(
+      data,
+      xRange,
+      [chartHeight - marginBottom / 2, marginTop],
+      Y
+    )
+  } else {
     scatterplot(
       data,
       yName, // the y column
@@ -562,7 +561,7 @@ function plot (
       xLabelShift,
       xAxisText
     )
-  // }
+  }
 }
 
 function mousemove (
