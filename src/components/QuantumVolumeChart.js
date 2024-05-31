@@ -464,8 +464,9 @@ function plot (
   const I = d3.range(data.length)
 
   // domains
+  const yMin = d3.min(Y)
   const xDomain = [d3.min(X), d3.max(X)]
-  const yDomain = [1, d3.max(Y) + d3.max(Y) * rangeMult]
+  const yDomain = [yMin < 0 ? yMin : 0, d3.max(Y) + d3.max(Y) * rangeMult]
 
   // scale
   const xScale = xScaleType(xDomain, xRange)
