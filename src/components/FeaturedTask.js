@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import { renderLatex } from './RenderLatex'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import SotaChart from './SotaChart'
@@ -83,7 +84,7 @@ const FeaturedTask = (props) => {
                 <span> <Link to='/QEDC' onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave}><span className='link'>(QED-C)</span></Link></span>}
               <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={props.isLoggedIn} onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave} /></span>
             </h5>
-            {description}
+            {description ? renderLatex(description) : ""}
           </div>
         </div>
         <div className='row h-100'>
