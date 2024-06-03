@@ -25,7 +25,7 @@ const strokeOpacity = {
   achieved: 1,
   estimated: 0.7
 }
-const colors = ['#ED1010', '#0D99FF', '#56E1C8', '#FFB800']
+const colors = ['#ED1010', '#0D99FF', '#56E1C8', '#FFB800', '#c403f0', '#7c7c66', '#b82840', '#87b5f0', '#25fdf4']
 const domainIndex = {
   quantinuum: 0,
   ibmq: 1,
@@ -34,7 +34,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricName, taskName
+let svg, d, metricName, taskName, isQubits
 
 let areLabelsVisible = false
 function onLabelSwitchClick () {
@@ -144,13 +144,13 @@ function barplot (
     .attr('width', x.bandwidth())
     .attr('height', (i) => (height - y(i.metricValue)))
     .style('stroke', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
+      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
         : colors[3]
     )
     .style('fill', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
+      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
         : colors[3]
     )
 }
@@ -292,13 +292,13 @@ function scatterplot (
     .attr('r', circleSize)
     .style('cursor', 'pointer')
     .style('stroke', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
+      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
         : colors[3]
     )
     .style('fill', (i) =>
-      colors[domainIndex[i.provider]]
-        ? colors[domainIndex[i.provider]]
+      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
         : colors[3]
     )
     .style('fill-opacity', (i) => circleOpacity.achieved)
@@ -697,7 +697,7 @@ function mousemove (
         <a href="https://metriq.info/Submission/${
           idData.submissionId
         }" style="color: ${
-          colors[domainIndex[idData.domain]]
+          colors[isQubits ? idData.qubitCount - 1 : domainIndex[idData.domain]]
         }; filter: brightness(0.85)">→ explore submission</a>
       </div>`
       )
@@ -779,6 +779,77 @@ function legend (circleSizeFields = 8) {
     .style('width', '100%')
 
   let newY = circleSizeFields + 10
+
+  if (isQubits) {
+    // circle 1
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[1])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[1])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 1 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('2 qubits')
+
+    newY = newY + circleSizeFields + 20
+
+    // circle 2
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[5])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[5])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 2 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('6 qubits')
+
+    newY = newY + circleSizeFields + 20
+
+    // circle 3
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[6])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[6])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 3 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('7 qubits')
+
+    return
+  }
 
   // circle 1
   svg
@@ -878,8 +949,13 @@ function makeClass (x, y) {
 function QuantumVolumeChart (props) {
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
+  const [isQ, setIsQ] = React.useState(false)
   React.useEffect(() => {
     isScaleLinear = (parseInt(props.taskId) !== 34)
+    isQubits = !!(props.isQubits)
+    if (isQubits !== isQ) {
+      setIsQ(isQubits)
+    }
     if (taskId === props.taskId) {
       return
     }
@@ -912,9 +988,12 @@ function QuantumVolumeChart (props) {
             metricNameCounts.push(1)
             if (results[i].metricName.toLowerCase() === 'quantum volume') {
               metricName = 'quantum volume'
+            } else if (isQubits && (results[i].metricName.toLowerCase() === 'iterations to 1e-3 error')) {
+              metricName = 'iterations to 1e-3 error'
             }
           }
         }
+        metricNames.sort((a, b) => a > b)
         if (metricName === '') {
           const maxCount = metricNameCounts[0]
           let maxCountIndex = 0
@@ -951,13 +1030,13 @@ function QuantumVolumeChart (props) {
             tableDate: Date.parse(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
-          .sort((a, b) => a.tableDate > b.tableDate)
+          .sort((a, b) => isQubits ? (a.qubitCount < b.qubitCount) : (a.tableDate > b.tableDate))
         redraw()
       })
       .catch(err => {
         window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
       })
-  }, [props, metricNames, taskId, setTaskId])
+  }, [props, metricNames, taskId, setTaskId, isQ, setIsQ])
 
   return (
     <span>
@@ -1001,7 +1080,7 @@ function QuantumVolumeChart (props) {
             </div>
           </div>
           <div>
-            <span className='legendTitle'>Providers</span>
+            <span className='legendTitle'>{isQ ? 'Qubits' : 'Providers'}</span>
             <div id='legend-color' style={{ marginTop: '10px' }} />
           </div>
           <div>
