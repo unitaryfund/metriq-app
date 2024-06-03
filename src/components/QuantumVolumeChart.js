@@ -1049,20 +1049,23 @@ function QuantumVolumeChart (props) {
         <div id='my_dataviz' />
         <div id='legend_guide'>
           <div>
-            <div id='legend-switch' style={{ marginTop: '10px' }}>
-              <label className='switch'>
-                <input id='labelSwitch' type='checkbox' onClick={onLabelSwitchClick} />
-                <span className='slider round' />
-              </label>
-              <span className='legendTitle'>Show labels</span>
-            </div>
-            <div id='legend-switch' style={{ marginTop: '10px' }}>
-              <label className='switch'>
-                <input id='arXivSwitch' type='checkbox' onClick={onArxivSwitchClick} />
-                <span className='slider round' />
-              </label>
-              <span className='legendTitle'>Labels | ID</span>
-            </div>
+            {!isQ &&
+              <span>
+                <div id='legend-switch' style={{ marginTop: '10px' }}>
+                  <label className='switch'>
+                    <input id='labelSwitch' type='checkbox' onClick={onLabelSwitchClick} />
+                    <span className='slider round' />
+                  </label>
+                  <span className='legendTitle'>Show labels</span>
+                </div>
+                <div id='legend-switch' style={{ marginTop: '10px' }}>
+                  <label className='switch'>
+                    <input id='arXivSwitch' type='checkbox' onClick={onArxivSwitchClick} />
+                    <span className='slider round' />
+                  </label>
+                  <span className='legendTitle'>Labels | ID</span>
+                </div>
+              </span>}
             <div id='legend-switch' style={{ marginTop: '10px' }}>
               <label className='switch'>
                 <input id='isScaleLinearSwitch' type='checkbox' onClick={onScaleSwitchClick} />
