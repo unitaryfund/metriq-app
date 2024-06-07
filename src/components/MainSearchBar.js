@@ -18,54 +18,27 @@ const MainSearchBar = () => {
       return
     }
 
-    axios.get(config.api.getUriPrefix() + '/task/names')
-      .then(res => {
-        const tNames = res.data.data
+    const fetchNames = async () => {
+      try {
+        const { data: { data: tNames } } = await axios.get(config.api.getUriPrefix() + '/task/names')
+        const { data: { data: mNames } } = await axios.get(config.api.getUriPrefix() + '/method/names')
+        const { data: { data: pNames } } = await axios.get(config.api.getUriPrefix() + '/platform/names')
+        const { data: { data: tgNames } } = await axios.get(config.api.getUriPrefix() + '/tag/names')
+        const { data: { data: sNames } } = await axios.get(config.api.getUriPrefix() + '/submission/names')
+
         setTaskNames(tNames)
-
-        axios.get(config.api.getUriPrefix() + '/method/names')
-          .then(res => {
-            const mNames = res.data.data
-            setMethodNames(mNames)
-
-            axios.get(config.api.getUriPrefix() + '/platform/names')
-              .then(res => {
-                const pNames = res.data.data
-                setPlatformNames(pNames)
-
-                axios.get(config.api.getUriPrefix() + '/tag/names')
-                  .then(res => {
-                    const tgNames = res.data.data
-                    setTagNames(tgNames)
-
-                    axios.get(config.api.getUriPrefix() + '/submission/names')
-                      .then(res => {
-                        const sNames = res.data.data
-                        setSubmissionNames(sNames)
-
-                        setAllNames(tNames.concat(mNames).concat(pNames).concat(tgNames).concat(sNames))
-                      })
-                      .catch(err => {
-                        console.log(err)
-                      })
-                  })
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      })
-      .catch(err => {
+        setMethodNames(mNames)
+        setPlatformNames(pNames)
+        setTagNames(tgNames)
+        setSubmissionNames(sNames)
+        setAllNames([...tNames, ...mNames, ...pNames, ...tgNames, ...sNames])
+      } catch (err) {
         console.log(err)
-      })
-  }, [allNames, setAllNames,
-    taskNames, setTaskNames,
-    methodNames, setMethodNames,
-    platformNames, setPlatformNames,
-    submissionNames, setSubmissionNames])
+      }
+    }
+
+    fetchNames()
+  }, [allNames.length])
 
   const handleOnSelect = (value) => {
     if (!value) {
