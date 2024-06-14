@@ -193,6 +193,20 @@ class AddSubmission extends React.Component {
       return false
     }
 
+    if (this.state.contentUrl.toLowerCase().startsWith('https://arxiv.org/')) {
+      let urlTail = this.state.contentUrl.substring(22)
+      axios.get('https://export.arxiv.org/api/query?id_list=' + urlTail)
+        .then((response) => {
+          const html = response.data.toString()
+          const noHead = html.split('<published>')[1]
+          const noTail = noHead.split('</published>')[0]
+          this.setState({ result: { ...this.state.result, evaluatedDate: new Date(noTail).toISOString().split('T')[0] } })
+        })
+        .catch(err => {
+          this.setState({ requestFailedMessage: ErrorHandler(err) })
+        })
+    }
+ 
     const request = {
       name: this.state.name,
       contentUrl: this.state.contentUrl,
