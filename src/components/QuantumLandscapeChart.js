@@ -45,6 +45,11 @@ function onSwitchClick () {
   areLabelsVisible = !areLabelsVisible
   refreshLabels()
 }
+let subsetName = "All data"
+function onSubsetSelectChange (e) {
+  subsetName = e.target.value
+  redraw()
+}
 function refreshLabels () {
   if (areLabelsVisible) {
     showLabels()
@@ -101,6 +106,10 @@ function scatterplot (
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
     })
+
+  if (subsetName !== "All data") {
+    data = data.filter((x) => x.subsetName.toLowerCase() === subsetName.toLowerCase())
+  }
 
   // define aesthetic mappings
   const x = (d) => d[xName]
@@ -752,7 +761,8 @@ function QuantumLandscapeChart () {
       task_name: _d.task_name,
       reference: _d.reference,
       year: _d.year,
-      submission_id: _d.submission_id
+      submission_id: _d.submission_id,
+      subsetName: _d.subsetName
     })).then((_d) => {
       d = _d
       scatterplot(_d)
@@ -765,7 +775,8 @@ function QuantumLandscapeChart () {
       evaluatedAt: _d.evaluatedAt,
       submissionName: _d.submissionName,
       taskName: _d.taskName,
-      submissionId: _d.submissionId
+      submissionId: _d.submissionId,
+      subsetName: _d.subsetName
     })).then((_d) => {
       setTableJson(_d)
     })
@@ -797,6 +808,12 @@ function QuantumLandscapeChart () {
                 <span className='slider round' />
               </label>
             </div>
+            <span className='legendTitle'>Subset</span>
+            <select id='metricSelect' style={{ width: '100%' }} onChange={onSubsetSelectChange}>
+              <option key={1} value={"All data"}>All data</option>
+              <option key={2} value={"Classically intractable"}>Classically intractable</option>
+              <option key={2} value={"Quantum advantage"}>Quantum advantage</option>
+            </select>
           </div>
         </div>
       </div>
