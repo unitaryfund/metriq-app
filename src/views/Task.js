@@ -11,7 +11,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CategoryScroll from '../components/CategoryScroll'
-import { parse } from 'json2csv'
+import { Parser } from '@json2csv/plainjs'
 import Commento from '../components/Commento'
 import SocialShareIcons from '../components/SocialShareIcons'
 import SubscribeButton from '../components/SubscribeButton'
@@ -20,7 +20,6 @@ import { sortByCounts } from '../components/SortFunctions'
 import { renderLatex } from '../components/RenderLatex'
 import TopSubmitters from '../components/TopSubmitters'
 import SubmissionScroll from '../components/SubmissionScroll'
-const SotaChart = React.lazy(() => import('../components/SotaChart'))
 const QuantumVolumeChart = React.lazy(() => import('../components/QuantumVolumeChart'))
 
 library.add(faEdit)
@@ -190,7 +189,8 @@ class Task extends React.Component {
   handleCsvExport () {
     const fields = Object.keys(this.state.resultsJson[0])
     const opts = { fields }
-    const csv = parse(this.state.resultsJson, opts)
+    const parser = new Parser(opts)
+    const csv = parser.parse(this.state.resultsJson)
 
     const element = document.createElement('a')
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv))
@@ -229,18 +229,7 @@ class Task extends React.Component {
               </div>
               <br />
             </span>}
-          {!this.state.item.isHideChart && this.props.match.params.id !== '34' &&
-            <Suspense fallback={<div>Loading...</div>}>
-              <SotaChart
-                chartId='task-detail'
-                xLabel='Time'
-                taskId={this.props.match.params.id}
-                onLoadData={this.handleOnLoadData}
-                logBase='2'
-                onCsvExport={this.handleCsvExport}
-              />
-            </Suspense>}
-          {!this.state.item.isHideChart && this.props.match.params.id === '34' &&
+          {!this.state.item.isHideChart &&
             <Suspense fallback={<div>Loading...</div>}>
               <QuantumVolumeChart
                 chartId='task-detail'

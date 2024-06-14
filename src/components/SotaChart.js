@@ -3,9 +3,8 @@
 // and https://betterprogramming.pub/react-d3-plotting-a-line-chart-with-tooltips-ed41a4c31f4f
 
 import React from 'react'
-import { Chart, LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip } from 'chart.js'
+import { Chart, LinearScale, LogarithmicScale, TimeScale, CategoryScale, PointElement, LineElement, BarElement, ScatterController, BarController, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { BarWithErrorBarsChart } from 'chartjs-chart-error-bars'
 import moment from 'moment'
 import 'chartjs-adapter-moment'
 import axios from 'axios'
@@ -31,10 +30,10 @@ const percentileZ = (p) => {
            ((((3.1308291 * r - 21.0622410) * r + 23.0833674) * r - 8.4735109) * r + 1)
 }
 
-const chartComponents = [LinearScale, LogarithmicScale, TimeScale, PointElement, LineElement, ScatterController, Tooltip, ChartDataLabels]
+const chartComponents = [LinearScale, LogarithmicScale, TimeScale, CategoryScale, PointElement, LineElement, BarElement, ScatterController, BarController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
 Chart.defaults.font.size = 13
-let chart = null
+const chart = null
 
 class SotaChart extends React.Component {
   constructor (props) {
@@ -316,8 +315,7 @@ class SotaChart extends React.Component {
         datasets: [],
         labels: d.map((obj, index) => ((state.label === 'arXiv') && obj.arXivId) ? (obj.arXivId + '\n') : (obj.method + (obj.platform ? '\n' + obj.platform : '')))
       }
-    }
-    if (!isSameDate) {
+    } else {
       const dataSotaLine = state.isSotaLineVisible
         ? {
             type: 'line',
@@ -455,10 +453,10 @@ class SotaChart extends React.Component {
         }
         ++color
         color = color % 6
+        for (let x = 0; x < subsets[key].length; ++x) {
+          subsets[key][x].rgb = rgb
+        }
         if (state.subsetDataSetsActive.get(key) ?? true) {
-          for (let x = 0; x < subsets[key].length; ++x) {
-            subsets[key][x].rgb = rgb
-          }
           fullSet = fullSet.concat(subsets[key])
         }
       }
@@ -696,7 +694,7 @@ class SotaChart extends React.Component {
       if (this.state.chart) {
         this.state.chart.destroy()
       }
-      chart = new BarWithErrorBarsChart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { data, options })
+      const chart = new Chart(document.getElementById('sota-chart-canvas-' + this.props.chartId).getContext('2d'), { type: isSameDate ? 'bar' : undefined, data, options })
       this.setState({ chart, subsetDataSets })
     }
     chartFunc()

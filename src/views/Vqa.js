@@ -12,6 +12,7 @@ import SotaChart from '../components/SotaChart'
 import SubmissionScroll from '../components/SubmissionScroll'
 import { withRouter, Link } from 'react-router-dom'
 import { renderLatex } from '../components/RenderLatex'
+import QuantumVolumeChart from '../components/QuantumVolumeChart'
 
 class Vqa extends React.Component {
   constructor (props) {
@@ -111,12 +112,12 @@ class Vqa extends React.Component {
             <div className='col-md col'>
               {this.state.featured &&
                 <CategoryItemBox item={this.state.featured} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />}
-              <SotaChart
+              <QuantumVolumeChart
                 chartId={0}
                 xLabel='Time'
                 taskId={119}
                 key={0}
-                isSubsetDisabled
+                isQubits
               />
               <hr />
             </div>
