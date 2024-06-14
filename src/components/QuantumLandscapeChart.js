@@ -39,10 +39,7 @@ const domainIndex = {
 const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
-
-let _isIntractable = true
-let _isAdvantage = true
-
+let _subsetName = "All data"
 let areLabelsVisible = false
 function onSwitchClick () {
   areLabelsVisible = !areLabelsVisible
@@ -104,13 +101,8 @@ function scatterplot (
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
     })
-
-  if (!_isAdvantage && !_isIntractable) {
-    data = data.filter((x) => x.subsetName.toLowerCase() === 'other')
-  } else if (!_isAdvantage) {
-    data = data.filter((x) => (x.subsetName.toLowerCase() === 'other') || (x.subsetName.toLowerCase() === 'classically intractable'))
-  } else if (!_isIntractable) {
-    data = data.filter((x) => (x.subsetName.toLowerCase() === 'other') || (x.subsetName.toLowerCase() === 'quantum advantage'))
+  if (_subsetName !== "All data") {
+    data = data.filter((x) => x.subsetName.toLowerCase() === _subsetName.toLowerCase())
   }
 
   // define aesthetic mappings
@@ -764,8 +756,7 @@ function legend (circleSizeFields = 8) {
 
 function QuantumLandscapeChart () {
   const [tableJson, setTableJson] = React.useState([])
-  const [isAdvantage, setIsAdvantage] = React.useState(true)
-  const [isIntractable, setIsIntractable] = React.useState(true)
+  const [subsetName, setsubsetName] = React.useState("All data")
   React.useEffect(() => {
     // Draw scatterplot from data
     d3.csv(progressCsv, (_d) => ({
@@ -796,15 +787,9 @@ function QuantumLandscapeChart () {
       setTableJson(_d)
     })
   }, [])
-
-  function onIntractableClick (e) {
-    setIsIntractable(e.target.checked)
-    _isIntractable = e.target.checked
-    redraw()
-  }
-  function onAdvantageClick (e) {
-    setIsAdvantage(e.target.checked)
-    _isAdvantage = e.target.checked
+  function onMetricSelectChange (e) {
+    setsubsetName(e.target.value)
+    _subsetName = e.target.value
     redraw()
   }
 
@@ -814,6 +799,19 @@ function QuantumLandscapeChart () {
         <div className='col text-left'>
           <h4 align='left'>Quantum Computers: What We Need and What We Have</h4>
         </div>
+      </div>
+      <div className='row'>
+        <div className='col'/>
+        <div className='col text-left'>
+            <input type="radio" value="All data" onChange={onMetricSelectChange} checked={subsetName === "All data"} /> All Data
+        </div>
+        <div className='col text-left'>
+            <input type="radio" value="Classically intractable" onChange={onMetricSelectChange} checked={subsetName === "Classically intractable"} /> Classically intractable
+        </div>
+        <div className='col text-left'>
+            <input type="radio" value="Quantum advantage" onChange={onMetricSelectChange} checked={subsetName === "Quantum advantage"} /> Quantum advantage
+        </div>
+        <div className='col'/>
       </div>
       <div id='cargo'>
         <div id='my_dataviz' />
@@ -831,20 +829,6 @@ function QuantumLandscapeChart () {
               <span className='legendTitle'>Show labels</span><br />
               <label className='switch'>
                 <input type='checkbox' onClick={onSwitchClick} />
-                <span className='slider round' />
-              </label>
-            </div>
-            <div id='legend-switch'>
-              <span className='legendTitle'>Classically intractable</span><br />
-              <label className='switch'>
-                <input type='checkbox' onClick={onIntractableClick} checked={isIntractable} />
-                <span className='slider round' />
-              </label>
-            </div>
-            <div id='legend-switch'>
-              <span className='legendTitle'>Quantum advantage</span><br />
-              <label className='switch'>
-                <input type='checkbox' onClick={onAdvantageClick} checked={isAdvantage} />
                 <span className='slider round' />
               </label>
             </div>
