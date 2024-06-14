@@ -33,7 +33,7 @@ div#legend-switch {
 
   div#legend_guide {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 8fr 12fr;
   }
 }
 

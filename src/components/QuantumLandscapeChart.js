@@ -40,15 +40,13 @@ const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
 
+let _isIntractable = true
+let _isAdvantage = true
+
 let areLabelsVisible = false
 function onSwitchClick () {
   areLabelsVisible = !areLabelsVisible
   refreshLabels()
-}
-let subsetName = "All data"
-function onSubsetSelectChange (e) {
-  subsetName = e.target.value
-  redraw()
 }
 function refreshLabels () {
   if (areLabelsVisible) {
@@ -107,8 +105,12 @@ function scatterplot (
       return { ...obj, id: `ID_${index + 1}` }
     })
 
-  if (subsetName !== "All data") {
-    data = data.filter((x) => x.subsetName.toLowerCase() === subsetName.toLowerCase())
+  if (!_isAdvantage && !_isIntractable) {
+    data = data.filter((x) => x.subsetName.toLowerCase() === 'other')
+  } else if (!_isAdvantage) {
+    data = data.filter((x) => (x.subsetName.toLowerCase() === 'other') || (x.subsetName.toLowerCase() === 'classically intractable'))
+  } else if (!_isIntractable) {
+    data = data.filter((x) => (x.subsetName.toLowerCase() === 'other') || (x.subsetName.toLowerCase() === 'quantum advantage'))
   }
 
   // define aesthetic mappings
@@ -131,9 +133,20 @@ function scatterplot (
   const Y = d3.map(data, y)
   const I = d3.range(data.length)
 
+  let maxX = d[0].num_gates
+  let maxY = d[0].num_qubits
+  for (let i = 1; i < d.length; ++i) {
+    if (d[i].num_gates > maxX) {
+      maxX = d[i].num_gates
+    }
+    if (d[i].num_qubits > maxY) {
+      maxY = d[i].num_qubits
+    }
+  }
+
   // domains
-  const xDomain = [1, d3.max(X) + d3.max(X) * rangeMult]
-  const yDomain = [1, d3.max(Y) + d3.max(Y) * rangeMult]
+  const xDomain = [1, maxX + maxX * rangeMult]
+  const yDomain = [1, maxY + maxY * rangeMult]
 
   // scale
   const xScale = xScaleType(xDomain, xRange)
@@ -751,6 +764,8 @@ function legend (circleSizeFields = 8) {
 
 function QuantumLandscapeChart () {
   const [tableJson, setTableJson] = React.useState([])
+  const [isAdvantage, setIsAdvantage] = React.useState(true)
+  const [isIntractable, setIsIntractable] = React.useState(true)
   React.useEffect(() => {
     // Draw scatterplot from data
     d3.csv(progressCsv, (_d) => ({
@@ -782,6 +797,17 @@ function QuantumLandscapeChart () {
     })
   }, [])
 
+  function onIntractableClick (e) {
+    setIsIntractable(e.target.checked)
+    _isIntractable = e.target.checked
+    redraw()
+  }
+  function onAdvantageClick (e) {
+    setIsAdvantage(e.target.checked)
+    _isAdvantage = e.target.checked
+    redraw()
+  }
+
   return (
     <span>
       <div className='row'>
@@ -801,19 +827,27 @@ function QuantumLandscapeChart () {
             <div id='legend-color' />
           </div>
           <div>
-            <span className='legendTitle'>Show labels</span>
             <div id='legend-switch'>
+              <span className='legendTitle'>Show labels</span><br />
               <label className='switch'>
                 <input type='checkbox' onClick={onSwitchClick} />
                 <span className='slider round' />
               </label>
             </div>
-            <span className='legendTitle'>Subset</span>
-            <select id='metricSelect' style={{ width: '100%' }} onChange={onSubsetSelectChange}>
-              <option key={1} value={"All data"}>All data</option>
-              <option key={2} value={"Classically intractable"}>Classically intractable</option>
-              <option key={2} value={"Quantum advantage"}>Quantum advantage</option>
-            </select>
+            <div id='legend-switch'>
+              <span className='legendTitle'>Classically intractable</span><br />
+              <label className='switch'>
+                <input type='checkbox' onClick={onIntractableClick} checked={isIntractable} />
+                <span className='slider round' />
+              </label>
+            </div>
+            <div id='legend-switch'>
+              <span className='legendTitle'>Quantum advantage</span><br />
+              <label className='switch'>
+                <input type='checkbox' onClick={onAdvantageClick} checked={isAdvantage} />
+                <span className='slider round' />
+              </label>
+            </div>
           </div>
         </div>
       </div>

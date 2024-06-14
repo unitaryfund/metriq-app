@@ -194,7 +194,7 @@ class AddSubmission extends React.Component {
     }
 
     if (this.state.contentUrl.toLowerCase().startsWith('https://arxiv.org/')) {
-      let urlTail = this.state.contentUrl.substring(22)
+      const urlTail = this.state.contentUrl.substring(22)
       axios.get('https://export.arxiv.org/api/query?id_list=' + urlTail)
         .then((response) => {
           const html = response.data.toString()
@@ -206,7 +206,7 @@ class AddSubmission extends React.Component {
           this.setState({ requestFailedMessage: ErrorHandler(err) })
         })
     }
- 
+
     const request = {
       name: this.state.name,
       contentUrl: this.state.contentUrl,
