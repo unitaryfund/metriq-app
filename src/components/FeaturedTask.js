@@ -84,7 +84,7 @@ const FeaturedTask = (props) => {
                 <span> <Link to='/QEDC' onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave}><span className='link'>(QED-C)</span></Link></span>}
               <span className='float-right'><SubscribeButton item={item} type='task' isLoggedIn={props.isLoggedIn} onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave} /></span>
             </h5>
-            {description ? renderLatex(description) : ""}
+            {description ? renderLatex(description) : ''}
           </div>
         </div>
         <div className='row h-100'>
