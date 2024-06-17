@@ -951,6 +951,10 @@ function QuantumVolumeChart (props) {
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
   React.useEffect(() => {
+    if (!props.taskId || isNaN(props.taskId) || isNaN(parseFloat(props.taskId))) {
+      // Don't make an invalid API request.
+      return;
+    }
     isScaleLinear = (parseInt(props.taskId) !== 34)
     isQubits = !!(props.isQubits)
     if (isQubits !== isQ) {
@@ -1034,7 +1038,7 @@ function QuantumVolumeChart (props) {
         redraw()
       })
       .catch(err => {
-        window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
+        console.log('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
       })
   }, [props, metricNames, taskId, setTaskId, isQ, setIsQ])
 
