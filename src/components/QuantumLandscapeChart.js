@@ -102,7 +102,7 @@ function scatterplot (
       return { ...obj, id: `ID_${index + 1}` }
     })
   if (_subsetName !== "All data") {
-    data = data.filter((x) => x.subsetName.toLowerCase() === _subsetName.toLowerCase())
+    data = data.filter((x) => (x.subsetName.toLowerCase() === _subsetName.toLowerCase()) || (x.subsetName.toLowerCase() === "both"))
   }
 
   // define aesthetic mappings
