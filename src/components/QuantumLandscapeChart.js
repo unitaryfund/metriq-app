@@ -803,13 +803,13 @@ function QuantumLandscapeChart () {
       <div className='row'>
         <div className='col'/>
         <div className='col text-left'>
-            <input type="radio" value="All Resource Estimates" onChange={onMetricSelectChange} checked={subsetName === "All data"} /> All Data
+            <input type="radio" value="All data" onChange={onMetricSelectChange} checked={subsetName === "All data"} /> All resource estimates
         </div>
         <div className='col text-left'>
-            <input type="radio" value="Classically intractable problems" onChange={onMetricSelectChange} checked={subsetName === "Classically intractable"} /> Classically intractable
+            <input type="radio" value="Classically intractable" onChange={onMetricSelectChange} checked={subsetName === "Classically intractable"} /> Classically intractable problems
         </div>
         <div className='col text-left'>
-            <input type="radio" value="Useful problems" onChange={onMetricSelectChange} checked={subsetName === "Quantum advantage"} /> Quantum advantage
+            <input type="radio" value="Quantum advantage" onChange={onMetricSelectChange} checked={subsetName === "Quantum advantage"} /> Useful problems
         </div>
         <div className='col'/>
       </div>
