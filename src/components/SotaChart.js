@@ -396,7 +396,7 @@ class SotaChart extends React.Component {
       d.sort((a, b) => (a.circuitDepth > b.circuitDepth) ? 1 : -1)
     } else if (state.subset === 'platform') {
       d.sort((a, b) => (a.platform > b.platform) ? 1 : -1)
-    } else {
+    } else if (state.subset === 'method') {
       d.sort((a, b) => (a.method > b.method) ? 1 : -1)
     }
     for (let i = 0; i < d.length; ++i) {
@@ -407,7 +407,7 @@ class SotaChart extends React.Component {
         key = d[i].circuitDepth ? d[i].circuitDepth.toString() : 'Uncategorized'
       } else if (state.subset === 'platform') {
         key = d[i].platform ? d[i].platform.toString() : 'Uncategorized'
-      } else {
+      } else if (state.subset === 'method') {
         key = d[i].method ? d[i].method.toString() : 'Uncategorized'
       }
       if (subsets[key]) {
