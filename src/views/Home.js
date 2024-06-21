@@ -27,7 +27,7 @@ class Home extends React.Component {
       alphabetical: [],
       allNames: [],
       platforms: [],
-      featured: [34, 50, 164],
+      featured: [34, 50, 51],
       trending: [],
       popular: [],
       latest: [],
@@ -136,7 +136,7 @@ class Home extends React.Component {
                     <FeaturedTask
                       taskId={taskId}
                       index={index}
-                      isLog={index < 2}
+                      isLog
                       logBase={(index === 0) ? '2' : '10'}
                       isLoggedIn={this.props.isLoggedIn}
                     />
