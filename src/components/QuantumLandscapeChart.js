@@ -39,7 +39,7 @@ const domainIndex = {
 const breakpoint = 1250
 let isMobile = window.outerWidth < breakpoint
 let svg, d
-let _subsetName = "All data"
+let _subsetName = 'All data'
 let areLabelsVisible = false
 function onSwitchClick () {
   areLabelsVisible = !areLabelsVisible
@@ -101,8 +101,8 @@ function scatterplot (
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
     })
-  if (_subsetName !== "All data") {
-    data = data.filter((x) => (x.subsetName.toLowerCase() === _subsetName.toLowerCase()) || (x.subsetName.toLowerCase() === "both"))
+  if (_subsetName !== 'All data') {
+    data = data.filter((x) => (x.subsetName.toLowerCase() === _subsetName.toLowerCase()) || (x.subsetName.toLowerCase() === 'both'))
   }
 
   // define aesthetic mappings
@@ -756,7 +756,7 @@ function legend (circleSizeFields = 8) {
 
 function QuantumLandscapeChart () {
   const [tableJson, setTableJson] = React.useState([])
-  const [subsetName, setsubsetName] = React.useState("All data")
+  const [subsetName, setsubsetName] = React.useState('All data')
   React.useEffect(() => {
     // Draw scatterplot from data
     d3.csv(progressCsv, (_d) => ({
@@ -801,17 +801,17 @@ function QuantumLandscapeChart () {
         </div>
       </div>
       <div className='row'>
-        <div className='col'/>
+        <div className='col' />
         <div className='col text-left'>
-            <input type="radio" value="All data" onChange={onMetricSelectChange} checked={subsetName === "All data"} /> All resource estimates
+          <input type='radio' value='All data' onChange={onMetricSelectChange} checked={subsetName === 'All data'} /> All resource estimates
         </div>
         <div className='col text-left'>
-            <input type="radio" value="Classically intractable" onChange={onMetricSelectChange} checked={subsetName === "Classically intractable"} /> Classically intractable problems
+          <input type='radio' value='Classically intractable' onChange={onMetricSelectChange} checked={subsetName === 'Classically intractable'} /> Classically intractable problems
         </div>
         <div className='col text-left'>
-            <input type="radio" value="Quantum advantage" onChange={onMetricSelectChange} checked={subsetName === "Quantum advantage"} /> Useful problems
+          <input type='radio' value='Quantum advantage' onChange={onMetricSelectChange} checked={subsetName === 'Quantum advantage'} /> Useful problems
         </div>
-        <div className='col'/>
+        <div className='col' />
       </div>
       <div id='cargo'>
         <div id='my_dataviz' />

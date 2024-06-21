@@ -712,8 +712,8 @@ class SotaChart extends React.Component {
         return 1
       }
 
-      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt)
-      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt)
+      const mda = new Date(a.evaluatedAt ? a.evaluatedAt : a.createdAt.substring(0, 10))
+      const mdb = new Date(b.evaluatedAt ? b.evaluatedAt : b.createdAt.substring(0, 10))
       if (mda < mdb) {
         return -1
       }
