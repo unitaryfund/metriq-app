@@ -14,3 +14,6 @@ Assessing requirements to scale to practical quantum advantage,arXiv:2211.07629,
 Reliably assessing the electronic structure of cytochrome P450 on today's classical computers and tomorrow's quantum computers,arXiv:2202.01244,2022,Physics simulation,Quantum chemistry,0,726,1434,7800000000,false,Both
 Reducing the Number of Qubits in Quantum Factoring,cryptoeprint:2024/222,2024,Cryptography,Factoring,0,762,1700,68719476736,false,Both
 Analyzing Prospects for Quantum Advantage in Topological Data Analysis,arXiv:2209.13581,2022,Machine learning,Topological data analysis,0,701,100,100000000,false,Classically intractable
+Applications and resource estimates for open system simulation on a quantum computer,arXiv:2406.06281,2024,Quantum dynamics,Metal-Insulator Transition,0,774,3000,270000000000000,false,Both
+Quantifying fault tolerant simulation of strongly correlated systems using the Fermi-Hubbard model,arXiv:2406.06511,2024,Quantum chemistry,Fermi-Hubbard,Bacitracin simulation,0,773,400,3000000,false,Both
+Prospects for NMR Spectral Prediction on Fault-Tolerant Quantum Computers,arXiv:2406.09340,2024,Quantum chemisty,0,772,256,579000000000,false,Both
