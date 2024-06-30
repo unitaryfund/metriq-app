@@ -125,16 +125,8 @@ function scatterplot (
   const Y = d3.map(data, y)
   const I = d3.range(data.length)
 
-  let maxX = d[0].num_gates
-  let maxY = d[0].num_qubits
-  for (let i = 1; i < d.length; ++i) {
-    if (d[i].num_gates > maxX) {
-      maxX = d[i].num_gates
-    }
-    if (d[i].num_qubits > maxY) {
-      maxY = d[i].num_qubits
-    }
-  }
+  const maxX = 40e15
+  const maxY = 100000
 
   // domains
   const xDomain = [1, maxX + maxX * rangeMult]
