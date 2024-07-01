@@ -950,6 +950,7 @@ function QuantumVolumeChart (props) {
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
+  const [isLoaded, setIsLoaded] = React.useState(false)
   React.useEffect(() => {
     isScaleLinear = (parseInt(props.taskId) !== 34)
     isQubits = !!(props.isQubits)
@@ -1031,12 +1032,18 @@ function QuantumVolumeChart (props) {
             arXiv: _d.arXiv
           }))
           .sort((a, b) => isQubits ? (a.qubitCount < b.qubitCount) : (a.tableDate > b.tableDate))
+        setIsLoaded(true)
         redraw()
       })
       .catch(err => {
-        window.alert('Could not load task! Check your connection and reload the page. (Error: ' + err + ')')
+        setIsLoaded(false)
+        console.log(err)
       })
-  }, [props, metricNames, taskId, setTaskId, isQ, setIsQ])
+  }, [props, metricNames, taskId, setTaskId, isQ, setIsQ, isLoaded, setIsLoaded])
+
+  if (!isLoaded) {
+    return <span />
+  }
 
   return (
     <span>
