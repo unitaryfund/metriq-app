@@ -10,7 +10,7 @@ import ViewHeader from '../components/ViewHeader'
 import { sortAlphabetical } from '../components/SortFunctions'
 import SotaChart from '../components/SotaChart'
 import SubmissionScroll from '../components/SubmissionScroll'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { renderLatex } from '../components/RenderLatex'
 import QuantumVolumeChart from '../components/QuantumVolumeChart'
 
@@ -98,7 +98,7 @@ class Vqa extends React.Component {
       <div id='metriq-main-content' className='container'>
         <ViewHeader align='center'>VQA Benchmarks</ViewHeader>
         <h5>Metriq has the latest data on variational quantum algoritms (VQAs).</h5>
-        <p>Here you can find and contribute to VQA benchmarks like those in this <Link to='https://github.com/JoanArrow/VQA-Benchmarking-Project'>GitHub repository</Link> by a member of the QED-C Standards Committee, Joan Étude Arrow, and her collaborators.</p>
+        <p>Here you can find and contribute to VQA benchmarks like those in this <a href='https://github.com/JoanArrow/VQA-Benchmarking-Project'>GitHub repository</a> by a member of the QED-C Standards Committee, Joan Étude Arrow, and her collaborators.</p>
         <p>{renderLatex('Joan’s approach to benchmarking prioritizes application-based measures of performance that enable cross-comparison across all VQA applications. This project investigates the largest instance of a problem that can be solved by a VQA in various noisy environments. A VQA instance is considered solved provided the solution found by the algorithm is within $\\epsilon = 10^{-3}$ of the true solution.')}</p>
         <p>{renderLatex('$||S_T-S_A||_{VQA}\\leq\\epsilon$')}</p>
         <p>{renderLatex('Here the metric is determined by the output type of the VQA. If the solution output is a number, the metric $||.||_{VQA}$ is simply the difference between the true value and the algorithm output. If the solution output is a probability distribution, then we employ the Hellinger distance to be consistent with the fidelity calculations of previous QED-C benchmarks.')}</p>

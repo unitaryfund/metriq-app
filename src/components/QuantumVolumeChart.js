@@ -1031,7 +1031,7 @@ function QuantumVolumeChart (props) {
             tableDate: Date.parse(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
-          .sort((a, b) => isQubits ? (a.qubitCount < b.qubitCount) : (a.tableDate > b.tableDate))
+          .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.tableDate > b.tableDate))
         setIsLoaded(true)
         redraw()
       })
