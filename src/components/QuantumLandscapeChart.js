@@ -833,6 +833,7 @@ function QuantumLandscapeChart () {
           <p>The shaded blue region indicates the qubit widths that can be simulated by state vector methods, up to about 50 qubits. This plot does not include clock speed, which is another important parameter to consider. Resource estimates are based on applications where performance can be proved. This is a high bar. Estimates may be pessimistic as many heuristics need to be developed in practice. Estimates may be optimistic as they haven't been run and so could have mistakes!</p>
           <p>If you have other data you would like to see added to this chart please either make a pull-request on Metriq to the <a href='https://github.com/unitaryfund/metriq-app/blob/main/src/progress.csv'>progress chart CSV file</a> directly or email <a href='mailto:metriq@unitary.fund'>metriq@unitary.fund</a>.</p>
           <p>Below is a more in-depth table of relevant results, from which key representative points have been selected to display on the chart above.</p>
+          <p>To have new data point additions of your own considered for inclusion in the chart, please open a pull request on GitHub against <a href='https://github.com/unitaryfund/metriq-app/blob/main/src/progress.csv'>the chart data file</a>.</p>
         </div>
       </div>
       <div className='row'>
