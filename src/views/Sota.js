@@ -19,7 +19,7 @@ const Sota = (props) => {
       <SotaItem
         title='Quantum Volume'
         description={'The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).'}
-        value='2^19'
+        value='2^20'
         submissionId={642}
         taskId={34}
         method={<Link to={'/Platform/' + 80}>Quantinuum System Model H1-1</Link>}
