@@ -126,7 +126,7 @@ function scatterplot (
   const I = d3.range(data.length)
 
   const maxX = 40e15
-  const maxY = 100000
+  const maxY = 400000
 
   // domains
   const xDomain = [1, maxX + maxX * rangeMult]
