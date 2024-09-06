@@ -138,8 +138,6 @@ function barplot (
   const height = yRange[0] - yRange[1]
   const yMin = d3.min(Y)
   const yDomain = [yMin < 1 ? yMin : 1, d3.max(Y)]
-  console.log(yDomain)
-  console.log(yRange)
   const x = d3.scaleBand()
     .range([xRange[0], xRange[1]])
     .domain(data.map((i) => { if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
@@ -467,7 +465,6 @@ function plot (
 
   let chronData = [...data]
   quickSort(chronData, 0, chronData.length - 1)
-  console.log(chronData)
   const maxIDs = [chronData[0].id]
   let currentMaxValue = chronData[0].metricValue
   for (let lcv = 1; lcv < chronData.length; ++lcv) {
