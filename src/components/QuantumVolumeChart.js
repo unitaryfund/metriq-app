@@ -83,6 +83,49 @@ function hideLabels () {
   })
 }
 
+function parseDate(dateString) {
+  var [year, month, date] = dateString.split("-").map(Number)
+
+  return new Date(year, month - 1, date)
+}
+
+
+// Quick sort from https://www.geeksforgeeks.org/javascript-program-for-quick-sort/
+// ...PURELY because Chrome Array.prototype.sort() is bugged for this case!
+function partition(arr, low, high) { 
+  let pivot = arr[high].dayIndexInEpoch; 
+  let i = low - 1; 
+
+  for (let j = low; j <= high - 1; j++) { 
+      // If current element is smaller than the pivot 
+      if (arr[j].dayIndexInEpoch < pivot) { 
+          // Increment index of smaller element 
+          i++; 
+          // Swap elements 
+          [arr[i], arr[j]] = [arr[j], arr[i]];  
+      } 
+  } 
+  // Swap pivot to its correct position 
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];  
+  return i + 1; // Return the partition index 
+} 
+
+function quickSort(arr, low, high) { 
+  if (low >= high) return; 
+  let pi = partition(arr, low, high); 
+
+  quickSort(arr, low, pi - 1); 
+  quickSort(arr, pi + 1, high); 
+} 
+
+function dayIndexInEpoch(dateString) {
+  // This is actually purely a work-around for a bug baked into Chrome.
+  // It doesn't need to be exact; it just needs to be unique and maintain order.
+  var [year, month, date] = dateString.split("-").map(Number)
+
+  return (year - 1960) * 366 + (month - 1) * 32 + date
+}
+
 function barplot (
   data,
   xRange,
@@ -397,7 +440,7 @@ function plot (
 ) {
   data = data
     .filter(
-      (x) => (!isNaN(x[xName]) && x[xName] > 0 && !isNaN(x[yName]) && x[yName] > 0)
+      (x) => (!isNaN(x[xName]) && (x[xName] > 0) && !isNaN(x[yName]) && (x[yName] > 0))
     )
     .map(function (obj, index) {
       return { ...obj, id: `ID_${index + 1}` }
@@ -406,12 +449,10 @@ function plot (
   // list of IDs of data with max values
   // maxData with only max objects
 
-  let maxIDs = []
-  let currentMaxValue = -1
+  const metricNameInvariant = metricName.toLowerCase()
+  const isQv = (metricNameInvariant === 'quantum volume')
 
-  const isQv = (metricName.toLowerCase() === 'quantum volume')
-
-  data = data.filter((x) => x.metricName.toLowerCase() === metricName.toLowerCase())
+  data = data.filter((x) => x.metricName.toLowerCase() === metricNameInvariant)
   if (isQv && !isScaleLinear) {
     data = data.filter((x) => x.metricValue > 1)
   }
@@ -420,28 +461,33 @@ function plot (
     if (isQv && !isScaleLinear) {
       d.metricValue = Math.log2(d.metricValue)
     }
-    if (Number(d.metricValue) > currentMaxValue) {
-      maxIDs = [...maxIDs, d.id]
-      currentMaxValue = Number(d.metricValue)
-    }
 
     return 0
   })
+
+  let chronData = [...data]
+  quickSort(chronData, 0, chronData.length - 1)
+  console.log(chronData)
+  const maxIDs = [chronData[0].id]
+  let currentMaxValue = chronData[0].metricValue
+  for (let lcv = 1; lcv < chronData.length; ++lcv) {
+    const d = chronData[lcv]
+    if (d.metricValue > currentMaxValue) {
+      maxIDs.push(d.id)
+      currentMaxValue = d.metricValue
+    }
+  }
+
+  const maxData = chronData.filter((d) => maxIDs.includes(d.id))
+  for (let lcv = 0; lcv < (maxData.length - 1); ++lcv) {
+    maxData[lcv].nextX = maxData[lcv + 1][xName]
+    maxData[lcv].nextY = maxData[lcv + 1][yName]
+  }
 
   const yScaleType = (isScaleLinear || isQv) ? d3.scaleLinear : d3.scaleLog
   if (isQv && !isScaleLinear) {
     yAxisText = 'Log-2 Quantum Volume  →'
   }
-
-  const maxData = data.filter((d) => maxIDs.includes(d.id))
-  maxData.map((d, i) => {
-    if (i < maxData.length - 1) {
-      d.nextX = maxData[i + 1][xName]
-      d.nextY = maxData[i + 1][yName]
-    }
-
-    return 0
-  })
 
   // define aesthetic mappings
   const x = (d) => d[xName]
@@ -559,7 +605,7 @@ function plot (
 
   let isSameDate = true
   for (let i = 1; i < data.length; ++i) {
-    if (data[0].tableDate !== data[i].tableDate) {
+    if (data[0].dayIndexInEpoch !== data[i].dayIndexInEpoch) {
       isSameDate = false
       break
     }
@@ -1028,10 +1074,11 @@ function QuantumVolumeChart (props) {
             qubitCount: _d.qubitCount ? +_d.qubitCount : '',
             circuitDepth: _d.circuitDepth ? +_d.circuitDepth : '',
             provider: _d.providerName ? _d.providerName.toLowerCase() : 'Other',
-            tableDate: Date.parse(_d.evaluatedAt),
+            tableDate: parseDate(_d.evaluatedAt),
+            dayIndexInEpoch: dayIndexInEpoch(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
-          .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.tableDate > b.tableDate))
+          .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setIsLoaded(true)
         redraw()
       })
