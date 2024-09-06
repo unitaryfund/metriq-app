@@ -123,7 +123,7 @@ function dayIndexInEpoch(dateString) {
   // It doesn't need to be exact; it just needs to be unique and maintain order.
   var [year, month, date] = dateString.split("-").map(Number)
 
-  return (year - 1960) * 366 + (month - 1) * 32 + date
+  return (year - 1960) * 372 + (month - 1) * 31 + date
 }
 
 function barplot (
