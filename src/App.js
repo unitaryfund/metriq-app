@@ -8,7 +8,7 @@ const App = () =>
     <SimpleReactFooter
       title='metriq'
       description='Quantum computing benchmarks by community contributors'
-      copyright='2021-2023 Unitary Fund'
+      copyright='2021-2024 Unitary Fund'
       discord='unitary.fund'
       github='unitaryfund'
       twitch='unitaryfund'
