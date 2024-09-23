@@ -342,6 +342,7 @@ input[type="range"] {
 
 .submission-ref-button {
   margin-right: 4px;
+  width: 96px;
 }
 
 .submission-heading {

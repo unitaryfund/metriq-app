@@ -100,7 +100,7 @@ const FormFieldRow = (props) => {
           />}
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        {props.imageUrl && <Button variant='primary' onClick={() => setImagePreviewUrl(value)}>Preview</Button>}
+        {props.imageUrl && <Button variant='primary' className='submission-ref-button' onClick={() => setImagePreviewUrl(value)}>Preview</Button>}
         <FormFieldValidator invalid={!isValid} className='col-md-3' message={props.validatorMessage} />
         {imagePreviewUrl && isValid &&
           <FormFieldWideRow className='text-center'>
