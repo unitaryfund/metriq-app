@@ -629,7 +629,7 @@ class Platform extends React.Component {
             <div>
               <h2>Properties
                 <EditButton
-                  className='float-right edit-button btn'
+                  className='float-end edit-button btn'
                   onClickAdd={() => this.handleOnClickAddProperty()}
                   onClickRemove={() => this.handleOnClickRemove('Property')}
                 />

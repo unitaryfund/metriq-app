@@ -36,12 +36,12 @@ const CategoryItemBoxWide = (props) => {
               {props.type === 'task' && qedcIds.includes(parseInt(props.item.id)) &&
                 <span> <Link to='/QEDC'><span className='link'>(QED-C)</span></Link></span>}
             </div>
-            <div className='col-xl-6 col-6 text-right submission-button-align'>
+            <div className='col-xl-6 col-6 text-end submission-button-align'>
               <CategoryItemIcon count={props.item.resultCount} type={props.type} word='results' icon={faChartLine} />
               <CategoryItemIcon count={props.item.submissionCount} type={props.type} word='submissions' icon={faExternalLinkAlt} />
               <CategoryItemIcon count={props.item.upvoteTotal} type={props.type} word='up-votes' icon={faHeart} />
             </div>
-            <div className='col-xl-2 col-6 text-right'>
+            <div className='col-xl-2 col-6 text-end'>
               <SubscribeButton item={props.item} type={props.type} isLoggedIn={props.isLoggedIn} />
             </div>
           </div>

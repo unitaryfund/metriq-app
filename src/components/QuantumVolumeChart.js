@@ -83,45 +83,44 @@ function hideLabels () {
   })
 }
 
-function parseDate(dateString) {
-  var [year, month, date] = dateString.split("-").map(Number)
+function parseDate (dateString) {
+  const [year, month, date] = dateString.split('-').map(Number)
 
   return new Date(year, month - 1, date)
 }
 
-
 // Quick sort from https://www.geeksforgeeks.org/javascript-program-for-quick-sort/
 // ...PURELY because Chrome Array.prototype.sort() is bugged for this case!
-function partition(arr, low, high) { 
-  let pivot = arr[high].dayIndexInEpoch; 
-  let i = low - 1; 
+function partition (arr, low, high) {
+  const pivot = arr[high].dayIndexInEpoch
+  let i = low - 1
 
-  for (let j = low; j <= high - 1; j++) { 
-      // If current element is smaller than the pivot 
-      if (arr[j].dayIndexInEpoch < pivot) { 
-          // Increment index of smaller element 
-          i++; 
-          // Swap elements 
-          [arr[i], arr[j]] = [arr[j], arr[i]];  
-      } 
-  } 
-  // Swap pivot to its correct position 
-  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];  
-  return i + 1; // Return the partition index 
-} 
+  for (let j = low; j <= high - 1; j++) {
+    // If current element is smaller than the pivot
+    if (arr[j].dayIndexInEpoch < pivot) {
+      // Increment index of smaller element
+      i++;
+      // Swap elements
+      [arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+  }
+  // Swap pivot to its correct position
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
+  return i + 1 // Return the partition index
+}
 
-function quickSort(arr, low, high) { 
-  if (low >= high) return; 
-  let pi = partition(arr, low, high); 
+function quickSort (arr, low, high) {
+  if (low >= high) return
+  const pi = partition(arr, low, high)
 
-  quickSort(arr, low, pi - 1); 
-  quickSort(arr, pi + 1, high); 
-} 
+  quickSort(arr, low, pi - 1)
+  quickSort(arr, pi + 1, high)
+}
 
-function dayIndexInEpoch(dateString) {
+function dayIndexInEpoch (dateString) {
   // This is actually purely a work-around for a bug baked into Chrome.
   // It doesn't need to be exact; it just needs to be unique and maintain order.
-  var [year, month, date] = dateString.split("-").map(Number)
+  const [year, month, date] = dateString.split('-').map(Number)
 
   return (year - 1960) * 372 + (month - 1) * 31 + date
 }
@@ -463,7 +462,7 @@ function plot (
     return 0
   })
 
-  let chronData = [...data]
+  const chronData = [...data]
   quickSort(chronData, 0, chronData.length - 1)
   const maxIDs = [chronData[0].id]
   let currentMaxValue = chronData[0].metricValue
@@ -1092,7 +1091,7 @@ function QuantumVolumeChart (props) {
   return (
     <span>
       <div className='row'>
-        <div className='col text-left'>
+        <div className='col text-start'>
           <h4 align='left'>{taskName}</h4>
         </div>
       </div>

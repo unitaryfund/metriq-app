@@ -11,7 +11,7 @@ const SubmissionBoxSmall = (props) =>
     <Link to={'/Submission/' + props.item.id}>
       <div className='row'>
         <div className='col col-md-12'>
-          <div className='text-left submission-heading-small'>{(props.item.name.length > 80) ? (props.item.name.substring(0, 77) + '...') : props.item.name}</div>
+          <div className='text-start submission-heading-small'>{(props.item.name.length > 80) ? (props.item.name.substring(0, 77) + '...') : props.item.name}</div>
         </div>
       </div>
       <div className='row'>

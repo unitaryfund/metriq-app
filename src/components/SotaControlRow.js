@@ -1,6 +1,6 @@
 const SotaControlRow = (props) =>
   <div className='row sota-control-row'>
-    <span htmlFor={props.name} className='col col-md-5 form-field-label metric-chart-label text-left'>{props.label}</span>
+    <span htmlFor={props.name} className='col col-md-5 form-field-label metric-chart-label text-start'>{props.label}</span>
     <div className='col col-md-7'>
       <select
         className='form-control'

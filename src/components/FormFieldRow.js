@@ -53,7 +53,7 @@ const FormFieldRow = (props) => {
         </Suspense>}
       {!props.tooltip &&
         <label htmlFor={props.inputName} className='col-md-3 form-field-label' dangerouslySetInnerHTML={{ __html: props.label }} />}
-      <div className='col-md-6 '>
+      <div className='col-md-6'>
         {(props.inputType === 'textarea') &&
           <textarea
             id={props.inputName}
@@ -69,7 +69,23 @@ const FormFieldRow = (props) => {
           >
             {props.value}
           </textarea>}
-        {(props.inputType !== 'textarea') &&
+        {(props.inputType === 'checkbox') &&
+          <div className='text-center'>
+            <input
+              id={props.inputName}
+              name={props.inputName}
+              className='form-check sota-checkbox-control'
+              style={{ display: 'inline-block' }}
+              type={props.inputType}
+              selected={props.defaultValue}
+              value={value}
+              checked={checked}
+              onChange={handleOnFieldChange}
+              onBlur={handleOnFieldBlur}
+              disabled={props.disabled}
+            />
+          </div>}
+        {(props.inputType !== 'textarea') && (props.inputType !== 'checkbox') &&
           <input
             id={props.inputName}
             name={props.inputName}

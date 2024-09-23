@@ -13,7 +13,7 @@ const ResultsTable = (props) => {
         <div className='card-title'>
           <h5>Results
             <EditButton
-              className='float-right edit-button btn'
+              className='float-end edit-button btn'
               onClickAdd={props.onClickAdd}
               onClickRemove={props.onClickRemove}
               disabled={props.disabled}

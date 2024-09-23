@@ -779,7 +779,7 @@ class Submission extends React.Component {
               <div className='card-title'>
                 <h5>Methods
                   <EditButton
-                    className='float-right edit-button btn'
+                    className='float-end edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Method')}
                     onClickRemove={() => this.handleOnClickRemove('Method')}
                   />
@@ -815,7 +815,7 @@ class Submission extends React.Component {
               <div className='card-title'>
                 <h5>Platforms
                   <EditButton
-                    className='float-right edit-button btn'
+                    className='float-end edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Platform')}
                     onClickRemove={() => this.handleOnClickRemove('Platform')}
                   />
@@ -853,7 +853,7 @@ class Submission extends React.Component {
               <div className='card-title'>
                 <h5>Tasks
                   <EditButton
-                    className='float-right edit-button btn'
+                    className='float-end edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Task')}
                     onClickRemove={() => this.handleOnClickRemove('Task')}
                   />
@@ -889,7 +889,7 @@ class Submission extends React.Component {
               <div className='card-title'>
                 <h5>Data Sets
                   <EditButton
-                    className='float-right edit-button btn'
+                    className='float-end edit-button btn'
                     onClickAdd={() => this.handleOnClickAddRef('Data Set')}
                     onClickRemove={() => this.handleOnClickRemove('Data Set')}
                   />
@@ -925,7 +925,7 @@ class Submission extends React.Component {
               <div className='card-title'>
                 <h5>Tags
                   <EditButton
-                    className='float-right edit-button btn'
+                    className='float-end edit-button btn'
                     onClickAdd={() => this.handleOnClickAdd('Tag')}
                     onClickRemove={() => this.handleOnClickRemove('Tag')}
                   />

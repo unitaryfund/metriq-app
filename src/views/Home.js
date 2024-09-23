@@ -107,8 +107,8 @@ class Home extends React.Component {
           <br />
         </div>
         <div id='metriq-main-content'>
-          <p className='text-left'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to='/Submissions'>submissions</Link> that show the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</p>
-          <p className='text-left'>We have highlighted tasks here and you can search for more:</p>
+          <p className='text-start'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to='/Submissions'>submissions</Link> that show the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</p>
+          <p className='text-start'>We have highlighted tasks here and you can search for more:</p>
           <br />
           <FormFieldTypeaheadRow
             className='search-bar'
@@ -173,7 +173,7 @@ class Home extends React.Component {
           <br />
           {(this.state.platforms.length > 0) &&
             <span>
-              <FormFieldWideRow className='text-left'>
+              <FormFieldWideRow className='text-start'>
                 <h4 align='left' style={{ display: 'inline-block' }}>Platforms</h4> <Link to='/Platforms'><Button variant='outline-light' className='platforms-more-button'>See more platforms</Button></Link>
               </FormFieldWideRow>
               <FormFieldWideRow>

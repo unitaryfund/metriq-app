@@ -211,7 +211,7 @@ class Task extends React.Component {
           <div className='row'>
             <div className='col-xl-9 col-12'>
               <h1 className='view-header'>{this.state.item.fullName ? this.state.item.fullName : this.state.item.name}</h1> <FontAwesomeIcon icon='edit' className='submission-edit' onClick={this.handleShowEditModal} />
-              <div className='float-right'>
+              <div className='float-end'>
                 <SubscribeButton item={this.state.item} type='task' isLoggedIn={this.props.isLoggedIn} />
                 <SocialShareIcons url={config.web.getUriPrefix() + '/task/' + this.props.match.params.id} />
               </div>

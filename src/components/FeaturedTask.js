@@ -63,7 +63,7 @@ const FeaturedTask = (props) => {
   return (
     <Link to={'/Task/' + props.taskId} className='active-navlink' onClick={handleOnLinkClick}>
       <div className='task card task-card-link'>
-        <div className='row h-100 text-left'>
+        <div className='row h-100 text-start'>
           <div className='col-xl-4 col-lg-5 col'>
             <SotaChart
               isPreview
@@ -88,7 +88,7 @@ const FeaturedTask = (props) => {
           </div>
         </div>
         <div className='row h-100'>
-          <div className='col-lg-4 col text-left'>
+          <div className='col-lg-4 col text-start'>
             <Link to={'/Task/' + parentTaskId} onMouseEnter={handleOnMouseEnter} onMouseLeave={handleOnMouseLeave}>{parentTaskName}</Link>
           </div>
           <div className='col-lg-8 col'>

@@ -58,11 +58,11 @@ const FormFieldTypeaheadRow = (props) => {
       {props.label && props.tooltip &&
         <Suspense fallback={<div>Loading...</div>}>
           <TooltipTrigger message={props.tooltip}>
-            <span htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
+            <span htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-end' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />
           </TooltipTrigger>
         </Suspense>}
       {(props.isRow || (props.label && !props.tooltip)) &&
-        <label htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-right' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
+        <label htmlFor={coalescedId} className={'col-12' + (props.isWide ? ' col-md-4' : ' col-md-3') + ' form-field-label' + (props.alignLabelRight ? ' text-end' : '')} dangerouslySetInnerHTML={{ __html: props.label }} />}
       <Typeahead
         ref={typeahead}
         id={coalescedId}

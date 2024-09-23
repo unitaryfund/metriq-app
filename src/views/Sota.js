@@ -18,7 +18,7 @@ const Sota = (props) => {
       <br />
       <SotaItem
         title='Quantum Volume'
-        description={'The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).'}
+        description='The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).'
         value='2^20'
         submissionId={642}
         taskId={34}
@@ -72,7 +72,7 @@ const Sota = (props) => {
         architecture={<Link to='/Architrecture/1'>Neutral Atom Qubits</Link>}
       />
       <div className='row'>
-        <div className='col-md-9 text-left'>
+        <div className='col-md-9 text-start'>
           <b>Make a new <Link to='/AddSubmission'>submission</Link> to report the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</b>
         </div>
       </div>

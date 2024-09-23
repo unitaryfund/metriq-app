@@ -240,20 +240,43 @@ class Platforms extends React.Component {
             <FormFieldWideRow>
               <div className='row'>
                 <div className='col'>
-                  <h4 align='left'><img src={architecturesLogo} alt='Architectures logo' /> Architectures</h4>
+                  <h4 align='left'><img src={architecturesLogo} alt='Architectures logo' /> Hardware</h4>
                 </div>
               </div>
               <div className='row'>
                 <div className='col-md-12 centered-tabs'>
                   <Tabs defaultActiveKey='common' id='categories-tabs'>
                     <Tab eventKey='common' title='Common'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures} isLoggedIn={this.props.isLoggedIn} />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures.slice(0, 2).concat(this.state.commonArchitectures.slice(3, 4))} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='popular' title='Popular'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures} isLoggedIn={this.props.isLoggedIn} />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures.slice(0, 2).concat(this.state.popularArchitectures.slice(3, 4))} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                     <Tab eventKey='alphabetical' title='Alphabetical'>
-                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures} isLoggedIn={this.props.isLoggedIn} />
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures.slice(0, 2).concat(this.state.alphabeticalArchitectures.slice(3, 4))} isLoggedIn={this.props.isLoggedIn} />
+                    </Tab>
+                  </Tabs>
+                </div>
+              </div>
+            </FormFieldWideRow>
+            <br />
+            <FormFieldWideRow>
+              <div className='row'>
+                <div className='col'>
+                  <h4 align='left'><img src={providersLogo} alt='Hardware logo' /> Software</h4>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-md-12 centered-tabs'>
+                  <Tabs defaultActiveKey='common' id='categories-tabs'>
+                    <Tab eventKey='common' title='Common'>
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.commonArchitectures.slice(4, 5).concat(this.state.commonArchitectures.slice(2, 3))} isLoggedIn={this.props.isLoggedIn} />
+                    </Tab>
+                    <Tab eventKey='popular' title='Popular'>
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.popularArchitectures.slice(4, 5).concat(this.state.popularArchitectures.slice(2, 3))} isLoggedIn={this.props.isLoggedIn} />
+                    </Tab>
+                    <Tab eventKey='alphabetical' title='Alphabetical'>
+                      <CategoryScroll type='architecture' isLoading={this.state.isLoadingArchitectures} items={this.state.alphabeticalArchitectures.slice(4, 5).concat(this.state.alphabeticalArchitectures.slice(2, 3))} isLoggedIn={this.props.isLoggedIn} />
                     </Tab>
                   </Tabs>
                 </div>

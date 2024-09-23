@@ -134,7 +134,7 @@ const SubmissionBox = (props) => {
             </TooltipTrigger>
           </div>
         </div>
-        <div className={props.isDraft ? 'col-md-3 text-right' : 'col-md-1 text-right'}>
+        <div className={props.isDraft ? 'col-md-3 text-end' : 'col-md-1 text-end'}>
           {props.isDraft &&
             <TooltipTrigger message='Publish submission'>
               <span>{props.isEditView && <button className='delete-button btn btn-danger submission-ref-button' onClick={handlePublishOnClick}>Publish</button>}</span>

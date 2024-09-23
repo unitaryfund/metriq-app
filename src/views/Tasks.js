@@ -84,7 +84,7 @@ class Tasks extends React.Component {
         />
         <br />
         <h4 align='left'>Tasks are workloads of interest performed on a quantum computer.</h4>
-        <p className='text-left'>Search the task hierarchy to see charts of comparative performance across methods or click into the parent/child task hierarchy through top-level task categories.</p>
+        <p className='text-start'>Search the task hierarchy to see charts of comparative performance across methods or click into the parent/child task hierarchy through top-level task categories.</p>
         <br />
         <FormFieldWideRow className='centered-tabs'>
           <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
