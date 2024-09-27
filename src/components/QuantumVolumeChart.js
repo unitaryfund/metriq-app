@@ -480,6 +480,18 @@ function plot (
     maxData[lcv].nextY = maxData[lcv + 1][yName]
   }
 
+  let isSameDate = true
+  for (let i = 1; i < data.length; ++i) {
+    if (data[0].dayIndexInEpoch !== data[i].dayIndexInEpoch) {
+      isSameDate = false
+      break
+    }
+  }
+  if (isSameDate) {
+    marginBottom = 128
+    xLabelShift = marginBottom - 40
+  }
+
   const yScaleType = (isScaleLinear || isQv) ? d3.scaleLinear : d3.scaleLog
   if (isQv && !isScaleLinear) {
     yAxisText = 'Log-2 Quantum Volume  →'
@@ -598,14 +610,6 @@ function plot (
     .style('font-size', `${smallLabelSize}px`)
     .style('font-family', fontType)
     .text((i) => d3.format('.2s')(y(i)))
-
-  let isSameDate = true
-  for (let i = 1; i < data.length; ++i) {
-    if (data[0].dayIndexInEpoch !== data[i].dayIndexInEpoch) {
-      isSameDate = false
-      break
-    }
-  }
 
   if (isSameDate) {
     barplot(

@@ -12,7 +12,10 @@ import SotaChart from '../components/SotaChart'
 import SubmissionScroll from '../components/SubmissionScroll'
 import { withRouter } from 'react-router-dom'
 import { renderLatex } from '../components/RenderLatex'
-import QuantumVolumeChart from '../components/QuantumVolumeChart'
+import vqls from '../images/VQLS.png'
+import vqsd from '../images/VQSD.png'
+import aavqe from '../images/AAVQE.png'
+import qabom from '../images/QABOM.png'
 
 class Vqa extends React.Component {
   constructor (props) {
@@ -112,13 +115,8 @@ class Vqa extends React.Component {
             <div className='col-md col'>
               {this.state.featured &&
                 <CategoryItemBox item={this.state.featured} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />}
-              <QuantumVolumeChart
-                chartId={0}
-                xLabel='Time'
-                taskId={119}
-                key={0}
-                isQubits
-              />
+              <img src={vqls} alt='VQLS chart' style={{ width: '50%' }} /><img src={vqsd} alt='VQSD chart' style={{ width: '50%' }} />
+              <img src={aavqe} alt='AAVQE chart' style={{ width: '50%' }} /><img src={qabom} alt='QABOM chart' style={{ width: '50%' }} />
               <hr />
             </div>
           </div>
@@ -130,10 +128,10 @@ class Vqa extends React.Component {
               <div className='col-md col'>
                 <CategoryItemBox item={item} isWide isPreview isLoggedIn={this.props.isLoggedIn} type='task' className='submission' />
                 <SotaChart
-                  chartId={index + 1}
+                  chartId={index}
                   xLabel='Time'
                   taskId={item.id}
-                  key={index + 1}
+                  key={index}
                 />
                 <hr />
               </div>
