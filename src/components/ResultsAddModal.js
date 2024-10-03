@@ -138,9 +138,13 @@ const ResultsAddModal = (props) => {
     }
     if (result.dataSet && isNaN(result.dataSet)) {
       result.dataSet = result.dataSet.id
+    } else {
+      result.dataSet = null
     }
     if (result.platform && isNaN(result.platform)) {
       result.platform = result.platform.id
+    } else {
+      result.platform = null
     }
     const resultRoute = config.api.getUriPrefix() + (result.id ? ('/result/' + result.id) : ('/submission/' + props.submission.id + '/result'))
     axios.post(resultRoute, result)
