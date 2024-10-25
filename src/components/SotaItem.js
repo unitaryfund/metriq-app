@@ -12,18 +12,6 @@ const SotaItem = (props) =>
         <p>{props.description}</p>
       </div>
     </div>
-    <div className='row'>
-      <label htmlFor={props.name + '-value'} className='col-md-1 text-start'>Value:</label>
-      <div className='col-md-6 text-start'><Link to={'/Submission/' + props.submissionId}>{props.value}</Link></div>
-    </div>
-    <div className='row'>
-      <label htmlFor={props.name + '-value'} className='col-md-1 text-start'>{props.isPlatform ? 'Platform:' : 'Method:'}</label>
-      <div className='col-md-6 text-start'>{props.method}</div>
-    </div>
-    <div className='row'>
-      <label htmlFor={props.name + '-value'} className='col-md-1 text-start'>Architecture:</label>
-      <div className='col-md-6 text-start'>{props.architecture}</div>
-    </div>
     <br />
   </span>
 
