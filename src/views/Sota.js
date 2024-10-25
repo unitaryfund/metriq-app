@@ -9,6 +9,11 @@ const Sota = (props) => {
           <h4 align='left'>State of the Art Quantum Benchmarks</h4>
         </div>
       </div>
+      <div className='row'>
+        <div className='col text-start'>
+          <p>These are benchmarks that the Metriq team thinks give a handle on understanding the state-of-the-art in quantum computing. Click into each task comparison to see the latest data.</p>
+        </div>
+      </div>
       <br />
       <div className='row'>
         <div className='col'>
@@ -19,7 +24,7 @@ const Sota = (props) => {
       <SotaItem
         title='Quantum Volume'
         description='The Log-2 Quantum Volume is otherwise known as "algorithmic qubits" (in the absence of error correction) and constitutes the effective number of viable logical qubits (for QV-like tasks).'
-        value='2^20'
+        value='2^21'
         submissionId={642}
         taskId={34}
         method={<Link to={'/Platform/' + 80}>Quantinuum System Model H1-1</Link>}
