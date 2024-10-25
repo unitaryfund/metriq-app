@@ -11,7 +11,7 @@ const Sota = (props) => {
       </div>
       <div className='row'>
         <div className='col text-start'>
-          <p>These are benchmarks that the Metriq team thinks give a handle on understanding the state-of-the-art in quantum computing. Click into each task comparison to see the latest data.</p>
+          <p>These are benchmarks that the Metriq team thinks give a handle on understanding the state-of-the-art in quantum computing. Click into each task comparison title link to see the latest data.</p>
         </div>
       </div>
       <br />
