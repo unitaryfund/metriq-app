@@ -1,6 +1,5 @@
 import axios from 'axios'
 import React from 'react'
-import { Button } from 'react-bootstrap'
 import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -9,11 +8,10 @@ import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import CategoryScroll from '../components/CategoryScroll'
-import CategoryItemBox from '../components/CategoryItemBox'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SotaChart from '../components/SotaChart'
+import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -141,28 +139,13 @@ class Home extends React.Component {
                     <br />
                   </span>
                 )}
+                <div className='card sota-card'>
+                  <QuantumLandscapeChart />
+                </div>
               </div>
             </div>
           </FormFieldWideRow>
           <br />
-          <FormFieldWideRow className='centered-tabs'>
-            <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading={<span>Tasks <Link to='/Tasks'><Button variant='outline-light' className='platforms-more-button'>Explore tasks</Button></Link></span>} />
-          </FormFieldWideRow>
-          <br />
-          {(this.state.platforms.length > 0) &&
-            <span>
-              <FormFieldWideRow className='text-start'>
-                <h4 align='left' style={{ display: 'inline-block' }}>Platforms</h4> <Link to='/Platforms'><Button variant='outline-light' className='platforms-more-button'>See more platforms</Button></Link>
-              </FormFieldWideRow>
-              <FormFieldWideRow>
-                <div className='row h-100'>
-                  <div className='col-lg-9 col h-100'>
-                    {this.state.platforms.map((row, rid) => <div className='row' key={rid}>{row.map((item, id) => <CategoryItemBox item={item} key={3 * rid + id} isLoggedIn={this.props.isLoggedIn} type='platform' />)}</div>)}
-                  </div>
-                </div>
-              </FormFieldWideRow>
-              <br />
-            </span>}
           <FormFieldAlertRow>
             <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
           </FormFieldAlertRow>
