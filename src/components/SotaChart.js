@@ -826,6 +826,7 @@ class SotaChart extends React.Component {
             <div className='row'>
               <div className='col-xl-8 col-12'>
                 <div className='chart-container sota-chart'>
+                  <h5 className='text-start'>{this.state.task.name}</h5>
                   <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
                 </div>
                 {!this.props.isHideSubset &&
