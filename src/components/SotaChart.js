@@ -721,7 +721,7 @@ class SotaChart extends React.Component {
     for (let i = 0; i < metricNames.length; i++) {
       const length = chartData[metricNames[i]].length
       isLowerBetterDict[metricNames[i]] = (isHigherBetterCounts[metricNames[i]] < (length / 2))
-      if (length > m) {
+      if ((metricNames[i] === this.props.chartKey) || ((!this.props.chartKey) && (length > m))) {
         chartKeyInt = i
         chartKey = metricNames[i]
         m = length
@@ -828,18 +828,19 @@ class SotaChart extends React.Component {
                 <div className='chart-container sota-chart'>
                   <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
                 </div>
-                <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-                  <span className='metric-chart-label'>Subset Entry</span>
-                  <table style={{ width: '100%' }}>
-                    {this.state.subsetDataSets.map((row, key1) =>
-                      <tr key={key1}>
-                        {row.map((series, key2) =>
-                          <td key={key2} style={{ width: '20%' }}>
-                            {!this.state.isSameDate && <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} />} <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
-                          </td>)}
-                      </tr>)}
-                  </table>
-                </div>
+                {!this.props.isHideSubset &&
+                  <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
+                    <span className='metric-chart-label'>Subset Entry</span>
+                    <table style={{ width: '100%' }}>
+                      {this.state.subsetDataSets.map((row, key1) =>
+                        <tr key={key1}>
+                          {row.map((series, key2) =>
+                            <td key={key2} style={{ width: '20%' }}>
+                              {!this.state.isSameDate && <input type='checkbox' className='sota-checkbox-control' checked={this.state.subsetDataSetsActive.get(series.label) ?? true} onChange={e => this.handleSeriesToggle(series.label)} />} <span class='dot' style={{ backgroundColor: series.color }} /> {series.label + ' ' + this.state.subset}
+                            </td>)}
+                        </tr>)}
+                    </table>
+                  </div>}
                 <br />
               </div>
               <div className='col-xl-4 col-12 text-center'>
@@ -872,19 +873,20 @@ class SotaChart extends React.Component {
                   }}
                   tooltip='A metric performance measure of any "method" on this "task"'
                 />
-                <SotaControlRow
-                  name='subsetOption'
-                  label='Subset option:'
-                  value={this.state.subset}
-                  disabled={this.props.isSubsetDisabled}
-                  options={{
-                    qubits: 'Qubit count',
-                    depth: 'Circuit depth',
-                    method: 'Method',
-                    platform: 'Platform'
-                  }}
-                  onChange={this.handleOnChangeSubset}
-                />
+                {!this.props.isHideSubset &&
+                  <SotaControlRow
+                    name='subsetOption'
+                    label='Subset option:'
+                    value={this.state.subset}
+                    disabled={this.props.isSubsetDisabled}
+                    options={{
+                      qubits: 'Qubit count',
+                      depth: 'Circuit depth',
+                      method: 'Method',
+                      platform: 'Platform'
+                    }}
+                    onChange={this.handleOnChangeSubset}
+                  />}
                 <SotaControlRow
                   name='logOption'
                   label='Log option:'

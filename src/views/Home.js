@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { Button, Tab, Tabs } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
 import { withRouter, Link } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -13,9 +13,7 @@ import CategoryScroll from '../components/CategoryScroll'
 import CategoryItemBox from '../components/CategoryItemBox'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
-import TopSubmitters from '../components/TopSubmitters'
-import SubmissionScroll from '../components/SubmissionScroll'
-import FeaturedTask from '../components/FeaturedTask'
+import SotaChart from '../components/SotaChart'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -27,7 +25,7 @@ class Home extends React.Component {
       alphabetical: [],
       allNames: [],
       platforms: [],
-      featured: [34, 50, 164],
+      featured: [34, 38, 159],
       trending: [],
       popular: [],
       latest: [],
@@ -130,39 +128,19 @@ class Home extends React.Component {
               </div>
             </div>
             <div className='row'>
-              <div className='col-md-9'>
+              <div className='col-md-12'>
                 {this.state.featured.map((taskId, index) =>
                   <span key={index}>
-                    <FeaturedTask
+                    <SotaChart
+                      chartId={index}
                       taskId={taskId}
-                      index={index}
-                      isLog
+                      isLog={index < 2}
                       logBase={(index === 0) ? '2' : '10'}
-                      isLoggedIn={this.props.isLoggedIn}
+                      isHideSubset
                     />
                     <br />
                   </span>
                 )}
-              </div>
-              <div className='col-md-3'>
-                <div className='card top-submitters-card'>
-                  <TopSubmitters isOnlyAllTime />
-                </div>
-                <br />
-                <div className='card top-submitters-card'>
-                  <h5>Top Submissions</h5>
-                  <Tabs id='top-submissions-tabs' activeKey={this.state.activeTab} onSelect={activeTab => this.setState({ activeTab })}>
-                    <Tab eventKey='Trending' title='Trending' className='metriq-nav-tab'>
-                      <SubmissionScroll isSmall sortType='trending' isLoggedIn={this.props.isLoggedIn} />
-                    </Tab>
-                    <Tab eventKey='Popular' title='Popular' className='metriq-nav-tab'>
-                      <SubmissionScroll isSmall sortType='popular' isLoggedIn={this.props.isLoggedIn} />
-                    </Tab>
-                    <Tab eventKey='Latest' title='Latest' className='metriq-nav-tab'>
-                      <SubmissionScroll isSmall sortType='latest' isLoggedIn={this.props.isLoggedIn} />
-                    </Tab>
-                  </Tabs>
-                </div>
               </div>
             </div>
           </FormFieldWideRow>
