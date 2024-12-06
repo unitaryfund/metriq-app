@@ -34,6 +34,7 @@ import Qedc from './views/Qedc'
 import Vqa from './views/Vqa'
 import Progress from './views/Progress'
 import Sota from './views/Sota'
+import MetriqGym from './views/MetriqGym'
 
 const MainRouter = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -119,6 +120,12 @@ const MainRouter = (props) => {
           path='/Tags'
         >
           <Tags isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Gym'
+        >
+          <MetriqGym isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
