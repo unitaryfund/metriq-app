@@ -16,5 +16,6 @@ Reducing the Number of Qubits in Quantum Factoring,cryptoeprint:2024/222,2024,Cr
 Analyzing Prospects for Quantum Advantage in Topological Data Analysis,arXiv:2209.13581,2022,Machine learning,Topological data analysis,0,701,100,100000000,false,Classically intractable
 Applications and resource estimates for open system simulation on a quantum computer,arXiv:2406.06281,2024,Physics simulation,Quantum dynamics,0,774,3000,270000000000000,false,Both
 Quantifying fault tolerant simulation of strongly correlated systems using the Fermi-Hubbard model,arXiv:2406.06511,2024,Physics simulation,Quantum chemistry,0,773,400,3000000,false,Both
-Prospects for NMR Spectral Prediction on Fault-Tolerant Quantum Computers,arXiv:2406.09340,2024,Physics simulation,Quantum chemisty,0,772,256,579000000000,false,Both
-QREChem: Quantum Resource Estimation Software for Chemistry Applications,arXiv:2404.16351,2024,Physics simulation,Quantum chemisty,0,791,300000,1000000000000000,false,Both
+Prospects for NMR Spectral Prediction on Fault-Tolerant Quantum Computers,arXiv:2406.09340,2024,Physics simulation,Quantum chemistry,0,772,256,579000000000,false,Both
+QREChem: Quantum Resource Estimation Software for Chemistry Applications,arXiv:2404.16351,2024,Physics simulation,Quantum chemistry,0,791,300000,1000000000000000,false,Both
+The electronic complexity of the ground-state of the FeMo cofactor of nitrogenase as relevant to quantum simulations,doi:10.1063/1.5063376,2024,Physics simulation,Quantum chemistry,228,801,1972,14000000000000,false,Both
