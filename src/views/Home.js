@@ -12,6 +12,7 @@ import FormFieldAlertRow from '../components/FormFieldAlertRow'
 import FormFieldWideRow from '../components/FormFieldWideRow'
 import SotaChart from '../components/SotaChart'
 import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
+import Partners from './Partners'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -98,57 +99,14 @@ class Home extends React.Component {
     return (
       <span>
         <div className='metriq-header'>
-          <h1><b>Community-driven</b> quantum benchmarks</h1>
-          <p><a href='/Submissions'>Submissions</a> show performance of <a href='/Methods/'>methods</a> on <a href='/Platforms/'>platforms</a> against <a href='/Tasks/'>tasks</a></p>
+          <h1>Open tracking of quantum technology progress</h1>
           <br />
         </div>
         <div id='metriq-main-content'>
           <p className='text-start'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to='/Submissions'>submissions</Link> that show the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</p>
-          <p className='text-start'>We have highlighted tasks here and you can search for more:</p>
           <br />
-          <FormFieldTypeaheadRow
-            className='search-bar'
-            innerClassName='search-accent'
-            options={this.state.allNames}
-            labelKey='name'
-            inputName='name'
-            value=''
-            placeholder='🔎'
-            onChange={(field, value) => this.handleOnFilter(value)}
-            onSelect={this.handleOnSelect}
-            alignLabelRight
-            isRow
-          />
-          <FormFieldWideRow>
-            <div className='row'>
-              <div className='col'>
-                <h4 align='left'>Featured Tasks</h4>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-md-12'>
-                {this.state.featured.map((taskId, index) =>
-                  <span key={index}>
-                    <SotaChart
-                      chartId={index}
-                      taskId={taskId}
-                      isLog={index < 2}
-                      logBase={(index === 0) ? '2' : '10'}
-                      isHideSubset
-                    />
-                    <br />
-                  </span>
-                )}
-                <div className='card sota-card'>
-                  <QuantumLandscapeChart />
-                </div>
-              </div>
-            </div>
-          </FormFieldWideRow>
-          <br />
-          <FormFieldAlertRow>
-            <FormFieldValidator invalid={!!this.state.requestFailedMessage} message={this.state.requestFailedMessage} />
-          </FormFieldAlertRow>
+          <Partners />
+          <Committee />
         </div>
       </span>
     )

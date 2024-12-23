@@ -11,7 +11,6 @@ import EditDetails from './views/EditDetails'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
-import Partners from './views/Partners'
 import FAQ from './views/FAQ'
 import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
@@ -98,7 +97,7 @@ const MainRouter = (props) => {
         </Route>
         <Route
           exact
-          path='/Tasks'
+          path='/Trends'
         >
           <Tasks isLoggedIn={isLoggedIn} />
         </Route>
@@ -162,11 +161,6 @@ const MainRouter = (props) => {
           exact
           path='/About'
           component={About}
-        />
-        <Route
-          exact
-          path='/Partners'
-          component={Partners}
         />
         <Route
           exact

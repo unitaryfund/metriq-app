@@ -9,7 +9,6 @@ const About = () => {
             <p>
               Make transparent, accessible benchmarks available to everyone in the quantum computing community.
             </p>
-            <iframe title='Metriq: the open source platform for community driven quantum benchmarks' width='420' height='315' src='https://www.youtube.com/embed/tg6Q5fnw2EE' />
           </div>
           <br />
           <h1 className='text-center'>About</h1>
@@ -23,13 +22,13 @@ const About = () => {
               </i>
             </p>
             <p>
-              Metriq is a free and open source platform that helps anyone better answer this question for themselves.
+              Metriq is a free and open source platform that helps anyone better answer this question for themselves. It is supported by <a href='https://unitary.fund'>Unitary Fund</a>, a 501(c)(3) nonprofit organization devoted to research and community-building in quantum computing and quantum open-source software.
             </p>
             <p>
               Researchers and developers in academia and industry can submit results on existing benchmarks or propose new benchmarking tasks to the community. Results include sources and are openly accessible. It is free to sign up and submit.
             </p>
             <p>
-              Metriq accelerates research by upgrading the taxonomy of reported results that are often now locked away in tables of review papers. By making the data explorable and live-updated we’ll be able to make better progress together to develop quantum technology.
+              Metriq accelerates research by upgrading the taxonomy of reported results that are often now locked away in tables of review papers. By making the data explorable and live-updated we'll be able to make better progress together to develop quantum technology.
             </p>
           </div>
           <br />
