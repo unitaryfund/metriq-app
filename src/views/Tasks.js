@@ -22,6 +22,7 @@ class Tasks extends React.Component {
       isLoading: true,
       alphabetical: [],
       allNames: [],
+      featured: [34, 38, 159],
       filterId: null,
       requestFailedMessage: ''
     }
@@ -85,6 +86,28 @@ class Tasks extends React.Component {
         <br />
         <h4 align='left'>Tasks are workloads of interest performed on a quantum computer.</h4>
         <p className='text-start'>Search the task hierarchy to see charts of comparative performance across methods or click into the parent/child task hierarchy through top-level task categories.</p>
+        <br />
+        <div className='row'>
+          <div className='col'>
+            <h4 align='left'>Featured Tasks</h4>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            {this.state.featured.map((taskId, index) =>
+              <span key={index}>
+                <SotaChart
+                  chartId={index}
+                  taskId={taskId}
+                  isLog={index < 2}
+                  logBase={(index === 0) ? '2' : '10'}
+                  isHideSubset
+                />
+                <br />
+              </span>
+            )}
+          </div>
+        </div>
         <br />
         <FormFieldWideRow className='centered-tabs'>
           <CategoryScroll className='col-lg-9 col' type='task' isLoading={this.state.isLoading} items={this.state.alphabetical} isLoggedIn={this.props.isLoggedIn} heading='Top-level task categories' />
