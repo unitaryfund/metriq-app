@@ -99,6 +99,18 @@ const MainRouter = (props) => {
           exact
           path='/Trends'
         >
+          <Trends isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Data'
+        >
+          <Tasks isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Tasks'
+        >
           <Tasks isLoggedIn={isLoggedIn} />
         </Route>
         <Route
