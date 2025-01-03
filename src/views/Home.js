@@ -6,13 +6,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
-import FormFieldValidator from '../components/FormFieldValidator'
-import FormFieldTypeaheadRow from '../components/FormFieldTypeaheadRow'
-import FormFieldAlertRow from '../components/FormFieldAlertRow'
-import FormFieldWideRow from '../components/FormFieldWideRow'
-import SotaChart from '../components/SotaChart'
-import QuantumLandscapeChart from '../components/QuantumLandscapeChart'
 import Partners from './Partners'
+import Committee from './Committee'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
