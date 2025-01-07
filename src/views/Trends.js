@@ -12,7 +12,7 @@ import SotaChart from '../components/SotaChart'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
-class Home extends React.Component {
+class Trends extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -134,4 +134,4 @@ class Home extends React.Component {
   }
 }
 
-export default withRouter(Home)
+export default withRouter(Trends)

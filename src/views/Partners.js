@@ -6,12 +6,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
-import Partners from './Partners'
+import Partners from '../components/Partners'
 import Committee from './Committee'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
-class Home extends React.Component {
+class Partners extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -97,8 +97,6 @@ class Home extends React.Component {
           <br />
         </div>
         <div id='metriq-main-content'>
-          <p className='text-start'>Metriq is a platform for tracking and sharing quantum technology benchmarks. Users can make new <Link to='/Submissions'>submissions</Link> that show the performance of different <Link to='/Methods'>methods</Link> on <Link to='/Platforms'>platforms</Link> against <Link to='/Tasks'>tasks</Link>.</p>
-          <br />
           <Partners />
           <Committee />
         </div>
@@ -107,4 +105,4 @@ class Home extends React.Component {
   }
 }
 
-export default withRouter(Home)
+export default withRouter(Partners)
