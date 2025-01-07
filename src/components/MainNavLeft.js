@@ -8,6 +8,7 @@ const MainNavLeft = () => {
     <Nav className='metriq-navbar'>
       <NavDropdown id='metriq-navbar-dropdown' title='About' active='true' className='metriq-navbar-text' alignRight>
         <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/About' eventKey='1'><p className='font-weight-bold'>About</p></NavDropdown.Item>
+        <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/Partners' eventKey='2'><p className='font-weight-bold'>Partners</p></NavDropdown.Item>
         <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/FAQ' eventKey='3'><p className='font-weight-bold'>F.A.Q.</p></NavDropdown.Item>
         <NavDropdown.Item as={NavLink} activeClassName='active-dropdown-navlink' to='/UserGuidelines' eventKey='4'><p className='font-weight-bold'>User Guidelines</p></NavDropdown.Item>
       </NavDropdown>
