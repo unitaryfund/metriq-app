@@ -5,14 +5,14 @@ const About = () => {
         <div className='col-md-2' />
         <div className='col-md-8 text-justify'>
           <h1 className='text-center'>Mission</h1>
-          <div>
+          <div className='text-start'>
             <p>
               Make transparent, accessible benchmarks available to everyone in the quantum computing community.
             </p>
           </div>
           <br />
           <h1 className='text-center'>About</h1>
-          <div>
+          <div className='text-start'>
             <p>
               There has been rapid progress in quantum computing, but it can be hard to track that progress. Researchers want to know how to compare against the state of the art and users want to know what tools would be the best fit for them. Many in the community want to answer the following question:
             </p>
@@ -33,7 +33,7 @@ const About = () => {
           </div>
           <br />
           <h1 className='text-center'>Community</h1>
-          <div>
+          <div className='text-start'>
             <p>
               The Metriq community is growing. The <a href='https://discord.com/channels/764231928676089909/818208195612639304'>#metriq</a> channel on the Unitary Fund <a href='https://discord.com/invite/JqVGmpkP96'>Discord</a> server is visited by folks who share and collaborate on understanding the landscape of quantum benchmarks
             </p>
