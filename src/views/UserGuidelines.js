@@ -7,7 +7,7 @@ const UserGuidelines = () => {
           <h1 className='text-center'>User Guidelines</h1>
           <br />
           <h2 className='text-center'>About Metriq</h2>
-          <div>
+          <div className='text-start'>
             <p>
               Metriq is a platform to benchmark quantum computers, https://metriq.info/. It covers benchmarks on high-level applications like:
             </p>
@@ -19,7 +19,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Submissions, Tags, Methods, Platforms, Metrics and Results</h2>
-          <div>
+          <div className='text-start'>
             <p>
               Submissions are research papers, software projects, or verified communications, which, once added to the Metriq platform, are listed and can be discovered by the whole community. Submissions can be tagged with Tags. Submissions can be connected to one or more Tasks, Methods and Platforms. Results reporting numerical Values for specific Metrics can be extracted from Submission.
             </p>
@@ -35,7 +35,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Submissions</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 Users can make submissions to add to the Metriq database papers or software projects (or other information-worth material) that help the community learn more about the state of the art in quantum computing.
@@ -56,7 +56,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Tags</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 What makes a good tag? Any keyword that you think would help a user find a given submission. Think of them as hashtags or journal keywords.
@@ -80,7 +80,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Tasks</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 Tasks are the goal of a given benchmark.
@@ -101,7 +101,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Methods</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 Methods are techniques, protocols, or procedures that are compared on their abilities to achieve a given task.
@@ -113,7 +113,7 @@ const UserGuidelines = () => {
           </div>
           <br />
           <h2 className='text-center'>Platforms</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 Platforms are explicit property lists of environmental and device factors that must be controlled to recreate the result. This could include things like hardware quantum device names, software versions, classical computer type/OS, etc..
@@ -127,7 +127,7 @@ const UserGuidelines = () => {
             </ul>
           </div>
           <h2 className='text-center'>Results</h2>
-          <div>
+          <div className='text-start'>
             <ul>
               <li>
                 Results for specific metrics are the fabric of Metriq!

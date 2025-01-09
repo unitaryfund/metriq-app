@@ -6,8 +6,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
-import Partners from '../components/Partners'
-import Committee from './Committee'
+import _Partners from '../components/Partners'
+import Committee from '../components/Committee'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -97,7 +97,7 @@ class Partners extends React.Component {
           <br />
         </div>
         <div id='metriq-main-content'>
-          <Partners />
+          <_Partners />
           <Committee />
         </div>
       </span>
