@@ -7,6 +7,11 @@ on:
   push:
     branches: [ main ]
 
+  schedule:
+    # This cron expression schedules the job to run at 12:01 AM on January 1st
+    # which will keep the copyright notice up-to-date.
+    - cron: '1 0 1 1 *'
+
 jobs:
   deployment:
 
