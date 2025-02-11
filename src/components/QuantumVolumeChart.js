@@ -1,6 +1,6 @@
 // QuantumLandscapeChart.js
 
-import React from 'react'
+import React, { useRef, useCallback } from 'react'
 import * as d3 from 'd3'
 import { saveAs } from 'file-saver'
 import XMLSerializer from 'xmlserializer'
@@ -9,6 +9,7 @@ import axios from 'axios'
 import { sortByCounts } from './SortFunctions'
 import config from '../config'
 
+const chartId = '#my_dataviz_' + crypto.randomUUID()
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
 const mobileLabelSize = 11
@@ -34,42 +35,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, d, metricName, taskName, isQubits
-
-let areLabelsVisible = false
-function onLabelSwitchClick () {
-  areLabelsVisible = !areLabelsVisible
-  refreshLabels()
-}
-let areLabelsArxiv = false
-function onArxivSwitchClick () {
-  areLabelsArxiv = !areLabelsArxiv
-  refreshLabels()
-}
-let isScaleLinear = false
-function onScaleSwitchClick () {
-  isScaleLinear = !isScaleLinear
-  redraw()
-}
-function onMetricSelectChange (e) {
-  metricName = e.target.value
-  redraw()
-}
-function onDownloadClick () {
-  const svgElement = d3.select('#my_dataviz').node()
-  const svgString = new XMLSerializer().serializeToString(svgElement)
-  const blob = new Blob([svgString], {
-    type: 'image/svg+xml;charset=utf-8'
-  })
-  saveAs(blob, 'chart.svg')
-}
-function refreshLabels () {
-  if (areLabelsVisible) {
-    showLabels()
-  } else {
-    hideLabels()
-  }
-}
+let svg, metricName, taskName, isQubits
 
 function showLabels () {
   [...document.getElementsByClassName('labeltohide')].forEach((el) => {
@@ -123,534 +89,6 @@ function dayIndexInEpoch (dateString) {
   const [year, month, date] = dateString.split('-').map(Number)
 
   return (year - 1960) * 372 + (month - 1) * 31 + date
-}
-
-function barplot (
-  data,
-  xRange,
-  yRange,
-  Y,
-  marginLeft,
-  marginTop,
-  yAxisText
-) {
-  const height = yRange[0] - yRange[1]
-  const yMin = d3.min(Y)
-  const yDomain = [yMin < 1 ? yMin : 1, d3.max(Y)]
-  const x = d3.scaleBand()
-    .range([xRange[0], xRange[1]])
-    .domain(data.map((i) => { if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
-    .padding(0.2)
-  svg.append('g')
-    .attr('transform', 'translate(0,' + height + ')')
-    .call(d3.axisBottom(x))
-    .selectAll('text')
-    .attr('transform', 'translate(-10,0)rotate(-45)')
-    .style('text-anchor', 'end')
-
-  // Add Y axis
-  const y = (isScaleLinear ? d3.scaleLinear() : d3.scaleLog())
-    .range([0, yRange[0] - yRange[1]])
-    .domain([yDomain[1], yDomain[0]])
-
-  const yAxis = d3.axisLeft(y)
-  // append y axis
-  svg
-    .append('g')
-    .attr('transform', `translate(${marginLeft},0)`)
-    .attr('class', 'yaxis')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .call(yAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('transform', 'rotate(270)')
-        .attr('x', -marginTop)
-        .attr('y', -50)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .attr('font-size', `${smallLabelSize}px`)
-        .text(yAxisText)
-    )
-
-  // Bars
-  svg.selectAll('bar')
-    .data(data)
-    .enter()
-    .append('rect')
-    .attr('x', (i) => { if (i.arXiv && areLabelsArxiv) { return x(`arXiv:${i.arXiv}`) } else { return x(i.platformName ? i.platformName : i.methodName) } })
-    .attr('y', (i) => y(i.metricValue))
-    .attr('width', x.bandwidth())
-    .attr('height', (i) => (height - y(i.metricValue)))
-    .style('stroke', (i) =>
-      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        : colors[3]
-    )
-    .style('fill', (i) =>
-      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        : colors[3]
-    )
-}
-
-function scatterplot (
-  data,
-  yName, // the y column
-  xName, // the x column
-  marginLeft,
-  marginRight, // right margin, in pixels
-  xlabelDistance,
-  I,
-  voronoi,
-  xRange,
-  xScale,
-  x,
-  yScale,
-  y,
-  maxIDs,
-  maxData,
-  tooltipLineColor,
-  tooltipLineStrokeTexture,
-  horizontalLineStrokeSize,
-  tickInterval,
-  marginTop,
-  marginBottom,
-  chartHeight,
-  chartWidth,
-  xLabelShift,
-  xAxisText,
-  yAxisText
-) {
-  const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
-  // append x axis
-  svg
-    .append('g')
-    .attr('transform', `translate(0,${chartHeight - marginBottom})`)
-    .attr('class', 'xaxis')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .call(xAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('x', chartWidth - marginRight)
-        .attr('y', marginBottom - 4)
-        .attr('transform', `translate(0,${-xLabelShift})`)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .text(xAxisText)
-    )
-  const yAxis = isScaleLinear ? d3.axisLeft(yScale).tickFormat(d3.format('~s')) : d3.axisLeft(yScale)
-  // append y axis
-  svg
-    .append('g')
-    .attr('transform', `translate(${marginLeft},0)`)
-    .attr('class', 'yaxis')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .call(yAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('transform', 'rotate(270)')
-        .attr('x', -marginTop)
-        .attr('y', -50)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .attr('font-size', `${smallLabelSize}px`)
-        .text(yAxisText)
-    )
-
-  // max lines (h + v)
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(maxData.slice(0, maxData.length - 1))
-    .join('line')
-    .attr('x1', (i) => xScale(x(i)) + circleSize)
-    .attr('y1', (i) => yScale(y(i)))
-    .attr('x2', (i) => xScale(i.nextX))
-    .attr('y2', (i) => yScale(y(i)))
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(maxData.slice(0, maxData.length - 1))
-    .join('line')
-    .attr('x1', (i) => xScale(i.nextX))
-    .attr('y1', (i) => yScale(y(i)))
-    .attr('x2', (i) => xScale(i.nextX))
-    .attr('y2', (i) => yScale(i.nextY) + circleSize)
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
-
-  // voronoi grid
-  svg
-    .append('g')
-    .attr('stroke', 'none')
-    .attr('fill', '#00000000')
-    .selectAll('path')
-    .data(I)
-    .join('path')
-    .attr('d', (i) => voronoi.renderCell(i))
-    .attr('id', function (i) {
-      return data[i].id
-    })
-    .attr('class', function (i) {
-      return makeClass(data[i][xName], data[i][yName])
-    })
-  // .attr("centroid_x", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[0])
-  // .attr("centroid_y", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[1])
-  // .classed("voronoi", true)
-    .on('mousemove touchstart', (e) =>
-      mousemove(
-        e,
-        marginRight,
-        xRange,
-        data,
-        colors,
-        domainIndex,
-        fontType,
-        smallLabelSize
-      )
-    )
-
-  // append circles
-  svg
-    .append('g')
-    .attr('stroke-width', strokeSize)
-    .selectAll('circle')
-    .data(data)
-    .join('circle')
-    .attr('cx', (i) => xScale(x(i)))
-    .attr('cy', (i) => yScale(y(i)))
-    .attr('r', circleSize)
-    .style('cursor', 'pointer')
-    .style('stroke', (i) =>
-      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        : colors[3]
-    )
-    .style('fill', (i) =>
-      colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-        : colors[3]
-    )
-    .style('fill-opacity', (i) => circleOpacity.achieved)
-    .attr('id', (i) => i.id)
-    .attr('class', (i) => {
-      return maxIDs.includes(i.id) ? 'haslabel' : null
-    })
-    .attr('class', (i) => makeClass(x(i), y(i)))
-    .attr('submissionId', (i) => i.submissionId)
-    .attr('label', (i) => {
-      if (i.arXiv && areLabelsArxiv) { return `arXiv:${i.arXiv}` } else return i.platformName ? i.platformName : i.methodName
-    })
-    .on('click', function () {
-      if (!isMobile) {
-        const submissionId = d3.select(this).attr('submissionId')
-        window.open(`https://metriq.info/Submission/${submissionId}`)
-      }
-    })
-    .on('mousemove touchstart', (e) =>
-      mousemove(
-        e,
-        marginRight,
-        xRange,
-        data,
-        colors,
-        domainIndex,
-        fontType,
-        smallLabelSize
-      )
-    )
-
-  // label
-  d3.selectAll('circle').each(function (d, i) {
-    const id = d3.select(this).attr('id')
-
-    if (maxIDs.includes(id)) {
-      const x = d3.select(`circle#${id}`).attr('cx')
-      const y = d3.select(`circle#${id}`).attr('cy')
-
-      const svgWidth = d3
-        .select('#svgscatter')
-        .node()
-        .getBoundingClientRect().width
-
-      const turnLabelBreakpoint = isMobile
-        ? (svgWidth / 3) * 1.5
-        : svgWidth / 3
-
-      svg
-        .append('text')
-        .attr(
-          'x',
-          x > turnLabelBreakpoint
-            ? Number(x) - xlabelDistance
-            : Number(x) + xlabelDistance
-        )
-        .attr('y', Number(y))
-        .attr('class', 'labeltohide')
-        .style(
-          'visibility',
-          areLabelsVisible ? 'visible' : 'hidden'
-        )
-        .style(
-          'font-size',
-          isMobile ? `${mobileLabelSize}px` : `${smallLabelSize}px`
-        )
-        .style('font-family', fontType)
-        .attr('text-anchor', x > turnLabelBreakpoint ? 'end' : 'start')
-        .text(`${d3.select(`circle#${id}`).attr('label')}`)
-    }
-  })
-}
-
-// Function to draw plot
-function plot (
-  data,
-  isScaleLinear = false,
-  yAxisText = 'Quantum Volume  →',
-  yName = 'metricValue', // the y column
-  xAxisText = 'Date →',
-  xName = 'tableDate', // the x column
-  chartTarget = '#my_dataviz', // html target element to attach chart
-  chartHeight = 600, // chart height
-  marginTop = 40, // top margin, in pixels
-  marginRight = 100, // right margin, in pixels
-  marginBottom = 70, // bottom margin, in pixels
-  xLabelShift = marginBottom - 40,
-  marginLeft = 100, // left margin, in pixels
-  rangeMult = 0.11,
-  xScaleType = d3.scaleTime,
-  horizontalLineStrokeSize = '1px',
-  tooltipLineStrokeTexture = '1 1',
-  tooltipLineColor = '#bbbbbb',
-  tooltipLineTextBorder = 2.5,
-  xlabelDistance = 19
-) {
-  data = data
-    .filter(
-      (x) => (!isNaN(x[xName]) && (x[xName] > 0) && !isNaN(x[yName]) && (x[yName] > 0))
-    )
-    .map(function (obj, index) {
-      return { ...obj, id: `ID_${index + 1}` }
-    })
-
-  // list of IDs of data with max values
-  // maxData with only max objects
-
-  const metricNameInvariant = metricName.toLowerCase()
-  const isQv = (metricNameInvariant === 'quantum volume')
-
-  data = data.filter((x) => x.metricName.toLowerCase() === metricNameInvariant)
-  if (isQv && !isScaleLinear) {
-    data = data.filter((x) => x.metricValue > 1)
-  }
-
-  data.map((d) => {
-    if (isQv && !isScaleLinear) {
-      d.metricValue = Math.log2(d.metricValue)
-    }
-
-    return 0
-  })
-
-  const chronData = [...data]
-  quickSort(chronData, 0, chronData.length - 1)
-  const maxIDs = [chronData[0].id]
-  let currentMaxValue = chronData[0].metricValue
-  for (let lcv = 1; lcv < chronData.length; ++lcv) {
-    const d = chronData[lcv]
-    if (d.metricValue > currentMaxValue) {
-      maxIDs.push(d.id)
-      currentMaxValue = d.metricValue
-    }
-  }
-
-  const maxData = chronData.filter((d) => maxIDs.includes(d.id))
-  for (let lcv = 0; lcv < (maxData.length - 1); ++lcv) {
-    maxData[lcv].nextX = maxData[lcv + 1][xName]
-    maxData[lcv].nextY = maxData[lcv + 1][yName]
-  }
-
-  let isSameDate = true
-  for (let i = 1; i < data.length; ++i) {
-    if (data[0].dayIndexInEpoch !== data[i].dayIndexInEpoch) {
-      isSameDate = false
-      break
-    }
-  }
-  if (isSameDate) {
-    marginBottom = 128
-    xLabelShift = marginBottom - 40
-  }
-
-  const yScaleType = (isScaleLinear || isQv) ? d3.scaleLinear : d3.scaleLog
-  if (isQv && !isScaleLinear) {
-    yAxisText = 'Log-2 Quantum Volume  →'
-  }
-
-  // define aesthetic mappings
-  const x = (d) => d[xName]
-  const y = (d) => d[yName]
-
-  // width
-  const chartWidth = d3.select(chartTarget).node().getBoundingClientRect().width
-  if (isMobile) {
-    marginLeft = 80
-    marginRight = 50
-  }
-
-  // ranges
-  const xRange = [marginLeft, chartWidth - marginRight] // [left, right]
-  const yRange = [chartHeight - marginBottom, marginTop] // [bottom, top]
-
-  // values
-  const X = d3.map(data, x)
-  const Y = d3.map(data, y)
-  const I = d3.range(data.length)
-
-  // domains
-  const yMin = d3.min(Y)
-  const yMax = d3.max(Y)
-  const xDomain = [d3.min(X), d3.max(X)]
-  const yDomain = [yMin < 1 ? yMin : 1, yMax > 1 ? (d3.max(Y) + d3.max(Y) * rangeMult) : 1]
-
-  // scale
-  const xScale = xScaleType(xDomain, xRange)
-  const yScale = yScaleType(yDomain, yRange)
-
-  // time axes formatter
-  // For a less crowded x axis, especially if we increase fontsize for labels
-  const tickInterval = d3.timeMonth.every(12)
-
-  // voronoi generator
-  const dataForVoronoi = d3.map(I, (i) => [xScale(X[i]), yScale(Y[i])])
-  const voronoiRange = [xRange[0], yRange[1], xRange[1], yRange[0]]
-  const voronoi = d3.Delaunay.from(dataForVoronoi).voronoi(voronoiRange)
-
-  // generate tooltip
-  d3
-    .select('body')
-    .append('div')
-    .attr('id', 'scatter-tooltip')
-    .style('position', 'absolute')
-
-  // initiate svg
-  svg = d3
-    .select(chartTarget)
-    .append('svg')
-    .attr('viewBox', [0, 0, chartWidth, chartHeight])
-    .attr('id', 'svgscatter')
-    .attr('style', 'max-width: 100%')
-
-  // tooltip vlines
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(data)
-    .join('line')
-    .attr('x1', (i) => xScale(x(i)))
-    .attr('y1', (i) => yScale(y(i)) + circleSize)
-    .attr('x2', (i) => xScale(x(i)))
-    .attr('y2', yScale(1))
-    .attr('id', (i) => i.id)
-    .style('visibility', 'hidden')
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
-
-  // tooltip vline text
-  svg
-    .append('g')
-    .selectAll('text')
-    .data(data)
-    .join('text')
-    .attr('x', (i) => xScale(x(i)) + tooltipLineTextBorder)
-    .attr('y', yScale(1) - tooltipLineTextBorder)
-    .attr('id', (i) => i.id)
-    .style('visibility', 'hidden')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text((i) => d3.utcFormat('%B %Y')(x(i)))
-
-  // tooltip hlines
-  svg
-    .append('g')
-    .selectAll('line')
-    .data(data)
-    .join('line')
-    .attr('x1', (i) => xScale(x(i)) - circleSize)
-    .attr('y1', (i) => yScale(y(i)))
-    .attr('x2', xScale(d3.min(X)))
-    .attr('y2', (i) => yScale(y(i)))
-    .attr('id', (i) => i.id)
-    .style('visibility', 'hidden')
-    .style('stroke', tooltipLineColor)
-    .style('stroke-width', horizontalLineStrokeSize)
-    .style('stroke-dasharray', tooltipLineStrokeTexture)
-
-  // tooltip hline text
-  svg
-    .append('g')
-    .selectAll('text')
-    .data(data)
-    .join('text')
-    .attr('x', xScale(d3.min(X)) + tooltipLineTextBorder)
-    .attr('y', (i) => yScale(y(i)) - tooltipLineTextBorder)
-    .attr('id', (i) => i.id)
-    .style('visibility', 'hidden')
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text((i) => d3.format('.2s')(y(i)))
-
-  if (isSameDate) {
-    barplot(
-      data,
-      xRange,
-      [chartHeight - marginBottom / 2, marginTop],
-      Y,
-      marginLeft,
-      marginTop,
-      yAxisText
-    )
-  } else {
-    scatterplot(
-      data,
-      yName, // the y column
-      xName, // the x column
-      marginLeft,
-      marginRight, // right margin, in pixels
-      xlabelDistance,
-      I,
-      voronoi,
-      xRange,
-      xScale,
-      x,
-      yScale,
-      y,
-      maxIDs,
-      maxData,
-      tooltipLineColor,
-      tooltipLineStrokeTexture,
-      horizontalLineStrokeSize,
-      tickInterval,
-      marginTop,
-      marginBottom,
-      chartHeight,
-      chartWidth,
-      xLabelShift,
-      xAxisText,
-      yAxisText
-    )
-  }
 }
 
 function mousemove (
@@ -790,17 +228,6 @@ function mousemove (
       .attr('class', null)
       .style('visibility', 'hidden')
   }
-}
-
-function redraw () {
-  const scroll = window.scrollY
-  isMobile = window.outerWidth < breakpoint
-  d3.select('#svgscatter').remove()
-  d3.select('#scatter-tooltip').remove()
-  d3.selectAll('#svglegend').remove()
-  plot(d, isScaleLinear, metricName)
-  legend()
-  window.scrollTo(0, scroll)
 }
 
 // Function to build legend
@@ -993,12 +420,606 @@ function makeClass (x, y) {
 }
 
 function QuantumVolumeChart (props) {
+  const chartRef = useRef();
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
+  const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
+  const [isScaleLinear, setIsScaleLinear] = React.useState(false)
+  const [d, setD] = React.useState({})
+
+  function onLabelSwitchClick () {
+    const alv = !areLabelsVisible
+    setAreLabelsVisible(alv)
+    refreshLabels(alv)
+  }
+  function onArxivSwitchClick () {
+    setAreLabelsArxiv(!areLabelsArxiv)
+    refreshLabels(areLabelsVisible)
+  }
+  function onScaleSwitchClick () {
+    const isl = !isScaleLinear
+    setIsScaleLinear(isl)
+    redraw(d, isl, areLabelsVisible, areLabelsArxiv)
+  }
+  function onMetricSelectChange (e) {
+    metricName = e.target.value
+    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv)
+  }
+
+  function refreshLabels (alv) {
+    if (alv) {
+      showLabels()
+    } else {
+      hideLabels()
+    }
+  }
+
+  function onDownloadClick () {
+    const svgElement = d3.select(chartRef.current).node()
+    const svgString = new XMLSerializer().serializeToString(svgElement)
+    const blob = new Blob([svgString], {
+      type: 'image/svg+xml;charset=utf-8'
+    })
+    saveAs(blob, 'chart.svg')
+  }
+
+  const barplot = useCallback((
+    data,
+    isl,
+    ala,
+    xRange,
+    yRange,
+    Y,
+    marginLeft,
+    marginTop,
+    yAxisText,
+  ) => {
+    const height = yRange[0] - yRange[1]
+    const yMin = d3.min(Y)
+    const yDomain = [yMin < 1 ? yMin : 1, d3.max(Y)]
+    const x = d3.scaleBand()
+      .range([xRange[0], xRange[1]])
+      .domain(data.map((i) => { if (i.arXiv && ala) { return `arXiv:${i.arXiv}` } else { return i.platformName ? i.platformName : i.methodName } }))
+      .padding(0.2)
+    svg.append('g')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(x))
+      .selectAll('text')
+      .attr('transform', 'translate(-10,0)rotate(-45)')
+      .style('text-anchor', 'end')
+  
+    // Add Y axis
+    const y = (isl ? d3.scaleLinear() : d3.scaleLog())
+      .range([0, yRange[0] - yRange[1]])
+      .domain([yDomain[1], yDomain[0]])
+  
+    const yAxis = d3.axisLeft(y)
+    // append y axis
+    svg
+      .append('g')
+      .attr('transform', `translate(${marginLeft},0)`)
+      .attr('class', 'yaxis')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .call(yAxis)
+      .call((g) =>
+        g
+          .append('text')
+          .attr('transform', 'rotate(270)')
+          .attr('x', -marginTop)
+          .attr('y', -50)
+          .attr('fill', 'currentColor')
+          .attr('text-anchor', 'end')
+          .attr('font-size', `${smallLabelSize}px`)
+          .text(yAxisText)
+      )
+  
+    // Bars
+    svg.selectAll('bar')
+      .data(data)
+      .enter()
+      .append('rect')
+      .attr('x', (i) => { if (i.arXiv && ala) { return x(`arXiv:${i.arXiv}`) } else { return x(i.platformName ? i.platformName : i.methodName) } })
+      .attr('y', (i) => y(i.metricValue))
+      .attr('width', x.bandwidth())
+      .attr('height', (i) => (height - y(i.metricValue)))
+      .style('stroke', (i) =>
+        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          : colors[3]
+      )
+      .style('fill', (i) =>
+        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          : colors[3]
+      )
+  }, [])
+  
+  const scatterplot = useCallback((
+    data,
+    isl,
+    alv,
+    ala,
+    yName, // the y column
+    xName, // the x column
+    marginLeft,
+    marginRight, // right margin, in pixels
+    xlabelDistance,
+    I,
+    voronoi,
+    xRange,
+    xScale,
+    x,
+    yScale,
+    y,
+    maxIDs,
+    maxData,
+    tooltipLineColor,
+    tooltipLineStrokeTexture,
+    horizontalLineStrokeSize,
+    tickInterval,
+    marginTop,
+    marginBottom,
+    chartHeight,
+    chartWidth,
+    xLabelShift,
+    xAxisText,
+    yAxisText
+  ) => {
+    const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
+    // append x axis
+    svg
+      .append('g')
+      .attr('transform', `translate(0,${chartHeight - marginBottom})`)
+      .attr('class', 'xaxis')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .call(xAxis)
+      .call((g) =>
+        g
+          .append('text')
+          .attr('x', chartWidth - marginRight)
+          .attr('y', marginBottom - 4)
+          .attr('transform', `translate(0,${-xLabelShift})`)
+          .attr('fill', 'currentColor')
+          .attr('text-anchor', 'end')
+          .text(xAxisText)
+      )
+    const yAxis = isl ? d3.axisLeft(yScale).tickFormat(d3.format('~s')) : d3.axisLeft(yScale)
+    // append y axis
+    svg
+      .append('g')
+      .attr('transform', `translate(${marginLeft},0)`)
+      .attr('class', 'yaxis')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .call(yAxis)
+      .call((g) =>
+        g
+          .append('text')
+          .attr('transform', 'rotate(270)')
+          .attr('x', -marginTop)
+          .attr('y', -50)
+          .attr('fill', 'currentColor')
+          .attr('text-anchor', 'end')
+          .attr('font-size', `${smallLabelSize}px`)
+          .text(yAxisText)
+      )
+  
+    // max lines (h + v)
+    svg
+      .append('g')
+      .selectAll('line')
+      .data(maxData.slice(0, maxData.length - 1))
+      .join('line')
+      .attr('x1', (i) => xScale(x(i)) + circleSize)
+      .attr('y1', (i) => yScale(y(i)))
+      .attr('x2', (i) => xScale(i.nextX))
+      .attr('y2', (i) => yScale(y(i)))
+      .style('stroke', tooltipLineColor)
+      .style('stroke-width', horizontalLineStrokeSize)
+      .style('stroke-dasharray', tooltipLineStrokeTexture)
+    svg
+      .append('g')
+      .selectAll('line')
+      .data(maxData.slice(0, maxData.length - 1))
+      .join('line')
+      .attr('x1', (i) => xScale(i.nextX))
+      .attr('y1', (i) => yScale(y(i)))
+      .attr('x2', (i) => xScale(i.nextX))
+      .attr('y2', (i) => yScale(i.nextY) + circleSize)
+      .style('stroke', tooltipLineColor)
+      .style('stroke-width', horizontalLineStrokeSize)
+      .style('stroke-dasharray', tooltipLineStrokeTexture)
+  
+    // voronoi grid
+    svg
+      .append('g')
+      .attr('stroke', 'none')
+      .attr('fill', '#00000000')
+      .selectAll('path')
+      .data(I)
+      .join('path')
+      .attr('d', (i) => voronoi.renderCell(i))
+      .attr('id', function (i) {
+        return data[i].id
+      })
+      .attr('class', function (i) {
+        return makeClass(data[i][xName], data[i][yName])
+      })
+    // .attr("centroid_x", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[0])
+    // .attr("centroid_y", (i) => d3.polygonCentroid(voronoi.cellPolygon(i))[1])
+    // .classed("voronoi", true)
+      .on('mousemove touchstart', (e) =>
+        mousemove(
+          e,
+          marginRight,
+          xRange,
+          data,
+          colors,
+          domainIndex,
+          fontType,
+          smallLabelSize
+        )
+      )
+  
+    // append circles
+    svg
+      .append('g')
+      .attr('stroke-width', strokeSize)
+      .selectAll('circle')
+      .data(data)
+      .join('circle')
+      .attr('cx', (i) => xScale(x(i)))
+      .attr('cy', (i) => yScale(y(i)))
+      .attr('r', circleSize)
+      .style('cursor', 'pointer')
+      .style('stroke', (i) =>
+        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          : colors[3]
+      )
+      .style('fill', (i) =>
+        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          : colors[3]
+      )
+      .style('fill-opacity', (i) => circleOpacity.achieved)
+      .attr('id', (i) => i.id)
+      .attr('class', (i) => {
+        return maxIDs.includes(i.id) ? 'haslabel' : null
+      })
+      .attr('class', (i) => makeClass(x(i), y(i)))
+      .attr('submissionId', (i) => i.submissionId)
+      .attr('label', (i) => {
+        if (i.arXiv && ala) { return `arXiv:${i.arXiv}` } else return i.platformName ? i.platformName : i.methodName
+      })
+      .on('click', function () {
+        if (!isMobile) {
+          const submissionId = d3.select(this).attr('submissionId')
+          window.open(`https://metriq.info/Submission/${submissionId}`)
+        }
+      })
+      .on('mousemove touchstart', (e) =>
+        mousemove(
+          e,
+          marginRight,
+          xRange,
+          data,
+          colors,
+          domainIndex,
+          fontType,
+          smallLabelSize
+        )
+      )
+  
+    // label
+    d3.selectAll('circle').each(function (d, i) {
+      const id = d3.select(this).attr('id')
+  
+      if (maxIDs.includes(id)) {
+        const x = d3.select(`circle#${id}`).attr('cx')
+        const y = d3.select(`circle#${id}`).attr('cy')
+  
+        const svgWidth = d3
+          .select('#svgscatter')
+          .node()
+          .getBoundingClientRect().width
+  
+        const turnLabelBreakpoint = isMobile
+          ? (svgWidth / 3) * 1.5
+          : svgWidth / 3
+  
+        svg
+          .append('text')
+          .attr(
+            'x',
+            x > turnLabelBreakpoint
+              ? Number(x) - xlabelDistance
+              : Number(x) + xlabelDistance
+          )
+          .attr('y', Number(y))
+          .attr('class', 'labeltohide')
+          .style(
+            'visibility',
+            alv ? 'visible' : 'hidden'
+          )
+          .style(
+            'font-size',
+            isMobile ? `${mobileLabelSize}px` : `${smallLabelSize}px`
+          )
+          .style('font-family', fontType)
+          .attr('text-anchor', x > turnLabelBreakpoint ? 'end' : 'start')
+          .text(`${d3.select(`circle#${id}`).attr('label')}`)
+      }
+    })
+  }, [])
+
+  // Function to draw plot
+  const plot = useCallback((
+    data,
+    isl = false,
+    alv = false,
+    ala = false,
+    yAxisText = 'Quantum Volume  →',
+    yName = 'metricValue', // the y column
+    xAxisText = 'Date →',
+    xName = 'tableDate', // the x column
+    chartTarget = chartRef.current, // html target element to attach chart
+    chartHeight = 600, // chart height
+    marginTop = 40, // top margin, in pixels
+    marginRight = 100, // right margin, in pixels
+    marginBottom = 70, // bottom margin, in pixels
+    xLabelShift = marginBottom - 40,
+    marginLeft = 100, // left margin, in pixels
+    rangeMult = 0.11,
+    xScaleType = d3.scaleTime,
+    horizontalLineStrokeSize = '1px',
+    tooltipLineStrokeTexture = '1 1',
+    tooltipLineColor = '#bbbbbb',
+    tooltipLineTextBorder = 2.5,
+    xlabelDistance = 19
+  ) => {
+    data = data
+      .filter(
+        (x) => (!isNaN(x[xName]) && (x[xName] > 0) && !isNaN(x[yName]) && (x[yName] > 0))
+      )
+      .map(function (obj, index) {
+        return { ...obj, id: `ID_${index + 1}` }
+      })
+
+    // list of IDs of data with max values
+    // maxData with only max objects
+
+    const metricNameInvariant = metricName.toLowerCase()
+    const isQv = (metricNameInvariant === 'quantum volume')
+
+    data = data.filter((x) => x.metricName.toLowerCase() === metricNameInvariant)
+    if (isQv && !isl) {
+      data = data.filter((x) => x.metricValue > 1)
+    }
+
+    data.map((d) => {
+      if (isQv && !isl) {
+        d.metricValue = Math.log2(d.metricValue)
+      }
+
+      return 0
+    })
+
+    const chronData = [...data]
+    quickSort(chronData, 0, chronData.length - 1)
+    const maxIDs = [chronData[0].id]
+    let currentMaxValue = chronData[0].metricValue
+    for (let lcv = 1; lcv < chronData.length; ++lcv) {
+      const d = chronData[lcv]
+      if (d.metricValue > currentMaxValue) {
+        maxIDs.push(d.id)
+        currentMaxValue = d.metricValue
+      }
+    }
+
+    const maxData = chronData.filter((d) => maxIDs.includes(d.id))
+    for (let lcv = 0; lcv < (maxData.length - 1); ++lcv) {
+      maxData[lcv].nextX = maxData[lcv + 1][xName]
+      maxData[lcv].nextY = maxData[lcv + 1][yName]
+    }
+
+    let isSameDate = true
+    for (let i = 1; i < data.length; ++i) {
+      if (data[0].dayIndexInEpoch !== data[i].dayIndexInEpoch) {
+        isSameDate = false
+        break
+      }
+    }
+    if (isSameDate) {
+      marginBottom = 128
+      xLabelShift = marginBottom - 40
+    }
+
+    const yScaleType = (isl || isQv) ? d3.scaleLinear : d3.scaleLog
+    if (isQv && !isl) {
+      yAxisText = 'Log-2 Quantum Volume  →'
+    }
+
+    // define aesthetic mappings
+    const x = (d) => d[xName]
+    const y = (d) => d[yName]
+
+    // width
+    const chartWidth = d3.select(chartTarget).node().getBoundingClientRect().width
+    if (isMobile) {
+      marginLeft = 80
+      marginRight = 50
+    }
+
+    // ranges
+    const xRange = [marginLeft, chartWidth - marginRight] // [left, right]
+    const yRange = [chartHeight - marginBottom, marginTop] // [bottom, top]
+
+    // values
+    const X = d3.map(data, x)
+    const Y = d3.map(data, y)
+    const I = d3.range(data.length)
+
+    // domains
+    const yMin = d3.min(Y)
+    const yMax = d3.max(Y)
+    const xDomain = [d3.min(X), d3.max(X)]
+    const yDomain = [yMin < 1 ? yMin : 1, yMax > 1 ? (d3.max(Y) + d3.max(Y) * rangeMult) : 1]
+
+    // scale
+    const xScale = xScaleType(xDomain, xRange)
+    const yScale = yScaleType(yDomain, yRange)
+
+    // time axes formatter
+    // For a less crowded x axis, especially if we increase fontsize for labels
+    const tickInterval = d3.timeMonth.every(12)
+
+    // voronoi generator
+    const dataForVoronoi = d3.map(I, (i) => [xScale(X[i]), yScale(Y[i])])
+    const voronoiRange = [xRange[0], yRange[1], xRange[1], yRange[0]]
+    const voronoi = d3.Delaunay.from(dataForVoronoi).voronoi(voronoiRange)
+
+    // generate tooltip
+    d3
+      .select('body')
+      .append('div')
+      .attr('id', 'scatter-tooltip')
+      .style('position', 'absolute')
+
+    // initiate svg
+    svg = d3
+      .select(chartTarget)
+      .append('svg')
+      .attr('viewBox', [0, 0, chartWidth, chartHeight])
+      .attr('id', 'svgscatter')
+      .attr('style', 'max-width: 100%')
+
+    // tooltip vlines
+    svg
+      .append('g')
+      .selectAll('line')
+      .data(data)
+      .join('line')
+      .attr('x1', (i) => xScale(x(i)))
+      .attr('y1', (i) => yScale(y(i)) + circleSize)
+      .attr('x2', (i) => xScale(x(i)))
+      .attr('y2', yScale(1))
+      .attr('id', (i) => i.id)
+      .style('visibility', 'hidden')
+      .style('stroke', tooltipLineColor)
+      .style('stroke-width', horizontalLineStrokeSize)
+      .style('stroke-dasharray', tooltipLineStrokeTexture)
+
+    // tooltip vline text
+    svg
+      .append('g')
+      .selectAll('text')
+      .data(data)
+      .join('text')
+      .attr('x', (i) => xScale(x(i)) + tooltipLineTextBorder)
+      .attr('y', yScale(1) - tooltipLineTextBorder)
+      .attr('id', (i) => i.id)
+      .style('visibility', 'hidden')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text((i) => d3.utcFormat('%B %Y')(x(i)))
+
+    // tooltip hlines
+    svg
+      .append('g')
+      .selectAll('line')
+      .data(data)
+      .join('line')
+      .attr('x1', (i) => xScale(x(i)) - circleSize)
+      .attr('y1', (i) => yScale(y(i)))
+      .attr('x2', xScale(d3.min(X)))
+      .attr('y2', (i) => yScale(y(i)))
+      .attr('id', (i) => i.id)
+      .style('visibility', 'hidden')
+      .style('stroke', tooltipLineColor)
+      .style('stroke-width', horizontalLineStrokeSize)
+      .style('stroke-dasharray', tooltipLineStrokeTexture)
+
+    // tooltip hline text
+    svg
+      .append('g')
+      .selectAll('text')
+      .data(data)
+      .join('text')
+      .attr('x', xScale(d3.min(X)) + tooltipLineTextBorder)
+      .attr('y', (i) => yScale(y(i)) - tooltipLineTextBorder)
+      .attr('id', (i) => i.id)
+      .style('visibility', 'hidden')
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text((i) => d3.format('.2s')(y(i)))
+
+    if (isSameDate) {
+      barplot(
+        data,
+        isl,
+        ala,
+        xRange,
+        [chartHeight - marginBottom / 2, marginTop],
+        Y,
+        marginLeft,
+        marginTop,
+        yAxisText
+      )
+    } else {
+      scatterplot(
+        data,
+        isl,
+        alv,
+        ala,
+        yName, // the y column
+        xName, // the x column
+        marginLeft,
+        marginRight, // right margin, in pixels
+        xlabelDistance,
+        I,
+        voronoi,
+        xRange,
+        xScale,
+        x,
+        yScale,
+        y,
+        maxIDs,
+        maxData,
+        tooltipLineColor,
+        tooltipLineStrokeTexture,
+        horizontalLineStrokeSize,
+        tickInterval,
+        marginTop,
+        marginBottom,
+        chartHeight,
+        chartWidth,
+        xLabelShift,
+        xAxisText,
+        yAxisText,
+      )
+    }
+  }, [barplot, scatterplot])
+
+  const redraw = useCallback((d, isl, alv, ala) => {
+    const scroll = window.scrollY
+    isMobile = window.outerWidth < breakpoint
+    d3.select('#svgscatter').remove()
+    d3.select('#scatter-tooltip').remove()
+    d3.selectAll('#svglegend').remove()
+    plot(d, isl, alv, ala, metricName)
+    legend()
+    window.scrollTo(0, scroll)
+  }, [plot])
+
   React.useEffect(() => {
-    isScaleLinear = (parseInt(props.taskId) !== 34)
+    const isl = (parseInt(props.taskId) !== 34)
+    setIsScaleLinear(isl)
     isQubits = !!(props.isQubits)
     if (isQubits !== isQ) {
       setIsQ(isQubits)
@@ -1063,7 +1084,7 @@ function QuantumVolumeChart (props) {
           }
         }
         setMetricNames(metricNames)
-        d = results
+        const data = results
           .map((_d) => ({
             key: +_d.id,
             submissionId: +_d.submissionId,
@@ -1079,14 +1100,15 @@ function QuantumVolumeChart (props) {
             arXiv: _d.arXiv
           }))
           .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
+        setD(data)
         setIsLoaded(true)
-        redraw()
+        redraw(data, isl, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
         setIsLoaded(false)
         console.log(err)
       })
-  }, [props, metricNames, taskId, setTaskId, isQ, setIsQ, isLoaded, setIsLoaded])
+  }, [props, redraw, setD, metricNames, taskId, setTaskId, isQ, setIsQ, isLoaded, setIsLoaded, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   if (!isLoaded) {
     return <span />
@@ -1100,7 +1122,7 @@ function QuantumVolumeChart (props) {
         </div>
       </div>
       <div id='cargo'>
-        <div id='my_dataviz' />
+        <div id={chartId} ref={chartRef} />
         <div id='legend_guide'>
           <div>
             {!isQ &&
@@ -1125,7 +1147,7 @@ function QuantumVolumeChart (props) {
                 <input id='isScaleLinearSwitch' type='checkbox' onClick={onScaleSwitchClick} />
                 <span className='slider round' />
               </label>
-              <span className='legendTitle'>{isScaleLinear ? 'Linear | Log' : 'Log | Linear'}</span>
+              <span className='legendTitle'>{parseInt(props.taskId) !== 34 ? 'Linear | Log' : 'Log | Linear'}</span>
             </div>
             <div id='legend-switch' style={{ marginTop: '10px' }}>
               <label className='switch' style={{ width: '50%' }}>
