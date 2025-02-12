@@ -427,7 +427,7 @@ function QuantumVolumeChart (props) {
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
-  const [isScaleLinear, setIsScaleLinear] = React.useState(false)
+  const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
   const [d, setD] = React.useState({})
 
   function onLabelSwitchClick () {
@@ -1018,8 +1018,6 @@ function QuantumVolumeChart (props) {
   }, [plot])
 
   React.useEffect(() => {
-    const isl = (parseInt(props.taskId) !== 34)
-    setIsScaleLinear(isl)
     isQubits = !!(props.isQubits)
     if (isQubits !== isQ) {
       setIsQ(isQubits)
@@ -1102,7 +1100,7 @@ function QuantumVolumeChart (props) {
           .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
         setIsLoaded(true)
-        redraw(data, isl, areLabelsVisible, areLabelsArxiv)
+        redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
         setIsLoaded(false)
