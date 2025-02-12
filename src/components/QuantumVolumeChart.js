@@ -434,10 +434,13 @@ function QuantumVolumeChart (props) {
     const alv = !areLabelsVisible
     setAreLabelsVisible(alv)
     refreshLabels(alv)
+    redraw(d, isScaleLinear, alv, areLabelsArxiv)
   }
   function onArxivSwitchClick () {
-    setAreLabelsArxiv(!areLabelsArxiv)
+    const ala = !areLabelsArxiv
+    setAreLabelsArxiv(ala)
     refreshLabels(areLabelsVisible)
+    redraw(d, isScaleLinear, areLabelsVisible, ala)
   }
   function onScaleSwitchClick () {
     const isl = !isScaleLinear
