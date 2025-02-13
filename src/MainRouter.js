@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import axios from 'axios'
 import React, { useState } from 'react'
 import config from './config'
-import Home from './views/Home'
+import Partners from './views/Partners'
 import Submissions from './views/Submissions'
 import LogIn from './views/LogIn'
 import Register from './views/Register'
@@ -11,7 +11,6 @@ import EditDetails from './views/EditDetails'
 import Forgot from './views/Forgot'
 import Recover from './views/Recover'
 import About from './views/About'
-import Partners from './views/Partners'
 import FAQ from './views/FAQ'
 import Profile from './views/Profile'
 import AddSubmission from './views/AddSubmission'
@@ -21,6 +20,7 @@ import Token from './views/Token'
 import Password from './views/Password'
 import Methods from './views/Methods'
 import Tasks from './views/Tasks'
+import Trends from './views/Trends'
 import Platforms from './views/Platforms'
 import Tags from './views/Tags'
 import Submission from './views/Submission'
@@ -64,7 +64,7 @@ const MainRouter = (props) => {
           exact
           path='/'
         >
-          <Home isLoggedIn={isLoggedIn} isHomepage />
+          <Trends isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
@@ -95,6 +95,18 @@ const MainRouter = (props) => {
           path='/Methods'
         >
           <Methods isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Trends'
+        >
+          <Trends isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route
+          exact
+          path='/Data'
+        >
+          <Tasks isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           exact
