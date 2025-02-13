@@ -9,7 +9,9 @@ import axios from 'axios'
 import { sortByCounts } from './SortFunctions'
 import config from '../config'
 
-const chartId = '#my_dataviz_' + crypto.randomUUID()
+const key = crypto.randomUUID()
+const chartId = 'my_dataviz_' + key
+const legendId = 'legend_guide_' + key
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
 const mobileLabelSize = 11
@@ -421,6 +423,7 @@ function makeClass (x, y) {
 
 function QuantumVolumeChart (props) {
   const chartRef = useRef();
+  const legendRef = useRef();
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
@@ -1124,7 +1127,7 @@ function QuantumVolumeChart (props) {
       </div>
       <div id='cargo'>
         <div id={chartId} ref={chartRef} />
-        <div id='legend_guide'>
+        <div id={legendId} ref={legendRef}>
           <div>
             {!isQ &&
               <span>
