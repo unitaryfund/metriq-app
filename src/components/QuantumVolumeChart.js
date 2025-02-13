@@ -12,6 +12,7 @@ import config from '../config'
 const key = crypto.randomUUID()
 const chartId = 'my_dataviz_' + key
 const legendId = 'legend_guide_' + key
+const legendColorId = 'legend-color-' + key
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
 const mobileLabelSize = 11
@@ -93,337 +94,14 @@ function dayIndexInEpoch (dateString) {
   return (year - 1960) * 372 + (month - 1) * 31 + date
 }
 
-function mousemove (
-  e,
-  marginRight,
-  xRange,
-  data,
-  colors,
-  domainIndex,
-  fontType, // font size in pixel
-  smallLabelSize,
-  selectionRadius = 50,
-  tooltipOffsetX = 0,
-  tooltipOffsetY = 0,
-  border = '1px',
-  borderColor = 'black',
-  padding = '5px',
-  borderRadius = '5px',
-  backgroundColor = '#fafafa',
-  arrowSize = 8,
-  turnTooltip = 0.6
-) {
-  const mouseX = e.pageX
-  const mouseY = e.pageY
-
-  const targetID = e.target.id
-  const targetClass = e.target.className.baseVal
-
-  const selectedCircle = d3
-    .select(`circle#${targetID}`)
-    .node()
-    .getBoundingClientRect()
-
-  const xPerc = (selectedCircle.x - xRange[0]) / (xRange[1] - marginRight)
-
-  const circleX = selectedCircle.x + window.scrollX + tooltipOffsetX
-  const circleXshifted = circleX + selectedCircle.width
-  const circleY = selectedCircle.y + window.scrollY + tooltipOffsetY
-
-  const mouseDist = Math.sqrt((circleX - mouseX) ** 2 + (circleY - mouseY) ** 2)
-
-  const otherCircles = d3.selectAll(`circle.${targetClass}`)
-
-  if (mouseDist <= selectionRadius) {
-    d3.selectAll('line.selectedLine')
-      .attr('class', null)
-      .style('visibility', 'hidden')
-
-    d3.selectAll('text.selectedText')
-      .attr('class', null)
-      .style('visibility', 'hidden')
-
-    d3.selectAll(`line#${targetID}`)
-      .attr('class', 'selectedLine')
-      .style('visibility', 'visible')
-
-    d3.selectAll(`text#${targetID}`)
-      .attr('class', 'selectedText')
-      .style('visibility', 'visible')
-
-    const idData = data.filter((d) => d.id === targetID)[0]
-
-    d3.select('#scatter-tooltip')
-      // Main tooltip
-      .style('visibility', 'visible')
-      .style('top', `${circleY}px`)
-      .style('font-size', `${smallLabelSize}px`)
-      .style('font-family', fontType)
-      .style('border', border)
-      .style('border-style', 'solid')
-      .style('border-color', borderColor)
-      .style('border-radius', borderRadius)
-      .style('padding', padding)
-      .style('background-color', backgroundColor)
-      .style(
-        'transform',
-        `translateY(-50%) translateY(${selectedCircle.width / 2}px)`
-      )
-      .html(
-        `
-      <div>
-        ${[...otherCircles._groups[0]]
-          .map(
-            (crcl) =>
-              `<div style="font-size: 1.5em;">${crcl.__data__.platformName}</div>`
-          )
-          .join('')}
-        ${d3.utcFormat('%B %d, %Y')(idData.tableDate)}<br>
-        ${idData.methodName}<br>
-        <a href="https://metriq.info/Submission/${
-          idData.submissionId
-        }" style="color: ${
-          colors[isQubits ? idData.qubitCount - 1 : domainIndex[idData.domain]]
-        }; filter: brightness(0.85)">→ explore submission</a>
-      </div>`
-      )
-
-    if (xPerc < turnTooltip) {
-      d3.select('#scatter-tooltip')
-        .style('right', null)
-        .style('left', `${circleXshifted + arrowSize / 2}px`)
-    } else {
-      d3.select('#scatter-tooltip')
-        .style('left', null)
-        .style('right', `${window.innerWidth - circleX + arrowSize / 2}px`)
-    }
-
-    d3.select('#scatter-tooltip')
-      // triangle
-      .append('div')
-      .attr('id', 'tooltip-triangle')
-      .style('position', 'absolute  ')
-      .style('content', '         ')
-      .style('top', '50%')
-      .style('left', `${xPerc < turnTooltip ? 0 : 100}%`)
-      .style('transform', 'translateX(-50%) rotate(45deg)')
-      .style('border', border)
-      .style('border-style', 'solid')
-      .style('margin-top', `-${arrowSize / 2}px`)
-      .style('width', `${arrowSize}px`)
-      .style('height', `${arrowSize}px`)
-      .style(
-        'border-color',
-        xPerc < turnTooltip
-          ? `transparent transparent ${borderColor} ${borderColor}`
-          : `${borderColor} ${borderColor} transparent transparent`
-      )
-      .style('background-color', backgroundColor)
-  } else {
-    d3.select('#scatter-tooltip').style('visibility', 'hidden')
-
-    d3.selectAll('line.selectedLine')
-      .attr('class', null)
-      .style('visibility', 'hidden')
-
-    d3.selectAll('text.selectedText')
-      .attr('class', null)
-      .style('visibility', 'hidden')
-  }
-}
-
-// Function to build legend
-function legend (circleSizeFields = 8) {
-  let multCoeff = 1
-  if (isMobile) {
-    multCoeff = 1.5
-  }
-
-  const chartTarget = '#legend-color' // html target element to attach chart
-  const chartWidth = d3
-    .select(chartTarget)
-    .node()
-    .getBoundingClientRect().width
-
-  // initiate svg
-  svg = d3
-    .select(chartTarget)
-    .append('svg')
-    .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
-    .attr('id', 'svglegend')
-    .style('width', '100%')
-
-  let newY = circleSizeFields + 10
-
-  if (isQubits) {
-    // circle 1
-    svg
-      .append('circle')
-      .attr('stroke-width', strokeSize)
-      .attr('cx', circleSizeFields)
-      .attr('cy', newY)
-      .attr('r', circleSizeFields)
-      .style('stroke', colors[1])
-      .style('stroke-opacity', strokeOpacity.fieldLegend)
-      .style('fill', colors[1])
-      .style('fill-opacity', circleOpacity.fieldLegend)
-
-    // circle 1 label
-    svg
-      .append('text')
-      .attr('x', circleSizeFields * 2 + 15)
-      .attr('y', newY + 4)
-      .style('font-size', `${smallLabelSize}px`)
-      .style('font-family', fontType)
-      .text('2 qubits')
-
-    newY = newY + circleSizeFields + 20
-
-    // circle 2
-    svg
-      .append('circle')
-      .attr('stroke-width', strokeSize)
-      .attr('cx', circleSizeFields)
-      .attr('cy', newY)
-      .attr('r', circleSizeFields)
-      .style('stroke', colors[5])
-      .style('stroke-opacity', strokeOpacity.fieldLegend)
-      .style('fill', colors[5])
-      .style('fill-opacity', circleOpacity.fieldLegend)
-
-    // circle 2 label
-    svg
-      .append('text')
-      .attr('x', circleSizeFields * 2 + 15)
-      .attr('y', newY + 4)
-      .style('font-size', `${smallLabelSize}px`)
-      .style('font-family', fontType)
-      .text('6 qubits')
-
-    newY = newY + circleSizeFields + 20
-
-    // circle 3
-    svg
-      .append('circle')
-      .attr('stroke-width', strokeSize)
-      .attr('cx', circleSizeFields)
-      .attr('cy', newY)
-      .attr('r', circleSizeFields)
-      .style('stroke', colors[6])
-      .style('stroke-opacity', strokeOpacity.fieldLegend)
-      .style('fill', colors[6])
-      .style('fill-opacity', circleOpacity.fieldLegend)
-
-    // circle 3 label
-    svg
-      .append('text')
-      .attr('x', circleSizeFields * 2 + 15)
-      .attr('y', newY + 4)
-      .style('font-size', `${smallLabelSize}px`)
-      .style('font-family', fontType)
-      .text('7 qubits')
-
-    return
-  }
-
-  // circle 1
-  svg
-    .append('circle')
-    .attr('stroke-width', strokeSize)
-    .attr('cx', circleSizeFields)
-    .attr('cy', newY)
-    .attr('r', circleSizeFields)
-    .style('stroke', colors[domainIndex.ibmq])
-    .style('stroke-opacity', strokeOpacity.fieldLegend)
-    .style('fill', colors[domainIndex.ibmq])
-    .style('fill-opacity', circleOpacity.fieldLegend)
-
-  // circle 1 label
-  svg
-    .append('text')
-    .attr('x', circleSizeFields * 2 + 15)
-    .attr('y', newY + 4)
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text('IBMQ')
-
-  newY = newY + circleSizeFields + 20
-
-  // circle 2
-  svg
-    .append('circle')
-    .attr('stroke-width', strokeSize)
-    .attr('cx', circleSizeFields)
-    .attr('cy', newY)
-    .attr('r', circleSizeFields)
-    .style('stroke', colors[domainIndex.quantinuum])
-    .style('stroke-opacity', strokeOpacity.fieldLegend)
-    .style('fill', colors[domainIndex.quantinuum])
-    .style('fill-opacity', circleOpacity.fieldLegend)
-
-  // circle 2 label
-  svg
-    .append('text')
-    .attr('x', circleSizeFields * 2 + 15)
-    .attr('y', newY + 4)
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text('Quantinuum')
-
-  newY = newY + circleSizeFields + 20
-
-  // circle 3
-  svg
-    .append('circle')
-    .attr('stroke-width', strokeSize)
-    .attr('cx', circleSizeFields)
-    .attr('cy', newY)
-    .attr('r', circleSizeFields)
-    .style('stroke', colors[domainIndex.rigetti])
-    .style('stroke-opacity', strokeOpacity.fieldLegend)
-    .style('fill', colors[domainIndex.rigetti])
-    .style('fill-opacity', circleOpacity.fieldLegend)
-
-  // circle 3 label
-  svg
-    .append('text')
-    .attr('x', circleSizeFields * 2 + 15)
-    .attr('y', newY + 4)
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text('Rigetti')
-
-  newY = newY + circleSizeFields + 20
-
-  // circle 4
-  svg
-    .append('circle')
-    .attr('stroke-width', strokeSize)
-    .attr('cx', circleSizeFields)
-    .attr('cy', newY)
-    .attr('r', circleSizeFields)
-    .style('stroke', colors[domainIndex.other])
-    .style('stroke-opacity', strokeOpacity.fieldLegend)
-    .style('fill', colors[domainIndex.other])
-    .style('fill-opacity', circleOpacity.fieldLegend)
-
-  // circle 4 label
-  svg
-    .append('text')
-    .attr('x', circleSizeFields * 2 + 15)
-    .attr('y', newY + 4)
-    .style('font-size', `${smallLabelSize}px`)
-    .style('font-family', fontType)
-    .text('Other')
-}
-
 function makeClass (x, y) {
   return `c${x - y}`
 }
 
 function QuantumVolumeChart (props) {
-  const chartRef = useRef();
-  const legendRef = useRef();
+  const chartRef = useRef()
+  const legendRef = useRef()
+  const legendColorRef = useRef()
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
@@ -472,6 +150,331 @@ function QuantumVolumeChart (props) {
     saveAs(blob, 'chart.svg')
   }
 
+  // Function to build legend
+  function legend (circleSizeFields = 8) {
+    let multCoeff = 1
+    if (isMobile) {
+      multCoeff = 1.5
+    }
+
+    const chartWidth = d3
+      .select(legendColorRef.current)
+      .node()
+      .getBoundingClientRect().width
+
+    // initiate svg
+    svg = d3
+      .select(legendColorRef.current)
+      .append('svg')
+      .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
+      .attr('id', 'svglegend')
+      .style('width', '100%')
+
+    let newY = circleSizeFields + 10
+
+    if (isQubits) {
+      // circle 1
+      svg
+        .append('circle')
+        .attr('stroke-width', strokeSize)
+        .attr('cx', circleSizeFields)
+        .attr('cy', newY)
+        .attr('r', circleSizeFields)
+        .style('stroke', colors[1])
+        .style('stroke-opacity', strokeOpacity.fieldLegend)
+        .style('fill', colors[1])
+        .style('fill-opacity', circleOpacity.fieldLegend)
+
+      // circle 1 label
+      svg
+        .append('text')
+        .attr('x', circleSizeFields * 2 + 15)
+        .attr('y', newY + 4)
+        .style('font-size', `${smallLabelSize}px`)
+        .style('font-family', fontType)
+        .text('2 qubits')
+
+      newY = newY + circleSizeFields + 20
+
+      // circle 2
+      svg
+        .append('circle')
+        .attr('stroke-width', strokeSize)
+        .attr('cx', circleSizeFields)
+        .attr('cy', newY)
+        .attr('r', circleSizeFields)
+        .style('stroke', colors[5])
+        .style('stroke-opacity', strokeOpacity.fieldLegend)
+        .style('fill', colors[5])
+        .style('fill-opacity', circleOpacity.fieldLegend)
+
+      // circle 2 label
+      svg
+        .append('text')
+        .attr('x', circleSizeFields * 2 + 15)
+        .attr('y', newY + 4)
+        .style('font-size', `${smallLabelSize}px`)
+        .style('font-family', fontType)
+        .text('6 qubits')
+
+      newY = newY + circleSizeFields + 20
+
+      // circle 3
+      svg
+        .append('circle')
+        .attr('stroke-width', strokeSize)
+        .attr('cx', circleSizeFields)
+        .attr('cy', newY)
+        .attr('r', circleSizeFields)
+        .style('stroke', colors[6])
+        .style('stroke-opacity', strokeOpacity.fieldLegend)
+        .style('fill', colors[6])
+        .style('fill-opacity', circleOpacity.fieldLegend)
+
+      // circle 3 label
+      svg
+        .append('text')
+        .attr('x', circleSizeFields * 2 + 15)
+        .attr('y', newY + 4)
+        .style('font-size', `${smallLabelSize}px`)
+        .style('font-family', fontType)
+        .text('7 qubits')
+
+      return
+    }
+
+    // circle 1
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[domainIndex.ibmq])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[domainIndex.ibmq])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 1 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('IBMQ')
+
+    newY = newY + circleSizeFields + 20
+
+    // circle 2
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[domainIndex.quantinuum])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[domainIndex.quantinuum])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 2 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('Quantinuum')
+
+    newY = newY + circleSizeFields + 20
+
+    // circle 3
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[domainIndex.rigetti])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[domainIndex.rigetti])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 3 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('Rigetti')
+
+    newY = newY + circleSizeFields + 20
+
+    // circle 4
+    svg
+      .append('circle')
+      .attr('stroke-width', strokeSize)
+      .attr('cx', circleSizeFields)
+      .attr('cy', newY)
+      .attr('r', circleSizeFields)
+      .style('stroke', colors[domainIndex.other])
+      .style('stroke-opacity', strokeOpacity.fieldLegend)
+      .style('fill', colors[domainIndex.other])
+      .style('fill-opacity', circleOpacity.fieldLegend)
+
+    // circle 4 label
+    svg
+      .append('text')
+      .attr('x', circleSizeFields * 2 + 15)
+      .attr('y', newY + 4)
+      .style('font-size', `${smallLabelSize}px`)
+      .style('font-family', fontType)
+      .text('Other')
+  }
+
+  function mousemove (
+    e,
+    marginRight,
+    xRange,
+    data,
+    colors,
+    domainIndex,
+    fontType, // font size in pixel
+    smallLabelSize,
+    selectionRadius = 50,
+    tooltipOffsetX = 0,
+    tooltipOffsetY = 0,
+    border = '1px',
+    borderColor = 'black',
+    padding = '5px',
+    borderRadius = '5px',
+    backgroundColor = '#fafafa',
+    arrowSize = 8,
+    turnTooltip = 0.6
+  ) {
+    const mouseX = e.pageX
+    const mouseY = e.pageY
+
+    const targetID = e.target.id
+    const targetClass = e.target.className.baseVal
+
+    const selectedCircle = d3
+      .select(`circle#${targetID}`)
+      .node()
+      .getBoundingClientRect()
+
+    const xPerc = (selectedCircle.x - xRange[0]) / (xRange[1] - marginRight)
+
+    const circleX = selectedCircle.x + window.scrollX + tooltipOffsetX
+    const circleXshifted = circleX + selectedCircle.width
+    const circleY = selectedCircle.y + window.scrollY + tooltipOffsetY
+
+    const mouseDist = Math.sqrt((circleX - mouseX) ** 2 + (circleY - mouseY) ** 2)
+
+    const svg = d3.select(chartRef.current)
+
+    const otherCircles = d3.selectAll(`circle.${targetClass}`)
+
+    if (mouseDist <= selectionRadius) {
+      svg.selectAll('line.selectedLine')
+        .attr('class', null)
+        .style('visibility', 'hidden')
+
+      svg.selectAll('text.selectedText')
+        .attr('class', null)
+        .style('visibility', 'hidden')
+
+      svg.selectAll(`line#${targetID}`)
+        .attr('class', 'selectedLine')
+        .style('visibility', 'visible')
+
+      svg.selectAll(`text#${targetID}`)
+        .attr('class', 'selectedText')
+        .style('visibility', 'visible')
+
+      const idData = data.filter((d) => d.id === targetID)[0]
+
+      svg.select('#scatter-tooltip')
+        // Main tooltip
+        .style('visibility', 'visible')
+        .style('top', `${circleY}px`)
+        .style('font-size', `${smallLabelSize}px`)
+        .style('font-family', fontType)
+        .style('border', border)
+        .style('border-style', 'solid')
+        .style('border-color', borderColor)
+        .style('border-radius', borderRadius)
+        .style('padding', padding)
+        .style('background-color', backgroundColor)
+        .style(
+          'transform',
+          `translateY(-50%) translateY(${selectedCircle.width / 2}px)`
+        )
+        .html(
+          `
+        <div>
+          ${[...otherCircles._groups[0]]
+            .map(
+              (crcl) =>
+                `<div style="font-size: 1.5em;">${crcl.__data__.platformName}</div>`
+            )
+            .join('')}
+          ${d3.utcFormat('%B %d, %Y')(idData.tableDate)}<br>
+          ${idData.methodName}<br>
+          <a href="https://metriq.info/Submission/${
+            idData.submissionId
+          }" style="color: ${
+            colors[isQubits ? idData.qubitCount - 1 : domainIndex[idData.domain]]
+          }; filter: brightness(0.85)">→ explore submission</a>
+        </div>`
+        )
+
+      if (xPerc < turnTooltip) {
+        svg.select('#scatter-tooltip')
+          .style('right', null)
+          .style('left', `${circleXshifted + arrowSize / 2}px`)
+      } else {
+        svg.select('#scatter-tooltip')
+          .style('left', null)
+          .style('right', `${window.innerWidth - circleX + arrowSize / 2}px`)
+      }
+
+      svg.select('#scatter-tooltip')
+        // triangle
+        .append('div')
+        .attr('id', 'tooltip-triangle')
+        .style('position', 'absolute  ')
+        .style('content', '         ')
+        .style('top', '50%')
+        .style('left', `${xPerc < turnTooltip ? 0 : 100}%`)
+        .style('transform', 'translateX(-50%) rotate(45deg)')
+        .style('border', border)
+        .style('border-style', 'solid')
+        .style('margin-top', `-${arrowSize / 2}px`)
+        .style('width', `${arrowSize}px`)
+        .style('height', `${arrowSize}px`)
+        .style(
+          'border-color',
+          xPerc < turnTooltip
+            ? `transparent transparent ${borderColor} ${borderColor}`
+            : `${borderColor} ${borderColor} transparent transparent`
+        )
+        .style('background-color', backgroundColor)
+    } else {
+      svg.select('#scatter-tooltip').style('visibility', 'hidden')
+
+      svg.selectAll('line.selectedLine')
+        .attr('class', null)
+        .style('visibility', 'hidden')
+
+      svg.selectAll('text.selectedText')
+        .attr('class', null)
+        .style('visibility', 'hidden')
+    }
+  }
+
   const barplot = useCallback((
     data,
     isl,
@@ -481,7 +484,7 @@ function QuantumVolumeChart (props) {
     Y,
     marginLeft,
     marginTop,
-    yAxisText,
+    yAxisText
   ) => {
     const height = yRange[0] - yRange[1]
     const yMin = d3.min(Y)
@@ -496,12 +499,12 @@ function QuantumVolumeChart (props) {
       .selectAll('text')
       .attr('transform', 'translate(-10,0)rotate(-45)')
       .style('text-anchor', 'end')
-  
+
     // Add Y axis
     const y = (isl ? d3.scaleLinear() : d3.scaleLog())
       .range([0, yRange[0] - yRange[1]])
       .domain([yDomain[1], yDomain[0]])
-  
+
     const yAxis = d3.axisLeft(y)
     // append y axis
     svg
@@ -522,7 +525,7 @@ function QuantumVolumeChart (props) {
           .attr('font-size', `${smallLabelSize}px`)
           .text(yAxisText)
       )
-  
+
     // Bars
     svg.selectAll('bar')
       .data(data)
@@ -543,7 +546,7 @@ function QuantumVolumeChart (props) {
           : colors[3]
       )
   }, [])
-  
+
   const scatterplot = useCallback((
     data,
     isl,
@@ -614,7 +617,7 @@ function QuantumVolumeChart (props) {
           .attr('font-size', `${smallLabelSize}px`)
           .text(yAxisText)
       )
-  
+
     // max lines (h + v)
     svg
       .append('g')
@@ -640,7 +643,7 @@ function QuantumVolumeChart (props) {
       .style('stroke', tooltipLineColor)
       .style('stroke-width', horizontalLineStrokeSize)
       .style('stroke-dasharray', tooltipLineStrokeTexture)
-  
+
     // voronoi grid
     svg
       .append('g')
@@ -671,7 +674,7 @@ function QuantumVolumeChart (props) {
           smallLabelSize
         )
       )
-  
+
     // append circles
     svg
       .append('g')
@@ -721,24 +724,24 @@ function QuantumVolumeChart (props) {
           smallLabelSize
         )
       )
-  
+
     // label
     d3.selectAll('circle').each(function (d, i) {
       const id = d3.select(this).attr('id')
-  
+
       if (maxIDs.includes(id)) {
         const x = d3.select(`circle#${id}`).attr('cx')
         const y = d3.select(`circle#${id}`).attr('cy')
-  
+
         const svgWidth = d3
           .select('#svgscatter')
           .node()
           .getBoundingClientRect().width
-  
+
         const turnLabelBreakpoint = isMobile
           ? (svgWidth / 3) * 1.5
           : svgWidth / 3
-  
+
         svg
           .append('text')
           .attr(
@@ -1007,7 +1010,7 @@ function QuantumVolumeChart (props) {
         chartWidth,
         xLabelShift,
         xAxisText,
-        yAxisText,
+        yAxisText
       )
     }
   }, [barplot, scatterplot])
@@ -1015,9 +1018,9 @@ function QuantumVolumeChart (props) {
   const redraw = useCallback((d, isl, alv, ala) => {
     const scroll = window.scrollY
     isMobile = window.outerWidth < breakpoint
-    d3.select('#svgscatter').remove()
-    d3.select('#scatter-tooltip').remove()
-    d3.selectAll('#svglegend').remove()
+    d3.select(chartRef.current).select('#svgscatter').remove()
+    d3.select(chartRef.current).select('#scatter-tooltip').remove()
+    d3.select(chartRef.current).selectAll('#svglegend').remove()
     plot(d, isl, alv, ala, metricName)
     legend()
     window.scrollTo(0, scroll)
@@ -1164,7 +1167,7 @@ function QuantumVolumeChart (props) {
           </div>
           <div>
             <span className='legendTitle'>{isQ ? 'Qubits' : 'Providers'}</span>
-            <div id='legend-color' style={{ marginTop: '10px' }} />
+            <div id={legendColorId} ref={legendColorRef} style={{ marginTop: '10px' }} />
           </div>
           <div>
             <div id='legend-stroke' style={{ marginTop: '10px' }}>
