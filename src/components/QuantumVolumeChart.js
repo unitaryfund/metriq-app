@@ -103,10 +103,10 @@ function QuantumVolumeChart (props) {
   const legendRef = useRef()
   const legendColorRef = useRef()
   const [metricNames, setMetricNames] = React.useState([])
-  const [isQ, setIsQ] = React.useState(false)
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
   const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
+  const [isInitialized, setIsInitialized] = React.useState(false)
   const [d, setD] = React.useState({})
 
   function onLabelSwitchClick () {
@@ -155,17 +155,17 @@ function QuantumVolumeChart (props) {
       multCoeff = 1.5
     }
 
-    const chartWidth = d3
-      .select(legendColorRef.current)
+    const legendColor = d3.select(legendColorRef.current)
+
+    const chartWidth = legendColor
       .node()
       .getBoundingClientRect().width
 
     // initiate svg
-    svg = d3
-      .select(legendColorRef.current)
+    svg = legendColor
       .append('svg')
       .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
-      .attr('id', 'svglegend')
+      .attr('id', 'svglegend' + key)
       .style('width', '100%')
 
     let newY = circleSizeFields + 10
@@ -375,6 +375,8 @@ function QuantumVolumeChart (props) {
 
     const otherCircles = svg.selectAll(`circle.${targetClass}`)
 
+    const scatterTooltip = svg.select('#scatter-tooltip' + key)
+
     if (mouseDist <= selectionRadius) {
       svg.selectAll('line.selectedLine')
         .attr('class', null)
@@ -394,7 +396,7 @@ function QuantumVolumeChart (props) {
 
       const idData = data.filter((d) => d.id === targetID)[0]
 
-      svg.select('#scatter-tooltip')
+      scatterTooltip
         // Main tooltip
         .style('visibility', 'visible')
         .style('top', `${circleY}px`)
@@ -430,16 +432,14 @@ function QuantumVolumeChart (props) {
         )
 
       if (xPerc < turnTooltip) {
-        svg.select('#scatter-tooltip')
-          .style('right', null)
+        scatterTooltip.style('right', null)
           .style('left', `${circleXshifted + arrowSize / 2}px`)
       } else {
-        svg.select('#scatter-tooltip')
-          .style('left', null)
+        scatterTooltip.style('left', null)
           .style('right', `${window.innerWidth - circleX + arrowSize / 2}px`)
       }
 
-      svg.select('#scatter-tooltip')
+      scatterTooltip
         // triangle
         .append('div')
         .attr('id', 'tooltip-triangle')
@@ -461,7 +461,7 @@ function QuantumVolumeChart (props) {
         )
         .style('background-color', backgroundColor)
     } else {
-      svg.select('#scatter-tooltip').style('visibility', 'hidden')
+      scatterTooltip.style('visibility', 'hidden')
 
       svg.selectAll('line.selectedLine')
         .attr('class', null)
@@ -732,7 +732,7 @@ function QuantumVolumeChart (props) {
         const y = svg.select(`circle#${id}`).attr('cy')
 
         const svgWidth = d3
-          .select('#svgscatter')
+          .select('#svgscatter' + key)
           .node()
           .getBoundingClientRect().width
 
@@ -895,7 +895,7 @@ function QuantumVolumeChart (props) {
     d3
       .select('body')
       .append('div')
-      .attr('id', 'scatter-tooltip')
+      .attr('id', 'scatter-tooltip' + key)
       .style('position', 'absolute')
 
     // initiate svg
@@ -903,7 +903,7 @@ function QuantumVolumeChart (props) {
       .select(chartTarget)
       .append('svg')
       .attr('viewBox', [0, 0, chartWidth, chartHeight])
-      .attr('id', 'svgscatter')
+      .attr('id', 'svgscatter' + key)
       .attr('style', 'max-width: 100%')
 
     // tooltip vlines
@@ -1016,19 +1016,14 @@ function QuantumVolumeChart (props) {
   const redraw = useCallback((d, isl, alv, ala) => {
     const scroll = window.scrollY
     isMobile = window.outerWidth < breakpoint
-    d3.select(chartRef.current).select('#svgscatter').remove()
-    d3.select(chartRef.current).select('#scatter-tooltip').remove()
-    d3.select(chartRef.current).selectAll('#svglegend').remove()
+    d3.select(chartRef.current).select('#svgscatter' + key).remove()
+    d3.select(chartRef.current).select('#scatter-tooltip' + key).remove()
+    d3.select(chartRef.current).selectAll('#svglegend' + key).remove()
     plot(d, isl, alv, ala, metricName)
-    legend()
     window.scrollTo(0, scroll)
   }, [plot])
 
   React.useEffect(() => {
-    isQubits = !!(props.isQubits)
-    if (isQubits !== isQ) {
-      setIsQ(isQubits)
-    }
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
@@ -1102,12 +1097,16 @@ function QuantumVolumeChart (props) {
           }))
           .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
-        redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
+        if (!isInitialized) {
+          setIsInitialized(true)
+          redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
+          legend()
+        }
       })
       .catch(err => {
         console.log(err)
       })
-  }, [props, redraw, setD, metricNames, isQ, setIsQ, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
+  }, [props, redraw, setD, metricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv, isInitialized, setIsInitialized])
 
   return (
     <span>
@@ -1120,7 +1119,7 @@ function QuantumVolumeChart (props) {
         <div id={chartId} ref={chartRef} />
         <div id={legendId} ref={legendRef}>
           <div>
-            {!isQ &&
+            {!props.isQubits &&
               <span>
                 <div id='legend-switch' style={{ marginTop: '10px' }}>
                   <label className='switch'>
@@ -1154,7 +1153,7 @@ function QuantumVolumeChart (props) {
             </div>
           </div>
           <div>
-            <span className='legendTitle'>{isQ ? 'Qubits' : 'Providers'}</span>
+            <span className='legendTitle'>{props.isQubits ? 'Qubits' : 'Providers'}</span>
             <div id={legendColorId} ref={legendColorRef} style={{ marginTop: '10px' }} />
           </div>
           <div>
