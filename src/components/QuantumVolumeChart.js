@@ -729,8 +729,8 @@ function QuantumVolumeChart (props) {
       const id = d3.select(this).attr('id')
 
       if (maxIDs.includes(id)) {
-        const x = d3.select(`circle#${id}`).attr('cx')
-        const y = d3.select(`circle#${id}`).attr('cy')
+        const x = svg.select(`circle#${id}`).attr('cx')
+        const y = svg.select(`circle#${id}`).attr('cy')
 
         const svgWidth = d3
           .select('#svgscatter')
@@ -761,7 +761,7 @@ function QuantumVolumeChart (props) {
           )
           .style('font-family', fontType)
           .attr('text-anchor', x > turnLabelBreakpoint ? 'end' : 'start')
-          .text(`${d3.select(`circle#${id}`).attr('label')}`)
+          .text(`${svg.select(`circle#${id}`).attr('label')}`)
       }
     })
   }, [])
@@ -1029,9 +1029,6 @@ function QuantumVolumeChart (props) {
     isQubits = !!(props.isQubits)
     if (isQubits !== isQ) {
       setIsQ(isQubits)
-    }
-    if (taskId === props.taskId) {
-      return
     }
     setTaskId(props.taskId)
     // Draw scatterplot from data
