@@ -357,9 +357,7 @@ function QuantumVolumeChart (props) {
     const targetID = e.target.id
     const targetClass = e.target.className.baseVal
 
-    const svg = d3.select(chartRef.current)
-
-    const selectedCircle = svg
+    const selectedCircle = d3
       .select(`circle#${targetID}`)
       .node()
       .getBoundingClientRect()
@@ -372,30 +370,28 @@ function QuantumVolumeChart (props) {
 
     const mouseDist = Math.sqrt((circleX - mouseX) ** 2 + (circleY - mouseY) ** 2)
 
-    const otherCircles = svg.selectAll(`circle.${targetClass}`)
-
-    const scatterTooltip = svg.select('#scatter-tooltip' + key)
+    const otherCircles = d3.selectAll(`circle.${targetClass}`)
 
     if (mouseDist <= selectionRadius) {
-      svg.selectAll('line.selectedLine')
+      d3.selectAll('line.selectedLine')
         .attr('class', null)
         .style('visibility', 'hidden')
 
-      svg.selectAll('text.selectedText')
+      d3.selectAll('text.selectedText')
         .attr('class', null)
         .style('visibility', 'hidden')
 
-      svg.selectAll(`line#${targetID}`)
+      d3.selectAll(`line#${targetID}`)
         .attr('class', 'selectedLine')
         .style('visibility', 'visible')
 
-      svg.selectAll(`text#${targetID}`)
+      d3.selectAll(`text#${targetID}`)
         .attr('class', 'selectedText')
         .style('visibility', 'visible')
 
       const idData = data.filter((d) => d.id === targetID)[0]
 
-      scatterTooltip
+      d3.select('#scatter-tooltip' + key)
         // Main tooltip
         .style('visibility', 'visible')
         .style('top', `${circleY}px`)
@@ -431,14 +427,16 @@ function QuantumVolumeChart (props) {
         )
 
       if (xPerc < turnTooltip) {
-        scatterTooltip.style('right', null)
+        d3.select('#scatter-tooltip' + key)
+          .style('right', null)
           .style('left', `${circleXshifted + arrowSize / 2}px`)
       } else {
-        scatterTooltip.style('left', null)
+        d3.select('#scatter-tooltip' + key)
+          .style('left', null)
           .style('right', `${window.innerWidth - circleX + arrowSize / 2}px`)
       }
 
-      scatterTooltip
+      d3.select('#scatter-tooltip' + key)
         // triangle
         .append('div')
         .attr('id', 'tooltip-triangle')
@@ -460,13 +458,13 @@ function QuantumVolumeChart (props) {
         )
         .style('background-color', backgroundColor)
     } else {
-      scatterTooltip.style('visibility', 'hidden')
+      d3.select('#scatter-tooltip' + key).style('visibility', 'hidden')
 
-      svg.selectAll('line.selectedLine')
+      d3.selectAll('line.selectedLine')
         .attr('class', null)
         .style('visibility', 'hidden')
 
-      svg.selectAll('text.selectedText')
+      d3.selectAll('text.selectedText')
         .attr('class', null)
         .style('visibility', 'hidden')
     }
