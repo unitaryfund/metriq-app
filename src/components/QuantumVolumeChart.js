@@ -105,7 +105,6 @@ function QuantumVolumeChart (props) {
   const [metricNames, setMetricNames] = React.useState([])
   const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
-  const [isLoaded, setIsLoaded] = React.useState(false)
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
   const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
@@ -360,7 +359,9 @@ function QuantumVolumeChart (props) {
     const targetID = e.target.id
     const targetClass = e.target.className.baseVal
 
-    const selectedCircle = d3
+    const svg = d3.select(chartRef.current)
+
+    const selectedCircle = svg
       .select(`circle#${targetID}`)
       .node()
       .getBoundingClientRect()
@@ -373,9 +374,7 @@ function QuantumVolumeChart (props) {
 
     const mouseDist = Math.sqrt((circleX - mouseX) ** 2 + (circleY - mouseY) ** 2)
 
-    const svg = d3.select(chartRef.current)
-
-    const otherCircles = d3.selectAll(`circle.${targetClass}`)
+    const otherCircles = svg.selectAll(`circle.${targetClass}`)
 
     if (mouseDist <= selectionRadius) {
       svg.selectAll('line.selectedLine')
@@ -726,7 +725,7 @@ function QuantumVolumeChart (props) {
       )
 
     // label
-    d3.selectAll('circle').each(function (d, i) {
+    svg.selectAll('circle').each(function (d, i) {
       const id = d3.select(this).attr('id')
 
       if (maxIDs.includes(id)) {
@@ -1108,18 +1107,12 @@ function QuantumVolumeChart (props) {
           }))
           .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
-        setIsLoaded(true)
         redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
-        setIsLoaded(false)
         console.log(err)
       })
-  }, [props, redraw, setD, metricNames, taskId, setTaskId, isQ, setIsQ, isLoaded, setIsLoaded, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
-
-  if (!isLoaded) {
-    return <span />
-  }
+  }, [props, redraw, setD, metricNames, taskId, setTaskId, isQ, setIsQ, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
