@@ -106,7 +106,6 @@ function QuantumVolumeChart (props) {
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
   const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
-  const [isInitialized, setIsInitialized] = React.useState(false)
   const [d, setD] = React.useState({})
 
   function onLabelSwitchClick () {
@@ -1018,8 +1017,9 @@ function QuantumVolumeChart (props) {
     isMobile = window.outerWidth < breakpoint
     d3.select(chartRef.current).select('#svgscatter' + key).remove()
     d3.select(chartRef.current).select('#scatter-tooltip' + key).remove()
-    d3.select(chartRef.current).selectAll('#svglegend' + key).remove()
+    d3.select(legendColorRef.current).selectAll('#svglegend' + key).remove()
     plot(d, isl, alv, ala, metricName)
+    legend()
     window.scrollTo(0, scroll)
   }, [plot])
 
@@ -1097,16 +1097,12 @@ function QuantumVolumeChart (props) {
           }))
           .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
-        if (!isInitialized) {
-          setIsInitialized(true)
-          redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
-          legend()
-        }
+        redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
         console.log(err)
       })
-  }, [props, redraw, setD, metricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv, isInitialized, setIsInitialized])
+  }, [props, redraw, setD, metricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
