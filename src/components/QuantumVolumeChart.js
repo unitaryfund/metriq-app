@@ -103,7 +103,6 @@ function QuantumVolumeChart (props) {
   const legendRef = useRef()
   const legendColorRef = useRef()
   const [metricNames, setMetricNames] = React.useState([])
-  const [taskId, setTaskId] = React.useState(0)
   const [isQ, setIsQ] = React.useState(false)
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
@@ -1030,7 +1029,6 @@ function QuantumVolumeChart (props) {
     if (isQubits !== isQ) {
       setIsQ(isQubits)
     }
-    setTaskId(props.taskId)
     // Draw scatterplot from data
     const taskRoute = config.api.getUriPrefix() + '/task/' + props.taskId
     axios.get(taskRoute)
@@ -1102,14 +1100,14 @@ function QuantumVolumeChart (props) {
             dayIndexInEpoch: dayIndexInEpoch(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
-          .sort((a, b) => (taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
+          .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
         redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
         console.log(err)
       })
-  }, [props, redraw, setD, metricNames, taskId, setTaskId, isQ, setIsQ, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
+  }, [props, redraw, setD, metricNames, isQ, setIsQ, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
