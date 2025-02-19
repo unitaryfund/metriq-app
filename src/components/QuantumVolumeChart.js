@@ -38,7 +38,7 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, metricName, taskName, isQubits
+let svg, taskName, isQubits
 
 function showLabels () {
   [...document.getElementsByClassName('labeltohide')].forEach((el) => {
@@ -102,6 +102,8 @@ function QuantumVolumeChart (props) {
   const chartRef = useRef()
   const legendRef = useRef()
   const legendColorRef = useRef()
+  const [isInit, setIsInit] = React.useState(true)
+  const [metricName, setMetricName] = React.useState('')
   const [metricNames, setMetricNames] = React.useState([])
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
@@ -112,22 +114,22 @@ function QuantumVolumeChart (props) {
     const alv = !areLabelsVisible
     setAreLabelsVisible(alv)
     refreshLabels(alv)
-    redraw(d, isScaleLinear, alv, areLabelsArxiv)
+    redraw(d, isScaleLinear, alv, areLabelsArxiv, metricName)
   }
   function onArxivSwitchClick () {
     const ala = !areLabelsArxiv
     setAreLabelsArxiv(ala)
     refreshLabels(areLabelsVisible)
-    redraw(d, isScaleLinear, areLabelsVisible, ala)
+    redraw(d, isScaleLinear, areLabelsVisible, ala, metricName)
   }
   function onScaleSwitchClick () {
     const isl = !isScaleLinear
     setIsScaleLinear(isl)
-    redraw(d, isl, areLabelsVisible, areLabelsArxiv)
+    redraw(d, isl, areLabelsVisible, areLabelsArxiv, metricName)
   }
   function onMetricSelectChange (e) {
-    metricName = e.target.value
-    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv)
+    setMetricName(e.target.value)
+    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv, e.target.value)
   }
 
   function refreshLabels (alv) {
@@ -770,6 +772,7 @@ function QuantumVolumeChart (props) {
     isl = false,
     alv = false,
     ala = false,
+    mn = metricName,
     yAxisText = 'Quantum Volume  →',
     yName = 'metricValue', // the y column
     xAxisText = 'Date →',
@@ -800,7 +803,7 @@ function QuantumVolumeChart (props) {
     // list of IDs of data with max values
     // maxData with only max objects
 
-    const metricNameInvariant = metricName.toLowerCase()
+    const metricNameInvariant = mn.toLowerCase()
     const isQv = (metricNameInvariant === 'quantum volume')
 
     data = data.filter((x) => x.metricName.toLowerCase() === metricNameInvariant)
@@ -1010,15 +1013,15 @@ function QuantumVolumeChart (props) {
         yAxisText
       )
     }
-  }, [barplot, scatterplot])
+  }, [barplot, scatterplot, metricName])
 
-  const redraw = useCallback((d, isl, alv, ala) => {
+  const redraw = useCallback((d, isl, alv, ala, mn) => {
     const scroll = window.scrollY
     isMobile = window.outerWidth < breakpoint
     d3.select(chartRef.current).select('#svgscatter' + key).remove()
     d3.select(chartRef.current).select('#scatter-tooltip' + key).remove()
     d3.select(legendColorRef.current).selectAll('#svglegend' + key).remove()
-    plot(d, isl, alv, ala, metricName)
+    plot(d, isl, alv, ala, mn)
     legend()
     window.scrollTo(0, scroll)
   }, [plot])
@@ -1035,7 +1038,7 @@ function QuantumVolumeChart (props) {
           props.onLoadData(task)
         }
         const results = task.results
-        metricName = ''
+        let metric = ''
         const metricNameCounts = []
         for (let i = 0; i < results.length; ++i) {
           if (results[i].submissionUrl.toLowerCase().startsWith('https://arxiv.org/')) {
@@ -1051,35 +1054,40 @@ function QuantumVolumeChart (props) {
             metricNames.push(results[i].metricName)
             metricNameCounts.push(1)
             if (results[i].metricName.toLowerCase() === 'quantum volume') {
-              metricName = 'quantum volume'
+              metric = 'quantum volume'
             } else if (isQubits && (results[i].metricName.toLowerCase() === 'iterations to 1e-3 error')) {
-              metricName = 'iterations to 1e-3 error'
+              metric = 'iterations to 1e-3 error'
             }
           }
         }
         metricNames.sort((a, b) => a > b)
-        if (metricName === '') {
-          const maxCount = metricNameCounts[0]
+        if (metric === '') {
+          let maxCount = metricNameCounts[0]
           let maxCountIndex = 0
           for (let i = 1; i < metricNames.length; ++i) {
             if (metricNameCounts[i] > maxCount) {
               maxCountIndex = i
+              maxCount = metricNameCounts[i]
             }
           }
-          metricName = metricNames[maxCountIndex]
+          metric = metricNames[maxCountIndex]
           if (maxCountIndex > 0) {
             const tmp = metricNames[0]
             metricNames[0] = metricNames[maxCountIndex]
             metricNames[maxCountIndex] = tmp
           }
         } else {
-          const tmp = metricNames.indexOf(metricName)
+          const tmp = metricNames.indexOf(metric)
           if (tmp > 0) {
             metricNames[tmp] = metricNames[0]
-            metricNames[0] = metricName
+            metricNames[0] = metric
           }
         }
         setMetricNames(metricNames)
+        if (isInit) {
+          setIsInit(false)
+          setMetricName(metric)
+        }
         const data = results
           .map((_d) => ({
             key: +_d.id,
@@ -1102,7 +1110,7 @@ function QuantumVolumeChart (props) {
       .catch(err => {
         console.log(err)
       })
-  }, [props, redraw, setD, metricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
+  }, [props, redraw, setD, isInit, setIsInit, metricName, setMetricName, metricNames, setMetricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
