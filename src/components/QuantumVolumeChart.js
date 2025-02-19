@@ -370,8 +370,6 @@ function QuantumVolumeChart (props) {
 
     const mouseDist = Math.sqrt((circleX - mouseX) ** 2 + (circleY - mouseY) ** 2)
 
-    const otherCircles = d3.selectAll(`circle.${targetClass}`)
-
     if (mouseDist <= selectionRadius) {
       d3.selectAll('line.selectedLine')
         .attr('class', null)
@@ -390,8 +388,9 @@ function QuantumVolumeChart (props) {
         .style('visibility', 'visible')
 
       const idData = data.filter((d) => d.id === targetID)[0]
-
-      d3.select('#scatter-tooltip' + key)
+      try {
+        const otherCircles = d3.selectAll(`circle.${targetClass}`)
+        d3.select('#scatter-tooltip' + key)
         // Main tooltip
         .style('visibility', 'visible')
         .style('top', `${circleY}px`)
@@ -425,6 +424,9 @@ function QuantumVolumeChart (props) {
           }; filter: brightness(0.85)">→ explore submission</a>
         </div>`
         )
+      } catch {
+        // Intentionally left blank
+      }
 
       if (xPerc < turnTooltip) {
         d3.select('#scatter-tooltip' + key)
