@@ -1110,7 +1110,8 @@ function QuantumVolumeChart (props) {
       .catch(err => {
         console.log(err)
       })
-  }, [props, redraw, setD, isInit, setIsInit, metricName, setMetricName, metricNames, setMetricNames, isScaleLinear, setIsScaleLinear, areLabelsVisible, areLabelsArxiv])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props])
 
   return (
     <span>
