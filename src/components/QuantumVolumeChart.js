@@ -1047,6 +1047,10 @@ function QuantumVolumeChart (props) {
             results[i].arXiv = results[i].methodName
           }
 
+          if (props.metric) {
+            continue
+          }
+
           if (metricNames.includes(results[i].metricName)) {
             ++metricNameCounts[metricNames.indexOf(results[i].metricName)]
           } else {
@@ -1060,7 +1064,7 @@ function QuantumVolumeChart (props) {
           }
         }
         metricNames.sort((a, b) => a > b)
-        if (metric === '') {
+        if (!props.metric && (metric === '')) {
           let maxCount = metricNameCounts[0]
           let maxCountIndex = 0
           for (let i = 1; i < metricNames.length; ++i) {
@@ -1069,12 +1073,7 @@ function QuantumVolumeChart (props) {
               maxCount = metricNameCounts[i]
             }
           }
-          metric = metricNames[maxCountIndex]
-          if (maxCountIndex > 0) {
-            const tmp = metricNames[0]
-            metricNames[0] = metricNames[maxCountIndex]
-            metricNames[maxCountIndex] = tmp
-          }
+          metric = metricNames[maxCountIndex].toLowerCase()
         } else {
           const tmp = metricNames.indexOf(metric)
           if (tmp > 0) {
@@ -1083,7 +1082,7 @@ function QuantumVolumeChart (props) {
           }
         }
         setMetricNames(metricNames)
-        setMetricName(metric)
+        setMetricName(props.metric ? props.metric : metric)
         const data = results
           .map((_d) => ({
             key: +_d.id,

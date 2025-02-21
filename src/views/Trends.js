@@ -115,6 +115,7 @@ class Trends extends React.Component {
                   <QuantumVolumeChart
                     chartId={index}
                     taskId={taskId}
+                    metric={taskId === 34 ? 'quantum volume' : (taskId === 38 ? 'infidelity' : 'qubits')}
                     isLog={index < 2}
                     logBase={(index === 0) ? '2' : '10'}
                     isHideSubset
