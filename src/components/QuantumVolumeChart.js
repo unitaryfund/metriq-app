@@ -102,7 +102,6 @@ function QuantumVolumeChart (props) {
   const chartRef = useRef()
   const legendRef = useRef()
   const legendColorRef = useRef()
-  const [isInit, setIsInit] = React.useState(true)
   const [metricName, setMetricName] = React.useState('')
   const [metricNames, setMetricNames] = React.useState([])
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
@@ -1084,10 +1083,7 @@ function QuantumVolumeChart (props) {
           }
         }
         setMetricNames(metricNames)
-        if (isInit) {
-          setIsInit(false)
-          setMetricName(metric)
-        }
+        setMetricName(metric)
         const data = results
           .map((_d) => ({
             key: +_d.id,
