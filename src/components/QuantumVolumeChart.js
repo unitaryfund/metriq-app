@@ -1121,7 +1121,7 @@ function QuantumVolumeChart (props) {
       </div>
       <div id='cargo'>
         <div id={chartId} ref={chartRef} />
-        <div id={legendId} ref={legendRef}>
+        <div id={legendId} ref={legendRef} style={{ 'textAlign': 'justify' }}>
           <div>
             {!props.isQubits &&
               <span>
