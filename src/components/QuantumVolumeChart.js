@@ -38,7 +38,6 @@ const domainIndex = {
 }
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
-let svg, taskName, isQubits
 
 function showLabels () {
   [...document.getElementsByClassName('labeltohide')].forEach((el) => {
@@ -102,6 +101,7 @@ function QuantumVolumeChart (props) {
   const chartRef = useRef()
   const legendRef = useRef()
   const legendColorRef = useRef()
+  const [taskName, setTaskName] = React.useState('')
   const [metricName, setMetricName] = React.useState('')
   const [metricNames, setMetricNames] = React.useState([])
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
@@ -149,7 +149,7 @@ function QuantumVolumeChart (props) {
   }
 
   // Function to build legend
-  function legend (circleSizeFields = 8) {
+  const legend = React.useCallback((circleSizeFields = 8) => {
     let multCoeff = 1
     if (isMobile) {
       multCoeff = 1.5
@@ -162,7 +162,7 @@ function QuantumVolumeChart (props) {
       .getBoundingClientRect().width
 
     // initiate svg
-    svg = legendColor
+    const svg = legendColor
       .append('svg')
       .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
       .attr('id', 'svglegend' + key)
@@ -170,7 +170,7 @@ function QuantumVolumeChart (props) {
 
     let newY = circleSizeFields + 10
 
-    if (isQubits) {
+    if (props.isQubits) {
       // circle 1
       svg
         .append('circle')
@@ -330,9 +330,9 @@ function QuantumVolumeChart (props) {
       .style('font-size', `${smallLabelSize}px`)
       .style('font-family', fontType)
       .text('Other')
-  }
+  }, [props.isQubits])
 
-  function mousemove (
+  const mousemove = React.useCallback((
     e,
     marginRight,
     xRange,
@@ -351,7 +351,7 @@ function QuantumVolumeChart (props) {
     backgroundColor = '#fafafa',
     arrowSize = 8,
     turnTooltip = 0.6
-  ) {
+  ) => {
     const mouseX = e.pageX
     const mouseY = e.pageY
 
@@ -393,21 +393,21 @@ function QuantumVolumeChart (props) {
         const otherCircles = d3.selectAll(`circle.${targetClass}`)
         d3.select('#scatter-tooltip' + key)
         // Main tooltip
-        .style('visibility', 'visible')
-        .style('top', `${circleY}px`)
-        .style('font-size', `${smallLabelSize}px`)
-        .style('font-family', fontType)
-        .style('border', border)
-        .style('border-style', 'solid')
-        .style('border-color', borderColor)
-        .style('border-radius', borderRadius)
-        .style('padding', padding)
-        .style('background-color', backgroundColor)
-        .style(
-          'transform',
+          .style('visibility', 'visible')
+          .style('top', `${circleY}px`)
+          .style('font-size', `${smallLabelSize}px`)
+          .style('font-family', fontType)
+          .style('border', border)
+          .style('border-style', 'solid')
+          .style('border-color', borderColor)
+          .style('border-radius', borderRadius)
+          .style('padding', padding)
+          .style('background-color', backgroundColor)
+          .style(
+            'transform',
           `translateY(-50%) translateY(${selectedCircle.width / 2}px)`
-        )
-        .html(
+          )
+          .html(
           `
         <div>
           ${[...otherCircles._groups[0]]
@@ -421,10 +421,10 @@ function QuantumVolumeChart (props) {
           <a href="https://metriq.info/Submission/${
             idData.submissionId
           }" style="color: ${
-            colors[isQubits ? idData.qubitCount - 1 : domainIndex[idData.domain]]
+            colors[props.isQubits ? idData.qubitCount - 1 : domainIndex[idData.domain]]
           }; filter: brightness(0.85)">→ explore submission</a>
         </div>`
-        )
+          )
       } catch {
         // Intentionally left blank
       }
@@ -471,7 +471,7 @@ function QuantumVolumeChart (props) {
         .attr('class', null)
         .style('visibility', 'hidden')
     }
-  }
+  }, [props.isQubits])
 
   const barplot = useCallback((
     data,
@@ -482,7 +482,8 @@ function QuantumVolumeChart (props) {
     Y,
     marginLeft,
     marginTop,
-    yAxisText
+    yAxisText,
+    svg
   ) => {
     const height = yRange[0] - yRange[1]
     const yMin = d3.min(Y)
@@ -534,16 +535,16 @@ function QuantumVolumeChart (props) {
       .attr('width', x.bandwidth())
       .attr('height', (i) => (height - y(i.metricValue)))
       .style('stroke', (i) =>
-        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
           : colors[3]
       )
       .style('fill', (i) =>
-        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
           : colors[3]
       )
-  }, [])
+  }, [props.isQubits])
 
   const scatterplot = useCallback((
     data,
@@ -574,7 +575,8 @@ function QuantumVolumeChart (props) {
     chartWidth,
     xLabelShift,
     xAxisText,
-    yAxisText
+    yAxisText,
+    svg
   ) => {
     const xAxis = d3.axisBottom(xScale).ticks(tickInterval)
     // append x axis
@@ -685,13 +687,13 @@ function QuantumVolumeChart (props) {
       .attr('r', circleSize)
       .style('cursor', 'pointer')
       .style('stroke', (i) =>
-        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
           : colors[3]
       )
       .style('fill', (i) =>
-        colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
-          ? colors[isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+        colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
+          ? colors[props.isQubits ? i.qubitCount - 1 : domainIndex[i.provider]]
           : colors[3]
       )
       .style('fill-opacity', (i) => circleOpacity.achieved)
@@ -763,7 +765,7 @@ function QuantumVolumeChart (props) {
           .text(`${svg.select(`circle#${id}`).attr('label')}`)
       }
     })
-  }, [])
+  }, [props.isQubits, mousemove])
 
   // Function to draw plot
   const plot = useCallback((
@@ -900,7 +902,7 @@ function QuantumVolumeChart (props) {
       .style('position', 'absolute')
 
     // initiate svg
-    svg = d3
+    const svg = d3
       .select(chartTarget)
       .append('svg')
       .attr('viewBox', [0, 0, chartWidth, chartHeight])
@@ -977,7 +979,8 @@ function QuantumVolumeChart (props) {
         Y,
         marginLeft,
         marginTop,
-        yAxisText
+        yAxisText,
+        svg
       )
     } else {
       scatterplot(
@@ -1009,7 +1012,8 @@ function QuantumVolumeChart (props) {
         chartWidth,
         xLabelShift,
         xAxisText,
-        yAxisText
+        yAxisText,
+        svg
       )
     }
   }, [barplot, scatterplot, metricName])
@@ -1023,7 +1027,7 @@ function QuantumVolumeChart (props) {
     plot(d, isl, alv, ala, mn)
     legend()
     window.scrollTo(0, scroll)
-  }, [plot])
+  }, [plot, legend])
 
   React.useEffect(() => {
     // Draw scatterplot from data
@@ -1031,7 +1035,7 @@ function QuantumVolumeChart (props) {
     axios.get(taskRoute)
       .then(res => {
         const task = res.data.data
-        taskName = task.fullName
+        setTaskName(task.fullName)
         task.childTasks.sort(sortByCounts)
         if (props.onLoadData) {
           props.onLoadData(task)
@@ -1054,7 +1058,7 @@ function QuantumVolumeChart (props) {
             metricNameCounts.push(1)
             if (results[i].metricName.toLowerCase() === 'quantum volume') {
               metric = 'quantum volume'
-            } else if (isQubits && (results[i].metricName.toLowerCase() === 'iterations to 1e-3 error')) {
+            } else if (props.isQubits && (results[i].metricName.toLowerCase() === 'iterations to 1e-3 error')) {
               metric = 'iterations to 1e-3 error'
             }
           }
@@ -1094,7 +1098,7 @@ function QuantumVolumeChart (props) {
             dayIndexInEpoch: dayIndexInEpoch(_d.evaluatedAt),
             arXiv: _d.arXiv
           }))
-          .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
+          .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : props.isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
         redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
@@ -1113,7 +1117,7 @@ function QuantumVolumeChart (props) {
       </div>
       <div id='cargo'>
         <div id={chartId} ref={chartRef} />
-        <div id={legendId} ref={legendRef} style={{ 'textAlign': 'justify' }}>
+        <div id={legendId} ref={legendRef} style={{ textAlign: 'justify' }}>
           <div>
             {!props.isQubits &&
               <span>
