@@ -39,64 +39,6 @@ const domainIndex = {
 const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
 
-function showLabels () {
-  [...document.getElementsByClassName('labeltohide')].forEach((el) => {
-    el.style.visibility = 'visible'
-  })
-}
-
-function hideLabels () {
-  [...document.getElementsByClassName('labeltohide')].forEach((el) => {
-    el.style.visibility = 'hidden'
-  })
-}
-
-function parseDate (dateString) {
-  const [year, month, date] = dateString.split('-').map(Number)
-
-  return new Date(year, month - 1, date)
-}
-
-// Quick sort from https://www.geeksforgeeks.org/javascript-program-for-quick-sort/
-// ...PURELY because Chrome Array.prototype.sort() is bugged for this case!
-function partition (arr, low, high) {
-  const pivot = arr[high].dayIndexInEpoch
-  let i = low - 1
-
-  for (let j = low; j <= high - 1; j++) {
-    // If current element is smaller than the pivot
-    if (arr[j].dayIndexInEpoch < pivot) {
-      // Increment index of smaller element
-      i++;
-      // Swap elements
-      [arr[i], arr[j]] = [arr[j], arr[i]]
-    }
-  }
-  // Swap pivot to its correct position
-  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
-  return i + 1 // Return the partition index
-}
-
-function quickSort (arr, low, high) {
-  if (low >= high) return
-  const pi = partition(arr, low, high)
-
-  quickSort(arr, low, pi - 1)
-  quickSort(arr, pi + 1, high)
-}
-
-function dayIndexInEpoch (dateString) {
-  // This is actually purely a work-around for a bug baked into Chrome.
-  // It doesn't need to be exact; it just needs to be unique and maintain order.
-  const [year, month, date] = dateString.split('-').map(Number)
-
-  return (year - 1960) * 372 + (month - 1) * 31 + date
-}
-
-function makeClass (x, y) {
-  return `c${x - y}`
-}
-
 function QuantumVolumeChart (props) {
   const chartRef = useRef()
   const legendRef = useRef()
@@ -108,6 +50,56 @@ function QuantumVolumeChart (props) {
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
   const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
   const [d, setD] = React.useState({})
+
+  function showLabels () {
+    [...document.getElementsByClassName('labeltohide')].forEach((el) => {
+      el.style.visibility = 'visible'
+    })
+  }
+  
+  function hideLabels () {
+    [...document.getElementsByClassName('labeltohide')].forEach((el) => {
+      el.style.visibility = 'hidden'
+    })
+  }
+  
+  function parseDate (dateString) {
+    const [year, month, date] = dateString.split('-').map(Number)
+  
+    return new Date(year, month - 1, date)
+  }
+  
+  // Quick sort from https://www.geeksforgeeks.org/javascript-program-for-quick-sort/
+  // ...PURELY because Chrome Array.prototype.sort() is bugged for this case!
+  function partition (arr, low, high) {
+    const pivot = arr[high].dayIndexInEpoch
+    let i = low - 1
+  
+    for (let j = low; j <= high - 1; ++j) {
+      // If current element is smaller than the pivot
+      if (arr[j].dayIndexInEpoch < pivot) {
+        // Increment index of smaller element
+        ++i;
+        // Swap elements
+        [arr[i], arr[j]] = [arr[j], arr[i]]
+      }
+    }
+    // Swap pivot to its correct position
+    [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
+    return i + 1 // Return the partition index
+  }
+  
+  function dayIndexInEpoch (dateString) {
+    // This is actually purely a work-around for a bug baked into Chrome.
+    // It doesn't need to be exact; it just needs to be unique and maintain order.
+    const [year, month, date] = dateString.split('-').map(Number)
+  
+    return (year - 1960) * 372 + (month - 1) * 31 + date
+  }
+  
+  function makeClass (x, y) {
+    return `c${x - y}`
+  }
 
   function onLabelSwitchClick () {
     const alv = !areLabelsVisible
@@ -147,6 +139,14 @@ function QuantumVolumeChart (props) {
     })
     saveAs(blob, 'chart.svg')
   }
+
+  const quickSort = React.useCallback((arr, low, high) => {
+    if (low >= high) return
+    const pi = partition(arr, low, high)
+  
+    quickSort(arr, low, pi - 1)
+    quickSort(arr, pi + 1, high)
+  }, [])
 
   // Function to build legend
   const legend = React.useCallback((circleSizeFields = 8) => {
@@ -1016,7 +1016,7 @@ function QuantumVolumeChart (props) {
         svg
       )
     }
-  }, [barplot, scatterplot, metricName])
+  }, [barplot, scatterplot, metricName, quickSort])
 
   const redraw = useCallback((d, isl, alv, ala, mn) => {
     const scroll = window.scrollY
