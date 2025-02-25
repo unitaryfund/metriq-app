@@ -8,6 +8,7 @@ import '../viz-style.css'
 import axios from 'axios'
 import { sortByCounts } from './SortFunctions'
 import config from '../config'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const key = crypto.randomUUID()
 const chartId = 'my_dataviz_' + key
@@ -56,25 +57,25 @@ function QuantumVolumeChart (props) {
       el.style.visibility = 'visible'
     })
   }
-  
+
   function hideLabels () {
     [...document.getElementsByClassName('labeltohide')].forEach((el) => {
       el.style.visibility = 'hidden'
     })
   }
-  
+
   function parseDate (dateString) {
     const [year, month, date] = dateString.split('-').map(Number)
-  
+
     return new Date(year, month - 1, date)
   }
-  
+
   // Quick sort from https://www.geeksforgeeks.org/javascript-program-for-quick-sort/
   // ...PURELY because Chrome Array.prototype.sort() is bugged for this case!
   function partition (arr, low, high) {
     const pivot = arr[high].dayIndexInEpoch
     let i = low - 1
-  
+
     for (let j = low; j <= high - 1; ++j) {
       // If current element is smaller than the pivot
       if (arr[j].dayIndexInEpoch < pivot) {
@@ -88,15 +89,15 @@ function QuantumVolumeChart (props) {
     [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
     return i + 1 // Return the partition index
   }
-  
+
   function dayIndexInEpoch (dateString) {
     // This is actually purely a work-around for a bug baked into Chrome.
     // It doesn't need to be exact; it just needs to be unique and maintain order.
     const [year, month, date] = dateString.split('-').map(Number)
-  
+
     return (year - 1960) * 372 + (month - 1) * 31 + date
   }
-  
+
   function makeClass (x, y) {
     return `c${x - y}`
   }
@@ -143,7 +144,7 @@ function QuantumVolumeChart (props) {
   const quickSort = React.useCallback((arr, low, high) => {
     if (low >= high) return
     const pi = partition(arr, low, high)
-  
+
     quickSort(arr, low, pi - 1)
     quickSort(arr, pi + 1, high)
   }, [])
@@ -1106,13 +1107,13 @@ function QuantumVolumeChart (props) {
         console.log(err)
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props])
+  }, [props.taskId, props.onLoadData, props.metric, props.isQubits])
 
   return (
     <span>
       <div className='row'>
         <div className='col text-start'>
-          <h4 align='left'>{taskName}</h4>
+          <h4 align='left'>{props.isPreview ? <Link to={'/Task/' + props.taskId}>{taskName}</Link> : taskName}</h4>
         </div>
       </div>
       <div id='cargo'>

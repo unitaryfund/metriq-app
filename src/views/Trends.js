@@ -119,6 +119,7 @@ class Trends extends React.Component {
                     isLog={index < 2}
                     logBase={(index === 0) ? '2' : '10'}
                     isHideSubset
+                    isPreview
                   />
                   <br />
                 </span>
