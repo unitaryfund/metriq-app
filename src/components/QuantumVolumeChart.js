@@ -44,6 +44,7 @@ function QuantumVolumeChart (props) {
   const chartRef = useRef()
   const legendRef = useRef()
   const legendColorRef = useRef()
+  const [isInit, setIsInit] = React.useState(true)
   const [taskName, setTaskName] = React.useState('')
   const [metricName, setMetricName] = React.useState('')
   const [metricNames, setMetricNames] = React.useState([])
@@ -1083,7 +1084,10 @@ function QuantumVolumeChart (props) {
           }
         }
         setMetricNames(metricNames)
-        setMetricName(props.metric ? props.metric : metric)
+        if (isInit) {
+          setMetricName(props.metric ? props.metric : metric)
+          setIsInit(false)
+        }
         const data = results
           .map((_d) => ({
             key: +_d.id,
@@ -1106,8 +1110,7 @@ function QuantumVolumeChart (props) {
       .catch(err => {
         console.log(err)
       })
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.taskId, props.onLoadData, props.metric, props.isQubits])
+  }, [props, metricNames, redraw, isScaleLinear, areLabelsVisible, areLabelsArxiv, isInit])
 
   return (
     <span>
