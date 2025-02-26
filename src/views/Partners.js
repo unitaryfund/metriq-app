@@ -1,12 +1,12 @@
 import axios from 'axios'
 import React from 'react'
 import { sortCommon, sortAlphabetical } from '../components/SortFunctions'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faExternalLinkAlt, faChartLine } from '@fortawesome/free-solid-svg-icons'
 import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
-import _Partners from '../components/Partners'
+import PartnersComponent from '../components/Partners'
 import Committee from '../components/Committee'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
@@ -97,7 +97,7 @@ class Partners extends React.Component {
           <br />
         </div>
         <div id='metriq-main-content'>
-          <_Partners />
+          <PartnersComponent />
           <Committee />
         </div>
       </span>
