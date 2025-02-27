@@ -13,6 +13,7 @@ import { sortByCounts } from './SortFunctions'
 import ErrorHandler from './ErrorHandler'
 import SotaControlRow from './SotaControlRow'
 import { Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const chartComponents = [LinearScale, LogarithmicScale, TimeScale, CategoryScale, PointElement, LineElement, BarElement, ScatterController, BarController, Tooltip, ChartDataLabels]
 Chart.register(chartComponents)
@@ -825,10 +826,12 @@ class SotaChart extends React.Component {
           <div className='card sota-card'>
             <div className='row'>
               <div className='col-xl-8 col-12'>
-                <div className='chart-container sota-chart'>
-                  <h5 className='text-start'>{this.state.task.name}</h5>
-                  <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
-                </div>
+                <Link to={'/Task/' + this.props.taskId}>
+                  <div className='chart-container sota-chart'>
+                    <h5 className='text-start'>{this.state.task.name}</h5>
+                    <canvas id={'sota-chart-canvas-' + this.props.chartId} key={this.state.key} />
+                  </div>
+                </Link>
                 {!this.props.isHideSubset &&
                   <div style={{ paddingLeft: '32px', paddingRight: '32px' }}>
                     <span className='metric-chart-label'>Subset Entry</span>

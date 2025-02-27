@@ -8,7 +8,7 @@ import config from '../config'
 import ErrorHandler from '../components/ErrorHandler'
 import FormFieldValidator from '../components/FormFieldValidator'
 import FormFieldAlertRow from '../components/FormFieldAlertRow'
-import SotaChart from '../components/SotaChart'
+import QuantumVolumeChart from '../components/QuantumVolumeChart'
 
 library.add(faHeart, faExternalLinkAlt, faChartLine)
 
@@ -112,12 +112,14 @@ class Trends extends React.Component {
             <div className='col-md-12'>
               {this.state.featured.map((taskId, index) =>
                 <span key={index}>
-                  <SotaChart
+                  <QuantumVolumeChart
                     chartId={index}
                     taskId={taskId}
+                    metric={taskId === 34 ? 'quantum volume' : (taskId === 38 ? 'infidelity' : 'qubits')}
                     isLog={index < 2}
                     logBase={(index === 0) ? '2' : '10'}
                     isHideSubset
+                    isPreview
                   />
                   <br />
                 </span>

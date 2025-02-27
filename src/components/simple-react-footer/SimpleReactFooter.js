@@ -5,7 +5,7 @@ import MailchimpSubscribe from 'react-mailchimp-subscribe'
 import { FaDiscord, FaGithub, FaPinterestSquare, FaTwitterSquare } from 'react-icons/fa'
 import { ImFacebook2, ImInstagram, ImLinkedin, ImTwitch, ImYoutube } from 'react-icons/im'
 import { Button } from 'react-bootstrap'
-import logo from './../../images/unitary_fund_logo.png'
+import logo from './../../images/uf_logo.svg'
 
 const CustomMailchimpForm = ({ status, message, onValidated }) => {
   let email
@@ -50,7 +50,7 @@ class SimpleReactFooter extends React.Component {
             <div style={{ color: this.props.fontColor || 'black' }} className='stay-connected-title row'>
               <div className='col-sm-1' />
               <div className='col-sm-7'>
-                Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a> made with <div id='heart' /> by <a href='https://unitary.fund'><img width='64px' src={logo} alt='Unitary Fund logo' /></a><br />
+                Quantum computing benchmarks by <a href='https://github.com/unitaryfund/metriq-app'>community contributors</a> made with <div id='heart' /> by <a href='https://unitary.foundation'><img width='64px' src={logo} alt='Unitary Foundation logo' /></a><br />
                 <span className='stay-connected-shim' /><br />
                 Stay up to date on metriq.info! Subscribe now to our newsletter:&nbsp;
                 <div className='email-subscribe'>
