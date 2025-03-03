@@ -22,7 +22,7 @@ const About = () => {
               </i>
             </p>
             <p>
-              Metriq is a free and open source platform that helps anyone better answer this question for themselves. It is supported by <a href='https://unitary.fund'>Unitary Fund</a>, a 501(c)(3) nonprofit organization devoted to research and community-building in quantum computing and quantum open-source software.
+              Metriq is a free and open source platform that helps anyone better answer this question for themselves. It is supported by <a href='https://unitary.foundation'>Unitary Foundation</a>, a 501(c)(3) nonprofit organization devoted to research and community-building in quantum computing and quantum open-source software.
             </p>
             <p>
               Researchers and developers in academia and industry can submit results on existing benchmarks or propose new benchmarking tasks to the community. Results include sources and are openly accessible. It is free to sign up and submit.
@@ -35,7 +35,7 @@ const About = () => {
           <h1 className='text-center'>Community</h1>
           <div className='text-start'>
             <p>
-              The Metriq community is growing. The <a href='https://discord.com/channels/764231928676089909/818208195612639304'>#metriq</a> channel on the Unitary Fund <a href='https://discord.com/invite/JqVGmpkP96'>Discord</a> server is visited by folks who share and collaborate on understanding the landscape of quantum benchmarks
+              The Metriq community is growing. The <a href='https://discord.com/channels/764231928676089909/818208195612639304'>#metriq</a> channel on the Unitary Foundation <a href='https://discord.com/invite/JqVGmpkP96'>Discord</a> server is visited by folks who share and collaborate on understanding the landscape of quantum benchmarks
             </p>
           </div>
         </div>
