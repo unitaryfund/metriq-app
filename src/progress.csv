@@ -23,3 +23,5 @@ Quantum-Centric Algorithm for Sample-Based Krylov Diagonalization,arXiv:2501.097
 Faster quantum chemistry simulations on a quantum computer with improved tensor factorization and active volume compilation,arXiv:2501.06165,2025,Physics simulation,Quantum chemisty,228,826,999,1700000000,false,Both
 Quantum resource estimates for computing binary elliptic curve discrete logarithms,arXiv:2503.02984,2025,Cryptography,ECC-163,228,829,2125,1370000,false,Both
 Quantum resource estimates for computing binary elliptic curve discrete logarithms,arXiv:2503.02984,2025,Cryptography,ECC-233,228,829,3035,3520000,false,Both
+Fast quantum simulation of electronic structure by spectrum amplification,arXiv:2502.15882,2025,Physics simulation,FeMoco-54,228,830,1137,341000000,false,Both
+Fast quantum simulation of electronic structure by spectrum amplification,arXiv:2502.15882,2025,Physics simulation,FeMoco-76,228,830,1459,999000000,false,Both
