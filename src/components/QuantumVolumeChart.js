@@ -1,6 +1,6 @@
 // QuantumLandscapeChart.js
 
-import React, { useRef, useCallback } from 'react'
+import React from 'react'
 import * as d3 from 'd3'
 import { saveAs } from 'file-saver'
 import XMLSerializer from 'xmlserializer'
@@ -10,10 +10,6 @@ import { sortByCounts } from './SortFunctions'
 import config from '../config'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
-const key = crypto.randomUUID()
-const chartId = 'my_dataviz_' + key
-const legendId = 'legend_guide_' + key
-const legendColorId = 'legend-color-' + key
 const fontType = 'Helvetica'
 const smallLabelSize = 15 // font size in pixel
 const mobileLabelSize = 11
@@ -41,29 +37,24 @@ const breakpoint = 700
 let isMobile = window.outerWidth < breakpoint
 
 function QuantumVolumeChart (props) {
-  const chartRef = useRef()
-  const legendRef = useRef()
-  const legendColorRef = useRef()
-  const [isInit, setIsInit] = React.useState(true)
+  const chartRef = React.useRef()
+  const legendRef = React.useRef()
+  const legendColorRef = React.useRef()
+  const [key,] = React.useState(crypto.randomUUID())
+  const [chartId,] = React.useState('my_dataviz_' + key)
+  const [legendId,] = React.useState('legend_guide_' + key)
+  const [legendColorId,] = React.useState('legend-color-' + key)
+  const [labelClass,] = React.useState('labeltohide' + key)
+  const [svgLegendId,] = React.useState('svglegend' + key)
+  const [toolTipId,] = React.useState('#scatter-tooltip' + key)
+  const [svgId,] = React.useState('#svgscatter' + key)
   const [taskName, setTaskName] = React.useState('')
-  const [metricName, setMetricName] = React.useState('')
+  const [metricName, setMetricName] = React.useState(props.metric)
   const [metricNames, setMetricNames] = React.useState([])
   const [areLabelsVisible, setAreLabelsVisible] = React.useState(false)
   const [areLabelsArxiv, setAreLabelsArxiv] = React.useState(false)
   const [isScaleLinear, setIsScaleLinear] = React.useState(parseInt(props.taskId) !== 34)
   const [d, setD] = React.useState({})
-
-  function showLabels () {
-    [...document.getElementsByClassName('labeltohide')].forEach((el) => {
-      el.style.visibility = 'visible'
-    })
-  }
-
-  function hideLabels () {
-    [...document.getElementsByClassName('labeltohide')].forEach((el) => {
-      el.style.visibility = 'hidden'
-    })
-  }
 
   function parseDate (dateString) {
     const [year, month, date] = dateString.split('-').map(Number)
@@ -104,33 +95,16 @@ function QuantumVolumeChart (props) {
   }
 
   function onLabelSwitchClick () {
-    const alv = !areLabelsVisible
-    setAreLabelsVisible(alv)
-    refreshLabels(alv)
-    redraw(d, isScaleLinear, alv, areLabelsArxiv, metricName)
+    setAreLabelsVisible(!areLabelsVisible)
   }
   function onArxivSwitchClick () {
-    const ala = !areLabelsArxiv
-    setAreLabelsArxiv(ala)
-    refreshLabels(areLabelsVisible)
-    redraw(d, isScaleLinear, areLabelsVisible, ala, metricName)
+    setAreLabelsArxiv(!areLabelsArxiv)
   }
   function onScaleSwitchClick () {
-    const isl = !isScaleLinear
-    setIsScaleLinear(isl)
-    redraw(d, isl, areLabelsVisible, areLabelsArxiv, metricName)
+    setIsScaleLinear(!isScaleLinear)
   }
   function onMetricSelectChange (e) {
     setMetricName(e.target.value)
-    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv, e.target.value)
-  }
-
-  function refreshLabels (alv) {
-    if (alv) {
-      showLabels()
-    } else {
-      hideLabels()
-    }
   }
 
   function onDownloadClick () {
@@ -167,7 +141,7 @@ function QuantumVolumeChart (props) {
     const svg = legendColor
       .append('svg')
       .attr('viewBox', [0, 0, chartWidth * multCoeff, chartHeight])
-      .attr('id', 'svglegend' + key)
+      .attr('id', svgLegendId)
       .style('width', '100%')
 
     let newY = circleSizeFields + 10
@@ -332,7 +306,7 @@ function QuantumVolumeChart (props) {
       .style('font-size', `${smallLabelSize}px`)
       .style('font-family', fontType)
       .text('Other')
-  }, [props.isQubits])
+  }, [props.isQubits, svgLegendId])
 
   const mousemove = React.useCallback((
     e,
@@ -393,7 +367,7 @@ function QuantumVolumeChart (props) {
       const idData = data.filter((d) => d.id === targetID)[0]
       try {
         const otherCircles = d3.selectAll(`circle.${targetClass}`)
-        d3.select('#scatter-tooltip' + key)
+        d3.select(toolTipId)
         // Main tooltip
           .style('visibility', 'visible')
           .style('top', `${circleY}px`)
@@ -432,16 +406,16 @@ function QuantumVolumeChart (props) {
       }
 
       if (xPerc < turnTooltip) {
-        d3.select('#scatter-tooltip' + key)
+        d3.select(toolTipId)
           .style('right', null)
           .style('left', `${circleXshifted + arrowSize / 2}px`)
       } else {
-        d3.select('#scatter-tooltip' + key)
+        d3.select(toolTipId)
           .style('left', null)
           .style('right', `${window.innerWidth - circleX + arrowSize / 2}px`)
       }
 
-      d3.select('#scatter-tooltip' + key)
+      d3.select(toolTipId)
         // triangle
         .append('div')
         .attr('id', 'tooltip-triangle')
@@ -463,7 +437,7 @@ function QuantumVolumeChart (props) {
         )
         .style('background-color', backgroundColor)
     } else {
-      d3.select('#scatter-tooltip' + key).style('visibility', 'hidden')
+      d3.select(toolTipId).style('visibility', 'hidden')
 
       d3.selectAll('line.selectedLine')
         .attr('class', null)
@@ -473,9 +447,9 @@ function QuantumVolumeChart (props) {
         .attr('class', null)
         .style('visibility', 'hidden')
     }
-  }, [props.isQubits])
+  }, [props.isQubits, toolTipId])
 
-  const barplot = useCallback((
+  const barplot = React.useCallback((
     data,
     isl,
     ala,
@@ -548,7 +522,7 @@ function QuantumVolumeChart (props) {
       )
   }, [props.isQubits])
 
-  const scatterplot = useCallback((
+  const scatterplot = React.useCallback((
     data,
     isl,
     alv,
@@ -736,7 +710,7 @@ function QuantumVolumeChart (props) {
         const y = svg.select(`circle#${id}`).attr('cy')
 
         const svgWidth = d3
-          .select('#svgscatter' + key)
+          .select(svgId)
           .node()
           .getBoundingClientRect().width
 
@@ -753,7 +727,7 @@ function QuantumVolumeChart (props) {
               : Number(x) + xlabelDistance
           )
           .attr('y', Number(y))
-          .attr('class', 'labeltohide')
+          .attr('class', labelClass)
           .style(
             'visibility',
             alv ? 'visible' : 'hidden'
@@ -767,10 +741,10 @@ function QuantumVolumeChart (props) {
           .text(`${svg.select(`circle#${id}`).attr('label')}`)
       }
     })
-  }, [props.isQubits, mousemove])
+  }, [props.isQubits, mousemove, labelClass, svgId])
 
   // Function to draw plot
-  const plot = useCallback((
+  const plot = React.useCallback((
     data,
     isl = false,
     alv = false,
@@ -1021,18 +995,28 @@ function QuantumVolumeChart (props) {
         svg
       )
     }
-  }, [barplot, scatterplot, metricName, quickSort])
+  }, [barplot, scatterplot, metricName, key, quickSort])
 
-  const redraw = useCallback((d, isl, alv, ala, mn) => {
+
+  React.useEffect(() => {
     const scroll = window.scrollY
     isMobile = window.outerWidth < breakpoint
-    d3.select(chartRef.current).select('#svgscatter' + key).remove()
-    d3.select(chartRef.current).select('#scatter-tooltip' + key).remove()
-    d3.select(legendColorRef.current).selectAll('#svglegend' + key).remove()
-    plot(d, isl, alv, ala, mn)
+    d3.select(chartRef.current).select(svgId).remove()
+    d3.select(chartRef.current).select(toolTipId).remove()
+    d3.select(legendColorRef.current).selectAll('#' + svgLegendId).remove()
+    plot(d, isScaleLinear, areLabelsVisible, areLabelsArxiv, metricName)
     legend()
+    if (areLabelsVisible) {
+      [...document.getElementsByClassName(labelClass)].forEach((el) => {
+        el.style.visibility = 'visible'
+      })
+    } else {
+      [...document.getElementsByClassName(labelClass)].forEach((el) => {
+        el.style.visibility = 'hidden'
+      })
+    }
     window.scrollTo(0, scroll)
-  }, [plot, legend])
+  }, [plot, legend, d, isScaleLinear, metricName, areLabelsVisible, areLabelsArxiv, key, svgId, toolTipId, svgLegendId, labelClass])
 
   React.useEffect(() => {
     // Draw scatterplot from data
@@ -1087,9 +1071,8 @@ function QuantumVolumeChart (props) {
           }
         }
         setMetricNames(metricNames)
-        if (isInit) {
-          setMetricName(props.metric ? props.metric : metric)
-          setIsInit(false)
+        if (!metricName) {
+          setMetricName(metric)
         }
         const data = results
           .map((_d) => ({
@@ -1114,10 +1097,6 @@ function QuantumVolumeChart (props) {
       })
       // eslint-disable-next-line
   }, [props.taskId])
-
-  React.useEffect(() => {
-    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv)
-  }, [redraw, d, isScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
@@ -1156,7 +1135,7 @@ function QuantumVolumeChart (props) {
             </div>
             <div id='legend-switch' style={{ marginTop: '10px' }}>
               <label className='switch' style={{ width: '50%' }}>
-                <select id='metricSelect' style={{ width: '100%' }} onChange={onMetricSelectChange}>
+                <select id='metricSelect' style={{ width: '100%' }} onChange={onMetricSelectChange} value={metricName}>
                   {metricNames.map((option, index) => <option key={index} value={option}>{option}</option>)}
                 </select>
               </label>
