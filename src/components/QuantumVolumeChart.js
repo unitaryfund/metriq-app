@@ -795,6 +795,9 @@ function QuantumVolumeChart (props) {
     tooltipLineTextBorder = 2.5,
     xlabelDistance = 19
   ) => {
+    if (!data || !data.filter) {
+      return
+    }
     data = data
       .filter(
         (x) => (!isNaN(x[xName]) && (x[xName] > 0) && !isNaN(x[yName]) && (x[yName] > 0))
@@ -1105,12 +1108,16 @@ function QuantumVolumeChart (props) {
           }))
           .sort((a, b) => (props.taskId === 119) ? (a.metricValue > b.metricValue) : props.isQubits ? (a.qubitCount < b.qubitCount) : (a.dayIndexInEpoch > b.dayIndexInEpoch))
         setD(data)
-        redraw(data, isScaleLinear, areLabelsVisible, areLabelsArxiv)
       })
       .catch(err => {
         console.log(err)
       })
-  }, [props, metricNames, redraw, isScaleLinear, areLabelsVisible, areLabelsArxiv, isInit])
+      // eslint-disable-next-line
+  }, [props.taskId])
+
+  React.useEffect(() => {
+    redraw(d, isScaleLinear, areLabelsVisible, areLabelsArxiv)
+  }, [redraw, d, isScaleLinear, areLabelsVisible, areLabelsArxiv])
 
   return (
     <span>
